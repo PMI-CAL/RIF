@@ -1,0 +1,159 @@
+# {{PROJECT_NAME}} - Configuration Template
+# This is a configuration template for {{PROJECT_NAME}}
+
+# Application Settings
+application:
+  name: "{{PROJECT_NAME}}"
+  version: "{{PROJECT_VERSION}}"
+  environment: "{{ENVIRONMENT}}"
+
+# Database Configuration (if applicable)
+database:
+  type: "{{DATABASE_TYPE}}"
+  path: "{{DATABASE_PATH}}"
+  host: "{{DATABASE_HOST}}"
+  port: "{{DATABASE_PORT}}"
+  name: "{{DATABASE_NAME}}"
+  user: "{{DATABASE_USER}}"
+  password: "${DATABASE_PASSWORD}"
+
+# External API Integration (if applicable)
+api:
+  {{EXTERNAL_API_1}}:
+    enabled: {{EXTERNAL_API_1_ENABLED}}
+    base_url: "{{EXTERNAL_API_1_BASE_URL}}"
+    credentials_file: "{{EXTERNAL_API_1_CREDENTIALS_FILE}}"
+    api_key: "${{{EXTERNAL_API_1}}_API_KEY}"
+    sync_interval_minutes: {{SYNC_INTERVAL_MINUTES}}
+    batch_size: {{BATCH_SIZE}}
+
+# Core Functionality Settings
+{{CORE_FUNCTIONALITY}}:
+  enabled: {{CORE_FUNCTIONALITY_ENABLED}}
+  threshold: {{CLASSIFICATION_THRESHOLD}}
+  auto_processing: {{AUTO_PROCESSING_ENABLED}}
+
+# AI/ML Configuration (if applicable)
+ai:
+  {{AI_PROVIDER}}:
+    enabled: {{AI_ENABLED}}
+    model: "{{AI_MODEL}}"
+    api_key: "${{{AI_PROVIDER}}_API_KEY}"
+    temperature: {{AI_TEMPERATURE}}
+    max_tokens: {{AI_MAX_TOKENS}}
+  processing:
+    enabled: {{AI_PROCESSING_ENABLED}}
+    features:
+      - "{{AI_FEATURE_1}}"
+      - "{{AI_FEATURE_2}}"
+
+# Authentication Configuration
+auth:
+  method: "{{AUTH_METHOD}}"
+  oauth:
+    client_id: "${OAUTH_CLIENT_ID}"
+    client_secret: "${OAUTH_CLIENT_SECRET}"
+    redirect_uri: "{{OAUTH_REDIRECT_URI}}"
+    scopes: {{OAUTH_SCOPES}}
+
+# Logging Configuration
+logging:
+  level: "{{LOG_LEVEL}}"
+  file:
+    enabled: {{FILE_LOGGING_ENABLED}}
+    path: "{{LOG_FILE_PATH}}"
+    max_size_mb: {{LOG_MAX_SIZE_MB}}
+    backup_count: {{LOG_BACKUP_COUNT}}
+  console:
+    enabled: {{CONSOLE_LOGGING_ENABLED}}
+    format: "{{LOG_FORMAT}}"
+
+# Error Reporting (Optional)
+error_reporting:
+  enabled: {{ERROR_REPORTING_ENABLED}}
+  service: "{{ERROR_REPORTING_SERVICE}}"
+  api_key: "${ERROR_REPORTING_API_KEY}"
+  environment: "{{ENVIRONMENT}}"
+  privacy:
+    scrub_fields:
+      - "password"
+      - "api_key"
+      - "access_token"
+      - "email"
+      - "phone"
+      - "ssn"
+      - "credit_card"
+
+# Update System (Optional)
+updates:
+  enabled: {{UPDATES_ENABLED}}
+  auto_check: {{AUTO_CHECK_UPDATES}}
+  check_interval_hours: {{UPDATE_CHECK_INTERVAL}}
+  auto_install_critical: {{AUTO_INSTALL_CRITICAL}}
+  server_url: "{{UPDATE_SERVER_URL}}"
+
+# Performance Settings
+performance:
+  cache:
+    enabled: {{CACHE_ENABLED}}
+    ttl_seconds: {{CACHE_TTL}}
+    max_size_mb: {{CACHE_MAX_SIZE}}
+  concurrency:
+    max_workers: {{MAX_WORKERS}}
+    timeout_seconds: {{OPERATION_TIMEOUT}}
+
+# Feature Flags
+features:
+  {{FEATURE_1}}: {{FEATURE_1_ENABLED}}
+  {{FEATURE_2}}: {{FEATURE_2_ENABLED}}
+  {{FEATURE_3}}: {{FEATURE_3_ENABLED}}
+  experimental_features: {{EXPERIMENTAL_FEATURES_ENABLED}}
+
+# Security Settings
+security:
+  encryption:
+    enabled: {{ENCRYPTION_ENABLED}}
+    algorithm: "{{ENCRYPTION_ALGORITHM}}"
+  ssl:
+    verify: {{SSL_VERIFY}}
+    cert_path: "{{SSL_CERT_PATH}}"
+  rate_limiting:
+    enabled: {{RATE_LIMITING_ENABLED}}
+    requests_per_minute: {{RATE_LIMIT_RPM}}
+
+# Monitoring and Analytics (Optional)
+monitoring:
+  enabled: {{MONITORING_ENABLED}}
+  service: "{{MONITORING_SERVICE}}"
+  api_key: "${MONITORING_API_KEY}"
+  metrics:
+    enabled: {{METRICS_ENABLED}}
+    collection_interval: {{METRICS_INTERVAL}}
+
+# Notification Settings (Optional)
+notifications:
+  enabled: {{NOTIFICATIONS_ENABLED}}
+  channels:
+    email:
+      enabled: {{EMAIL_NOTIFICATIONS_ENABLED}}
+      smtp_host: "{{SMTP_HOST}}"
+      smtp_port: {{SMTP_PORT}}
+      username: "${EMAIL_USERNAME}"
+      password: "${EMAIL_PASSWORD}"
+    webhook:
+      enabled: {{WEBHOOK_NOTIFICATIONS_ENABLED}}
+      url: "{{WEBHOOK_URL}}"
+      secret: "${WEBHOOK_SECRET}"
+
+# Development Settings
+development:
+  debug_mode: {{DEBUG_MODE}}
+  hot_reload: {{HOT_RELOAD_ENABLED}}
+  profiling: {{PROFILING_ENABLED}}
+  test_mode: {{TEST_MODE}}
+
+# Component Loading (Advanced)
+components:
+  loading_strategy: "{{COMPONENT_LOADING_STRATEGY}}"
+  auto_reload: {{COMPONENT_AUTO_RELOAD}}
+  dependency_checking: {{DEPENDENCY_CHECKING_ENABLED}}

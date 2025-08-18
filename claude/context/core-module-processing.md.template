@@ -1,0 +1,149 @@
+# {{CORE_MODULE_1_NAME}} Context
+
+## Overview
+This context should be loaded when working on {{CORE_MODULE_1_DESCRIPTION}} functionality in `{{CORE_MODULE_1_PATH}}/`.
+
+## Key Components
+
+### {{EXTERNAL_API_1}} Integration
+- **{{AUTH_METHOD}} Authentication**: Handle secure API authentication
+- **Rate Limiting**: Respect API rate limits and quotas
+- **Batch Processing**: Use batch operations for efficiency
+- **Error Handling**: Implement exponential backoff and retry logic
+
+### {{AI_PROVIDER}} Integration
+- **Model**: {{AI_MODEL}}
+- **Configuration**: Configure in application settings
+- **{{AI_USE_CASE}}**: Tailored for your specific use case
+
+### {{CORE_MODULE_1_NAME}} Pipeline
+
+1. **Data Input** (`{{INPUT_MODULE}}.{{LANGUAGE_EXTENSION}}`): {{AUTH_METHOD}} authentication, data ingestion
+2. **{{CORE_FUNCTIONALITY}}** (`{{CLASSIFIER_MODULE}}.{{LANGUAGE_EXTENSION}}`): {{CLASSIFICATION_CRITERIA}}
+3. **AI Analysis** (`{{AI_PROCESSOR_MODULE}}.{{LANGUAGE_EXTENSION}}`): {{AI_PROVIDER}} integration for {{AI_USE_CASE}}
+4. **Processing** (`{{CALCULATOR_MODULE}}.{{LANGUAGE_EXTENSION}}`): {{BUSINESS_CALCULATION_RULES}}
+5. **Review Interface** (`ui/{{REVIEW_MODULE}}.{{LANGUAGE_EXTENSION}}`): {{REVIEW_MODE_DESCRIPTION}}
+6. **Data Storage** (`core/database.{{LANGUAGE_EXTENSION}}`): Audit trail and persistence
+
+## Best Practices
+
+### Security
+- {{AUTH_METHOD}} security best practices
+- Never store credentials in code
+- Use secure credential storage
+- Rate limiting and error handling
+- Data processing security guidelines
+- Privacy and compliance requirements
+
+### Performance
+- Batch API operations when possible
+- Implement efficient data processing
+- Cache frequently accessed data
+- Optimize database queries and operations
+
+### Error Handling
+- {{EXTERNAL_API_1}} API failures with exponential backoff
+- AI processing fallbacks when API unavailable
+- Database transaction rollbacks on errors
+- User notification through logging system
+
+## Common Issues
+
+### Import/Module Conflicts
+Handle potential naming conflicts with system modules:
+
+**{{LANGUAGE}} Workaround**:
+```{{LANGUAGE_LOWERCASE}}
+{{IMPORT_CONFLICT_SOLUTION}}
+```
+
+### {{EXTERNAL_API_1}} API Quotas
+- Monitor quota usage and limits
+- Implement batch operations to minimize API calls
+- Use caching strategies where appropriate
+
+## Testing {{CORE_MODULE_1_NAME}}
+
+```bash
+# Test {{EXTERNAL_API_1}} connection
+{{TEST_API_CONNECTION_COMMAND}}
+
+# Test {{CORE_FUNCTIONALITY}} pipeline
+{{TEST_PIPELINE_COMMAND}}
+
+# Run module-specific tests
+{{TEST_MODULE_COMMAND}}
+```
+
+## Configuration
+
+Example configuration for {{CORE_MODULE_1_NAME}}:
+```{{CONFIG_FORMAT}}
+{{EXTERNAL_API_1_CONFIG_BLOCK}}
+
+{{AI_CONFIG_BLOCK}}
+
+{{CORE_FUNCTIONALITY_CONFIG_BLOCK}}
+```
+
+## Module-Specific Logging
+
+- `{{PROJECT_NAME}}.{{CORE_MODULE_1_PATH}}.{{SYNC_LOGGER}}`: {{EXTERNAL_DATA_SYNC}} events
+- `{{PROJECT_NAME}}.{{CORE_MODULE_1_PATH}}.{{CLASSIFIER_LOGGER}}`: {{CLASSIFICATION_STEP}} decisions
+- `{{PROJECT_NAME}}.{{CORE_MODULE_1_PATH}}.ai`: AI processing events
+- `{{PROJECT_NAME}}.{{CORE_MODULE_1_PATH}}.processor`: Overall pipeline events
+
+## Technology-Specific Considerations
+
+### For API-Heavy Applications
+- Implement circuit breakers for external API calls
+- Use connection pooling for database operations
+- Monitor API usage and costs
+
+### For Data Processing Applications
+- Consider streaming vs. batch processing trade-offs
+- Implement data validation and sanitization
+- Plan for data schema evolution
+
+### For AI/ML Applications
+- Handle model versioning and updates
+- Implement fallback mechanisms for AI failures
+- Monitor model performance and accuracy
+
+## Integration Patterns
+
+### Common Integration Points
+- {{EXTERNAL_API_1}} for external data
+- {{AI_PROVIDER}} for intelligent processing
+- Database for persistence and audit trail
+- UI for user interaction and review
+
+### Data Flow
+1. **Ingestion**: Data from {{EXTERNAL_API_1}}
+2. **Processing**: {{CORE_FUNCTIONALITY}} and AI analysis
+3. **Storage**: Structured data persistence
+4. **Review**: User interface for validation
+5. **Output**: {{OUTPUT_GENERATION}}
+
+## Troubleshooting
+
+### Common Issues
+1. **Authentication Failures**: Check credentials and tokens
+2. **Rate Limiting**: Implement proper throttling
+3. **Data Quality**: Validate input data
+4. **Performance**: Monitor processing times and optimize
+
+### Debug Commands
+```bash
+# Check system status
+{{STATUS_COMMAND}}
+
+# View logs
+{{LOG_VIEW_COMMAND}}
+
+# Test configuration
+{{CONFIG_TEST_COMMAND}}
+
+# Validate data integrity
+{{DATA_VALIDATION_COMMAND}}
+```

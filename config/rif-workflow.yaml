@@ -1,0 +1,320 @@
+# RIF Workflow Configuration
+# Defines the automatic workflow state machine and transitions
+
+workflow:
+  name: "RIF Automatic Workflow"
+  version: "2.0.0"
+  
+  # Initial state for all new issues
+  initial_state: "new"
+  
+  # All possible states
+  states:
+    new:
+      description: "Issue created, awaiting analysis"
+      timeout: "30m"
+      
+    analyzing:
+      description: "RIF-Analyst analyzing requirements"
+      agent: "rif-analyst"
+      timeout: "1h"
+      
+    planning:
+      description: "RIF-Planner creating execution plan"
+      agent: "rif-planner"
+      timeout: "1h"
+      
+    architecting:
+      description: "RIF-Architect designing solution"
+      agent: "rif-architect"
+      timeout: "2h"
+      
+    implementing:
+      description: "RIF-Implementer writing code"
+      agent: "rif-implementer"
+      timeout: "4h"
+      checkpoints: true
+      
+    validating:
+      description: "RIF-Validator testing solution"
+      agent: "rif-validator"
+      timeout: "2h"
+      
+    documenting:
+      description: "RIF-Documenter generating documentation"
+      agent: "rif-documenter"
+      timeout: "1h"
+      
+    learning:
+      description: "RIF-Learner updating knowledge base"
+      agent: "rif-learner"
+      timeout: "30m"
+      
+    reviewing:
+      description: "RIF-Reviewer analyzing code quality"
+      agent: "rif-reviewer"
+      timeout: "1h"
+      
+    complete:
+      description: "Work finished successfully"
+      final: true
+      
+    blocked:
+      description: "Work blocked, needs intervention"
+      alert: true
+      
+    failed:
+      description: "Work failed, needs recovery"
+      alert: true
+      recovery: true
+
+  # Automatic state transitions
+  transitions:
+    - from: "new"
+      to: "analyzing"
+      trigger: "auto"
+      condition: "always"
+      
+    - from: "analyzing"
+      to: "planning"
+      trigger: "analysis_complete"
+      condition: "patterns_found OR complexity_assessed"
+      
+    - from: "planning"
+      to: "architecting"
+      trigger: "plan_complete"
+      condition: "complexity >= high"
+      
+    - from: "planning"
+      to: "implementing"
+      trigger: "plan_complete"
+      condition: "complexity < high"
+      
+    - from: "architecting"
+      to: "implementing"
+      trigger: "design_complete"
+      condition: "dependencies_mapped"
+      
+    - from: "implementing"
+      to: "validating"
+      trigger: "code_complete"
+      condition: "tests_written"
+      
+    - from: "validating"
+      to: "documenting"
+      trigger: "tests_pass"
+      condition: "quality_gates_pass"
+      
+    - from: "validating"
+      to: "implementing"
+      trigger: "tests_fail"
+      condition: "fixable_errors"
+      
+    - from: "validating"
+      to: "failed"
+      trigger: "tests_fail"
+      condition: "critical_errors"
+      
+    - from: "documenting"
+      to: "reviewing"
+      trigger: "docs_complete"
+      condition: "pr_created"
+      
+    - from: "documenting"
+      to: "learning"
+      trigger: "docs_complete"
+      condition: "no_pr_needed"
+      
+    - from: "reviewing"
+      to: "learning"
+      trigger: "review_approved"
+      condition: "changes_approved"
+      
+    - from: "reviewing"
+      to: "implementing"
+      trigger: "changes_requested"
+      condition: "minor_changes"
+      
+    - from: "reviewing"
+      to: "architecting"
+      trigger: "changes_requested"
+      condition: "major_changes"
+      
+    - from: "learning"
+      to: "complete"
+      trigger: "knowledge_updated"
+      condition: "always"
+      
+    # Recovery transitions
+    - from: "blocked"
+      to: "analyzing"
+      trigger: "unblocked"
+      condition: "manual_intervention"
+      
+    - from: "failed"
+      to: "analyzing"
+      trigger: "retry"
+      condition: "checkpoint_available"
+
+  # Parallel execution rules
+  parallel:
+    enabled: true
+    max_concurrent: 4
+    
+    allowed_states:
+      - "implementing"
+      - "validating"
+      - "documenting"
+      
+    constraints:
+      - "Cannot parallelize across different issues"
+      - "Must maintain dependency order"
+      - "Quality gates must be sequential"
+
+  # Checkpoint configuration
+  checkpoints:
+    enabled: true
+    
+    automatic_triggers:
+      - "state_transition"
+      - "test_failure"
+      - "error_detected"
+      - "timeout_approaching"
+      
+    retention:
+      successful: "7d"
+      failed: "30d"
+      
+    recovery:
+      automatic: true
+      max_attempts: 3
+      backoff: "exponential"
+
+  # Quality gates
+  quality_gates:
+    code_coverage:
+      threshold: 80
+      required: true
+      blocker: true
+      
+    security_scan:
+      threshold: "no_critical"
+      required: true
+      blocker: true
+      
+    linting:
+      threshold: "no_errors"
+      required: true
+      blocker: false
+      
+    performance:
+      threshold: "baseline"
+      required: false
+      blocker: false
+      
+    documentation:
+      threshold: "complete"
+      required: true
+      blocker: false
+
+  # Complexity assessment
+  complexity:
+    factors:
+      - name: "lines_of_code"
+        weight: 0.3
+        thresholds:
+          low: 50
+          medium: 500
+          high: 2000
+          very_high: 5000
+          
+      - name: "files_affected"
+        weight: 0.2
+        thresholds:
+          low: 1
+          medium: 5
+          high: 20
+          very_high: 50
+          
+      - name: "dependencies"
+        weight: 0.3
+        thresholds:
+          low: 0
+          medium: 3
+          high: 10
+          very_high: 20
+          
+      - name: "cross_cutting"
+        weight: 0.2
+        thresholds:
+          low: false
+          medium: false
+          high: true
+          very_high: true
+
+  # Planning depth
+  planning_depth:
+    shallow:
+      complexity: "low"
+      max_depth: 1
+      agents: ["rif-analyst", "rif-implementer", "rif-validator"]
+      
+    standard:
+      complexity: "medium"
+      max_depth: 3
+      agents: ["rif-analyst", "rif-planner", "rif-implementer", "rif-validator"]
+      
+    deep:
+      complexity: "high"
+      max_depth: 5
+      agents: ["rif-analyst", "rif-planner", "rif-architect", "rif-implementer", "rif-validator", "rif-documenter"]
+      
+    recursive:
+      complexity: "very_high"
+      max_depth: 10
+      agents: "all"
+      decompose: true
+      sub_issues: true
+
+  # Monitoring and alerts
+  monitoring:
+    metrics:
+      - "state_duration"
+      - "transition_count"
+      - "checkpoint_usage"
+      - "quality_scores"
+      - "agent_performance"
+      
+    alerts:
+      stuck_workflow:
+        condition: "state_duration > timeout"
+        action: "escalate"
+        
+      quality_failure:
+        condition: "quality_gate_failed"
+        action: "rollback"
+        
+      repeated_failure:
+        condition: "failure_count > 3"
+        action: "manual_review"
+
+  # GitHub integration
+  github:
+    auto_labels:
+      enabled: true
+      prefix: "rif-"
+      
+    auto_comments:
+      enabled: true
+      format: "markdown"
+      include_metrics: true
+      
+    auto_pr:
+      enabled: true
+      draft: false
+      reviewers: "auto"
+      
+    auto_close:
+      enabled: true
+      on_complete: true
+      add_comment: true

@@ -1,0 +1,157 @@
+{
+  "name": "RIF - Reactive Intelligence Framework",
+  "version": "2.0.0",
+  "description": "Automatic intelligent development system with GitHub orchestration",
+  
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo '=== RIF Session Started ===' && gh issue list --state open --label 'state:*' --json number,title,labels,body 2>/dev/null | jq -r '.[:5] | .[] | \"Issue #\\(.number): \\(.title) [\\([.labels[].name] | join(\", \"))]\"' || echo 'No active RIF issues found'",
+        "output": "context"
+      },
+      {
+        "type": "command",
+        "command": "if [ -f ./knowledge/patterns/recent.json ]; then echo 'Loading recent patterns...'; jq -r '.patterns[:3] | .[] | \"Pattern: \\(.name) - \\(.description)\"' ./knowledge/patterns/recent.json 2>/dev/null || true; fi",
+        "output": "context"
+      }
+    ],
+    
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*issue.*|.*fix.*|.*implement.*|.*analyze.*|.*create.*|.*build.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'RIF: Checking for similar past issues...' && if [ -f ./knowledge/issues/resolved.json ]; then jq -r '.issues[] | select(.similarity > 0.7) | \"Similar: \\(.title) - Solution: \\(.solution)\"' ./knowledge/issues/resolved.json 2>/dev/null | head -3 || true; fi",
+            "output": "context"
+          }
+        ]
+      },
+      {
+        "matcher": ".*test.*|.*validate.*|.*check.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'RIF: Loading quality gates...' && if [ -f ./knowledge/metrics/quality.json ]; then jq -r '.gates | to_entries[] | \"\\(.key): \\(.value.threshold) (current: \\(.value.current))\"' ./knowledge/metrics/quality.json 2>/dev/null || true; fi",
+            "output": "context"
+          }
+        ]
+      }
+    ],
+    
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$1\" == *\"npm test\"* ]] || [[ \"$1\" == *\"pytest\"* ]]; then echo 'RIF: Creating checkpoint before test run...'; mkdir -p ./knowledge/checkpoints && date -u +\"%Y-%m-%dT%H:%M:%SZ\" > ./knowledge/checkpoints/latest.txt; fi",
+            "output": "silent"
+          }
+        ]
+      }
+    ],
+    
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\", \"action\": \"code_modified\", \"files\": \"'$1'\"}' >> ./knowledge/events.jsonl",
+            "output": "silent"
+          },
+          {
+            "type": "command",
+            "command": "echo 'RIF: Code modified, updating dependency graph...' && echo '{\"file\": \"'$1'\", \"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\"}' >> ./knowledge/dependencies.jsonl",
+            "output": "silent"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$1\" == *\"git commit\"* ]]; then echo 'RIF: Commit detected, updating knowledge base...'; echo '{\"action\": \"commit\", \"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\"}' >> ./knowledge/events.jsonl; fi",
+            "output": "silent"
+          }
+        ]
+      }
+    ],
+    
+    "Stop": [
+      {
+        "type": "command",
+        "command": "echo 'RIF: Session complete. Updating metrics...' && if [ -f ./knowledge/events.jsonl ]; then wc -l ./knowledge/events.jsonl | awk '{print \"Events recorded: \" $1}'; fi",
+        "output": "context"
+      }
+    ],
+    
+    "SubagentStop": [
+      {
+        "type": "command",
+        "command": "echo 'RIF: Agent task complete' && echo '{\"agent\": \"subagent\", \"completed\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\"}' >> ./knowledge/events.jsonl",
+        "output": "silent"
+      }
+    ]
+  },
+  
+  "automations": {
+    "issue_detection": {
+      "enabled": true,
+      "interval": "5m",
+      "command": "gh issue list --state open --label 'state:new' --json number --jq '.[0].number' 2>/dev/null",
+      "trigger": "rif-analyst"
+    },
+    
+    "knowledge_update": {
+      "enabled": true,
+      "interval": "30m",
+      "command": "find ./knowledge -name '*.jsonl' -mmin -30 | wc -l",
+      "threshold": 10,
+      "action": "consolidate"
+    },
+    
+    "checkpoint_cleanup": {
+      "enabled": true,
+      "interval": "daily",
+      "retention": "7d",
+      "path": "./knowledge/checkpoints"
+    }
+  },
+  
+  "agents": {
+    "rif-analyst": {
+      "trigger": ["state:new", "state:analyzing"],
+      "parallel": true,
+      "tasks": 4
+    },
+    "rif-planner": {
+      "trigger": ["state:planning"],
+      "parallel": true,
+      "tasks": 4
+    },
+    "rif-architect": {
+      "trigger": ["state:architecting"],
+      "parallel": true,
+      "tasks": 4
+    },
+    "rif-implementer": {
+      "trigger": ["state:implementing"],
+      "parallel": true,
+      "tasks": 4
+    },
+    "rif-validator": {
+      "trigger": ["state:validating"],
+      "parallel": true,
+      "tasks": 4
+    },
+    "rif-learner": {
+      "trigger": ["state:learning", "state:complete"],
+      "parallel": false,
+      "tasks": 1
+    }
+  }
+}

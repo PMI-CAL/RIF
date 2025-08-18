@@ -1,0 +1,266 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "{{PROJECT_NAME}} Configuration Schema",
+  "type": "object",
+  "properties": {
+    "application": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": "string"},
+        "environment": {"type": "string", "enum": ["development", "staging", "production"]},
+        "debug_mode": {"type": "boolean"},
+        "data_dir": {"type": "string"},
+        "log_dir": {"type": "string"}
+      },
+      "required": ["name", "version", "environment"]
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "type": {"type": "string", "enum": ["sqlite", "postgresql", "mysql", "mongodb", "redis"]},
+        "host": {"type": "string"},
+        "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "name": {"type": "string"},
+        "user": {"type": "string"},
+        "password": {"type": "string"},
+        "path": {"type": "string"},
+        "backup_interval_hours": {"type": "integer", "minimum": 1},
+        "max_backups": {"type": "integer", "minimum": 1}
+      },
+      "required": ["type"]
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "level": {"type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]},
+        "file": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "path": {"type": "string"},
+            "max_size_mb": {"type": "integer", "minimum": 1},
+            "backup_count": {"type": "integer", "minimum": 1}
+          }
+        },
+        "console": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "format": {"type": "string"}
+          }
+        }
+      },
+      "required": ["level"]
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "{{EXTERNAL_API_1}}": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "base_url": {"type": "string", "format": "uri"},
+            "api_key": {"type": "string"},
+            "credentials_file": {"type": "string"},
+            "sync_interval_minutes": {"type": "integer", "minimum": 1},
+            "batch_size": {"type": "integer", "minimum": 1, "maximum": 1000},
+            "timeout_seconds": {"type": "integer", "minimum": 1},
+            "retry_attempts": {"type": "integer", "minimum": 0}
+          },
+          "required": ["enabled"]
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "properties": {
+        "method": {"type": "string", "enum": ["oauth", "api_key", "basic", "jwt", "none"]},
+        "oauth": {
+          "type": "object",
+          "properties": {
+            "client_id": {"type": "string"},
+            "client_secret": {"type": "string"},
+            "redirect_uri": {"type": "string", "format": "uri"},
+            "scopes": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "{{CORE_FUNCTIONALITY}}": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "auto_processing": {"type": "boolean"},
+        "batch_size": {"type": "integer", "minimum": 1}
+      },
+      "required": ["enabled"]
+    },
+    "ai": {
+      "type": "object",
+      "properties": {
+        "{{AI_PROVIDER}}": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "model": {"type": "string"},
+            "api_key": {"type": "string"},
+            "max_tokens": {"type": "integer", "minimum": 1},
+            "temperature": {"type": "number", "minimum": 0, "maximum": 2},
+            "timeout_seconds": {"type": "integer", "minimum": 1}
+          }
+        },
+        "processing": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "features": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "cache": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "ttl_seconds": {"type": "integer", "minimum": 1},
+            "max_size_mb": {"type": "integer", "minimum": 1}
+          }
+        },
+        "concurrency": {
+          "type": "object",
+          "properties": {
+            "max_workers": {"type": "integer", "minimum": 1},
+            "timeout_seconds": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "encryption": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "algorithm": {"type": "string"}
+          }
+        },
+        "ssl": {
+          "type": "object",
+          "properties": {
+            "verify": {"type": "boolean"},
+            "cert_path": {"type": "string"}
+          }
+        },
+        "rate_limiting": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "requests_per_minute": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "service": {"type": "string"},
+        "api_key": {"type": "string"},
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "collection_interval": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "error_reporting": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "service": {"type": "string"},
+        "api_key": {"type": "string"},
+        "environment": {"type": "string"},
+        "privacy": {
+          "type": "object",
+          "properties": {
+            "scrub_fields": {"type": "array", "items": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "channels": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "object",
+              "properties": {
+                "enabled": {"type": "boolean"},
+                "smtp_host": {"type": "string"},
+                "smtp_port": {"type": "integer", "minimum": 1, "maximum": 65535},
+                "username": {"type": "string"},
+                "password": {"type": "string"}
+              }
+            },
+            "webhook": {
+              "type": "object",
+              "properties": {
+                "enabled": {"type": "boolean"},
+                "url": {"type": "string", "format": "uri"},
+                "secret": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "{{FEATURE_1}}": {"type": "boolean"},
+        "{{FEATURE_2}}": {"type": "boolean"},
+        "{{FEATURE_3}}": {"type": "boolean"},
+        "experimental_features": {"type": "boolean"}
+      }
+    },
+    "updates": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "auto_check": {"type": "boolean"},
+        "check_interval_hours": {"type": "integer", "minimum": 1},
+        "auto_install_critical": {"type": "boolean"},
+        "server_url": {"type": "string", "format": "uri"}
+      }
+    },
+    "development": {
+      "type": "object",
+      "properties": {
+        "debug_mode": {"type": "boolean"},
+        "hot_reload": {"type": "boolean"},
+        "profiling": {"type": "boolean"},
+        "test_mode": {"type": "boolean"}
+      }
+    },
+    "components": {
+      "type": "object",
+      "properties": {
+        "loading_strategy": {"type": "string", "enum": ["eager", "lazy", "on_demand"]},
+        "auto_reload": {"type": "boolean"},
+        "dependency_checking": {"type": "boolean"}
+      }
+    }
+  },
+  "required": ["application", "logging"]
+}

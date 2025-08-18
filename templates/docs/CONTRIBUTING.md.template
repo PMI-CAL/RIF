@@ -1,0 +1,257 @@
+# Contributing to {{PROJECT_NAME}}
+
+We welcome contributions to the {{PROJECT_NAME}} project! This document provides guidelines for contributing.
+
+## Development Setup
+
+### Prerequisites
+- {{TECHNOLOGY_STACK}} development environment
+- Git version control
+- {{BUILD_TOOL}} (if applicable)
+
+### Initial Setup
+1. Fork the repository
+2. Clone your fork:
+   ```bash
+   git clone https://github.com/yourusername/{{PROJECT_NAME}}.git
+   cd {{PROJECT_NAME}}
+   ```
+
+3. Set up development environment:
+   ```bash
+   # Technology-specific setup commands
+   {{SETUP_COMMANDS}}
+   ```
+
+4. Install dependencies:
+   ```bash
+   {{INSTALL_DEPENDENCIES_COMMAND}}
+   ```
+
+5. Copy configuration template (if applicable):
+   ```bash
+   {{COPY_CONFIG_COMMAND}}
+   ```
+
+### Development Workflow
+
+1. Create a feature branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make your changes following the coding standards below
+
+3. Run tests:
+   ```bash
+   {{TEST_COMMAND}}
+   ```
+
+4. Run linting/formatting:
+   ```bash
+   {{LINT_COMMAND}}
+   {{FORMAT_COMMAND}}
+   ```
+
+5. Commit your changes:
+   ```bash
+   git commit -m "feat: add your feature description"
+   ```
+
+6. Push to your fork:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+7. Create a Pull Request
+
+## Coding Standards
+
+### {{LANGUAGE}} Style
+- Follow {{STYLE_GUIDE}} guidelines
+- Use {{FORMATTER}} for code formatting
+- Use {{TYPE_SYSTEM}} for type safety (if applicable)
+- Maximum line length: {{MAX_LINE_LENGTH}} characters
+- Use descriptive variable and function names
+
+### Documentation
+- Add documentation to all public functions and classes
+- Use {{DOCUMENTATION_STYLE}} format
+- Update README.md for user-facing changes
+- Add inline comments for complex logic
+
+### Git Commit Messages
+Follow conventional commit format:
+- `feat:` new features
+- `fix:` bug fixes
+- `docs:` documentation changes
+- `style:` formatting changes
+- `refactor:` code refactoring
+- `test:` adding tests
+- `chore:` maintenance tasks
+
+Examples:
+- `feat: add {{CORE_FUNCTIONALITY}} enhancement`
+- `fix: resolve {{INTEGRATION_NAME}} API issue`
+- `docs: update {{COMPONENT_NAME}} setup instructions`
+
+## Project Structure
+
+```
+{{PROJECT_STRUCTURE}}
+```
+
+## Testing Guidelines
+
+### Writing Tests
+- Write unit tests for all new functionality
+- Use {{TEST_FRAMEWORK}} for testing
+- Aim for >90% code coverage
+- Mock external dependencies
+
+### Test Categories
+- **Unit Tests**: Test individual functions and classes
+- **Integration Tests**: Test component interactions
+- **End-to-End Tests**: Test complete workflows
+
+### Running Tests
+```bash
+# Run all tests
+{{TEST_COMMAND}}
+
+# Run with coverage
+{{TEST_WITH_COVERAGE_COMMAND}}
+
+# Run specific test file
+{{TEST_SPECIFIC_FILE_COMMAND}}
+
+# Run tests matching pattern
+{{TEST_PATTERN_COMMAND}}
+```
+
+## Feature Development Guidelines
+
+### Adding New Features
+
+1. **Design Document**: For major features, create a design document outlining:
+   - Problem statement
+   - Proposed solution
+   - Implementation approach
+   - Testing strategy
+
+2. **Configuration**: Make features configurable through {{CONFIG_FORMAT}}
+3. **Logging**: Add appropriate logging at appropriate levels
+4. **Error Handling**: Implement comprehensive error handling
+5. **Documentation**: Update user documentation
+6. **Tests**: Write comprehensive tests
+
+### {{CORE_FUNCTIONALITY}} Rules
+
+When adding new {{CORE_FUNCTIONALITY}} rules:
+- Add patterns to the appropriate component
+- Include test cases with examples
+- Document the rule logic
+- Consider performance implications
+
+### Data Changes
+
+For data schema changes:
+- Create migration scripts (if applicable)
+- Test with existing data
+- Update documentation
+- Consider backward compatibility
+
+## Security Guidelines
+
+### Sensitive Data
+- Never commit credentials or API keys
+- Use environment variables for secrets
+- Sanitize logs to remove sensitive information
+- Follow principle of least privilege
+
+### Code Security
+- Validate all user inputs
+- Use secure coding practices for {{LANGUAGE}}
+- Implement proper error handling
+- Regular dependency updates
+
+## Performance Guidelines
+
+### External API Usage
+- Respect rate limits
+- Use batch operations where possible
+- Implement exponential backoff
+- Cache frequently accessed data
+
+### Data Operations
+- Use proper indexing strategies
+- Optimize queries and operations
+- Implement connection pooling (if applicable)
+- Regular cleanup of old data
+
+## Documentation
+
+### Code Documentation
+- Use clear, descriptive names
+- Add documentation for all public interfaces
+- Include examples in documentation
+- Document complex algorithms
+
+### User Documentation
+- Update README.md for new features
+- Create setup guides for new integrations
+- Include troubleshooting sections
+- Provide configuration examples
+
+## Getting Help
+
+### Communication Channels
+- GitHub Issues: Bug reports and feature requests
+- GitHub Discussions: Questions and general discussion
+- Pull Request Reviews: Code feedback
+
+### Resources
+- [{{LANGUAGE}} Documentation]({{LANGUAGE_DOCS_URL}})
+- [{{FRAMEWORK}} Documentation]({{FRAMEWORK_DOCS_URL}})
+- [{{LIBRARY}} Documentation]({{LIBRARY_DOCS_URL}})
+
+## Issue Guidelines
+
+### Bug Reports
+Include:
+- Steps to reproduce
+- Expected behavior
+- Actual behavior
+- System information
+- Log files (sanitized)
+- Configuration (sanitized)
+
+### Feature Requests
+Include:
+- Use case description
+- Proposed solution
+- Alternative solutions considered
+- Implementation complexity estimate
+
+## Release Process
+
+### Version Numbering
+Follow Semantic Versioning (SemVer):
+- `MAJOR.MINOR.PATCH`
+- Major: Breaking changes
+- Minor: New features
+- Patch: Bug fixes
+
+### Release Checklist
+- [ ] All tests passing
+- [ ] Documentation updated
+- [ ] Version number bumped
+- [ ] Changelog updated
+- [ ] Security review completed
+- [ ] Performance testing completed
+
+## License
+
+By contributing to this project, you agree that your contributions will be licensed under the {{LICENSE_TYPE}} License.
+
+Thank you for contributing to {{PROJECT_NAME}}! 🚀
