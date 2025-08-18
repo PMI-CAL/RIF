@@ -152,6 +152,21 @@
       "trigger": ["state:learning", "state:complete"],
       "parallel": false,
       "tasks": 1
+    },
+    "rif-projectgen": {
+      "trigger": ["/newproject"],
+      "parallel": false,
+      "tasks": 1,
+      "interactive": true
+    }
+  },
+  
+  "commands": {
+    "/newproject": {
+      "script": "$RIF_HOME/scripts/newproject.sh",
+      "description": "Create new RIF-enabled project with intelligent discovery",
+      "interactive": true,
+      "agent": "rif-projectgen"
     }
   }
 }

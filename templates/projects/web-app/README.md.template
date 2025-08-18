@@ -1,0 +1,123 @@
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## Overview
+
+This is a full-stack web application built with modern technologies and powered by the RIF (Reactive Intelligence Framework) for intelligent development automation.
+
+## Features
+
+{{CORE_FEATURES}}
+
+## Technology Stack
+
+- **Frontend**: {{FRONTEND_STACK}}
+- **Backend**: {{BACKEND_STACK}}
+- **Database**: {{DATABASE}}
+- **Development**: RIF Framework
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 18.0.0
+- npm or yarn
+- Git
+- GitHub CLI (for RIF integration)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/{{GITHUB_USER}}/{{PROJECT_NAME}}.git
+cd {{PROJECT_NAME}}
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+4. Start development server:
+```bash
+npm run dev
+```
+
+## Development with RIF
+
+This project uses RIF for intelligent development. To create new features or fix issues:
+
+1. Create a GitHub issue describing what you need
+2. Apply the `state:new` label
+3. RIF agents will automatically analyze, plan, and implement the solution
+4. Review the generated code and merge when ready
+
+### Track RIF Progress
+
+```bash
+gh issue list --label "state:*"
+```
+
+## Project Structure
+
+```
+{{PROJECT_NAME}}/
+├── frontend/           # Frontend application
+├── backend/           # Backend API
+├── database/          # Database schemas and migrations
+├── docs/             # Documentation
+├── tests/            # Test suites
+├── claude/           # RIF agents and configurations
+└── knowledge/        # RIF knowledge base
+```
+
+## Documentation
+
+- [Product Requirements Document](docs/PRD.md)
+- [Architecture Overview](docs/architecture.md)
+- [API Documentation](docs/api.md)
+- [UI/UX Specifications](docs/ui-spec.md)
+
+## Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test suite
+npm run test:unit
+npm run test:integration
+npm run test:e2e
+```
+
+## Deployment
+
+```bash
+# Build for production
+npm run build
+
+# Deploy to staging
+npm run deploy:staging
+
+# Deploy to production
+npm run deploy:production
+```
+
+## Contributing
+
+This project uses RIF for development. Please create GitHub issues for any features or bugs, and RIF agents will help implement them.
+
+## License
+
+{{LICENSE}}
+
+---
+
+*Generated with RIF-ProjectGen on {{GENERATED_DATE}}*
