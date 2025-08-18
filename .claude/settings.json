@@ -76,8 +76,31 @@
             "type": "command",
             "command": "if [[ \"$1\" == *\"git commit\"* ]]; then echo 'RIF: Commit detected, updating knowledge base...'; echo '{\"action\": \"commit\", \"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\"}' >> ./knowledge/events.jsonl; fi",
             "output": "silent"
+          },
+          {
+            "type": "command",
+            "command": "BASH_EXIT_CODE=$?; if [ $BASH_EXIT_CODE -ne 0 ]; then python3 ./claude/commands/error-analysis.py --analyze-exit-code $BASH_EXIT_CODE --command \"$1\" 2>/dev/null || echo 'RIF: Error analysis failed' >> ./knowledge/errors/logs/analysis-failures.log; fi",
+            "output": "silent"
           }
         ]
+      },
+      {
+        "matcher": "Read|Glob|Grep|LS",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ ! -z \"$CLAUDE_ERROR\" ]; then python3 ./claude/commands/error-analysis.py --capture \"Tool execution error: $CLAUDE_ERROR\" --context '{\"tool\": \"$CLAUDE_TOOL\", \"source\": \"claude_code\"}' 2>/dev/null || true; fi",
+            "output": "silent"
+          }
+        ]
+      }
+    ],
+    
+    "ErrorCapture": [
+      {
+        "type": "command",
+        "command": "python3 ./claude/commands/error-analysis.py --capture \"$ERROR_MESSAGE\" --context '{\"source\": \"claude_code\", \"context\": \"$ERROR_CONTEXT\"}' --stack-trace \"$ERROR_STACK\" 2>/dev/null || echo 'RIF: Critical error in error analysis system' >> ./knowledge/errors/logs/system-failures.log",
+        "output": "analysis"
       }
     ],
     

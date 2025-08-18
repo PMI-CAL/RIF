@@ -6,6 +6,38 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 An automatic intelligent development system that orchestrates specialized agents through GitHub issues with zero manual intervention.
 
+## 🚨 CRITICAL: How RIF Orchestration Actually Works
+
+**IMPORTANT**: The RIF Orchestrator is NOT a Task to launch. Claude Code IS the orchestrator.
+
+### Correct Orchestration Pattern
+When asked to "orchestrate" or "launch RIF orchestrator":
+1. **Claude Code directly** checks GitHub issues (not via Task)
+2. **Claude Code directly** analyzes states and determines which agents need launching
+3. **Claude Code launches MULTIPLE Task agents in ONE response** for parallel execution
+
+### Example: Correct Parallel Agent Execution
+```python
+# When orchestrating, Claude Code should execute (in a single response):
+Task(
+    description="RIF-Analyst for issue #3",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Analyst. Analyze issue #3 about LightRAG usage. [Include full rif-analyst.md instructions]"
+)
+Task(
+    description="RIF-Implementer for issue #2", 
+    subagent_type="general-purpose",
+    prompt="You are RIF-Implementer. Implement fix for issue #2. [Include full rif-implementer.md instructions]"
+)
+# These Tasks run IN PARALLEL because they're in the same response
+```
+
+### What "Task.parallel()" Means
+Documentation references to `Task.parallel()` are **pseudocode** meaning:
+"Launch multiple Task tool invocations in a single Claude response"
+
+It is NOT a real function - it represents the pattern of parallel Task execution.
+
 ## Architecture Overview
 
 RIF operates as a **completely automatic** framework:
