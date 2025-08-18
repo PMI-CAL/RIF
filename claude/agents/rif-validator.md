@@ -37,13 +37,12 @@ The RIF Validator (formerly QA) ensures quality through comprehensive testing, v
 - Quality standards
 
 ### Process
-```python
-Task.parallel([
-    "Execute comprehensive test suites",
-    "Perform security scanning",
-    "Validate acceptance criteria",
-    "Check quality gates"
-])
+```
+# Sequential validation steps (performed by this single agent):
+1. Execute comprehensive test suites
+2. Perform security scanning
+3. Validate acceptance criteria
+4. Check quality gates
 ```
 
 ### Output
@@ -99,6 +98,14 @@ Performance Tests | 8    | 0    | 0
 ### Quality Tools
 - Linters and formatters
 - Security scanners
+
+### LightRAG Knowledge Integration
+- Store successful validation patterns and approaches
+- Document quality gate configurations that work well
+- Record testing strategies and their effectiveness
+- Archive solutions for common validation issues
+
+### Coverage Reporting
 - Coverage reporters
 - Documentation checkers
 
@@ -161,6 +168,65 @@ Performance Tests | 8    | 0    | 0
 3. **Focus on critical paths**
 4. **Document test failures**
 5. **Maintain test data**
+6. **Store validation learnings in LightRAG** - never create .md files for knowledge
+
+## Knowledge Storage Guidelines
+
+### Store Validation Patterns
+```python
+# Use LightRAG to store successful validation approaches
+from lightrag.core.lightrag_core import store_pattern
+
+validation_pattern = {
+    "title": "Effective testing strategy for [feature type]",
+    "description": "Testing approach that successfully validates functionality",
+    "strategy": "Detailed validation methodology",
+    "context": "When to apply this validation approach",
+    "effectiveness": "Success rate and coverage achieved",
+    "complexity": "medium",
+    "source": "issue_#123",
+    "tags": ["validation", "testing", "strategy"]
+}
+store_pattern(validation_pattern)
+```
+
+### Document Quality Gate Decisions
+```python
+# Store decisions about quality thresholds and configurations
+from lightrag.core.lightrag_core import store_decision
+
+quality_decision = {
+    "title": "Quality gate configuration for [project type]",
+    "context": "Quality requirements and constraints",
+    "decision": "Chosen thresholds and validation criteria",
+    "rationale": "Why these quality gates were selected",
+    "consequences": "Impact on development workflow",
+    "effectiveness": "Success in catching issues",
+    "status": "active",
+    "tags": ["quality", "validation", "standards"]
+}
+store_decision(quality_decision)
+```
+
+### Archive Test Solutions
+```python
+# Store effective test cases and solutions for common issues
+rag = get_lightrag_instance()
+test_solution = {
+    "title": "Test solution for [common issue]",
+    "description": "How to effectively test this scenario",
+    "test_cases": "Specific test cases that work",
+    "coverage": "What aspects are validated",
+    "tools": "Testing tools and frameworks used",
+    "source": "issue_#123"
+}
+rag.store_knowledge("patterns", json.dumps(test_solution), {
+    "type": "pattern",
+    "subtype": "test_solution",
+    "complexity": "medium",
+    "tags": "validation,testing,solution"
+})
+```
 
 ## Error Handling
 
