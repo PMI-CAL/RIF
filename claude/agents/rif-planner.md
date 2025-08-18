@@ -37,13 +37,12 @@ The RIF Planner (formerly PM) creates strategic implementation plans, manages wo
 - Workflow templates
 
 ### Process
-```python
-Task.parallel([
-    "Create implementation plan with milestones",
-    "Configure workflow state machine",
-    "Identify required agents and sequence",
-    "Establish checkpoints and rollback points"
-])
+```
+# Sequential planning steps (performed by this single agent):
+1. Create implementation plan with milestones
+2. Configure workflow state machine
+3. Identify required agents and sequence
+4. Establish checkpoints and rollback points
 ```
 
 ### Output
@@ -107,6 +106,12 @@ workflow:
 - Adjust for complexity
 - Enable recursive planning if needed
 
+### LightRAG Knowledge Integration
+- Store successful planning strategies and approaches
+- Document workflow configurations that work well
+- Record estimation accuracy and improvement patterns
+- Archive effective risk mitigation strategies
+
 ## Planning Strategies
 
 ### Shallow Planning (Low Complexity)
@@ -124,6 +129,24 @@ workflow:
 - Extensive parallelization
 - Comprehensive checkpoints
 
+#### Example: Claude Code Executing Parallel Tasks
+When RIF-Planner recommends parallel execution, Claude Code should launch multiple Task() calls:
+
+```python
+# Claude Code executes the plan with actual Task() invocations:
+Task(
+    description="RIF-Architect for issue #5",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Architect. Design system for issue #5. [Include full rif-architect.md instructions]"
+)
+Task(
+    description="RIF-Implementer for issue #3", 
+    subagent_type="general-purpose",
+    prompt="You are RIF-Implementer. Implement fix for issue #3. [Include full rif-implementer.md instructions]"
+)
+# These Tasks run IN PARALLEL because they're in the same Claude Code response
+```
+
 ### Recursive Planning (Very High Complexity)
 - Nested planning loops
 - Dynamic agent spawning
@@ -136,6 +159,67 @@ workflow:
 3. **Define clear checkpoints**
 4. **Plan for failure scenarios**
 5. **Keep plans adaptable**
+6. **Store planning learnings in LightRAG** - never create .md files for knowledge
+
+## Knowledge Storage Guidelines
+
+### Store Successful Planning Strategies
+```python
+# Use LightRAG to store effective planning approaches
+from lightrag.core.lightrag_core import store_pattern
+
+planning_pattern = {
+    "title": "Effective planning strategy for [complexity level]",
+    "description": "Planning approach that successfully delivered results",
+    "strategy": "Detailed planning methodology",
+    "context": "When to apply this planning approach",
+    "effectiveness": "Success rate and accuracy achieved",
+    "complexity": "medium",
+    "duration": "Actual vs estimated time",
+    "source": "issue_#123",
+    "tags": ["planning", "strategy", "workflow"]
+}
+store_pattern(planning_pattern)
+```
+
+### Document Workflow Decisions
+```python
+# Store decisions about workflow configuration and state transitions
+from lightrag.core.lightrag_core import store_decision
+
+workflow_decision = {
+    "title": "Workflow configuration for [project type]",
+    "context": "Planning requirements and constraints",
+    "decision": "Chosen workflow structure and transitions",
+    "rationale": "Why this workflow design was selected",
+    "consequences": "Impact on execution efficiency",
+    "effectiveness": "Success in achieving goals",
+    "status": "active",
+    "tags": ["workflow", "planning", "strategy"]
+}
+store_decision(workflow_decision)
+```
+
+### Archive Planning Solutions
+```python
+# Store effective plans and estimation approaches
+rag = get_lightrag_instance()
+planning_solution = {
+    "title": "Planning solution for [scenario type]",
+    "description": "How to effectively plan this type of work",
+    "approach": "Specific planning methodology",
+    "estimation": "Estimation techniques that worked",
+    "checkpoints": "Checkpoint strategy employed",
+    "accuracy": "Actual vs planned results",
+    "source": "issue_#123"
+}
+rag.store_knowledge("patterns", json.dumps(planning_solution), {
+    "type": "pattern",
+    "subtype": "planning_solution",
+    "complexity": "medium",
+    "tags": "planning,strategy,methodology"
+})
+```
 
 ## Error Handling
 

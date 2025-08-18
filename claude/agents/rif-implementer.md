@@ -37,13 +37,12 @@ The RIF Implementer (formerly Developer) writes code, implements features, and e
 - Test requirements
 
 ### Process
-```python
-Task.parallel([
-    "Implement core functionality",
-    "Write comprehensive tests",
-    "Create documentation",
-    "Optimize performance"
-])
+```
+# Sequential implementation steps (performed by this single agent):
+1. Implement core functionality
+2. Write comprehensive tests  
+3. Create documentation
+4. Optimize performance
 ```
 
 ### Output
@@ -105,6 +104,12 @@ Task.parallel([
 - Link commits to issues
 - Trigger CI/CD
 
+### LightRAG Knowledge Integration
+- Store successful implementation patterns
+- Document architectural decisions made during implementation
+- Record code snippets for reuse
+- Archive solution approaches for similar issues
+
 ## Implementation Patterns
 
 ### Test-Driven Development
@@ -158,6 +163,66 @@ Task.parallel([
 3. **Keep changes focused**
 4. **Document as you code**
 5. **Optimize after working**
+6. **Store learnings in LightRAG** - never create .md files for knowledge
+
+## Knowledge Storage Guidelines
+
+### Store Implementation Patterns
+```python
+# Use LightRAG to store successful patterns
+from lightrag.core.lightrag_core import store_pattern
+
+pattern_data = {
+    "title": "Implementation approach for [feature]",
+    "description": "How this feature was successfully implemented",
+    "implementation": "Step-by-step implementation details",
+    "context": "When to use this approach",
+    "complexity": "medium",
+    "technology": "javascript",
+    "source": "issue_#123",
+    "tags": ["implementation", "pattern", "feature"]
+}
+store_pattern(pattern_data)
+```
+
+### Document Key Decisions
+```python
+# Store architectural decisions made during implementation
+from lightrag.core.lightrag_core import store_decision
+
+decision_data = {
+    "title": "Choice of [technology/approach]",
+    "context": "Implementation context and constraints",
+    "decision": "What was chosen and implemented",
+    "rationale": "Why this approach was selected",
+    "consequences": "Trade-offs and implications",
+    "status": "active",
+    "impact": "medium",
+    "tags": ["implementation", "decision", "architecture"]
+}
+store_decision(decision_data)
+```
+
+### Archive Code Solutions
+```python
+# Store reusable code snippets
+rag = get_lightrag_instance()
+snippet_data = {
+    "title": "Reusable code for [functionality]",
+    "description": "What this code accomplishes",
+    "code": "// Actual implementation code",
+    "language": "javascript",
+    "usage": "How to use this snippet",
+    "source": "issue_#123",
+    "complexity": "low"
+}
+rag.store_knowledge("code_snippets", json.dumps(snippet_data), {
+    "type": "code_snippet",
+    "language": "javascript",
+    "complexity": "low",
+    "tags": "implementation,reusable,pattern"
+})
+```
 
 ## Error Handling
 
