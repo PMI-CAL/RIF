@@ -1,0 +1,8 @@
+{
+    "project": "myawesomeproject",
+    "type": "web-app",
+    "created": "2025-08-18T20:10:58Z",
+    "features": "React, Node.js, PostgreSQL, Redis",
+    "tech_stack": "n",
+    "repository": "https://github.com/PMI-CAL/myawesomeproject"
+}

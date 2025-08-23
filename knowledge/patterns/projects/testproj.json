@@ -1,0 +1,8 @@
+{
+    "project": "testproj",
+    "type": "web-app",
+    "created": "2025-08-18T20:22:15Z",
+    "features": "real-time activity tracking, error logging and analysis, task completion metrics, session history, parallel work visualization, unresolved error queue, knowledge base learnings tracker, LightRAG usage analytics, debugging action monitoring, work efficiency metrics",
+    "tech_stack": "",
+    "repository": "https://github.com/PMI-CAL/testproj"
+}

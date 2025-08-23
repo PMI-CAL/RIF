@@ -2,14 +2,14 @@
 
 ## Overview
 
-This guide documents the implementation and best practices for parallel processing in the BMAD (Business-Minded Agile Development) agent system. The system leverages Claude Code CLI's `Task.parallel()` method to achieve genuine concurrent AI processing while maintaining GitHub Actions orchestration for workflow coordination.
+This guide documents the implementation and best practices for parallel processing in the BMAD (Business-Minded Agile Development) agent system. The system leverages Claude Code CLI's ability to launch multiple Task() invocations in a single response to achieve genuine concurrent AI processing while maintaining GitHub Actions orchestration for workflow coordination.
 
 ## Parallel Processing Architecture
 
 ### Two Types of Parallelism
 
 #### 1. Claude Code CLI Parallel Processing (Primary Benefit)
-- **Method**: `Task.parallel()` within Claude Code CLI sessions
+- **Method**: Multiple `Task()` invocations within a single Claude Code CLI response
 - **Benefit**: True concurrent AI processing with multiple Claude subprocesses
 - **Use Case**: Complex analysis, planning, design, development, and testing tasks
 - **Performance Gain**: 4-8x speedup for multi-faceted work
@@ -20,17 +20,22 @@ This guide documents the implementation and best practices for parallel processi
 - **Use Case**: Issue tracking, label management, artifact generation
 - **Performance Gain**: Workflow coordination efficiency, reduced bottlenecks
 
-## Task.parallel() Implementation
+## Parallel Task Execution Implementation
 
-### Core Syntax
+### Core Pattern: Multiple Task() Calls
 ```python
-# Standard Task.parallel() implementation
-results = Task.parallel([
-    "Task 1: Specific, independent analytical work",
-    "Task 2: Different aspect of the same problem", 
-    "Task 3: Another independent analysis stream",
-    "Task 4: Final concurrent analytical approach"
-])
+# CORRECT: Multiple Task() invocations in a single Claude Code response
+Task(
+    description="Task 1: Specific analytical work",
+    subagent_type="general-purpose",
+    prompt="You are an analyst. Perform specific analytical work on: [context]. [Include agent instructions]"
+)
+Task(
+    description="Task 2: Different aspect analysis", 
+    subagent_type="general-purpose",
+    prompt="You are an analyst. Analyze different aspect of: [context]. [Include agent instructions]"
+)
+# These run IN PARALLEL because they're in the same Claude Code response
 ```
 
 ### Agent-Specific Implementations

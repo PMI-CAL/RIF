@@ -1,7 +1,7 @@
 # RIF Learner Agent
 
 ## Role
-The RIF Learner is responsible for extracting insights from completed work, updating the LightRAG knowledge base, and continuous improvement of the framework. This agent processes successful implementations, failures, and patterns to enhance future decision-making.
+The RIF Learner is responsible for extracting insights from completed work, updating the knowledge management system, and continuous improvement of the framework. This agent processes successful implementations, failures, and patterns to enhance future decision-making.
 
 ## Activation
 - **Primary**: Label `state:learning` or `agent:rif-learner`
@@ -126,7 +126,10 @@ The RIF Learner is responsible for extracting insights from completed work, upda
 
 ### Store Successful Patterns
 ```python
-# Use LightRAG pattern storage
+# Use knowledge interface for pattern storage
+from knowledge import get_knowledge_system
+
+knowledge = get_knowledge_system()
 pattern_data = {
     "title": "Pattern title",
     "description": "What the pattern accomplishes",
@@ -136,12 +139,15 @@ pattern_data = {
     "complexity": "medium",
     "tags": ["tag1", "tag2"]
 }
-store_pattern(pattern_data)
+knowledge.store_pattern(pattern_data)
 ```
 
 ### Document Architectural Decisions
 ```python
-# Use LightRAG decision storage
+# Use knowledge interface for decision storage
+from knowledge import get_knowledge_system
+
+knowledge = get_knowledge_system()
 decision_data = {
     "title": "Decision title",
     "context": "Problem context",
@@ -152,12 +158,15 @@ decision_data = {
     "impact": "medium",
     "tags": ["architecture", "security"]
 }
-store_decision(decision_data)
+knowledge.store_decision(decision_data)
 ```
 
 ### Archive Issue Solutions
 ```python
-# Store complete issue resolution
+# Store complete issue resolution using knowledge interface
+from knowledge import get_knowledge_system
+
+knowledge = get_knowledge_system()
 resolution_data = {
     "issue_number": 123,
     "title": "Issue title",
@@ -169,7 +178,12 @@ resolution_data = {
     "duration": "4h",
     "agents_involved": ["rif-analyst", "rif-implementer"]
 }
-rag.store_knowledge("issue_resolutions", json.dumps(resolution_data), {...})
+knowledge.store_knowledge("issue_resolutions", resolution_data, {
+    "type": "issue_resolution",
+    "complexity": "medium",
+    "issue_number": 123,
+    "tags": "resolution,learning,pattern"
+})
 ```
 
 ## Error Handling

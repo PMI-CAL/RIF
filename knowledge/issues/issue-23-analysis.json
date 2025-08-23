@@ -1,0 +1,163 @@
+{
+  "issue_id": 23,
+  "title": "Sub-Issue #7: Update RIF-Analyst for Granular Issue Decomposition",
+  "parent_issue": 16,
+  "analysis_timestamp": "2025-08-23T21:30:00Z",
+  "agent": "rif-analyst",
+  "state": "planning",
+  
+  "analysis_summary": {
+    "complexity": "medium",
+    "planning_depth": "standard", 
+    "estimated_loc": 500,
+    "files_affected": 1,
+    "dependencies": 0,
+    "cross_cutting": false
+  },
+  
+  "requirements_breakdown": {
+    "context_window_analysis": {
+      "description": "Add algorithmic assessment for context window constraints",
+      "priority": "high",
+      "estimated_effort": "150 LOC",
+      "complexity_factors": ["estimation_algorithms", "threshold_management"]
+    },
+    "decomposition_strategy": {
+      "description": "Structured decomposition into logical sub-issues",
+      "priority": "high", 
+      "estimated_effort": "200 LOC",
+      "complexity_factors": ["dependency_mapping", "validation_strategies"]
+    },
+    "evidence_requirements": {
+      "description": "Proactive evidence category identification",
+      "priority": "medium",
+      "estimated_effort": "100 LOC", 
+      "complexity_factors": ["categorization_logic", "collection_point_mapping"]
+    },
+    "complexity_enhancement": {
+      "description": "Extend complexity assessment with validation factors",
+      "priority": "medium",
+      "estimated_effort": "50 LOC",
+      "complexity_factors": ["validation_complexity", "risk_assessment"]
+    }
+  },
+  
+  "pattern_matches": [
+    {
+      "pattern_id": "real-time-file-monitoring-analysis",
+      "relevance": "high",
+      "applicable_aspects": [
+        "requirement_decomposition",
+        "complexity_assessment_methodology",
+        "LOC_estimation_patterns"
+      ]
+    },
+    {
+      "pattern_id": "rif-workflow-complexity-factors", 
+      "relevance": "high",
+      "applicable_aspects": [
+        "weighted_complexity_assessment",
+        "threshold_management",
+        "planning_depth_calibration"
+      ]
+    },
+    {
+      "pattern_id": "historical-implementation-patterns",
+      "relevance": "medium",
+      "applicable_aspects": [
+        "LOC_baselines",
+        "phased_approach_benefits",
+        "parallel_execution_strategies"
+      ]
+    }
+  ],
+  
+  "risk_assessment": {
+    "technical_risks": [
+      {
+        "risk": "Disruption of existing RIF-Analyst functionality",
+        "probability": "low",
+        "impact": "high",
+        "mitigation": "Incremental enhancement with backward compatibility testing"
+      },
+      {
+        "risk": "Inaccurate context window calculations",
+        "probability": "medium",
+        "impact": "medium", 
+        "mitigation": "Validation against historical issues with known LOC"
+      }
+    ],
+    "integration_risks": [
+      {
+        "risk": "Complex integration with existing workflow",
+        "probability": "low",
+        "impact": "medium",
+        "mitigation": "Leverage existing complexity assessment framework"
+      }
+    ]
+  },
+  
+  "success_metrics": {
+    "functional_requirements": [
+      "Issues >500 LOC automatically flagged for decomposition",
+      "Clear sub-issue recommendations with dependency mapping", 
+      "Evidence requirements identified upfront",
+      "Validation complexity accurately assessed",
+      "Parallel execution strategies recommended"
+    ],
+    "quality_gates": [
+      "Backward compatibility maintained",
+      "Context window calculations ±10% accuracy",
+      "Analysis completion time <2 minutes",
+      "Code coverage >90%"
+    ]
+  },
+  
+  "recommended_approach": {
+    "strategy": "incremental_enhancement",
+    "phases": [
+      {
+        "phase": 1,
+        "name": "Context Analysis Foundation",
+        "deliverables": ["context_window_analysis", "LOC_estimation", "decomposition_decision_logic"],
+        "estimated_effort": "200 LOC"
+      },
+      {
+        "phase": 2, 
+        "name": "Enhanced Output Format",
+        "deliverables": ["extended_analysis_template", "evidence_requirements", "parallel_strategies"],
+        "estimated_effort": "150 LOC"
+      },
+      {
+        "phase": 3,
+        "name": "Complexity Integration", 
+        "deliverables": ["validation_complexity_factors", "risk_assessment", "planning_depth_updates"],
+        "estimated_effort": "100 LOC"
+      },
+      {
+        "phase": 4,
+        "name": "Validation and Testing",
+        "deliverables": ["testing_suite", "backward_compatibility", "historical_validation"],
+        "estimated_effort": "50 LOC"
+      }
+    ],
+    "total_estimated_effort": "500 LOC"
+  },
+  
+  "context_window_assessment": {
+    "fits_single_context": true,
+    "needs_decomposition": false,
+    "rationale": "Well-defined scope, single file modification, clear requirements"
+  },
+  
+  "handoff_data": {
+    "next_agent": "rif-planner",
+    "next_state": "planning",
+    "key_considerations": [
+      "Leverage existing complexity assessment framework",
+      "Maintain backward compatibility",
+      "Implement incremental enhancement strategy",
+      "Focus on evidence-driven approach"
+    ]
+  }
+}

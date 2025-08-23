@@ -1,0 +1,10 @@
+{
+  "id": "patterns_20250823_042025_4050f90e",
+  "content": "Direct interface test - should work transparently",
+  "metadata": {
+    "test": "agent_interface",
+    "transparent": true
+  },
+  "timestamp": "2025-08-23T04:20:25.752392",
+  "collection": "patterns"
+}

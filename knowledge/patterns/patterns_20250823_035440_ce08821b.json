@@ -1,0 +1,12 @@
+{
+  "id": "patterns_20250823_035440_ce08821b",
+  "content": "{\n  \"title\": \"Test Pattern\",\n  \"description\": \"This is a test pattern\",\n  \"complexity\": \"low\",\n  \"source\": \"adapter_test\"\n}",
+  "metadata": {
+    "type": "pattern",
+    "source": "adapter_test",
+    "complexity": "low",
+    "tags": ""
+  },
+  "timestamp": "2025-08-23T03:54:40.944784",
+  "collection": "patterns"
+}

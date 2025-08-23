@@ -57,19 +57,29 @@ Knowledge: Previous project patterns
 
 ### Process
 ```python
-Task.sequential([
-    "Launch discovery session",
-    "Generate project brief",
-    Task.parallel([
-        "Create PRD with PM agent",
-        "Generate UX specs if needed",
-        "Design architecture with Architect"
-    ]),
-    "Setup repository structure",
-    "Create GitHub repository",
-    "Generate issues from PRD",
-    "Activate RIF workflow"
-])
+# Sequential steps:
+# 1. Launch discovery session (this agent handles)
+# 2. Generate project brief (this agent handles)
+# 3. Launch parallel agent tasks (actual Task() calls):
+Task(
+    description="Create PRD with PM agent",
+    subagent_type="general-purpose", 
+    prompt="You are a Project Manager. Create PRD for: [context]. [Include PM agent instructions]"
+)
+Task(
+    description="Generate UX specs if needed",
+    subagent_type="general-purpose",
+    prompt="You are UX/UI Designer. Create specs for: [context]. [Include UX agent instructions]" 
+)
+Task(
+    description="Design architecture",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Architect. Design architecture for: [context]. [Include rif-architect.md instructions]"
+)
+# 4. Setup repository structure (this agent handles)
+# 5. Create GitHub repository (this agent handles) 
+# 6. Generate issues from PRD (this agent handles)
+# 7. Activate RIF workflow (this agent handles)
 ```
 
 ### Output

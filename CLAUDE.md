@@ -16,7 +16,14 @@ When asked to "orchestrate" or "launch RIF orchestrator":
 2. **Claude Code directly** analyzes states and determines which agents need launching
 3. **Claude Code launches MULTIPLE Task agents in ONE response** for parallel execution
 
-### Example: Correct Parallel Agent Execution
+### ❌ WRONG: Claude Doing Work Directly
+```bash
+# This is INCORRECT - Claude doing implementation work:
+Edit(file_path="/path/to/file.js", old_string="...", new_string="...")
+# Or Claude analyzing requirements without launching agents
+```
+
+### ✅ CORRECT: Claude Launching Agents
 ```python
 # When orchestrating, Claude Code should execute (in a single response):
 Task(
@@ -32,11 +39,118 @@ Task(
 # These Tasks run IN PARALLEL because they're in the same response
 ```
 
+### Real-World Orchestration Examples
+
+#### Example 1: New Issue Detected
+```python
+# User: "Orchestrate RIF to handle the open issues"
+# Claude Code should respond with:
+
+Task(
+    description="RIF-Analyst: Analyze issue #5 requirements",
+    subagent_type="general-purpose", 
+    prompt="You are RIF-Analyst. Analyze GitHub issue #5 titled 'Add user authentication'. Extract requirements, identify patterns from knowledge base, assess complexity. Follow all instructions in claude/agents/rif-analyst.md."
+)
+Task(
+    description="RIF-Implementer: Implement issue #3 fix",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Implementer. Implement the fix for GitHub issue #3 'Database connection pooling'. Use checkpoints for progress tracking. Follow all instructions in claude/agents/rif-implementer.md."
+)
+```
+
+#### Example 2: Multiple States Need Processing  
+```python
+# When multiple issues are in different states:
+
+Task(
+    description="RIF-Validator: Validate issue #1 implementation", 
+    subagent_type="general-purpose",
+    prompt="You are RIF-Validator. Validate the implementation for GitHub issue #1. Run tests, check quality gates, ensure standards compliance. Follow all instructions in claude/agents/rif-validator.md."
+)
+Task(
+    description="RIF-Planner: Plan architecture for issue #4",
+    subagent_type="general-purpose", 
+    prompt="You are RIF-Planner. Create detailed plan for GitHub issue #4 'Microservices migration'. Assess complexity, create workflow. Follow all instructions in claude/agents/rif-planner.md."
+)
+Task(
+    description="RIF-Learner: Update knowledge from completed issue #2",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Learner. Extract learnings from completed GitHub issue #2. Update knowledge base with patterns, decisions, metrics. Follow all instructions in claude/agents/rif-learner.md."
+)
+```
+
+#### Example 3: Single Issue Full Workflow
+```python
+# For a complex issue requiring multiple agents in sequence:
+
+Task(
+    description="RIF-Analyst: Deep analysis of complex issue #7",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Analyst. Perform deep analysis of GitHub issue #7 'Real-time data processing pipeline'. This is a high-complexity task requiring thorough requirements analysis. Follow all instructions in claude/agents/rif-analyst.md."
+)
+Task(
+    description="RIF-Architect: Design system for issue #7", 
+    subagent_type="general-purpose",
+    prompt="You are RIF-Architect. Design the system architecture for GitHub issue #7 based on RIF-Analyst findings. Create detailed technical design. Follow all instructions in claude/agents/rif-architect.md."
+)
+```
+
 ### What "Task.parallel()" Means
 Documentation references to `Task.parallel()` are **pseudocode** meaning:
 "Launch multiple Task tool invocations in a single Claude response"
 
 It is NOT a real function - it represents the pattern of parallel Task execution.
+
+### Key Rules for Orchestration
+
+1. **NEVER do implementation work directly** - Always delegate to agents
+2. **Launch multiple Tasks in ONE response** for parallel execution  
+3. **Include full agent instructions** in the Task prompt
+4. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
+5. **Let agents handle GitHub interactions** (posting comments, changing labels)
+6. **Trust the agent specialization** - Don't micromanage their work
+
+### Quick Reference: Agent Launching Template
+
+```python
+# Step 1: Check GitHub issues (Claude Code does this directly)
+# Step 2: Identify which agents need to run
+# Step 3: Launch agents in parallel using this pattern:
+
+Task(
+    description="[AGENT_NAME]: [BRIEF_TASK_DESCRIPTION]",
+    subagent_type="general-purpose",
+    prompt="You are [AGENT_NAME]. [SPECIFIC_TASK_DETAILS]. Follow all instructions in claude/agents/[agent-file].md."
+)
+Task(
+    description="[ANOTHER_AGENT]: [ANOTHER_TASK_DESCRIPTION]", 
+    subagent_type="general-purpose",
+    prompt="You are [ANOTHER_AGENT]. [ANOTHER_TASK_DETAILS]. Follow all instructions in claude/agents/[agent-file].md."
+)
+# Add more Tasks as needed - they all run in parallel
+```
+
+### Common Orchestration Scenarios
+
+| Scenario | Claude Action | Agent Tasks |
+|----------|---------------|-------------|
+| New issue created | Check issue state | Launch RIF-Analyst |
+| Multiple issues in different states | Identify all states | Launch appropriate agent for each |
+| Complex issue needs planning | Assess complexity | Launch RIF-Analyst + RIF-Planner |
+| Implementation ready | Check state:implementing | Launch RIF-Implementer |
+| Code needs validation | Check state:validating | Launch RIF-Validator |
+| Learning phase | Check completed issues | Launch RIF-Learner |
+
+### Troubleshooting Orchestration
+
+**Problem**: Claude is doing work directly instead of launching agents
+**Solution**: Always use Task() tool to delegate work to specialized agents
+
+**Problem**: Agents are not running in parallel  
+**Solution**: Launch all Tasks in a single Claude response, not separate responses
+
+**Problem**: Agent instructions are incomplete
+**Solution**: Always include "Follow all instructions in claude/agents/[agent-file].md" in prompts
 
 ## Architecture Overview
 

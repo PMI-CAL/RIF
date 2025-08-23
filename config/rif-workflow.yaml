@@ -55,6 +55,46 @@ workflow:
       agent: "rif-reviewer"
       timeout: "1h"
       
+    skeptical_review:
+      description: "RIF-Validator conducting adversarial verification"
+      agent: "rif-validator"
+      timeout: "2h"
+      parallel_to: ["implementing", "architecting"]
+      risk_based: true
+      
+    evidence_gathering:
+      description: "RIF-Validator collecting validation evidence"
+      agent: "rif-validator"
+      timeout: "1h"
+      required_for: ["complete"]
+      
+    quality_tracking:
+      description: "Shadow quality monitoring via parallel issue"
+      agent: "rif-validator"
+      shadow_issue: true
+      continuous: true
+      parallel_orchestration: true
+      
+    pr_creating:
+      description: "RIF-PR-Manager creating pull request"
+      agent: "rif-pr-manager"
+      timeout: "30m"
+      
+    pr_validating:
+      description: "RIF-PR-Manager validating PR quality gates"
+      agent: "rif-pr-manager"
+      timeout: "2h"
+      
+    pr_merging:
+      description: "RIF-PR-Manager executing merge strategy"
+      agent: "rif-pr-manager"
+      timeout: "30m"
+      
+    deploying:
+      description: "RIF-PR-Manager coordinating deployment"
+      agent: "rif-pr-manager" 
+      timeout: "1h"
+      
     complete:
       description: "Work finished successfully"
       final: true
@@ -116,14 +156,44 @@ workflow:
       condition: "critical_errors"
       
     - from: "documenting"
-      to: "reviewing"
+      to: "pr_creating"
       trigger: "docs_complete"
-      condition: "pr_created"
+      condition: "pr_needed"
       
     - from: "documenting"
       to: "learning"
       trigger: "docs_complete"
       condition: "no_pr_needed"
+      
+    - from: "pr_creating"
+      to: "pr_validating"
+      trigger: "pr_created"
+      condition: "quality_gates_triggered"
+      
+    - from: "pr_validating"
+      to: "pr_merging"
+      trigger: "validation_complete"
+      condition: "all_gates_pass"
+      
+    - from: "pr_validating"
+      to: "implementing"
+      trigger: "validation_failed"
+      condition: "fixable_issues"
+      
+    - from: "pr_merging"
+      to: "deploying"
+      trigger: "merge_complete"
+      condition: "deployment_required"
+      
+    - from: "pr_merging"
+      to: "learning"
+      trigger: "merge_complete"
+      condition: "no_deployment_needed"
+      
+    - from: "deploying"
+      to: "learning"
+      trigger: "deployment_complete"
+      condition: "always"
       
     - from: "reviewing"
       to: "learning"
@@ -145,6 +215,33 @@ workflow:
       trigger: "knowledge_updated"
       condition: "always"
       
+    # Adversarial testing flow transitions
+    - from: "implementing"
+      to: "skeptical_review"
+      trigger: "code_ready"
+      condition: "risk_level >= medium"
+      parallel: true
+      
+    - from: "skeptical_review"
+      to: "evidence_gathering"
+      trigger: "missing_evidence"
+      condition: "evidence_incomplete"
+      
+    - from: "evidence_gathering"
+      to: "validating"
+      trigger: "evidence_complete"
+      condition: "all_evidence_provided"
+      
+    - from: "validating"
+      to: "implementing"
+      trigger: "validation_failed"
+      condition: "evidence_insufficient OR quality_score < 60"
+      
+    - from: "quality_tracking"
+      to: "complete"
+      trigger: "main_issue_complete"
+      condition: "shadow_issue_closed"
+      
     # Recovery transitions
     - from: "blocked"
       to: "analyzing"
@@ -165,6 +262,11 @@ workflow:
       - "implementing"
       - "validating"
       - "documenting"
+      - "pr_validating"
+      - "deploying"
+      - "skeptical_review"
+      - "evidence_gathering"
+      - "quality_tracking"
       
     constraints:
       - "Cannot parallelize across different issues"
@@ -216,6 +318,30 @@ workflow:
       threshold: "complete"
       required: true
       blocker: false
+      
+    evidence_requirements:
+      threshold: "100%"
+      required: true
+      blocker: true
+      validation: "All claims must have verifiable evidence"
+      
+    quality_score:
+      threshold: 80
+      formula: "100 - (20 × FAILs) - (10 × CONCERNS)"
+      required: true
+      blocker: true
+      deterministic: true
+      
+    risk_assessment:
+      threshold: "acceptable"
+      escalation_triggers:
+        - "security_changes"
+        - "auth_modifications"
+        - "payment_processing"
+        - "large_diff"
+        - "no_tests"
+      blocker: false
+      advisory: true
 
   # Complexity assessment
   complexity:
@@ -297,6 +423,106 @@ workflow:
       repeated_failure:
         condition: "failure_count > 3"
         action: "manual_review"
+
+  # Evidence requirements by claim type
+  evidence_requirements:
+    feature_complete:
+      mandatory:
+        - unit_tests_passing
+        - integration_tests_passing
+        - coverage_report
+        - functional_testing_results
+      optional:
+        - performance_metrics
+        - user_acceptance_testing
+        - accessibility_audit
+        
+    bug_fixed:
+      mandatory:
+        - regression_test_added
+        - root_cause_analysis
+        - fix_verification_test
+        - before_after_comparison
+      optional:
+        - prevention_measures_documented
+        - related_bug_tests_added
+        - monitoring_alerting_updated
+        
+    performance_improved:
+      mandatory:
+        - baseline_performance_metrics
+        - after_performance_metrics
+        - statistical_comparison_analysis
+        - load_testing_results
+      optional:
+        - profiling_data
+        - resource_utilization_analysis
+        - scalability_testing
+        
+    security_validated:
+      mandatory:
+        - automated_vulnerability_scan
+        - security_test_results
+        - threat_model_review
+        - penetration_testing_summary
+      optional:
+        - compliance_checklist
+        - security_audit_trail
+        - third_party_security_review
+        
+    refactoring_complete:
+      mandatory:
+        - before_after_code_metrics
+        - test_suite_still_passing
+        - performance_unchanged_proof
+        - api_compatibility_verified
+      optional:
+        - code_quality_improvements
+        - technical_debt_reduction
+        - maintainability_metrics
+
+  # Shadow quality tracking configuration
+  shadow_quality_tracking:
+    enabled: true
+    auto_create: true
+    prefix: "Quality Tracking:"
+    labels:
+      - "quality:shadow"
+      - "state:quality-tracking"
+    triggers:
+      complexity: ["medium", "high", "very-high"]
+      risk_level: ["medium", "high", "critical"]
+      security_changes: true
+      large_changes: ">500 lines"
+      
+  # Verification parallelism configuration  
+  verification_parallelism:
+    enabled: true
+    strategies:
+      main_development:
+        states: ["implementing", "architecting", "planning"]
+        description: "Primary development workflow"
+      quality_assurance:
+        states: ["skeptical_review", "quality_tracking", "evidence_gathering"]
+        description: "Parallel quality verification"
+      can_run_simultaneously: true
+      max_parallel_streams: 2
+      
+  # Adversarial testing configuration
+  adversarial_testing:
+    enabled: true
+    default_mindset: "skeptical"
+    evidence_based_decisions: true
+    risk_escalation:
+      enabled: true
+      auto_triggers: true
+      escalation_factors:
+        - security_file_changes
+        - authentication_modifications  
+        - payment_processing_changes
+        - large_diffs
+        - missing_tests
+        - previous_failures
 
   # GitHub integration
   github:

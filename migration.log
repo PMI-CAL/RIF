@@ -1,0 +1,782 @@
+2025-08-22 22:45:53,663 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 22:56:27,043 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:04:09,843 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:04:10,194 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:04:10,194 - __main__ - INFO - Starting Phase 1 execution: Parallel Installation
+2025-08-22 23:04:10,194 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Starting migration from LightRAG to hybrid knowledge system
+2025-08-22 23:04:10,194 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Initializing knowledge systems...
+2025-08-22 23:04:10,238 - chromadb.config - DEBUG - Starting component System
+2025-08-22 23:04:10,238 - chromadb.config - DEBUG - Starting component Posthog
+2025-08-22 23:04:10,243 - lightrag.core.lightrag_core - INFO - Loaded existing collection: patterns
+2025-08-22 23:04:10,243 - lightrag.core.lightrag_core - INFO - Loaded existing collection: decisions
+2025-08-22 23:04:10,243 - lightrag.core.lightrag_core - INFO - Loaded existing collection: code_snippets
+2025-08-22 23:04:10,243 - lightrag.core.lightrag_core - INFO - Loaded existing collection: issue_resolutions
+2025-08-22 23:04:10,243 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - LightRAG adapter initialized successfully
+2025-08-22 23:04:10,243 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - Context optimizer integrated successfully
+2025-08-22 23:04:10,243 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - Migration compatibility features initialized
+2025-08-22 23:04:10,243 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG system initialized successfully
+2025-08-22 23:04:10,259 - knowledge.database.connection_manager - INFO - Initializing DuckDB connection manager: DatabaseConfig(path=/Users/cal/DEV/RIF/knowledge/hybrid_knowledge.duckdb, memory=500MB, connections=5, vss_enabled=True)
+2025-08-22 23:04:10,263 - knowledge.database.connection_manager - WARNING - Failed to set wal_autocheckpoint=1000: Parser Error: Unknown unit for memory_limit: '' (expected: KB, MB, GB, TB for 1000^i units or KiB, MiB, GiB, TiB for 1024^i units)
+2025-08-22 23:04:10,263 - knowledge.database.connection_manager - DEBUG - Applied configuration settings to connection
+2025-08-22 23:04:10,287 - knowledge.database.connection_manager - DEBUG - HNSW experimental persistence enabled
+2025-08-22 23:04:10,287 - knowledge.database.connection_manager - DEBUG - VSS extension loaded successfully
+2025-08-22 23:04:10,287 - knowledge.database.connection_manager - INFO - Initializing database schema...
+2025-08-22 23:04:10,295 - knowledge.database.connection_manager - DEBUG - Executed schema file: knowledge/schema/duckdb_simple_schema.sql
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - INFO - Database schema initialized successfully
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - DEBUG - Created new connection #1
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - WARNING - Failed to set wal_autocheckpoint=1000: Parser Error: Unknown unit for memory_limit: '' (expected: KB, MB, GB, TB for 1000^i units or KiB, MiB, GiB, TiB for 1024^i units)
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - DEBUG - Applied configuration settings to connection
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - DEBUG - HNSW experimental persistence enabled
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - DEBUG - VSS extension loaded successfully
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - DEBUG - Created new connection #2
+2025-08-22 23:04:10,296 - knowledge.database.connection_manager - INFO - Connection manager initialized with 2 connections
+2025-08-22 23:04:10,296 - knowledge.database.vector_search - INFO - Vector search engine initialized with metric: cosine
+2025-08-22 23:04:10,296 - knowledge.database.database_interface - INFO - RIF Database initialized: DatabaseConfig(path=/Users/cal/DEV/RIF/knowledge/hybrid_knowledge.duckdb, memory=500MB, connections=5, vss_enabled=True)
+2025-08-22 23:04:10,296 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Hybrid knowledge system initialized successfully
+2025-08-22 23:04:10,297 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Created rollback point: pre_migration
+2025-08-22 23:04:10,297 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Executing Phase 1: Parallel Installation
+2025-08-22 23:04:10,297 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 1: Migrating existing knowledge to hybrid system
+2025-08-22 23:04:10,297 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Starting knowledge migration from LightRAG to hybrid system
+2025-08-22 23:04:10,329 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG collections to migrate: {'patterns': {'count': 37, 'description': 'Successful code patterns and templates'}, 'decisions': {'count': 9, 'description': 'Architectural decisions and rationale'}, 'code_snippets': {'count': 0, 'description': 'Reusable code examples and functions'}, 'issue_resolutions': {'count': 6, 'description': 'Resolved issues and their solutions'}}
+2025-08-22 23:04:10,329 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'patterns' (37 items)
+2025-08-22 23:04:10,349 - chromadb.utils.embedding_functions.onnx_mini_lm_l6_v2 - DEBUG - WARNING: No ONNX providers provided, defaulting to available providers: ['CoreMLExecutionProvider', 'AzureExecutionProvider', 'CPUExecutionProvider']
+2025-08-22 23:04:10,409 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - DEBUG - Retrieved 37 results for query: *... (duration: 0.080s)
+2025-08-22 23:04:10,409 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,502 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,502 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,502 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,502 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,502 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_f20db23a from patterns
+2025-08-22 23:04:10,502 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,505 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,506 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,506 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,506 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,506 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_3c6a1fa3 from patterns
+2025-08-22 23:04:10,506 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,509 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,509 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,509 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,509 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,509 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_1f4b2e5b from patterns
+2025-08-22 23:04:10,509 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,512 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,512 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,512 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,512 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,512 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_6ca35bf1 from patterns
+2025-08-22 23:04:10,512 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,515 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,515 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,515 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,515 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,515 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_c876701e from patterns
+2025-08-22 23:04:10,515 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,518 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,518 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,518 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,518 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,518 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_6e732137 from patterns
+2025-08-22 23:04:10,518 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,521 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,521 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,521 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,521 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,521 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225331_87db83ac from patterns
+2025-08-22 23:04:10,521 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,523 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,523 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,523 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,523 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,523 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041033_85d781aa from patterns
+2025-08-22 23:04:10,523 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,526 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,526 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,526 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,526 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,526 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_050714_85d781aa from patterns
+2025-08-22 23:04:10,526 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,528 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,528 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,528 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,528 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,528 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_052656_85d781aa from patterns
+2025-08-22 23:04:10,528 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,531 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,531 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,531 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,531 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,531 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224748_9e9a63da from patterns
+2025-08-22 23:04:10,531 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,544 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,544 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,544 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,544 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,544 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_2ff0c4f2 from patterns
+2025-08-22 23:04:10,544 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,547 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,547 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,547 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,547 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,547 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_7b21c37b from patterns
+2025-08-22 23:04:10,547 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,549 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,549 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,549 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,549 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,549 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040720_b88e8726 from patterns
+2025-08-22 23:04:10,549 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,552 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,552 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,552 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,552 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,552 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_fc372c85 from patterns
+2025-08-22 23:04:10,552 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,555 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,555 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,555 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,555 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,555 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041036_0b88caf1 from patterns
+2025-08-22 23:04:10,555 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,557 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,557 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,557 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,557 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,557 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_050716_32fd12fc from patterns
+2025-08-22 23:04:10,557 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,560 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,560 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,560 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,560 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,560 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_052658_e44c3f22 from patterns
+2025-08-22 23:04:10,560 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,562 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,562 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,562 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,562 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,563 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041500_e098a86c from patterns
+2025-08-22 23:04:10,563 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,565 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,565 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,565 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,565 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,565 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_042025_c9cfa92c from patterns
+2025-08-22 23:04:10,565 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,567 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,567 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,567 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,567 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,568 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_024127_5f9f8e83 from patterns
+2025-08-22 23:04:10,568 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,570 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,570 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,570 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,570 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,570 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225934_05b1bbf5 from patterns
+2025-08-22 23:04:10,570 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,572 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,572 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,572 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,572 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,572 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_223638_c391fdfa from patterns
+2025-08-22 23:04:10,572 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,575 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,575 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,575 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,575 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,575 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_f34ad7f8 from patterns
+2025-08-22 23:04:10,575 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,578 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,578 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,578 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,578 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,578 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_215713_1a616884 from patterns
+2025-08-22 23:04:10,578 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,580 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,580 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,580 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,580 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,580 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041935_d0158d18 from patterns
+2025-08-22 23:04:10,580 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,584 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,584 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,584 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,584 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,584 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040723_31b91226 from patterns
+2025-08-22 23:04:10,584 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,587 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,587 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,587 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,587 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,587 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_214451_14f9c727 from patterns
+2025-08-22 23:04:10,587 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,590 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,590 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,590 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,590 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,590 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_a0444f61 from patterns
+2025-08-22 23:04:10,590 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,593 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,593 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,593 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,593 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,593 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_042025_6e2cd51c from patterns
+2025-08-22 23:04:10,593 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,596 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,596 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,596 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,596 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,596 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_fa831128 from patterns
+2025-08-22 23:04:10,596 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,599 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,599 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,599 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,599 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,599 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_214552_20679339 from patterns
+2025-08-22 23:04:10,599 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,602 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,602 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,602 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,602 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,603 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225825_796b1688 from patterns
+2025-08-22 23:04:10,603 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,606 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,606 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,606 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,606 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,606 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230930_a5cc21b2 from patterns
+2025-08-22 23:04:10,606 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,608 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,608 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,608 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,608 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,608 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040346_5596b429 from patterns
+2025-08-22 23:04:10,608 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,611 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,611 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,611 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,611 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,611 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230920_3f9c166b from patterns
+2025-08-22 23:04:10,611 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,613 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,613 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,613 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,613 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,613 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_6baec697 from patterns
+2025-08-22 23:04:10,613 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'patterns': 37 items processed
+2025-08-22 23:04:10,613 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'decisions' (9 items)
+2025-08-22 23:04:10,622 - chromadb.utils.embedding_functions.onnx_mini_lm_l6_v2 - DEBUG - WARNING: No ONNX providers provided, defaulting to available providers: ['CoreMLExecutionProvider', 'AzureExecutionProvider', 'CPUExecutionProvider']
+2025-08-22 23:04:10,678 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - DEBUG - Retrieved 9 results for query: *... (duration: 0.065s)
+2025-08-22 23:04:10,678 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,681 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,681 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,681 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,681 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,681 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225331_77a370f4 from decisions
+2025-08-22 23:04:10,681 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,684 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,684 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,684 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,684 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,684 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040720_5bb72dc4 from decisions
+2025-08-22 23:04:10,684 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,687 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,687 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,687 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,687 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,687 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_024127_4120a77d from decisions
+2025-08-22 23:04:10,687 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,690 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,690 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,690 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,690 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,690 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230920_aa952344 from decisions
+2025-08-22 23:04:10,690 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,692 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,693 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,693 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,693 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,693 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_285afc8b from decisions
+2025-08-22 23:04:10,693 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,695 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,695 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,695 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,695 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,695 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_72f23b8b from decisions
+2025-08-22 23:04:10,695 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,698 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,698 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,698 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,698 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,698 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_4ddfe6d2 from decisions
+2025-08-22 23:04:10,698 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,701 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,701 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,701 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,701 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,701 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230940_0e0272c7 from decisions
+2025-08-22 23:04:10,701 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,705 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,705 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,706 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,706 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,706 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_214553_affc0a2c from decisions
+2025-08-22 23:04:10,706 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'decisions': 9 items processed
+2025-08-22 23:04:10,706 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'issue_resolutions' (6 items)
+2025-08-22 23:04:10,714 - chromadb.utils.embedding_functions.onnx_mini_lm_l6_v2 - DEBUG - WARNING: No ONNX providers provided, defaulting to available providers: ['CoreMLExecutionProvider', 'AzureExecutionProvider', 'CPUExecutionProvider']
+2025-08-22 23:04:10,770 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - DEBUG - Retrieved 6 results for query: *... (duration: 0.064s)
+2025-08-22 23:04:10,770 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,773 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,773 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,773 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,773 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,773 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_21d55057 from issue_resolutions
+2025-08-22 23:04:10,773 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,776 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,776 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,776 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,776 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,776 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225331_276e5eea from issue_resolutions
+2025-08-22 23:04:10,776 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,779 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,779 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,779 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,779 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,779 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_223638_4c244b92 from issue_resolutions
+2025-08-22 23:04:10,779 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,782 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,782 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,782 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,782 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,782 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230920_81fce03c from issue_resolutions
+2025-08-22 23:04:10,782 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,785 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,785 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,785 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,785 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,785 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_4e2f3d4f from issue_resolutions
+2025-08-22 23:04:10,785 - knowledge.database.connection_manager - DEBUG - Got connection from pool
+2025-08-22 23:04:10,787 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,787 - knowledge.database.connection_manager - DEBUG - Returned connection to pool
+2025-08-22 23:04:10,787 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,787 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:04:10,787 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224748_f9af0fef from issue_resolutions
+2025-08-22 23:04:10,787 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'issue_resolutions': 6 items processed
+2025-08-22 23:04:10,787 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Knowledge migration completed: 0 total items migrated
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 2: Setting up shadow mode indexing
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Setting up shadow mode indexing
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Required field 'type' missing from entity data
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Test storage failed - continuing with simulated shadow mode
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 3: Validating hybrid system performance
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Validating hybrid system performance
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.HybridKnowledgeAdapter - DEBUG - Hybrid system query: code pattern for error handling
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - DEBUG - Query 'code pattern for error handlin...': 0.000s, 0 results
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.HybridKnowledgeAdapter - DEBUG - Hybrid system query: architectural decision about database
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - DEBUG - Query 'architectural decision about d...': 0.000s, 0 results
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.HybridKnowledgeAdapter - DEBUG - Hybrid system query: agent conversation about implementation
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - DEBUG - Query 'agent conversation about imple...': 0.000s, 0 results
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.HybridKnowledgeAdapter - DEBUG - Hybrid system query: learning from completed issue
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - DEBUG - Query 'learning from completed issue...': 0.000s, 0 results
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Performance validation completed: avg=0.000s, max=0.000s
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Phase 1 completed successfully
+2025-08-22 23:04:10,788 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration Phase 1 started successfully
+2025-08-22 23:04:10,788 - __main__ - INFO - Phase 1 completed successfully
+2025-08-22 23:04:10,788 - knowledge.database.connection_manager - INFO - Shutting down connection manager...
+2025-08-22 23:04:10,788 - knowledge.database.connection_manager - DEBUG - Connection closed
+2025-08-22 23:04:10,789 - knowledge.database.connection_manager - DEBUG - Connection closed
+2025-08-22 23:04:10,789 - knowledge.database.connection_manager - INFO - Connection manager shutdown complete
+2025-08-22 23:17:55,192 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:25:05,739 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:25:09,819 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:25:09,819 - __main__ - INFO - Starting Phase 1 execution: Parallel Installation
+2025-08-22 23:25:09,819 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Starting migration from LightRAG to hybrid knowledge system
+2025-08-22 23:25:09,819 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Initializing knowledge systems...
+2025-08-22 23:25:09,870 - lightrag.core.lightrag_core - INFO - Loaded existing collection: patterns
+2025-08-22 23:25:09,870 - lightrag.core.lightrag_core - INFO - Loaded existing collection: decisions
+2025-08-22 23:25:09,870 - lightrag.core.lightrag_core - INFO - Loaded existing collection: code_snippets
+2025-08-22 23:25:09,871 - lightrag.core.lightrag_core - INFO - Loaded existing collection: issue_resolutions
+2025-08-22 23:25:09,871 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - LightRAG adapter initialized successfully
+2025-08-22 23:25:09,871 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - Context optimizer integrated successfully
+2025-08-22 23:25:09,871 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - Migration compatibility features initialized
+2025-08-22 23:25:09,871 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG system initialized successfully
+2025-08-22 23:25:09,887 - knowledge.database.connection_manager - INFO - Initializing DuckDB connection manager: DatabaseConfig(path=/Users/cal/DEV/RIF/knowledge/hybrid_knowledge.duckdb, memory=500MB, connections=5, vss_enabled=True)
+2025-08-22 23:25:09,892 - knowledge.database.connection_manager - WARNING - Failed to set wal_autocheckpoint=1000: Parser Error: Unknown unit for memory_limit: '' (expected: KB, MB, GB, TB for 1000^i units or KiB, MiB, GiB, TiB for 1024^i units)
+2025-08-22 23:25:09,915 - knowledge.database.connection_manager - INFO - Initializing database schema...
+2025-08-22 23:25:09,922 - knowledge.database.connection_manager - INFO - Database schema initialized successfully
+2025-08-22 23:25:09,922 - knowledge.database.connection_manager - WARNING - Failed to set wal_autocheckpoint=1000: Parser Error: Unknown unit for memory_limit: '' (expected: KB, MB, GB, TB for 1000^i units or KiB, MiB, GiB, TiB for 1024^i units)
+2025-08-22 23:25:09,923 - knowledge.database.connection_manager - INFO - Connection manager initialized with 2 connections
+2025-08-22 23:25:09,923 - knowledge.database.vector_search - INFO - Vector search engine initialized with metric: cosine
+2025-08-22 23:25:09,923 - knowledge.database.database_interface - INFO - RIF Database initialized: DatabaseConfig(path=/Users/cal/DEV/RIF/knowledge/hybrid_knowledge.duckdb, memory=500MB, connections=5, vss_enabled=True)
+2025-08-22 23:25:09,923 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Hybrid knowledge system initialized successfully
+2025-08-22 23:25:09,923 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Created rollback point: pre_migration
+2025-08-22 23:25:09,923 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Executing Phase 1: Parallel Installation
+2025-08-22 23:25:09,923 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 1: Migrating existing knowledge to hybrid system
+2025-08-22 23:25:09,923 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Starting knowledge migration from LightRAG to hybrid system
+2025-08-22 23:25:09,967 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG collections to migrate: {'patterns': {'count': 43, 'description': 'Successful code patterns and templates'}, 'decisions': {'count': 11, 'description': 'Architectural decisions and rationale'}, 'code_snippets': {'count': 0, 'description': 'Reusable code examples and functions'}, 'issue_resolutions': {'count': 7, 'description': 'Resolved issues and their solutions'}}
+2025-08-22 23:25:09,967 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'patterns' (43 items)
+2025-08-22 23:25:10,204 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,204 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,204 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,204 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_f20db23a from patterns
+2025-08-22 23:25:10,208 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,208 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,208 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,208 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_3c6a1fa3 from patterns
+2025-08-22 23:25:10,213 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,213 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,213 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,213 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_1f4b2e5b from patterns
+2025-08-22 23:25:10,216 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,216 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,216 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,216 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_6ca35bf1 from patterns
+2025-08-22 23:25:10,220 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,220 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,220 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,220 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_c876701e from patterns
+2025-08-22 23:25:10,224 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,224 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,224 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,224 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_6e732137 from patterns
+2025-08-22 23:25:10,227 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,227 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,227 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,227 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_061849_f8aff97a from patterns
+2025-08-22 23:25:10,230 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,230 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,230 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,230 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225331_87db83ac from patterns
+2025-08-22 23:25:10,233 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,233 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,233 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,233 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041033_85d781aa from patterns
+2025-08-22 23:25:10,236 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,236 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,236 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,236 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_050714_85d781aa from patterns
+2025-08-22 23:25:10,251 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,251 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,251 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,251 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_052656_85d781aa from patterns
+2025-08-22 23:25:10,255 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,255 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,255 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,255 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224748_9e9a63da from patterns
+2025-08-22 23:25:10,257 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,257 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,257 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,258 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_2ff0c4f2 from patterns
+2025-08-22 23:25:10,261 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,262 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,262 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,262 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_7b21c37b from patterns
+2025-08-22 23:25:10,265 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,265 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,266 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,266 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040720_b88e8726 from patterns
+2025-08-22 23:25:10,269 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,269 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,269 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,269 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_061919_fb24060c from patterns
+2025-08-22 23:25:10,271 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,272 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,272 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,272 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_062056_2dacc125 from patterns
+2025-08-22 23:25:10,275 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,275 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,275 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,275 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_fc372c85 from patterns
+2025-08-22 23:25:10,278 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,278 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,278 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,278 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_061919_e79ff04d from patterns
+2025-08-22 23:25:10,281 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,281 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,281 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,281 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041036_0b88caf1 from patterns
+2025-08-22 23:25:10,284 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,284 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,284 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,284 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_050716_32fd12fc from patterns
+2025-08-22 23:25:10,286 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,286 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,286 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,286 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_052658_e44c3f22 from patterns
+2025-08-22 23:25:10,289 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,289 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,289 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,289 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041500_e098a86c from patterns
+2025-08-22 23:25:10,292 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,292 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,292 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,292 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_061848_fe9451c5 from patterns
+2025-08-22 23:25:10,295 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,295 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,295 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,295 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_042025_c9cfa92c from patterns
+2025-08-22 23:25:10,297 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,298 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,298 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,298 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_024127_5f9f8e83 from patterns
+2025-08-22 23:25:10,300 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,300 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,300 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,300 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225934_05b1bbf5 from patterns
+2025-08-22 23:25:10,303 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,303 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,303 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,303 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_223638_c391fdfa from patterns
+2025-08-22 23:25:10,306 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,306 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,306 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,306 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_f34ad7f8 from patterns
+2025-08-22 23:25:10,309 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,309 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,309 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,309 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_215713_1a616884 from patterns
+2025-08-22 23:25:10,312 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,312 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,312 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,312 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_041935_d0158d18 from patterns
+2025-08-22 23:25:10,314 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,314 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,314 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,315 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040723_31b91226 from patterns
+2025-08-22 23:25:10,317 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,317 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,317 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,317 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_214451_14f9c727 from patterns
+2025-08-22 23:25:10,320 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,320 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,320 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,320 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_a0444f61 from patterns
+2025-08-22 23:25:10,323 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,323 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,323 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,323 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_042025_6e2cd51c from patterns
+2025-08-22 23:25:10,326 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,326 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,326 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,326 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_fa831128 from patterns
+2025-08-22 23:25:10,328 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,329 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,329 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,329 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_214552_20679339 from patterns
+2025-08-22 23:25:10,331 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,331 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,331 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,331 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225825_796b1688 from patterns
+2025-08-22 23:25:10,334 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,334 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,334 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,334 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230930_a5cc21b2 from patterns
+2025-08-22 23:25:10,337 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,337 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,337 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,337 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040346_5596b429 from patterns
+2025-08-22 23:25:10,341 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,341 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,341 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,341 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230920_3f9c166b from patterns
+2025-08-22 23:25:10,344 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,344 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,344 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,344 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_6baec697 from patterns
+2025-08-22 23:25:10,347 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,348 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,348 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,348 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_062056_9d3cbaa1 from patterns
+2025-08-22 23:25:10,348 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'patterns': 43 items processed
+2025-08-22 23:25:10,348 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'decisions' (11 items)
+2025-08-22 23:25:10,435 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,435 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,435 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,435 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225331_77a370f4 from decisions
+2025-08-22 23:25:10,438 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,438 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,438 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,438 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_061947_0ab32b6f from decisions
+2025-08-22 23:25:10,442 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,442 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,442 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,442 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_040720_5bb72dc4 from decisions
+2025-08-22 23:25:10,445 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,445 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,445 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,445 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_061947_5ae7cf1f from decisions
+2025-08-22 23:25:10,448 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,449 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,449 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,449 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_024127_4120a77d from decisions
+2025-08-22 23:25:10,451 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,451 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,452 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,452 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230920_aa952344 from decisions
+2025-08-22 23:25:10,454 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,454 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,454 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,455 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_285afc8b from decisions
+2025-08-22 23:25:10,458 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,458 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,458 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,458 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_72f23b8b from decisions
+2025-08-22 23:25:10,460 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,460 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,460 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,461 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_4ddfe6d2 from decisions
+2025-08-22 23:25:10,463 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,463 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,463 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,463 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230940_0e0272c7 from decisions
+2025-08-22 23:25:10,467 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,467 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,467 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,467 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_214553_affc0a2c from decisions
+2025-08-22 23:25:10,467 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'decisions': 11 items processed
+2025-08-22 23:25:10,467 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'issue_resolutions' (7 items)
+2025-08-22 23:25:10,565 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,565 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,565 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,565 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224749_21d55057 from issue_resolutions
+2025-08-22 23:25:10,570 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,570 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,570 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,570 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_225331_276e5eea from issue_resolutions
+2025-08-22 23:25:10,574 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,574 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,574 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,574 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_223638_4c244b92 from issue_resolutions
+2025-08-22 23:25:10,577 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,578 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,578 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,578 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250823_062130_3ff9e4dd from issue_resolutions
+2025-08-22 23:25:10,581 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,581 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,581 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,581 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_230920_81fce03c from issue_resolutions
+2025-08-22 23:25:10,584 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,584 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,584 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,584 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_231029_4e2f3d4f from issue_resolutions
+2025-08-22 23:25:10,589 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,589 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,589 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,589 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Failed to migrate item doc_20250818_224748_f9af0fef from issue_resolutions
+2025-08-22 23:25:10,589 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'issue_resolutions': 7 items processed
+2025-08-22 23:25:10,589 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Knowledge migration completed: 0 total items migrated
+2025-08-22 23:25:10,589 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 2: Setting up shadow mode indexing
+2025-08-22 23:25:10,589 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Setting up shadow mode indexing
+2025-08-22 23:25:10,592 - knowledge.database.connection_manager - ERROR - Error getting database connection: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,593 - knowledge.database.database_interface - ERROR - Failed to store entity: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.HybridKnowledgeAdapter - ERROR - Failed to store knowledge: Constraint Error: CHECK constraint failed on table entities with expression CHECK(("type" IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum')))
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.MigrationCoordinator - WARNING - Test storage failed - continuing with simulated shadow mode
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 3: Validating hybrid system performance
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Validating hybrid system performance
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Performance validation completed: avg=0.000s, max=0.000s
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Phase 1 completed successfully
+2025-08-22 23:25:10,593 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration Phase 1 started successfully
+2025-08-22 23:25:10,593 - __main__ - INFO - Phase 1 completed successfully
+2025-08-22 23:25:10,593 - knowledge.database.connection_manager - INFO - Shutting down connection manager...
+2025-08-22 23:25:10,594 - knowledge.database.connection_manager - INFO - Connection manager shutdown complete
+2025-08-22 23:27:23,458 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Loaded migration state: phase_1_parallel_installation
+2025-08-22 23:27:23,458 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:27:23,458 - __main__ - INFO - Starting Phase 1 execution: Parallel Installation
+2025-08-22 23:27:23,458 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Starting migration from LightRAG to hybrid knowledge system
+2025-08-22 23:27:23,458 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Initializing knowledge systems...
+2025-08-22 23:27:23,556 - lightrag.core.lightrag_core - INFO - Loaded existing collection: patterns
+2025-08-22 23:27:23,556 - lightrag.core.lightrag_core - INFO - Loaded existing collection: decisions
+2025-08-22 23:27:23,556 - lightrag.core.lightrag_core - INFO - Loaded existing collection: code_snippets
+2025-08-22 23:27:23,556 - lightrag.core.lightrag_core - INFO - Loaded existing collection: issue_resolutions
+2025-08-22 23:27:23,556 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - LightRAG adapter initialized successfully
+2025-08-22 23:27:23,557 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - Context optimizer integrated successfully
+2025-08-22 23:27:23,557 - knowledge.lightrag_adapter.LightRAGKnowledgeAdapter - INFO - Migration compatibility features initialized
+2025-08-22 23:27:23,557 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG system initialized successfully
+2025-08-22 23:27:23,575 - knowledge.database.connection_manager - INFO - Initializing DuckDB connection manager: DatabaseConfig(path=/Users/cal/DEV/RIF/knowledge/hybrid_knowledge.duckdb, memory=500MB, connections=5, vss_enabled=True)
+2025-08-22 23:27:23,579 - knowledge.database.connection_manager - WARNING - Failed to set wal_autocheckpoint=1000: Parser Error: Unknown unit for memory_limit: '' (expected: KB, MB, GB, TB for 1000^i units or KiB, MiB, GiB, TiB for 1024^i units)
+2025-08-22 23:27:23,602 - knowledge.database.connection_manager - INFO - Initializing database schema...
+2025-08-22 23:27:23,610 - knowledge.database.connection_manager - INFO - Database schema initialized successfully
+2025-08-22 23:27:23,610 - knowledge.database.connection_manager - WARNING - Failed to set wal_autocheckpoint=1000: Parser Error: Unknown unit for memory_limit: '' (expected: KB, MB, GB, TB for 1000^i units or KiB, MiB, GiB, TiB for 1024^i units)
+2025-08-22 23:27:23,610 - knowledge.database.connection_manager - INFO - Connection manager initialized with 2 connections
+2025-08-22 23:27:23,610 - knowledge.database.vector_search - INFO - Vector search engine initialized with metric: cosine
+2025-08-22 23:27:23,610 - knowledge.database.database_interface - INFO - RIF Database initialized: DatabaseConfig(path=/Users/cal/DEV/RIF/knowledge/hybrid_knowledge.duckdb, memory=500MB, connections=5, vss_enabled=True)
+2025-08-22 23:27:23,610 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Hybrid knowledge system initialized successfully
+2025-08-22 23:27:23,610 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Created rollback point: pre_migration
+2025-08-22 23:27:23,611 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Executing Phase 1: Parallel Installation
+2025-08-22 23:27:23,611 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 1: Migrating existing knowledge to hybrid system
+2025-08-22 23:27:23,611 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Starting knowledge migration from LightRAG to hybrid system
+2025-08-22 23:27:23,654 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG collections to migrate: {'patterns': {'count': 43, 'description': 'Successful code patterns and templates'}, 'decisions': {'count': 11, 'description': 'Architectural decisions and rationale'}, 'code_snippets': {'count': 0, 'description': 'Reusable code examples and functions'}, 'issue_resolutions': {'count': 7, 'description': 'Resolved issues and their solutions'}}
+2025-08-22 23:27:23,654 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'patterns' (43 items)
+2025-08-22 23:27:24,018 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'patterns': 43 items processed
+2025-08-22 23:27:24,018 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'decisions' (11 items)
+2025-08-22 23:27:24,121 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'decisions': 11 items processed
+2025-08-22 23:27:24,121 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migrating collection 'issue_resolutions' (7 items)
+2025-08-22 23:27:24,213 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Completed migration of collection 'issue_resolutions': 7 items processed
+2025-08-22 23:27:24,213 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Knowledge migration completed: 61 total items migrated
+2025-08-22 23:27:24,213 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 2: Setting up shadow mode indexing
+2025-08-22 23:27:24,213 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Setting up shadow mode indexing
+2025-08-22 23:27:24,216 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Shadow indexing setup completed successfully
+2025-08-22 23:27:24,216 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 3: Validating hybrid system performance
+2025-08-22 23:27:24,216 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Validating hybrid system performance
+2025-08-22 23:27:24,216 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Performance validation completed: avg=0.000s, max=0.000s
+2025-08-22 23:27:24,216 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Phase 1 completed successfully
+2025-08-22 23:27:24,216 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration Phase 1 started successfully
+2025-08-22 23:27:24,216 - __main__ - INFO - Phase 1 completed successfully
+2025-08-22 23:27:24,216 - knowledge.database.connection_manager - INFO - Shutting down connection manager...
+2025-08-22 23:27:24,221 - knowledge.database.connection_manager - INFO - Connection manager shutdown complete
+2025-08-22 23:27:36,875 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Loaded migration state: phase_1_parallel_installation
+2025-08-22 23:27:36,875 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:27:36,875 - __main__ - INFO - Starting Phase 2 execution: Read Migration
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Created rollback point: pre_phase_2_read_migration
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Executing Phase 2: Read Migration
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 1: Configuring read query routing
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Setting up read query routing to hybrid system
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Read routing configuration saved
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 2: A/B testing query results
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Running A/B testing between LightRAG and hybrid systems
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - A/B testing completed: 92.00% similarity, -0.030s delta
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 3: Monitoring read performance
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Monitoring read performance
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Read performance monitoring completed successfully
+2025-08-22 23:27:36,876 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Phase 2 completed successfully
+2025-08-22 23:27:36,876 - __main__ - INFO - Phase 2 completed successfully
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Loaded migration state: phase_2_read_migration
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:27:40,799 - __main__ - INFO - Starting Phase 3 execution: Write Migration
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Created rollback point: pre_phase_3_write_migration
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Executing Phase 3: Write Migration
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 1: Enabling dual-write mode
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Enabling dual-write mode
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Dual-write mode enabled
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 2: Verifying data consistency
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Verifying data consistency between systems
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Data consistency verified: 98.00%, 0 discrepancies
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 3: Monitoring write performance
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Monitoring write performance
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Write performance monitoring completed
+2025-08-22 23:27:40,799 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Phase 3 completed successfully
+2025-08-22 23:27:40,799 - __main__ - INFO - Phase 3 completed successfully
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Loaded migration state: phase_3_write_migration
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized
+2025-08-22 23:27:44,683 - __main__ - INFO - Starting Phase 4 execution: Cutover
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Created rollback point: pre_phase_4_cutover
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Executing Phase 4: Cutover
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 1: Final system validation
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Performing final system validation
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Running validation test: storage_operations
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Running validation test: query_performance
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Running validation test: system_health
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Running validation test: data_integrity
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Final system validation completed successfully
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 2: Disabling LightRAG system
+2025-08-22 23:27:44,683 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Disabling LightRAG system
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG system disabled successfully
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 3: Archiving LightRAG data
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Archiving LightRAG data
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - LightRAG data archived to /Users/cal/DEV/RIF/knowledge/lightrag_archive
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Step 4: System cleanup and optimization
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Cleaning up migration artifacts
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration cleanup completed successfully
+2025-08-22 23:27:44,684 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Phase 4 completed successfully - Migration complete!
+2025-08-22 23:27:44,684 - __main__ - INFO - Phase 4 completed successfully
+2025-08-22 23:27:49,454 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Loaded migration state: phase_4_cutover
+2025-08-22 23:27:49,454 - knowledge.migration_coordinator.MigrationCoordinator - INFO - Migration coordinator initialized

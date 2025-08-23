@@ -1,0 +1,24 @@
+2025-08-22 19:04:00,938 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 19:04:00,938 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 19:04:00,939 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 19:04:00,939 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 19:04:00,939 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 19:04:00,939 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 19:04:00,940 - shadow_comparison.ComparisonLogger - INFO - Shadow comparison - test_operation: similarity=0.80, differences=1, high_severity=0
+2025-08-22 19:04:00,940 - shadow_comparison.ComparisonLogger - INFO - Shadow comparison - test_operation: similarity=0.80, differences=1, high_severity=0
+2025-08-22 21:19:41,512 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 21:19:41,512 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 21:19:41,514 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 21:19:41,514 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 21:19:41,514 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 21:19:41,514 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 21:19:41,515 - shadow_comparison.ComparisonLogger - INFO - Shadow comparison - test_operation: similarity=0.80, differences=1, high_severity=0
+2025-08-22 21:19:41,515 - shadow_comparison.ComparisonLogger - INFO - Shadow comparison - test_operation: similarity=0.80, differences=1, high_severity=0
+2025-08-22 21:32:24,426 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 21:32:24,426 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 21:32:24,427 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 21:32:24,427 - shadow_mode - INFO - Primary system: legacy, Shadow system: lightrag
+2025-08-22 21:32:24,428 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 21:32:24,428 - shadow_mode - INFO - Shadow mode processor initialized successfully
+2025-08-22 21:32:24,430 - shadow_comparison.ComparisonLogger - INFO - Shadow comparison - test_operation: similarity=0.80, differences=1, high_severity=0
+2025-08-22 21:32:24,430 - shadow_comparison.ComparisonLogger - INFO - Shadow comparison - test_operation: similarity=0.80, differences=1, high_severity=0

@@ -1,0 +1,344 @@
+{
+  "pattern_id": "evidence-requirements-framework-implementation",
+  "pattern_type": "validation_framework",
+  "domain": "quality_assurance",
+  "complexity": "high",
+  "source_issues": [18, 19, 20, 22],
+  "parent_issue": 16,
+  "timestamp": "2025-08-23T06:00:00Z",
+  
+  "pattern_description": "Comprehensive evidence requirements framework that mandates verifiable proof for all implementation claims, enabling objective validation decisions and eliminating validation theater",
+  
+  "framework_architecture": {
+    "evidence_philosophy": "Never trust claims without evidence - all validation decisions must be backed by verifiable proof",
+    "claim_type_mapping": "Different evidence requirements based on type of implementation claim",
+    "verification_process": "Systematic evidence validation with VERIFIED/UNVERIFIED/PARTIAL status tracking",
+    "storage_integration": "Knowledge system integration for audit trails and pattern learning"
+  },
+  
+  "evidence_requirements_by_claim_type": {
+    "feature_complete": {
+      "mandatory_evidence": [
+        "passing_unit_tests",
+        "integration_tests_passing", 
+        "code_coverage_report",
+        "functional_testing_results"
+      ],
+      "optional_evidence": [
+        "performance_metrics",
+        "user_acceptance_testing",
+        "accessibility_audit"
+      ],
+      "verification_approach": "Independent test execution and coverage validation",
+      "failure_criteria": "Missing any mandatory evidence or test failures"
+    },
+    "bug_fixed": {
+      "mandatory_evidence": [
+        "regression_test_added",
+        "root_cause_analysis_document",
+        "fix_verification_test",
+        "before_after_comparison"
+      ],
+      "optional_evidence": [
+        "prevention_measures_documented",
+        "related_bug_tests_added",
+        "monitoring_alerting_updated"
+      ],
+      "verification_approach": "Reproduce original bug and confirm fix effectiveness",
+      "failure_criteria": "Cannot reproduce fix or missing regression test"
+    },
+    "performance_improved": {
+      "mandatory_evidence": [
+        "baseline_performance_metrics", 
+        "after_performance_metrics",
+        "statistical_comparison_analysis",
+        "load_testing_results"
+      ],
+      "optional_evidence": [
+        "profiling_data",
+        "resource_utilization_analysis",
+        "scalability_testing"
+      ],
+      "verification_approach": "Independent performance measurement and statistical validation",
+      "failure_criteria": "No measurable improvement or insufficient statistical significance"
+    },
+    "security_validated": {
+      "mandatory_evidence": [
+        "automated_vulnerability_scan",
+        "security_test_results",
+        "threat_model_review",
+        "penetration_testing_summary"
+      ],
+      "optional_evidence": [
+        "compliance_checklist",
+        "security_audit_trail",
+        "third_party_security_review"
+      ],
+      "verification_approach": "Independent security tool execution and manual security testing",
+      "failure_criteria": "Critical vulnerabilities found or security tests failing"
+    },
+    "refactoring_complete": {
+      "mandatory_evidence": [
+        "before_after_code_metrics",
+        "test_suite_still_passing",
+        "performance_unchanged_proof", 
+        "api_compatibility_verified"
+      ],
+      "optional_evidence": [
+        "code_quality_improvements",
+        "technical_debt_reduction_metrics",
+        "maintainability_improvements"
+      ],
+      "verification_approach": "Compare before/after states and verify no regressions",
+      "failure_criteria": "Functionality changes or performance regressions detected"
+    },
+    "integration_complete": {
+      "mandatory_evidence": [
+        "api_contract_verified",
+        "error_handling_tested",
+        "data_flow_validated",
+        "end_to_end_integration_tests"
+      ],
+      "optional_evidence": [
+        "monitoring_configured",
+        "rollback_tested",
+        "load_balancing_verified"
+      ],
+      "verification_approach": "Independent integration testing with real dependencies",
+      "failure_criteria": "Integration failures or missing error handling"
+    }
+  },
+  
+  "evidence_validation_process": {
+    "step_1_claim_identification": {
+      "description": "Identify the type of claim being made by implementer",
+      "techniques": [
+        "Parse implementation summary for claim keywords",
+        "Analyze acceptance criteria for claim types",
+        "Review issue description for explicit claims"
+      ],
+      "output": "Categorized list of claims with evidence requirements"
+    },
+    "step_2_evidence_requirement_check": {
+      "description": "Verify all mandatory evidence is provided for each claim type",
+      "techniques": [
+        "Compare provided evidence against mandatory list",
+        "Identify missing mandatory evidence",
+        "Note additional optional evidence provided"
+      ],
+      "output": "Evidence completeness assessment with gaps identified"
+    },
+    "step_3_evidence_quality_validation": {
+      "description": "Verify evidence exists, is accessible, and meets quality standards",
+      "techniques": [
+        "Execute provided test commands to verify results",
+        "Review evidence files for completeness and accuracy",
+        "Validate evidence format and readability"
+      ],
+      "output": "Evidence quality assessment with specific validation results"
+    },
+    "step_4_independent_verification": {
+      "description": "Test evidence claims independently without relying on provided reports",
+      "techniques": [
+        "Execute tests personally rather than trusting reports",
+        "Reproduce performance measurements independently",
+        "Run security scans with independent tools"
+      ],
+      "output": "Independent verification results comparing claimed vs actual"
+    },
+    "step_5_verification_status_assignment": {
+      "description": "Mark each piece of evidence as VERIFIED/UNVERIFIED/PARTIAL",
+      "criteria": {
+        "VERIFIED": "Evidence exists, quality is adequate, independent verification confirms claims",
+        "UNVERIFIED": "Evidence missing, inadequate quality, or independent verification fails",
+        "PARTIAL": "Evidence partially meets requirements but has gaps or concerns"
+      },
+      "output": "Complete verification status for all evidence items"
+    },
+    "step_6_gap_documentation": {
+      "description": "Document all missing evidence and validation failures for implementer feedback",
+      "techniques": [
+        "Create specific evidence collection templates",
+        "Document reproduction steps for validation failures",
+        "Provide clear guidance on evidence quality standards"
+      ],
+      "output": "Comprehensive evidence gap report with actionable feedback"
+    }
+  },
+  
+  "evidence_collection_templates": {
+    "test_evidence_template": {
+      "unit_tests": {
+        "required_information": ["test_count", "passing_count", "failing_count", "coverage_percentage"],
+        "execution_proof": "Screenshot or log of test execution with timestamps",
+        "validation_commands": ["npm test", "pytest", "go test ./..."]
+      },
+      "integration_tests": {
+        "required_information": ["integration_scenarios", "external_dependencies", "test_results"],
+        "execution_proof": "Test output showing real system interactions",
+        "validation_commands": ["npm run test:integration", "pytest tests/integration/"]
+      }
+    },
+    "performance_evidence_template": {
+      "baseline_metrics": {
+        "required_information": ["measurement_date", "system_configuration", "key_performance_indicators"],
+        "measurement_tool": "Specific tool used for measurement",
+        "raw_data": "Unprocessed measurement data for independent analysis"
+      },
+      "improvement_metrics": {
+        "required_information": ["after_measurement", "percentage_improvement", "statistical_significance"],
+        "comparison_analysis": "Side-by-side comparison with confidence intervals",
+        "load_testing": "Performance under realistic load conditions"
+      }
+    },
+    "security_evidence_template": {
+      "vulnerability_scan": {
+        "required_information": ["scan_tool", "scan_date", "vulnerabilities_found", "severity_levels"],
+        "scan_output": "Complete vulnerability scan report",
+        "remediation_status": "Status of any vulnerabilities found"
+      },
+      "penetration_testing": {
+        "required_information": ["test_scenarios", "attack_vectors", "findings", "remediation"],
+        "test_methodology": "Systematic approach used for penetration testing",
+        "evidence_collection": "Screenshots or logs of testing activities"
+      }
+    }
+  },
+  
+  "quality_scoring_integration": {
+    "evidence_impact_on_scoring": {
+      "complete_evidence": "No penalty to quality score",
+      "missing_mandatory_evidence": "-5 points per missing item",
+      "unverified_evidence": "-10 points per unverified item",
+      "false_evidence": "-20 points per item with false claims"
+    },
+    "evidence_bonus_scoring": {
+      "comprehensive_optional_evidence": "+5 points for extensive optional evidence",
+      "proactive_evidence_quality": "+3 points for evidence exceeding minimum standards",
+      "independent_validation_alignment": "+2 points when independent validation matches claims"
+    },
+    "evidence_based_decisions": {
+      "PASS": "All mandatory evidence VERIFIED, quality score ≥80",
+      "CONCERNS": "Some evidence PARTIAL, quality score 60-79", 
+      "FAIL": "Missing mandatory evidence or UNVERIFIED critical items, quality score <60",
+      "WAIVED": "Evidence gaps acknowledged with explicit risk acceptance"
+    }
+  },
+  
+  "technology_specific_patterns": {
+    "javascript_typescript": {
+      "test_frameworks": ["Jest", "Mocha", "Cypress", "Playwright"],
+      "coverage_tools": ["nyc", "c8", "jest --coverage"],
+      "quality_tools": ["ESLint", "TypeScript compiler", "Prettier"],
+      "security_tools": ["npm audit", "snyk", "semgrep"],
+      "evidence_commands": {
+        "tests": "npm test -- --coverage --reporter=json",
+        "linting": "npm run lint -- --format=json",
+        "security": "npm audit --json"
+      }
+    },
+    "python": {
+      "test_frameworks": ["pytest", "unittest", "nose2"],
+      "coverage_tools": ["coverage.py", "pytest-cov"],
+      "quality_tools": ["flake8", "black", "mypy", "pylint"],
+      "security_tools": ["bandit", "safety", "semgrep"],
+      "evidence_commands": {
+        "tests": "pytest --cov --cov-report=json",
+        "linting": "flake8 --format=json",
+        "security": "bandit -f json -r ."
+      }
+    },
+    "go": {
+      "test_frameworks": ["go test", "testify"],
+      "coverage_tools": ["go test -coverprofile"],
+      "quality_tools": ["golangci-lint", "go vet", "gofmt"],
+      "security_tools": ["gosec", "nancy"],
+      "evidence_commands": {
+        "tests": "go test -v -coverprofile=coverage.out ./...",
+        "linting": "golangci-lint run --out-format=json",
+        "security": "gosec -fmt=json ./..."
+      }
+    }
+  },
+  
+  "knowledge_system_integration": {
+    "evidence_storage_pattern": {
+      "validation_evidence_records": {
+        "issue_id": "Link to specific implementation issue",
+        "timestamp": "When evidence validation occurred",
+        "claims_made": "List of claims requiring evidence",
+        "evidence_provided": "Evidence items provided by implementer",
+        "evidence_verified": "Verification results for each item",
+        "missing_evidence": "Gaps in evidence coverage",
+        "verification_results": "Detailed results of independent verification"
+      },
+      "claim_evidence_records": {
+        "claim_type": "Category of claim (feature_complete, bug_fixed, etc.)",
+        "required_evidence": "Evidence mandatory for this claim type",
+        "optional_evidence": "Additional evidence that enhances validation",
+        "provided_evidence": "What implementer actually provided",
+        "verification_status": "VERIFIED/UNVERIFIED/PARTIAL for each item",
+        "missing_evidence": "Specific gaps identified",
+        "verification_notes": "Detailed validation observations"
+      }
+    },
+    "pattern_learning_integration": {
+      "successful_evidence_patterns": "Evidence approaches that consistently enable thorough validation",
+      "evidence_gap_patterns": "Common evidence gaps that lead to validation failures",
+      "technology_specific_learnings": "Effective evidence collection approaches per technology",
+      "validation_efficiency_patterns": "Evidence organization that accelerates validation"
+    }
+  },
+  
+  "implementation_best_practices": [
+    "Evidence requirements must be deterministic and measurable",
+    "Independent verification is mandatory - never trust reports without confirmation",
+    "Evidence collection should be automated where possible to reduce overhead",
+    "Evidence quality standards must be clearly documented and consistently applied",
+    "Technology-specific evidence patterns improve efficiency and consistency",
+    "Knowledge system integration enables continuous improvement of evidence requirements",
+    "Evidence gap documentation must provide actionable feedback for implementers"
+  ],
+  
+  "common_evidence_pitfalls": [
+    "Accepting test reports without independent execution",
+    "Allowing subjective evidence for objective claims",
+    "Missing performance baselines for improvement claims",
+    "Inadequate security evidence for security-sensitive changes",
+    "Evidence format incompatible with verification tools",
+    "Evidence collection without clear validation criteria"
+  ],
+  
+  "validation_efficiency_optimizations": [
+    "Automated evidence validation where possible",
+    "Standardized evidence formats across technologies",
+    "Evidence collection templates for common claim types",
+    "Integration with CI/CD pipelines for continuous evidence generation",
+    "Evidence caching for repeated validations"
+  ],
+  
+  "compliance_and_audit_benefits": [
+    "Complete audit trail for all validation decisions",
+    "Objective evidence-based decision criteria",
+    "Reproducible validation results across validators",
+    "Comprehensive documentation of evidence requirements",
+    "Systematic approach to evidence collection and verification"
+  ],
+  
+  "success_metrics": [
+    "All claims backed by appropriate evidence types",
+    "Evidence verification status clearly tracked",
+    "Independent verification confirms or refutes claims",
+    "Evidence gaps identified and communicated effectively",
+    "Knowledge system captures evidence patterns for reuse",
+    "Validation decisions based on objective evidence rather than trust"
+  ],
+  
+  "evolution_opportunities": [
+    "AI-assisted evidence quality assessment",
+    "Automated evidence collection from development environments",
+    "Dynamic evidence requirements based on risk assessment",
+    "Cross-project evidence pattern recognition",
+    "Integration with external quality assurance tools"
+  ]
+}

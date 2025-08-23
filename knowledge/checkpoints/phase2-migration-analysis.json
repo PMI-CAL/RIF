@@ -1,0 +1,192 @@
+{
+  "timestamp": "2025-08-18T21:36:39.391109",
+  "phase": "Phase 2 - Knowledge Migration",
+  "status": "completed_analysis",
+  "chromadb_test": true,
+  "discovered_items": 10,
+  "items": [
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/patterns/agent-orchestration-gap.json",
+      "type": "patterns",
+      "content_keys": [
+        "pattern_id",
+        "timestamp",
+        "issue",
+        "pattern_type",
+        "description",
+        "problem",
+        "solution",
+        "implementation",
+        "learned",
+        "reusable",
+        "complexity",
+        "effort_estimate",
+        "similar_patterns"
+      ],
+      "size": 1064
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/patterns/projects/myawesomeproject.json",
+      "type": "projects",
+      "content_keys": [
+        "project",
+        "type",
+        "created",
+        "features",
+        "tech_stack",
+        "repository"
+      ],
+      "size": 214
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/patterns/projects/testproj-1755548667.json",
+      "type": "projects",
+      "content_keys": [
+        "project",
+        "type",
+        "created",
+        "features",
+        "tech_stack",
+        "repository"
+      ],
+      "size": 361
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/patterns/projects/testproj.json",
+      "type": "projects",
+      "content_keys": [
+        "project",
+        "type",
+        "created",
+        "features",
+        "tech_stack",
+        "repository"
+      ],
+      "size": 428
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/checkpoints/lightrag-testing-phase1.json",
+      "type": "checkpoints",
+      "content_keys": [
+        "type",
+        "phase",
+        "issue",
+        "agent",
+        "timestamp",
+        "status",
+        "description",
+        "test_results",
+        "test_summary",
+        "validation_status",
+        "next_steps_for_full_testing",
+        "phase1_completion"
+      ],
+      "size": 981
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/checkpoints/lightrag-documentation-complete.json",
+      "type": "checkpoints",
+      "content_keys": [
+        "type",
+        "phase",
+        "issue",
+        "agent",
+        "timestamp",
+        "status",
+        "description",
+        "documentation_created",
+        "phase1_deliverables",
+        "readiness_status",
+        "handoff_notes",
+        "phase1_summary"
+      ],
+      "size": 1409
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/checkpoints/lightrag-foundation-phase1.json",
+      "type": "checkpoints",
+      "content_keys": [
+        "type",
+        "phase",
+        "issue",
+        "agent",
+        "timestamp",
+        "status",
+        "description",
+        "completed_tasks",
+        "files_created",
+        "architecture_features",
+        "next_phases",
+        "estimated_completion",
+        "dependencies_ready",
+        "core_functionality",
+        "testing_status",
+        "integration_status"
+      ],
+      "size": 1731
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/decisions/agent-orchestration-architecture.json",
+      "type": "decisions",
+      "content_keys": [
+        "decision_id",
+        "timestamp",
+        "issue",
+        "agent",
+        "decision",
+        "rationale",
+        "architecture",
+        "alternatives_considered",
+        "risks",
+        "success_criteria"
+      ],
+      "size": 1133
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/issues/issue-3-planning.json",
+      "type": "issues",
+      "content_keys": [
+        "issue_number",
+        "title",
+        "planning_date",
+        "complexity",
+        "analysis_summary",
+        "key_findings",
+        "implementation_plan",
+        "technical_requirements",
+        "risk_assessment",
+        "success_metrics",
+        "next_state",
+        "next_agent",
+        "architecture_requirements",
+        "status",
+        "transition_timestamp"
+      ],
+      "size": 2400
+    },
+    {
+      "file": "/Users/cal/DEV/RIF/knowledge/issues/issue-2-analysis.json",
+      "type": "issues",
+      "content_keys": [
+        "issue_number",
+        "title",
+        "analysis_date",
+        "complexity",
+        "root_cause",
+        "key_findings",
+        "solution_pattern",
+        "estimated_effort",
+        "dependencies",
+        "status",
+        "next_state"
+      ],
+      "size": 848
+    }
+  ],
+  "next_steps": [
+    "Fix numpy/pandas compatibility issue",
+    "Run full LightRAG initialization",
+    "Complete actual migration to ChromaDB",
+    "Perform integration tests"
+  ]
+}

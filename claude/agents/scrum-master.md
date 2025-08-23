@@ -187,13 +187,12 @@ def orchestrate_workflow(issue_number):
     # Assess current workflow state
     current_state = assess_workflow_state(issue_number)
     
-    # Execute parallel orchestration streams
-    orchestration_results = Task.parallel([
-        "Workflow analysis: assess current state, identify blockers, and determine next steps",
-        "Story development: create user stories, break down work streams, and define acceptance criteria",
-        "Progress tracking: update progress indicators, coordinate handoffs, and manage dependencies", 
-        "Quality assurance: ensure workflow quality, validate completeness, and coordinate final delivery"
-    ])
+    # Execute orchestration analysis (sequential steps by this agent):
+    # 1. Workflow analysis: assess current state, identify blockers, and determine next steps
+    # 2. Story development: create user stories, break down work streams, and define acceptance criteria
+    # 3. Progress tracking: update progress indicators, coordinate handoffs, and manage dependencies
+    # 4. Quality assurance: ensure workflow quality, validate completeness, and coordinate final delivery
+    orchestration_results = perform_orchestration_analysis()
     
     # Synthesize orchestration plan
     workflow_plan = synthesize_orchestration(orchestration_results)

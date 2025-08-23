@@ -1,0 +1,15 @@
+{
+  "project": "legal-time-tracker",
+  "type": "fullstack-monorepo",
+  "created": "2025-08-18T23:39:08Z",
+  "features": "Desktop time tracking,AI matter attribution,Smart screenshots,Email integration,Real-time sync,Billing compliance,Learning system",
+  "tech_stack": "TypeScript,React,Tauri,Next.js,tRPC,Supabase,PostgreSQL,SQLite,Zustand,TanStack Query,Tailwind CSS",
+  "pilot_users": 2,
+  "bootstrap_budget": 50,
+  "documentation": {
+    "prd": "comprehensive",
+    "architecture": "detailed",
+    "epics": 8,
+    "stories": 48
+  }
+}
