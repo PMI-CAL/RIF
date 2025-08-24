@@ -15,6 +15,8 @@ from contextlib import contextmanager
 import logging
 
 from .storage_backend import ConversationStorageBackend
+from .embedding_generator import create_embedding_generator, ConversationEmbeddingGenerator
+from .session_manager import ConversationSessionManager
 
 logger = logging.getLogger(__name__)
 
@@ -27,18 +29,27 @@ class ConversationCaptureEngine:
     with minimal impact on agent performance and code complexity.
     """
     
-    def __init__(self, storage_backend: Optional[ConversationStorageBackend] = None):
+    def __init__(self, storage_backend: Optional[ConversationStorageBackend] = None, 
+                 enable_embeddings: bool = True,
+                 session_manager: Optional[ConversationSessionManager] = None):
         """
         Initialize conversation capture engine.
         
         Args:
             storage_backend: Storage backend (creates default if None)
+            enable_embeddings: Whether to enable embedding generation
+            session_manager: Session manager (creates default if None)
         """
         self.storage = storage_backend or ConversationStorageBackend()
+        self.session_manager = session_manager or ConversationSessionManager(self.storage)
         self.active_conversations = {}
         self.capture_enabled = True
         self.embedding_generator = None  # Will be initialized if needed
         self._lock = threading.RLock()
+        
+        # Initialize embedding generator if requested
+        if enable_embeddings:
+            self._setup_embedding_generator()
         
         # Performance tracking
         self.capture_stats = {
@@ -91,8 +102,8 @@ class ConversationCaptureEngine:
         start_time = time.time()
         
         try:
-            # Start conversation
-            conversation_id = self.storage.start_conversation(
+            # Start conversation using session manager
+            conversation_id = self.session_manager.start_session(
                 agent_type=agent_type,
                 issue_number=issue_number,
                 context_summary=context_summary
@@ -121,11 +132,11 @@ class ConversationCaptureEngine:
             raise
             
         finally:
-            # End conversation
+            # End conversation using session manager
             if conversation_id:
                 try:
                     success = True  # Could be determined by exception handling
-                    self.storage.end_conversation(conversation_id, success=success)
+                    self.session_manager.end_session(conversation_id, success=success)
                     
                     with self._lock:
                         if conversation_id in self.active_conversations:
@@ -507,6 +518,49 @@ class ConversationCaptureEngine:
         if self.storage:
             self.storage.close()
         logger.info("Conversation capture engine closed")
+    
+    def _setup_embedding_generator(self):
+        """Set up embedding generator with auto-training from existing data"""
+        try:
+            # Create embedding generator
+            self._embedding_generator_instance = create_embedding_generator()
+            
+            # Auto-train if not already trained
+            if not self._embedding_generator_instance.is_trained:
+                logger.info("Auto-training embedding model from existing conversation data...")
+                self._embedding_generator_instance.auto_train_from_storage(self.storage)
+            
+            # Set up generator function
+            def embedding_function(text: str) -> Optional[List[float]]:
+                return self._embedding_generator_instance.generate_embedding(text)
+            
+            self.set_embedding_generator(embedding_function)
+            logger.info("Embedding generator set up successfully")
+            
+        except Exception as e:
+            logger.warning(f"Failed to set up embedding generator: {e}. Continuing without embeddings.")
+    
+    def get_embedding_generator_stats(self) -> Optional[Dict[str, Any]]:
+        """Get embedding generator statistics"""
+        if hasattr(self, '_embedding_generator_instance'):
+            return self._embedding_generator_instance.get_generation_stats()
+        return None
+    
+    def get_session_manager_stats(self) -> Dict[str, Any]:
+        """Get session manager statistics"""
+        return self.session_manager.get_session_statistics()
+    
+    def pause_conversation(self, conversation_id: str, reason: Optional[str] = None) -> bool:
+        """Pause an active conversation"""
+        return self.session_manager.pause_session(conversation_id, reason)
+    
+    def resume_conversation(self, conversation_id: str) -> bool:
+        """Resume a paused conversation"""
+        return self.session_manager.resume_session(conversation_id)
+    
+    def get_conversation_metadata(self, conversation_id: str) -> Optional[Any]:
+        """Get metadata for a conversation"""
+        return self.session_manager.get_session_metadata(conversation_id)
 
 
 # Convenience functions for use in agent code

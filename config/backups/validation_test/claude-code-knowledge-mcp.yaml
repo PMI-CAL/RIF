@@ -1,0 +1,374 @@
+# Claude Code Knowledge MCP Server Configuration
+# Integration with existing RIF Knowledge Graph system
+
+server:
+  name: "Claude Code Knowledge Server"
+  version: "1.0.0"
+  description: "Provides accurate Claude Code capability knowledge through existing RIF knowledge graph"
+  
+  # Integration with existing infrastructure
+  dependencies:
+    - "RIF Knowledge Graph (DuckDB)"
+    - "ChromaDB Vector Embeddings" 
+    - "Hybrid Knowledge System"
+    - "Vector Search Engine"
+  
+  # Resource allocation (lightweight interface)
+  resources:
+    memory_mb: 256
+    cpu_percent: 10
+    max_concurrent_requests: 10
+    query_timeout_ms: 5000
+
+# MCP Server Registration
+mcp:
+  server_id: "claude-code-knowledge-server"
+  capabilities:
+    - "compatibility_checking"
+    - "pattern_recommendations" 
+    - "architecture_validation"
+    - "limitation_queries"
+    - "alternative_suggestions"
+  
+  # Tools exposed via MCP protocol
+  tools:
+    check_compatibility:
+      description: "Validates proposed solution against Claude Code capabilities and limitations"
+      parameters:
+        issue_description:
+          type: "string"
+          required: true
+          description: "Description of proposed solution or approach"
+      returns:
+        type: "object"
+        properties:
+          compatible: 
+            type: "boolean"
+            description: "Whether approach is compatible with Claude Code"
+          confidence:
+            type: "number"
+            description: "Confidence score (0.0-1.0)"
+          issues:
+            type: "array"
+            description: "List of compatibility issues found"
+          recommendations:
+            type: "array" 
+            description: "Suggestions to resolve issues"
+          alternatives:
+            type: "array"
+            description: "Alternative compatible approaches"
+    
+    get_patterns:
+      description: "Returns correct implementation patterns for technology and task type"
+      parameters:
+        technology:
+          type: "string"
+          required: true
+          description: "Technology stack (e.g., 'python', 'javascript', 'github')"
+        task_type:
+          type: "string" 
+          required: true
+          description: "Type of task (e.g., 'integration', 'automation', 'analysis')"
+        limit:
+          type: "integer"
+          required: false
+          default: 5
+          description: "Maximum number of patterns to return"
+      returns:
+        type: "object"
+        properties:
+          patterns:
+            type: "array"
+            description: "List of relevant implementation patterns"
+    
+    suggest_alternatives:
+      description: "Proposes compatible solutions for incompatible approaches"
+      parameters:
+        incompatible_approach:
+          type: "string"
+          required: true
+          description: "Description of incompatible approach or pattern"
+      returns:
+        type: "object"
+        properties:
+          alternatives:
+            type: "array"
+            description: "List of compatible alternative approaches"
+          count:
+            type: "integer"
+            description: "Number of alternatives found"
+    
+    validate_architecture:
+      description: "Reviews system design against Claude Code architectural constraints" 
+      parameters:
+        system_design:
+          type: "string"
+          required: true
+          description: "System architecture description or design document"
+      returns:
+        type: "object"
+        properties:
+          valid:
+            type: "boolean"
+            description: "Whether architecture is compatible"
+          component_results:
+            type: "array"
+            description: "Validation results for each component"
+          recommendations:
+            type: "array"
+            description: "Architectural recommendations"
+    
+    get_limitations:
+      description: "Returns known limitations for specific capability area"
+      parameters:
+        capability_area:
+          type: "string"
+          required: true
+          description: "Capability area to query (e.g., 'orchestration', 'file_operations')"
+      returns:
+        type: "object"
+        properties:
+          limitations:
+            type: "array"
+            description: "List of limitations in the specified area"
+          capability_area:
+            type: "string"
+            description: "Queried capability area"
+
+# Knowledge Graph Integration
+knowledge_graph:
+  # Use existing RIF database connection
+  database_path: "knowledge/hybrid_knowledge.duckdb"
+  vector_store_path: "knowledge/chromadb/"
+  
+  # Entity types for Claude Code knowledge
+  entity_types:
+    claude_capability:
+      description: "What Claude Code CAN do"
+      metadata_schema:
+        category: "string"
+        description: "string"
+        parameters: "object"
+        limitations: "array"
+        version_support: "string"
+        confidence: "number"
+        examples: "array"
+    
+    claude_limitation:
+      description: "What Claude Code CANNOT do"
+      metadata_schema:
+        category: "string"
+        description: "string"
+        impact: "string"
+        severity: "string"
+        workarounds: "array"
+        version_support: "string"
+        confidence: "number"
+    
+    implementation_pattern:
+      description: "Correct usage patterns"
+      metadata_schema:
+        category: "string"
+        technology: "string"
+        task_type: "string"
+        description: "string"
+        code_example: "string"
+        best_practices: "array"
+        anti_patterns: "array"
+        confidence: "number"
+    
+    anti_pattern:
+      description: "Approaches to avoid"
+      metadata_schema:
+        category: "string"
+        description: "string"
+        why_wrong: "string"
+        common_mistakes: "array"
+        correct_approach: "string"
+        confidence: "number"
+  
+  # Relationship types for knowledge connections
+  relationship_types:
+    supports:
+      description: "Capability enables pattern"
+      source_types: ["claude_capability"]
+      target_types: ["implementation_pattern"]
+    
+    conflicts_with:
+      description: "Limitation blocks pattern"
+      source_types: ["claude_limitation"]
+      target_types: ["implementation_pattern", "anti_pattern"]
+    
+    alternative_to:
+      description: "Compatible replacement for incompatible approach"
+      source_types: ["implementation_pattern"]
+      target_types: ["anti_pattern"]
+    
+    requires:
+      description: "Pattern depends on capability"
+      source_types: ["implementation_pattern"]
+      target_types: ["claude_capability"]
+    
+    validates:
+      description: "Pattern validates against limitation"
+      source_types: ["implementation_pattern"]
+      target_types: ["claude_limitation"]
+
+# Query Optimization
+query_optimization:
+  # Leverage existing caching in HybridKnowledgeSystem
+  cache_enabled: true
+  cache_ttl_seconds: 3600
+  
+  # Vector search configuration
+  vector_search:
+    similarity_threshold: 0.7
+    max_results: 20
+    embedding_model: "existing_tfidf"  # Use existing embedding pipeline
+  
+  # Text search configuration
+  text_search:
+    fuzzy_matching: true
+    stemming: true
+    stop_words: true
+  
+  # Performance targets
+  performance:
+    simple_query_max_ms: 100
+    complex_query_max_ms: 500
+    compatibility_check_max_ms: 200
+    pattern_search_max_ms: 300
+
+# Health Monitoring
+monitoring:
+  # Integrate with existing MCP health monitoring
+  health_check_interval_seconds: 60
+  metrics_collection: true
+  
+  # Key metrics to track
+  metrics:
+    - "query_response_time_ms"
+    - "compatibility_check_accuracy"
+    - "pattern_recommendation_relevance" 
+    - "knowledge_graph_query_performance"
+    - "cache_hit_rate"
+    - "error_rate"
+  
+  # Alerts
+  alerts:
+    high_query_time:
+      condition: "avg_query_time_ms > 500"
+      action: "log_warning"
+    
+    low_cache_hit_rate:
+      condition: "cache_hit_rate < 0.6"
+      action: "optimize_queries"
+    
+    high_error_rate:
+      condition: "error_rate > 0.05"
+      action: "escalate"
+
+# Development and Testing
+development:
+  # Test data seeding
+  seed_knowledge_on_startup: false
+  test_mode: false
+  debug_logging: false
+  
+  # Validation
+  validate_knowledge_on_startup: true
+  schema_validation: true
+  
+  # Sample test queries for validation
+  test_queries:
+    compatibility_check:
+      - "I want to use Task() to launch multiple agents in parallel"
+      - "Create a background monitoring process that runs continuously"
+      - "Use MCP servers to integrate with GitHub API"
+    
+    pattern_search:
+      - technology: "github", task_type: "integration"
+      - technology: "python", task_type: "automation"  
+      - technology: "general", task_type: "agent_delegation"
+    
+    limitation_query:
+      - "orchestration"
+      - "file_operations"
+      - "state_management"
+
+# Deployment Configuration
+deployment:
+  # Integration with existing MCP registry
+  auto_register: true
+  registry_path: "knowledge/mcp_registry.json"
+  
+  # Startup sequence
+  startup_order:
+    1: "Initialize RIF database connection"
+    2: "Connect to hybrid knowledge system"
+    3: "Validate Claude Code knowledge data"
+    4: "Register MCP tools"
+    5: "Start health monitoring"
+    6: "Begin serving requests"
+  
+  # Graceful shutdown
+  shutdown_timeout_seconds: 30
+  
+  # Logging
+  log_level: "INFO"
+  log_file: "logs/claude-code-knowledge-server.log"
+  
+  # Tags for categorization  
+  tags:
+    - "claude-code"
+    - "compatibility"
+    - "patterns"
+    - "validation"
+    - "knowledge-graph"
+
+# Documentation
+documentation:
+  usage_examples: |
+    # Example 1: Check compatibility of proposed solution
+    result = mcp_client.call_tool("check_compatibility", {
+      "issue_description": "I want to create multiple agents that run in parallel and post to GitHub issues independently"
+    })
+    
+    # Example 2: Get implementation patterns for GitHub integration
+    patterns = mcp_client.call_tool("get_patterns", {
+      "technology": "github", 
+      "task_type": "issue_management"
+    })
+    
+    # Example 3: Find alternatives to incompatible approach
+    alternatives = mcp_client.call_tool("suggest_alternatives", {
+      "incompatible_approach": "Using Task() for parallel agent orchestration"
+    })
+  
+  integration_guide: |
+    This MCP server integrates with the existing RIF knowledge graph system:
+    
+    1. **Storage**: Uses existing DuckDB database with new entity types
+    2. **Search**: Leverages existing vector search and hybrid query capabilities  
+    3. **Performance**: Built on optimized infrastructure with sub-200ms targets
+    4. **Monitoring**: Integrates with existing MCP health monitoring
+    5. **Maintenance**: Single knowledge base for all RIF knowledge
+    
+    The server acts as a lightweight query interface, delegating all storage 
+    and search operations to the existing sophisticated knowledge infrastructure.
+
+# Version and Compatibility
+version_info:
+  server_version: "1.0.0"
+  mcp_protocol_version: "2024-11-05"
+  rif_knowledge_graph_version: "1.0.0"
+  claude_code_compatibility: "all_versions"
+  
+  # Change log
+  changelog:
+    "1.0.0":
+      - "Initial release with integration to RIF knowledge graph"
+      - "Core MCP tools: compatibility checking, pattern recommendations"
+      - "Vector search for semantic pattern matching"
+      - "Relationship-based alternative suggestions"
+      - "Architecture validation against Claude Code constraints"

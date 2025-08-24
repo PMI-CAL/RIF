@@ -12,10 +12,10 @@ import json
 from datetime import datetime, timedelta
 from unittest.mock import Mock, patch
 
-from .storage_backend import ConversationStorageBackend
-from .capture_engine import ConversationCaptureEngine
-from .query_engine import ConversationQueryEngine
-from .pattern_detector import ConversationPatternDetector
+from storage_backend import ConversationStorageBackend
+from capture_engine import ConversationCaptureEngine
+from query_engine import ConversationQueryEngine
+from pattern_detector import ConversationPatternDetector
 
 
 class TestConversationStorageBackend(unittest.TestCase):

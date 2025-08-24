@@ -1,0 +1,1 @@
+{"id": "56f862a8f144", "timestamp": "2025-08-24T01:43:29.031709Z", "severity": "medium", "error_type": "runtime", "source": "unknown", "message": "NullPointerException: object reference not set", "context": {"session_id": "20250823_184329_71711"}, "command": null, "exit_code": null, "session_id": "20250823_184329_71711", "auto_handled": false}

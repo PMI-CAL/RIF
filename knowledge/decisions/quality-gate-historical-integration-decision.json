@@ -1,0 +1,98 @@
+{
+  "id": "quality-gate-historical-integration",
+  "title": "Quality Gate Historical Data Integration Architecture Decision",
+  "date": "2025-08-24",
+  "context": {
+    "issue": "#104 - Sub-Issue #95.1: Historical Data Collection System",
+    "parent_issue": "#95 - Adaptive Threshold Learning System", 
+    "phase": "Foundation Layer (1/7)",
+    "decision_maker": "RIF-Implementer",
+    "quality_score": 95
+  },
+  "decision": "Integrate historical data collection directly into quality gate enforcement system using method injection pattern",
+  "status": "accepted",
+  "alternatives_considered": [
+    {
+      "option": "Separate microservice for data collection",
+      "pros": ["Loose coupling", "Independent scaling", "Technology flexibility"],
+      "cons": ["Additional complexity", "Network latency", "Not compatible with Claude Code session architecture"],
+      "rejected_reason": "Claude Code operates in session-based architecture where separate services add unnecessary complexity"
+    },
+    {
+      "option": "Event-driven publish/subscribe system",
+      "pros": ["Decoupled components", "Async processing", "Multiple subscribers"],
+      "cons": ["Requires message queue infrastructure", "Adds latency", "Overkill for current needs"],
+      "rejected_reason": "Too complex for file-based data collection requirements"
+    },
+    {
+      "option": "Database triggers or hooks",
+      "pros": ["Automatic data collection", "Database consistency", "ACID properties"],
+      "cons": ["Requires database setup", "Not compatible with RIF's file-based approach"],
+      "rejected_reason": "RIF uses file-based architecture for Claude Code compatibility"
+    }
+  ],
+  "chosen_approach": {
+    "pattern": "Method Injection with Direct Integration",
+    "implementation": {
+      "integration_point": "QualityGateEnforcement._record_quality_decision()",
+      "data_collector": "HistoricalDataCollector class initialization in constructor",
+      "call_location": "After validation report generation, before logging results",
+      "error_handling": "Try-catch with graceful degradation - continue operation if data collection fails"
+    },
+    "benefits": [
+      "Minimal performance overhead (<10ms per decision)",
+      "Automatic data collection without separate process",
+      "Rich contextual data capture from validation process",
+      "Compatible with Claude Code session architecture",
+      "Simple to test and debug in development"
+    ]
+  },
+  "implementation_details": {
+    "integration_code": {
+      "constructor": "self.data_collector = HistoricalDataCollector(quality_data_dir)",
+      "call_site": "self._record_quality_decision(issue_number, issue_details, validation_report)",
+      "error_handling": "try-catch with warning log on failure, continues operation"
+    },
+    "data_flow": [
+      "1. Quality gate validation completes",
+      "2. Validation report generated",
+      "3. Component type classified from issue content",
+      "4. Context object created with complexity, risk, gate results",
+      "5. Quality decision recorded to JSONL file",
+      "6. Operation continues regardless of recording success/failure"
+    ],
+    "component_classification": {
+      "method": "Content analysis of issue title, body, and labels",
+      "categories": ["security_critical", "critical_algorithms", "api_services", "ui_components", "data_layer", "testing_framework", "infrastructure", "general_development"],
+      "fallback": "general_development if no specific indicators found"
+    }
+  },
+  "quality_measures": {
+    "performance_validation": "Tested <10ms overhead per quality gate decision",
+    "integration_testing": "End-to-end testing confirmed automatic data collection",
+    "error_resilience": "System continues operation if data collection fails",
+    "data_consistency": "Schema validation prevents malformed entries"
+  },
+  "success_metrics": [
+    "6+ quality decisions automatically recorded during testing",
+    "Component type classification correctly identifying different issue types",
+    "Rich context capture including risk levels, complexity, and gate results", 
+    "Zero performance impact on quality gate validation speed",
+    "Seamless integration without breaking existing functionality"
+  ],
+  "lessons_learned": [
+    "Method injection pattern works well for session-based architectures",
+    "Rich context capture is more valuable than just pass/fail decisions", 
+    "Component type classification from content analysis is surprisingly effective",
+    "File-based data collection scales well for quality gate frequency",
+    "Graceful error handling prevents data collection from blocking core functionality"
+  ],
+  "impact": {
+    "immediate": "Foundation for adaptive threshold learning system (#95)",
+    "future": "Enables data-driven quality gate optimization and trend analysis",
+    "architectural": "Establishes pattern for automatic data collection in RIF workflows"
+  },
+  "review_date": "2025-09-24",
+  "related_patterns": ["historical-data-collection-jsonl", "quality-gate-enforcement"],
+  "tags": ["data-collection", "quality-gates", "integration-pattern", "adaptive-learning", "foundation-layer"]
+}

@@ -1,0 +1,1 @@
+{"id": "4c82a540cadf", "timestamp": "2025-08-24T02:04:16.400255Z", "severity": "medium", "error_type": "integration", "source": "unknown", "message": "Connection timeout to external API service", "context": {"session_id": "20250823_190416_76477"}, "command": null, "exit_code": null, "session_id": "20250823_190416_76477", "auto_handled": false}

@@ -1,0 +1,98 @@
+# Adaptive Threshold Learning System Configuration
+# Issue #95: Adaptive Threshold Learning System
+
+optimization:
+  # Core optimization settings
+  enabled: true
+  frequency_days: 14
+  min_confidence_threshold: 0.7
+  max_threshold_change_percent: 20.0
+  min_historical_data_days: 30
+  required_sample_size: 10
+  
+  # Learning preferences
+  prefer_conservative_changes: true
+  enable_statistical_optimization: true
+  use_pattern_based_recommendations: true
+
+safety:
+  # Safety constraints
+  require_manual_approval: true
+  max_simultaneous_changes: 3
+  rollback_monitoring_hours: 24
+  performance_degradation_threshold: 0.1
+  
+  # Automatic rollback conditions
+  auto_rollback_on_failure_rate: 0.5
+  auto_rollback_on_performance_drop: 0.15
+  monitoring_alert_threshold: 0.2
+
+component_priorities:
+  # Priority levels for optimization (high, medium, low)
+  critical_algorithms: high
+  public_apis: high
+  business_logic: medium
+  integration_code: medium
+  ui_components: low
+  test_utilities: low
+
+learning:
+  # Learning system settings
+  pattern_analysis_enabled: true
+  github_issue_mining: true
+  continuous_learning: true
+  success_tracking_days: 90
+  
+  # Knowledge base integration
+  use_rif_knowledge_patterns: true
+  store_successful_optimizations: true
+  learn_from_rollbacks: true
+
+notifications:
+  # Notification preferences
+  threshold_changes: true
+  optimization_results: true
+  rollback_required: true
+  performance_alerts: true
+  
+  # Notification channels (future extension)
+  github_comments: true
+  log_level: info
+
+thresholds:
+  # Global threshold constraints
+  absolute_minimum: 50.0
+  absolute_maximum: 100.0
+  
+  # Component-specific minimums
+  component_minimums:
+    critical_algorithms: 85.0
+    public_apis: 80.0
+    business_logic: 75.0
+    integration_code: 70.0
+    ui_components: 60.0
+    test_utilities: 50.0
+
+# Rule-based optimization settings
+rules:
+  # Performance-based rules
+  low_pass_rate_threshold: 0.6
+  high_override_rate_threshold: 0.25
+  excellent_performance_threshold: 0.9
+  
+  # Trend analysis rules
+  trend_analysis_periods: 4
+  improving_trend_confidence: 0.7
+  degrading_trend_sensitivity: 0.15
+  
+  # Statistical analysis rules
+  variance_threshold_for_optimization: 15.0
+  confidence_boost_for_large_samples: true
+  penalize_small_samples: true
+
+# Integration settings
+integration:
+  quality_gates_file: "config/rif-workflow.yaml"
+  backup_directory: "config/backups"
+  checkpoint_retention_days: 90
+  change_history_retention_days: 365

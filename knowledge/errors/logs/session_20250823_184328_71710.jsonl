@@ -1,0 +1,1 @@
+{"id": "a746f15afce3", "timestamp": "2025-08-24T01:43:28.999858Z", "severity": "medium", "error_type": "syntax", "source": "unknown", "message": "SyntaxError: invalid syntax in file.py line 42", "context": {"session_id": "20250823_184328_71710"}, "command": null, "exit_code": null, "session_id": "20250823_184328_71710", "auto_handled": false}

@@ -19,6 +19,11 @@
     
     "UserPromptSubmit": [
       {
+        "type": "command",
+        "command": "python3 knowledge/conversations/capture_user_prompt.py",
+        "output": "silent"
+      },
+      {
         "matcher": ".*issue.*|.*fix.*|.*implement.*|.*analyze.*|.*create.*|.*build.*",
         "hooks": [
           {
@@ -29,12 +34,18 @@
         ]
       },
       {
-        "matcher": ".*test.*|.*validate.*|.*check.*",
+        "matcher": ".*test.*|.*validate.*|.*check.*|.*quality.*|.*threshold.*",
         "hooks": [
           {
             "type": "command",
             "command": "echo 'RIF: Loading quality gates...' && if [ -f ./knowledge/metrics/quality.json ]; then jq -r '.gates | to_entries[] | \"\\(.key): \\(.value.threshold) (current: \\(.value.current))\"' ./knowledge/metrics/quality.json 2>/dev/null || true; fi",
             "output": "context"
+          },
+          {
+            "type": "command",
+            "command": "echo 'RIF: Context-aware thresholds active' && if [ -f ./config/component-types.yaml ]; then echo 'Component types: critical_algorithms(95%), public_apis(90%), business_logic(85%), integration_code(80%), ui_components(70%), test_utilities(60%)' | head -1; fi",
+            "output": "context",
+            "description": "Show active adaptive threshold configuration"
           }
         ]
       }
@@ -55,6 +66,17 @@
     
     "PostToolUse": [
       {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 knowledge/conversations/capture_tool_use.py",
+            "output": "silent",
+            "description": "Capture all tool usage for conversation analysis"
+          }
+        ]
+      },
+      {
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
@@ -66,6 +88,12 @@
             "type": "command",
             "command": "echo 'RIF: Code modified, updating dependency graph...' && echo '{\"file\": \"'$1'\", \"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\"}' >> ./knowledge/dependencies.jsonl",
             "output": "silent"
+          },
+          {
+            "type": "command",
+            "command": "echo 'RIF: Analyzing file for adaptive thresholds...' && python3 ./claude/commands/quality_gates/component_classifier.py classify \"$1\" 2>/dev/null | jq -r 'if .component_type then \"File \\(.file_path): \\(.component_type) (\\(.confidence*100|floor)% confidence)\" else empty end' || true",
+            "output": "context",
+            "description": "Context-aware quality threshold analysis for modified files"
           }
         ]
       },
@@ -79,7 +107,7 @@
           },
           {
             "type": "command",
-            "command": "BASH_EXIT_CODE=$?; if [ $BASH_EXIT_CODE -ne 0 ]; then python3 ./claude/commands/error-analysis.py --analyze-exit-code $BASH_EXIT_CODE --command \"$1\" 2>/dev/null || echo 'RIF: Error analysis failed' >> ./knowledge/errors/logs/analysis-failures.log; fi",
+            "command": "BASH_EXIT_CODE=$CLAUDE_TOOL_EXIT_CODE; BASH_STDERR=\"$CLAUDE_TOOL_STDERR\"; if [ $BASH_EXIT_CODE -ne 0 ]; then python3 ./claude/commands/session_error_handler.py --capture-bash \"$1\" $BASH_EXIT_CODE \"$BASH_STDERR\" 2>/dev/null || echo 'RIF: Session error handler failed' >> ./knowledge/errors/logs/handler-failures.log; fi",
             "output": "silent"
           }
         ]
@@ -88,19 +116,28 @@
         "matcher": "Read|Glob|Grep|LS",
         "hooks": [
           {
-            "type": "command",
-            "command": "if [ ! -z \"$CLAUDE_ERROR\" ]; then python3 ./claude/commands/error-analysis.py --capture \"Tool execution error: $CLAUDE_ERROR\" --context '{\"tool\": \"$CLAUDE_TOOL\", \"source\": \"claude_code\"}' 2>/dev/null || true; fi",
+            "type": "command", 
+            "command": "if [ ! -z \"$CLAUDE_TOOL_ERROR\" ]; then python3 ./claude/commands/session_error_handler.py --capture-tool \"$CLAUDE_TOOL_NAME\" \"$CLAUDE_TOOL_ERROR\" 2>/dev/null || true; fi",
             "output": "silent"
           }
         ]
       }
     ],
     
+    "AssistantResponseGenerated": [
+      {
+        "type": "command",
+        "command": "python3 knowledge/conversations/capture_assistant_response.py",
+        "output": "silent",
+        "description": "Capture assistant responses for conversation analysis"
+      }
+    ],
+    
     "ErrorCapture": [
       {
         "type": "command",
-        "command": "python3 ./claude/commands/error-analysis.py --capture \"$ERROR_MESSAGE\" --context '{\"source\": \"claude_code\", \"context\": \"$ERROR_CONTEXT\"}' --stack-trace \"$ERROR_STACK\" 2>/dev/null || echo 'RIF: Critical error in error analysis system' >> ./knowledge/errors/logs/system-failures.log",
-        "output": "analysis"
+        "command": "python3 ./claude/commands/session_error_handler.py --capture-generic \"$CLAUDE_ERROR_MESSAGE\" --context '{\"source\": \"claude_code\", \"error_context\": \"$CLAUDE_ERROR_CONTEXT\", \"stack_trace\": \"$CLAUDE_ERROR_STACK\"}' 2>/dev/null || echo 'RIF: Critical error in session error handler' >> ./knowledge/errors/logs/system-failures.log",
+        "output": "context"
       }
     ],
     
@@ -108,6 +145,11 @@
       {
         "type": "command",
         "command": "echo 'RIF: Session complete. Updating metrics...' && if [ -f ./knowledge/events.jsonl ]; then wc -l ./knowledge/events.jsonl | awk '{print \"Events recorded: \" $1}'; fi",
+        "output": "context"
+      },
+      {
+        "type": "command",
+        "command": "python3 ./claude/commands/session_error_handler.py --session-summary 2>/dev/null && echo 'RIF: Session error summary generated'",
         "output": "context"
       }
     ],

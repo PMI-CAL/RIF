@@ -1,0 +1,1 @@
+{"id": "371bd61c2161", "timestamp": "2025-08-24T02:48:43.887566Z", "severity": "medium", "error_type": "security", "source": "unknown", "message": "Authentication failed: invalid credentials", "context": {"session_id": "20250823_194843_85343"}, "command": null, "exit_code": null, "session_id": "20250823_194843_85343", "auto_handled": false}

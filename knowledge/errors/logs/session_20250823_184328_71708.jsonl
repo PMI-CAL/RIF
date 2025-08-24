@@ -1,0 +1,1 @@
+{"id": "733fe05aa863", "timestamp": "2025-08-24T01:43:28.940776Z", "severity": "medium", "error_type": "unknown", "source": "unknown", "message": "Integration test error for RIF processing", "context": {"test": true, "integration": "rif", "session_id": "20250823_184328_71708"}, "command": null, "exit_code": null, "session_id": "20250823_184328_71708", "auto_handled": false}

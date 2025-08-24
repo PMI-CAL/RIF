@@ -1,0 +1,78 @@
+{
+  "pattern_id": "command-not-found-error-analysis",
+  "pattern_name": "Command Not Found Error Analysis Pattern",
+  "description": "Standard analysis pattern for bash exit code 127 errors (command not found)",
+  "complexity": "low",
+  "issue_reference": "#106",
+  "error_signature": {
+    "exit_code": 127,
+    "error_type": "integration",
+    "severity": "high",
+    "command_pattern": ".*_command|.*missing.*|test.*"
+  },
+  "analysis_framework": {
+    "root_cause_method": "Direct inspection",
+    "investigation_steps": [
+      "Verify command existence in system PATH",
+      "Check if command is part of expected installation",
+      "Determine if test/placeholder command or legitimate missing dependency",
+      "Assess impact on workflow and other components"
+    ],
+    "classification_criteria": {
+      "complexity": "low - single command failure with clear resolution",
+      "priority": "high - blocks execution workflow",
+      "urgency": "immediate if blocking critical path"
+    }
+  },
+  "resolution_strategies": [
+    {
+      "scenario": "Missing legitimate command",
+      "solution": "Install required package/dependency",
+      "validation": "Verify command availability and functionality"
+    },
+    {
+      "scenario": "Test/placeholder command",
+      "solution": "Remove or replace with valid command",
+      "validation": "Ensure no functional regression"
+    },
+    {
+      "scenario": "Typo in command name",
+      "solution": "Correct command spelling/path",
+      "validation": "Test corrected command execution"
+    }
+  ],
+  "prevention_measures": [
+    "Add command existence checks before execution",
+    "Use type/which commands to validate availability",
+    "Implement graceful fallbacks for optional commands",
+    "Add dependency validation in setup scripts"
+  ],
+  "auto_detection_rules": {
+    "trigger_patterns": ["exit code 127", "command not found", ".*: command not found"],
+    "severity_classification": "high",
+    "auto_issue_creation": true,
+    "state_progression": "new -> analyzing -> implementing"
+  },
+  "knowledge_integration": {
+    "similar_patterns": [
+      "missing-dependency-error",
+      "installation-failure-analysis", 
+      "bash-execution-errors"
+    ],
+    "learning_points": [
+      "Exit code 127 is definitive for command not found",
+      "High severity due to execution blocking nature", 
+      "Low complexity resolution in most cases",
+      "Auto-detection works effectively for this pattern"
+    ]
+  },
+  "metrics": {
+    "analysis_time": "< 30 minutes",
+    "resolution_time": "1-2 hours average",
+    "success_rate": "95% (clear error pattern)",
+    "recurrence_prevention": "90% with proper validation"
+  },
+  "created": "2025-08-24T02:48:56Z",
+  "validated_by": "rif-analyst",
+  "reusability_score": 8.5
+}

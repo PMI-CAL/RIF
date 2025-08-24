@@ -1,0 +1,289 @@
+# Shadow Mode Configuration for RIF Knowledge System Testing
+# Enables parallel processing of both legacy and LightRAG knowledge systems for comparison
+
+shadow_mode:
+  enabled: true
+  version: "1.0.0"
+  description: "Shadow mode for testing new LightRAG system alongside legacy knowledge system"
+
+# Systems configuration
+systems:
+  legacy:
+    enabled: true
+    name: "Legacy Knowledge System"
+    description: "File-based knowledge storage using JSON/MD files"
+    paths:
+      patterns: "knowledge/patterns/"
+      decisions: "knowledge/decisions/"
+      learning: "knowledge/learning/"
+      issues: "knowledge/issues/"
+      checkpoints: "knowledge/checkpoints/"
+    
+  lightrag:
+    enabled: true
+    name: "LightRAG Vector Database"
+    description: "ChromaDB-based semantic knowledge storage"
+    config:
+      knowledge_path: "knowledge/"
+      collections:
+        - patterns
+        - decisions
+        - code_snippets
+        - issue_resolutions
+
+# Parallel processing settings
+parallel_processing:
+  enabled: true
+  mode: "shadow"  # shadow | canary | blue_green
+  
+  # Processing behavior
+  primary_system: "legacy"  # Which system's results to use for actual operations
+  shadow_system: "lightrag"  # Which system runs in shadow mode
+  
+  # Timeout configuration
+  timeout_ms: 5000  # Maximum time to wait for shadow system
+  abort_on_timeout: false  # Continue with primary if shadow times out
+  
+  # Resource limits
+  max_concurrent_operations: 4
+  memory_limit_mb: 512
+  cpu_limit_percent: 25
+
+# Operations to shadow test
+operations:
+  store_knowledge:
+    enabled: true
+    compare_results: true
+    log_differences: true
+    
+  retrieve_knowledge:
+    enabled: true
+    compare_results: true
+    log_differences: true
+    similarity_threshold: 0.8  # Threshold for considering results similar
+    
+  update_knowledge:
+    enabled: true
+    compare_results: true
+    log_differences: true
+    
+  delete_knowledge:
+    enabled: false  # Don't shadow test destructive operations
+    compare_results: false
+    log_differences: false
+    
+  search_patterns:
+    enabled: true
+    compare_results: true
+    log_differences: true
+    max_results: 10
+
+# Comparison framework
+comparison:
+  enabled: true
+  
+  # What to compare
+  compare_content: true
+  compare_metadata: true
+  compare_timing: true
+  compare_relevance_scores: true
+  
+  # Difference detection
+  content_similarity_threshold: 0.9
+  metadata_exact_match: false  # Allow metadata differences
+  timing_variance_threshold: 0.5  # 50% variance allowed
+  
+  # Result validation
+  validate_json_structure: true
+  validate_required_fields: true
+  required_fields:
+    - "id"
+    - "content"
+    - "metadata"
+
+# Logging configuration
+logging:
+  enabled: true
+  log_level: "INFO"  # DEBUG | INFO | WARN | ERROR
+  
+  # Log destinations
+  console: true
+  file: true
+  json_structured: true
+  
+  # File settings
+  log_file: "knowledge/shadow-mode.log"
+  max_file_size_mb: 100
+  backup_count: 5
+  
+  # What to log
+  log_operations: true
+  log_comparisons: true
+  log_differences: true
+  log_performance: true
+  log_errors: true
+  
+  # Performance metrics
+  track_latency: true
+  track_throughput: true
+  track_error_rates: true
+
+# Difference detection settings
+differences:
+  # Difference types to track
+  content_differences:
+    enabled: true
+    threshold: 0.1  # Minimum difference to log
+    
+  metadata_differences:
+    enabled: true
+    ignore_fields:
+      - "timestamp"
+      - "updated_timestamp"
+      
+  structure_differences:
+    enabled: true
+    strict_mode: false
+    
+  performance_differences:
+    enabled: true
+    latency_threshold_ms: 100
+    throughput_threshold_percent: 10
+
+# Metrics and monitoring
+metrics:
+  enabled: true
+  collection_interval_seconds: 60
+  
+  # Metrics to track
+  operation_counts:
+    store: true
+    retrieve: true
+    update: true
+    delete: true
+    search: true
+    
+  performance_metrics:
+    latency_percentiles: [50, 90, 95, 99]
+    throughput_per_second: true
+    error_rate_percent: true
+    
+  comparison_metrics:
+    similarity_scores: true
+    difference_counts: true
+    match_rates: true
+    
+  # Alerts
+  alerts:
+    high_error_rate:
+      threshold: 0.05  # 5% error rate
+      action: "log_warning"
+      
+    performance_degradation:
+      threshold: 2.0  # 2x slower than baseline
+      action: "log_warning"
+      
+    low_similarity:
+      threshold: 0.7  # Below 70% similarity
+      action: "log_warning"
+
+# Export and reporting
+reporting:
+  enabled: true
+  
+  # Report generation
+  daily_report: true
+  weekly_summary: true
+  real_time_dashboard: false
+  
+  # Report contents
+  include_metrics: true
+  include_comparisons: true
+  include_recommendations: true
+  
+  # Export formats
+  formats:
+    - "json"
+    - "markdown"
+  
+  # Output locations
+  reports_dir: "knowledge/shadow-mode-reports/"
+  dashboard_port: 8080
+
+# Agent integration
+agent_integration:
+  # Ensure no impact on existing agent operations
+  transparent_mode: true  # Agents don't know about shadow mode
+  fallback_to_primary: true  # Use primary system if shadow fails
+  
+  # Agent-specific settings
+  rif_analyst:
+    shadow_enabled: true
+    operations: ["retrieve_knowledge", "search_patterns"]
+    
+  rif_implementer:
+    shadow_enabled: true
+    operations: ["store_knowledge", "retrieve_knowledge"]
+    
+  rif_learner:
+    shadow_enabled: true
+    operations: ["store_knowledge", "update_knowledge"]
+    
+  rif_validator:
+    shadow_enabled: true
+    operations: ["retrieve_knowledge", "search_patterns"]
+
+# Safety and rollback
+safety:
+  # Rollback triggers
+  auto_disable_on_error_rate: true
+  error_rate_threshold: 0.1  # 10% error rate
+  
+  auto_disable_on_performance: true
+  performance_degradation_threshold: 3.0  # 3x slower
+  
+  # Manual controls
+  emergency_disable_file: ".shadow-mode-disable"
+  admin_override_env: "RIF_SHADOW_MODE_OVERRIDE"
+  
+  # Data integrity
+  readonly_shadow: true  # Shadow system cannot modify primary data
+  validate_writes: true  # Validate all write operations
+  backup_before_writes: false  # Don't backup for shadow mode
+
+# Testing and validation
+testing:
+  # Test scenarios
+  synthetic_load_testing: false
+  real_workload_testing: true
+  
+  # Validation rules
+  data_consistency_checks: true
+  performance_regression_tests: true
+  
+  # Test data
+  use_test_data: false
+  test_data_path: "tests/fixtures/shadow-mode/"
+
+# Environment-specific overrides
+environments:
+  development:
+    shadow_mode:
+      enabled: true
+    logging:
+      log_level: "DEBUG"
+    metrics:
+      collection_interval_seconds: 30
+      
+  staging:
+    shadow_mode:
+      enabled: true
+    parallel_processing:
+      max_concurrent_operations: 2
+      
+  production:
+    shadow_mode:
+      enabled: false  # Disabled by default in production
+    safety:
+      auto_disable_on_error_rate: true
+      error_rate_threshold: 0.05  # Stricter threshold

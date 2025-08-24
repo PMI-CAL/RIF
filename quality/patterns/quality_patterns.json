@@ -1,0 +1,158 @@
+{
+  "patterns": [
+    {
+      "pattern_id": "knowledge_pattern_test-pattern_1756028877",
+      "pattern_type": "knowledge_pattern",
+      "component_type": "business_logic",
+      "success_rate": 1.0,
+      "sample_size": 5,
+      "configuration": {},
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T02:47:57.807495Z"
+    },
+    {
+      "pattern_id": "decision_pattern_quality-gates-decision_1756028877",
+      "pattern_type": "decision_pattern",
+      "component_type": "critical_algorithms",
+      "success_rate": 0.3333333333333333,
+      "sample_size": 5,
+      "configuration": {
+        "old_threshold": 90.0,
+        "new_threshold": 95.0
+      },
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T02:47:57.807574Z"
+    },
+    {
+      "pattern_id": "knowledge_pattern_test-pattern_1756029834",
+      "pattern_type": "knowledge_pattern",
+      "component_type": "business_logic",
+      "success_rate": 1.0,
+      "sample_size": 5,
+      "configuration": {},
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:03:54.781342Z"
+    },
+    {
+      "pattern_id": "decision_pattern_quality-gates-decision_1756029834",
+      "pattern_type": "decision_pattern",
+      "component_type": "critical_algorithms",
+      "success_rate": 0.3333333333333333,
+      "sample_size": 5,
+      "configuration": {
+        "old_threshold": 90.0,
+        "new_threshold": 95.0
+      },
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:03:54.781416Z"
+    },
+    {
+      "pattern_id": "knowledge_pattern_test-pattern_1756029956",
+      "pattern_type": "knowledge_pattern",
+      "component_type": "business_logic",
+      "success_rate": 1.0,
+      "sample_size": 5,
+      "configuration": {},
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:05:56.823970Z"
+    },
+    {
+      "pattern_id": "decision_pattern_quality-gates-decision_1756029956",
+      "pattern_type": "decision_pattern",
+      "component_type": "critical_algorithms",
+      "success_rate": 0.3333333333333333,
+      "sample_size": 5,
+      "configuration": {
+        "old_threshold": 90.0,
+        "new_threshold": 95.0
+      },
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:05:56.824040Z"
+    },
+    {
+      "pattern_id": "knowledge_pattern_test-pattern_1756031003",
+      "pattern_type": "knowledge_pattern",
+      "component_type": "business_logic",
+      "success_rate": 1.0,
+      "sample_size": 5,
+      "configuration": {},
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:23:23.373101Z"
+    },
+    {
+      "pattern_id": "decision_pattern_quality-gates-decision_1756031003",
+      "pattern_type": "decision_pattern",
+      "component_type": "critical_algorithms",
+      "success_rate": 0.3333333333333333,
+      "sample_size": 5,
+      "configuration": {
+        "old_threshold": 90.0,
+        "new_threshold": 95.0
+      },
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:23:23.373177Z"
+    },
+    {
+      "pattern_id": "knowledge_pattern_test-pattern_1756032358",
+      "pattern_type": "knowledge_pattern",
+      "component_type": "business_logic",
+      "success_rate": 1.0,
+      "sample_size": 5,
+      "configuration": {},
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:45:58.528338Z"
+    },
+    {
+      "pattern_id": "decision_pattern_quality-gates-decision_1756032358",
+      "pattern_type": "decision_pattern",
+      "component_type": "critical_algorithms",
+      "success_rate": 0.3333333333333333,
+      "sample_size": 5,
+      "configuration": {
+        "old_threshold": 90.0,
+        "new_threshold": 95.0
+      },
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:45:58.528403Z"
+    },
+    {
+      "pattern_id": "knowledge_pattern_test-pattern_1756033038",
+      "pattern_type": "knowledge_pattern",
+      "component_type": "business_logic",
+      "success_rate": 1.0,
+      "sample_size": 5,
+      "configuration": {},
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:57:18.987854Z"
+    },
+    {
+      "pattern_id": "decision_pattern_quality-gates-decision_1756033038",
+      "pattern_type": "decision_pattern",
+      "component_type": "critical_algorithms",
+      "success_rate": 0.3333333333333333,
+      "sample_size": 5,
+      "configuration": {
+        "old_threshold": 90.0,
+        "new_threshold": 95.0
+      },
+      "context": {},
+      "learnings": [],
+      "last_updated": "2025-08-24T03:57:18.987923Z"
+    }
+  ],
+  "strategies": [],
+  "last_updated": "2025-08-24T03:57:18.988114Z",
+  "total_patterns": 12,
+  "total_strategies": 0
+}

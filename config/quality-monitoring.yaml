@@ -1,0 +1,387 @@
+# Quality Gate Effectiveness Monitoring Configuration
+# Issue #94 - Comprehensive monitoring and analytics system
+
+monitoring:
+  name: "Quality Gate Effectiveness Monitoring"
+  version: "1.0.0"
+  enabled: true
+  
+  # Storage configuration
+  storage:
+    base_path: "knowledge/quality_metrics"
+    retention:
+      recent_data_days: 30        # Hot data retention
+      archived_data_days: 365     # Historical data retention
+      reports_retention_days: 90  # Analytics reports retention
+    
+    compression:
+      enabled: true
+      threshold_mb: 50           # Compress files larger than 50MB
+      format: "gzip"
+    
+    backup:
+      enabled: true
+      interval_hours: 24
+      backup_path: "knowledge/quality_metrics/backups"
+      max_backups: 7
+
+  # Performance configuration
+  performance:
+    max_processing_time_ms: 50    # Alert threshold for slow decisions
+    batch_size: 100               # Batch size for bulk operations
+    cache_enabled: true
+    cache_size_mb: 10
+    
+    # Session tracking limits
+    max_session_decisions: 1000   # Maximum decisions per session
+    session_timeout_hours: 24     # Auto-archive session data after timeout
+
+# Quality gate configuration
+quality_gates:
+  # Gate definitions with monitoring parameters
+  code_coverage:
+    monitoring_enabled: true
+    threshold: 80                 # Default threshold
+    adaptive_threshold: true      # Enable adaptive threshold adjustment
+    weight: 0.2                  # Weight in overall quality score
+    performance_target_ms: 30    # Target processing time
+    
+    # Effectiveness targets
+    targets:
+      accuracy: 90               # Target accuracy percentage
+      false_positive_rate: 10    # Maximum acceptable FPR
+      false_negative_rate: 5     # Maximum acceptable FNR
+    
+    # Alert configuration
+    alerts:
+      effectiveness_below: 70    # Alert if effectiveness drops below 70%
+      processing_time_above: 100 # Alert if processing time exceeds 100ms
+      false_negative_rate_above: 8  # Critical alert threshold
+  
+  security_scan:
+    monitoring_enabled: true
+    threshold: "no_critical"
+    adaptive_threshold: false    # Security thresholds should be strict
+    weight: 0.3
+    performance_target_ms: 50
+    
+    targets:
+      accuracy: 95
+      false_positive_rate: 5
+      false_negative_rate: 2     # Very low tolerance for security FN
+    
+    alerts:
+      effectiveness_below: 85
+      processing_time_above: 150
+      false_negative_rate_above: 3
+  
+  linting:
+    monitoring_enabled: true
+    threshold: "no_errors"
+    adaptive_threshold: true
+    weight: 0.1
+    performance_target_ms: 20
+    
+    targets:
+      accuracy: 85
+      false_positive_rate: 15    # Higher tolerance for linting FP
+      false_negative_rate: 8
+    
+    alerts:
+      effectiveness_below: 75
+      processing_time_above: 75
+      false_negative_rate_above: 10
+  
+  performance:
+    monitoring_enabled: true
+    threshold: "baseline"
+    adaptive_threshold: true
+    weight: 0.15
+    performance_target_ms: 40
+    
+    targets:
+      accuracy: 80
+      false_positive_rate: 12
+      false_negative_rate: 8
+    
+    alerts:
+      effectiveness_below: 70
+      processing_time_above: 100
+      false_negative_rate_above: 12
+  
+  documentation:
+    monitoring_enabled: true
+    threshold: "complete"
+    adaptive_threshold: true
+    weight: 0.05
+    performance_target_ms: 15
+    
+    targets:
+      accuracy: 75
+      false_positive_rate: 20    # Documentation checks can have higher FP
+      false_negative_rate: 10
+    
+    alerts:
+      effectiveness_below: 65
+      processing_time_above: 50
+      false_negative_rate_above: 15
+  
+  evidence_requirements:
+    monitoring_enabled: true
+    threshold: "100%"
+    adaptive_threshold: false    # Evidence requirements should be strict
+    weight: 0.1
+    performance_target_ms: 25
+    
+    targets:
+      accuracy: 90
+      false_positive_rate: 8
+      false_negative_rate: 5
+    
+    alerts:
+      effectiveness_below: 80
+      processing_time_above: 75
+      false_negative_rate_above: 7
+  
+  risk_assessment:
+    monitoring_enabled: true
+    threshold: "acceptable"
+    adaptive_threshold: true
+    weight: 0.1
+    performance_target_ms: 35
+    
+    targets:
+      accuracy: 85
+      false_positive_rate: 10
+      false_negative_rate: 6
+    
+    alerts:
+      effectiveness_below: 75
+      processing_time_above: 100
+      false_negative_rate_above: 8
+
+# Analytics configuration
+analytics:
+  enabled: true
+  
+  # Report generation schedule
+  reports:
+    daily_summary: true
+    weekly_trend: true
+    monthly_comprehensive: true
+    
+    schedule:
+      daily_time: "06:00"        # UTC time for daily reports
+      weekly_day: "monday"       # Day for weekly reports
+      monthly_day: 1             # Day of month for monthly reports
+  
+  # Trend analysis configuration
+  trend_analysis:
+    enabled: true
+    minimum_data_points: 5      # Minimum data points for trend analysis
+    trend_sensitivity: 0.1      # Sensitivity for trend detection
+    lookback_days: 60          # Days to look back for trend analysis
+    
+    # Statistical thresholds
+    significance_threshold: 0.05 # P-value threshold for significance
+    confidence_interval: 0.95   # Confidence interval for statistics
+  
+  # Correlation analysis
+  correlation:
+    enabled: true
+    minimum_correlation_samples: 10  # Minimum samples for correlation
+    correlation_threshold: 0.3       # Minimum correlation to report
+    lag_analysis_days: 30           # Days to analyze for time lag
+  
+  # Insight generation
+  insights:
+    enabled: true
+    confidence_threshold: 0.7   # Minimum confidence for insights
+    impact_threshold: 10        # Minimum impact percentage to report
+    
+    # Insight categories
+    categories:
+      threshold_optimization: true
+      performance_improvement: true
+      false_positive_reduction: true
+      false_negative_prevention: true
+      trend_alerts: true
+
+# Production correlation configuration
+production_correlation:
+  enabled: true
+  
+  # Defect tracking
+  defect_tracking:
+    auto_detection: true
+    correlation_window_days: 90  # Days to correlate defects with decisions
+    severity_mapping:
+      critical: 5.0             # Weight for critical defects
+      high: 3.0                 # Weight for high severity defects
+      medium: 1.0               # Weight for medium severity defects
+      low: 0.5                  # Weight for low severity defects
+      cosmetic: 0.1             # Weight for cosmetic defects
+  
+  # GitHub integration for defect reporting
+  github_integration:
+    enabled: true
+    auto_comment: true          # Auto-comment on issues with defect info
+    create_follow_up_issues: true  # Create follow-up issues for defects
+    label_prefix: "production-defect"
+    
+    # Comment templates
+    defect_comment_template: |
+      ## 🚨 Production Defect Detected
+      
+      **Defect ID**: {defect_id}
+      **Severity**: {severity}
+      **Impact**: {impact_level}
+      **Detection Time**: {detection_time}
+      
+      **Description**: {description}
+      
+      This defect will be correlated with quality gate decisions to improve effectiveness.
+      
+      **Quality Correlation**: Will be analyzed within {correlation_window_days} days.
+  
+  # Alerting for high-impact defects
+  alerting:
+    enabled: true
+    critical_defect_alert: true
+    false_negative_alert: true  # Alert when FN leads to production defect
+    correlation_alert: true     # Alert when correlation analysis completes
+
+# Real-time tracking configuration
+realtime:
+  enabled: true
+  
+  # Session management
+  session:
+    auto_initialize: true
+    session_timeout_minutes: 1440  # 24 hours
+    max_concurrent_sessions: 10
+    
+    # Data collection
+    collect_tool_context: true
+    collect_file_changes: true
+    collect_agent_context: true
+    collect_performance_metrics: true
+  
+  # Hook integration
+  hooks:
+    enabled: true
+    hook_timeout_ms: 100        # Maximum time for hook processing
+    error_handling: "log_continue"  # Options: log_continue, fail_fast, silent
+    
+    # Hook triggers
+    triggers:
+      on_tool_use: true
+      on_edit_complete: true
+      on_bash_command: true
+      on_quality_gate_evaluation: true
+  
+  # Live dashboard
+  dashboard:
+    enabled: true
+    refresh_interval_seconds: 30
+    max_recent_decisions: 100
+    
+    # Metrics display
+    display_metrics:
+      - decision_rate
+      - pass_rate
+      - processing_time
+      - gate_effectiveness
+      - trend_indicators
+
+# Notification configuration
+notifications:
+  enabled: true
+  
+  # Notification channels
+  channels:
+    github_comments: true
+    console_alerts: true
+    file_logging: true
+    
+  # Alert thresholds
+  thresholds:
+    critical_effectiveness: 60   # Critical alert below 60% effectiveness
+    warning_effectiveness: 75    # Warning alert below 75% effectiveness
+    performance_degradation: 100 # Alert if processing time exceeds 100ms
+    false_negative_spike: 8      # Alert if FN rate exceeds 8%
+  
+  # Alert frequency limits
+  rate_limiting:
+    max_alerts_per_hour: 10
+    duplicate_alert_suppression: 300  # Seconds to suppress duplicate alerts
+    escalation_after_hours: 2         # Hours before escalating unacked alerts
+
+# Integration configuration
+integrations:
+  # RIF workflow integration
+  rif_workflow:
+    enabled: true
+    auto_update_thresholds: true      # Auto-update thresholds based on analytics
+    quality_gate_feedback: true      # Provide feedback to quality gates
+    
+    # Threshold adjustment parameters
+    adjustment:
+      max_adjustment_percent: 20      # Maximum threshold adjustment per update
+      adjustment_frequency_days: 7    # Frequency of threshold adjustments
+      min_data_points: 20            # Minimum data points before adjustment
+      confidence_threshold: 0.8      # Confidence required for adjustment
+  
+  # MCP integration (future enhancement)
+  mcp_integration:
+    enabled: false
+    server_name: "quality-monitoring-mcp"
+    auto_register: false
+  
+  # External monitoring tools
+  external_tools:
+    prometheus_metrics: false
+    grafana_dashboards: false
+    elasticsearch_logging: false
+
+# Development and debugging
+debug:
+  enabled: false                # Enable debug logging
+  verbose_logging: false        # Enable verbose logging
+  log_level: "INFO"            # Log level: DEBUG, INFO, WARN, ERROR
+  
+  # Testing configuration
+  testing:
+    mock_data_generation: false # Generate mock data for testing
+    test_mode: false            # Enable test mode
+    synthetic_defects: false    # Generate synthetic defects for testing
+  
+  # Performance profiling
+  profiling:
+    enabled: false
+    profile_analytics: false
+    profile_correlations: false
+    output_path: "knowledge/quality_metrics/profiling"
+
+# Backup and recovery
+backup_recovery:
+  enabled: true
+  
+  # Backup configuration
+  backup:
+    schedule: "daily"           # daily, weekly, monthly
+    compression: true
+    encryption: false           # Enable backup encryption (requires keys)
+    remote_storage: false       # Enable remote backup storage
+  
+  # Recovery configuration
+  recovery:
+    auto_recovery: true         # Enable automatic recovery from corruption
+    corruption_detection: true  # Enable data corruption detection
+    recovery_validation: true   # Validate data after recovery
+  
+  # Data integrity
+  integrity:
+    checksums: true            # Generate checksums for data files
+    validation_frequency: "weekly"  # Frequency of integrity checks
+    repair_mode: "auto"        # auto, manual, prompt

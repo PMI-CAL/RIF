@@ -1,0 +1,15 @@
+{
+  "pattern_id": "014e5cda6a3f",
+  "pattern_name": "validation_validation_error",
+  "error_signature": "validation|validation_error|Invalid JSON format in configuration file",
+  "frequency": 1,
+  "first_seen": "2025-08-24T04:04:14.900517+00:00",
+  "last_seen": "2025-08-24T04:04:14.900517+00:00",
+  "affected_systems": [],
+  "resolution_success_rate": 0.0,
+  "recommended_actions": [
+    "Check input format and syntax",
+    "Validate data against schema",
+    "Review validation rules"
+  ]
+}

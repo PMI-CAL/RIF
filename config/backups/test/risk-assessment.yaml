@@ -1,0 +1,376 @@
+# Risk Assessment Configuration - Issue #92
+# Configuration for Risk-Based Manual Intervention Framework
+
+# Risk factor weights (must sum to 1.0)
+risk_weights:
+  security: 0.40        # 40% - Highest priority for security changes
+  complexity: 0.20      # 20% - Code complexity and change size
+  impact: 0.20          # 20% - Business impact and system criticality
+  historical: 0.10      # 10% - Historical failure patterns
+  time_pressure: 0.10   # 10% - Urgency and time constraints
+
+# Security risk pattern detection
+security_patterns:
+  # High-risk file path patterns (glob-style)
+  high_risk_paths:
+    - "auth/**"
+    - "**/security/**"
+    - "*/payment/**"
+    - "**/authentication/**"
+    - "**/authorization/**"
+    - "*/crypto/**"
+    - "**/secrets/**"
+    - "*/password/**"
+    - "**/oauth/**"
+    - "**/jwt/**"
+    - "*/ssl/**"
+    - "**/tls/**"
+    - "*/certificate/**"
+    - "**/private/**"
+    - "*/key/**"
+    
+  # Medium-risk file path patterns
+  medium_risk_paths:
+    - "**/api/**"
+    - "**/database/**"
+    - "**/config/**"
+    - "**/admin/**"
+    - "**/user/**"
+    - "**/session/**"
+    - "*/middleware/**"
+    - "**/validation/**"
+    - "*/permissions/**"
+    - "**/roles/**"
+    
+  # High-risk keywords in issue content
+  high_risk_keywords:
+    - "password"
+    - "secret"
+    - "token"
+    - "auth"
+    - "login"
+    - "crypto"
+    - "encrypt"
+    - "decrypt"
+    - "certificate"
+    - "private_key"
+    - "api_key"
+    - "jwt"
+    - "oauth"
+    - "vulnerability"
+    - "exploit"
+    - "injection"
+    - "xss"
+    - "csrf"
+    - "privilege"
+    - "elevation"
+
+# Complexity assessment thresholds
+complexity_thresholds:
+  # Lines of code changed thresholds
+  lines_changed:
+    low: 50           # Under 50 lines = low complexity
+    medium: 200       # 50-200 lines = medium complexity
+    high: 500         # 200-500 lines = high complexity
+    critical: 1000    # Over 500 lines = critical complexity
+    
+  # Number of files affected thresholds
+  files_affected:
+    low: 3            # 1-3 files = low impact
+    medium: 10        # 4-10 files = medium impact
+    high: 25          # 11-25 files = high impact
+    critical: 50      # Over 25 files = critical impact
+    
+  # Cyclomatic complexity thresholds (future implementation)
+  cyclomatic_complexity:
+    low: 5
+    medium: 10
+    high: 20
+    critical: 30
+
+# Risk level escalation thresholds (0.0 to 1.0 scale)
+escalation_thresholds:
+  low: 0.3          # 0-30% risk score = low risk
+  medium: 0.6       # 30-60% risk score = medium risk
+  high: 0.8         # 60-80% risk score = high risk
+  critical: 1.0     # 80-100% risk score = critical risk
+
+# Specialist routing configuration
+specialist_routing:
+  security:
+    # Triggers that route to security specialist
+    triggers:
+      - "security_changes"
+      - "auth_modifications"
+      - "vulnerability_fixes"
+      - "crypto_changes"
+      - "permission_updates"
+    sla_hours: 4        # 4-hour response time for security issues
+    blocking: true      # Security reviews are blocking
+    escalation_chain:
+      - "senior_security_engineer"
+      - "security_architect"
+      - "ciso"
+      
+  architecture:
+    # Triggers that route to architecture specialist
+    triggers:
+      - "large_changes"
+      - "database_schema_changes"
+      - "api_changes"
+      - "performance_critical"
+      - "scalability_changes"
+    sla_hours: 12       # 12-hour response time for architecture reviews
+    blocking: false     # Architecture reviews can be parallel
+    escalation_chain:
+      - "senior_architect"
+      - "principal_architect"
+      - "engineering_director"
+      
+  compliance:
+    # Triggers that route to compliance specialist
+    triggers:
+      - "audit_changes"
+      - "privacy_changes"
+      - "gdpr_related"
+      - "data_retention"
+      - "regulatory_compliance"
+    sla_hours: 6        # 6-hour response time for compliance issues
+    blocking: true      # Compliance reviews are blocking
+    escalation_chain:
+      - "compliance_officer"
+      - "legal_counsel"
+      - "cpo"
+      
+  performance:
+    # Triggers that route to performance specialist  
+    triggers:
+      - "performance_critical"
+      - "database_optimization"
+      - "caching_changes"
+      - "algorithm_optimization"
+    sla_hours: 8        # 8-hour response time for performance reviews
+    blocking: false     # Performance reviews can be parallel
+    escalation_chain:
+      - "performance_engineer"
+      - "senior_architect"
+
+# Evidence requirements for manual intervention decisions
+evidence_requirements:
+  # Security specialist evidence requirements
+  security_specialist:
+    mandatory:
+      - "security_scan_results"
+      - "threat_model_review" 
+      - "penetration_test_summary"
+      - "vulnerability_assessment"
+      - "access_control_validation"
+    recommended:
+      - "security_code_review"
+      - "compliance_checklist"
+      - "incident_response_plan_update"
+      
+  # Architecture specialist evidence requirements  
+  architecture_specialist:
+    mandatory:
+      - "architectural_decision_record"
+      - "scalability_analysis"
+      - "performance_impact_assessment"
+      - "dependency_analysis"
+      - "integration_testing_plan"
+    recommended:
+      - "capacity_planning_review"
+      - "disaster_recovery_considerations"
+      - "monitoring_and_alerting_plan"
+      
+  # Compliance specialist evidence requirements
+  compliance_specialist:
+    mandatory:
+      - "regulatory_impact_assessment"
+      - "privacy_impact_analysis"
+      - "data_classification_review"
+      - "audit_trail_verification"
+      - "policy_compliance_check"
+    recommended:
+      - "legal_review_summary"
+      - "third_party_risk_assessment"
+      - "data_retention_compliance"
+
+# Escalation decision matrix
+escalation_matrix:
+  # Automatic escalation rules
+  automatic_escalation:
+    # Critical risk always escalates
+    - condition: "risk_level == 'critical'"
+      action: "escalate_immediately"
+      specialist: "determine_by_primary_risk_factor"
+      sla_override: "emergency"  # 2-hour maximum response
+      
+    # High risk with security factors
+    - condition: "risk_level == 'high' AND security_score >= 0.6"
+      action: "escalate_to_security"
+      specialist: "security"
+      sla_override: "urgent"      # 4-hour maximum response
+      
+    # High complexity and impact together
+    - condition: "complexity_score >= 0.7 AND impact_score >= 0.7"
+      action: "escalate_to_architecture"
+      specialist: "architecture"
+      sla_override: "standard"    # 12-hour maximum response
+      
+    # Multiple elevated factors (risk spreading)
+    - condition: "count(factors >= 0.6) >= 2"
+      action: "escalate_multi_specialist"
+      specialist: "determine_by_factors"
+      sla_override: "urgent"      # 6-hour maximum response
+
+  # Manual override conditions
+  manual_override:
+    # Manager can override any escalation
+    - role: "engineering_manager"
+      conditions: ["all"]
+      requires_justification: true
+      audit_trail: true
+      
+    # Security team can override security escalations
+    - role: "security_team_lead"
+      conditions: ["security_escalations"]
+      requires_justification: false
+      audit_trail: true
+      
+    # Architect can override complexity/impact escalations
+    - role: "principal_architect" 
+      conditions: ["architecture_escalations"]
+      requires_justification: true
+      audit_trail: true
+
+# SLA monitoring configuration
+sla_monitoring:
+  # Response time tracking
+  response_tracking:
+    enabled: true
+    track_business_hours_only: false  # Track 24/7
+    timezone: "UTC"
+    
+    # Business hours definition (if needed)
+    business_hours:
+      start: "09:00"
+      end: "17:00"
+      weekdays_only: true
+      
+  # Escalation alerts
+  escalation_alerts:
+    # 50% of SLA elapsed
+    early_warning:
+      threshold: 0.5
+      channels: ["slack", "email"]
+      
+    # 80% of SLA elapsed  
+    urgent_warning:
+      threshold: 0.8
+      channels: ["slack", "email", "pagerduty"]
+      
+    # SLA breach
+    sla_breach:
+      threshold: 1.0
+      channels: ["slack", "email", "pagerduty", "phone"]
+      escalate_to_manager: true
+
+# Audit trail configuration
+audit_trail:
+  enabled: true
+  storage_location: "knowledge/decisions/"
+  retention_days: 365
+  
+  # Required audit fields
+  required_fields:
+    - "timestamp"
+    - "issue_number"
+    - "risk_score_breakdown"
+    - "escalation_decision"
+    - "assigned_specialist"
+    - "decision_rationale"
+    - "evidence_provided"
+    - "resolution_time"
+    
+  # Tamper protection
+  tamper_protection:
+    enabled: true
+    checksum_validation: true
+    immutable_storage: true
+    
+# Integration settings
+integration:
+  # GitHub integration
+  github:
+    issue_creation:
+      enabled: true
+      template_path: "templates/escalation-issue-template.md"
+      labels:
+        - "state:blocked"
+        - "escalation:manual-review"
+        - "priority:high"
+      
+    comment_updates:
+      enabled: true
+      progress_updates: true
+      decision_notifications: true
+      
+  # External systems
+  external_systems:
+    # LDAP/Active Directory for specialist lookup
+    ldap:
+      enabled: false
+      server: "ldap://corporate.example.com"
+      base_dn: "ou=people,dc=example,dc=com"
+      
+    # PagerDuty for escalation alerts
+    pagerduty:
+      enabled: false
+      api_key: "${PAGERDUTY_API_KEY}"
+      service_id: "${PAGERDUTY_SERVICE_ID}"
+      
+    # Slack for notifications
+    slack:
+      enabled: false
+      webhook_url: "${SLACK_WEBHOOK_URL}"
+      channel: "#engineering-escalations"
+
+# Performance and monitoring
+performance:
+  # Risk assessment performance targets
+  assessment_performance:
+    target_time_ms: 5000        # Risk assessment should complete within 5 seconds
+    timeout_ms: 30000           # Timeout after 30 seconds
+    cache_results: true         # Cache results for 1 hour
+    cache_ttl_seconds: 3600
+    
+  # Metrics collection
+  metrics:
+    enabled: true
+    collection_interval_seconds: 300  # Every 5 minutes
+    
+    tracked_metrics:
+      - "assessment_duration"
+      - "escalation_rate"
+      - "false_positive_rate"
+      - "sla_compliance_rate"
+      - "specialist_response_time"
+      - "override_rate"
+
+# Machine learning readiness (future implementation)
+machine_learning:
+  enabled: false              # Not implemented yet
+  
+  # Data collection for ML training
+  data_collection:
+    collect_decision_outcomes: true
+    collect_specialist_feedback: true
+    collect_false_positive_data: true
+    
+  # ML model configuration (placeholder)
+  model_config:
+    algorithm: "gradient_boosting"
+    feature_engineering: "automatic"
+    retraining_interval_days: 30
+    validation_split: 0.2

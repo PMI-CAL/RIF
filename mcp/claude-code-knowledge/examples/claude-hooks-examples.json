@@ -1,0 +1,215 @@
+{
+  "description": "Example Claude Code hook configurations demonstrating all supported hook types and features",
+  "examples": {
+    "basic_rif_integration": {
+      "description": "Basic RIF integration with GitHub issue tracking",
+      "config": {
+        "hooks": {
+          "SessionStart": [
+            {
+              "type": "command",
+              "command": "gh issue list --state open --label 'state:*' --json number,title,labels,body | head -10 > /tmp/rif-context.json && echo 'RIF: Found '$(jq length /tmp/rif-context.json)' active issues'",
+              "output": "context",
+              "metadata": {
+                "name": "RIF Issue Context Loader",
+                "description": "Loads active GitHub issues into Claude context at session start"
+              }
+            }
+          ],
+          "UserPromptSubmit": [
+            {
+              "type": "command",
+              "command": "if [ -f ./knowledge/latest-patterns.json ]; then cat ./knowledge/latest-patterns.json; fi",
+              "matcher": ".*issue.*|.*fix.*|.*implement.*|.*analyze.*",
+              "output": "context",
+              "metadata": {
+                "name": "Pattern Context Injector",
+                "description": "Injects relevant patterns when user mentions issue-related keywords"
+              }
+            }
+          ],
+          "PostToolUse": [
+            {
+              "type": "command",
+              "command": "echo '{\"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\", \"action\": \"code_modified\"}' >> ./knowledge/events.jsonl",
+              "matcher": "Edit|Write|MultiEdit",
+              "output": "log",
+              "metadata": {
+                "name": "Code Modification Logger",
+                "description": "Logs code modification events for learning system"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "comprehensive_monitoring": {
+      "description": "Comprehensive monitoring with all hook types",
+      "config": {
+        "hooks": {
+          "SessionStart": [
+            {
+              "type": "command",
+              "command": "echo 'Claude Code session started at '$(date)",
+              "output": "log",
+              "priority": 1,
+              "metadata": {
+                "name": "Session Start Logger"
+              }
+            },
+            {
+              "type": "script",
+              "script": "./scripts/setup-workspace.sh",
+              "output": "silent",
+              "timeout": 10000,
+              "priority": 2
+            }
+          ],
+          "SessionEnd": [
+            {
+              "type": "command",
+              "command": "echo 'Claude Code session ended at '$(date)",
+              "output": "log",
+              "metadata": {
+                "name": "Session End Logger"
+              }
+            }
+          ],
+          "UserPromptSubmit": [
+            {
+              "type": "command",
+              "command": "echo 'User prompt: '$(echo \"$CLAUDE_USER_PROMPT\" | head -c 100)",
+              "output": "log",
+              "conditions": {
+                "environment": ["CLAUDE_DEBUG"]
+              }
+            }
+          ],
+          "AssistantResponse": [
+            {
+              "type": "webhook",
+              "url": "https://api.example.com/claude-responses",
+              "async": true,
+              "output": "silent",
+              "enabled": false,
+              "metadata": {
+                "name": "Response Analytics Webhook"
+              }
+            }
+          ],
+          "ToolUse": [
+            {
+              "type": "command",
+              "command": "echo 'Tool used: $CLAUDE_TOOL_NAME'",
+              "output": "log",
+              "conditions": {
+                "tools": ["Edit", "Write", "Bash"]
+              }
+            }
+          ],
+          "PostToolUse": [
+            {
+              "type": "command",
+              "command": "if [ $CLAUDE_TOOL_EXIT_CODE -ne 0 ]; then echo 'Command failed with exit code: $CLAUDE_TOOL_EXIT_CODE'; fi",
+              "matcher": "Bash",
+              "output": "context"
+            }
+          ],
+          "ErrorOccurred": [
+            {
+              "type": "command",
+              "command": "echo 'Error occurred: $CLAUDE_ERROR_MESSAGE' >> ./logs/errors.log",
+              "output": "log",
+              "timeout": 5000
+            },
+            {
+              "type": "webhook",
+              "url": "https://alerts.example.com/claude-errors",
+              "async": true,
+              "output": "silent",
+              "priority": 1
+            }
+          ]
+        }
+      }
+    },
+    "development_workflow": {
+      "description": "Development workflow with testing and validation",
+      "config": {
+        "hooks": {
+          "PostToolUse": [
+            {
+              "type": "command",
+              "command": "if [ -f package.json ]; then npm run lint; elif [ -f requirements.txt ]; then flake8 .; fi",
+              "matcher": "Edit|Write|MultiEdit",
+              "output": "context",
+              "async": true,
+              "conditions": {
+                "file_patterns": ["*.js", "*.ts", "*.py"]
+              },
+              "metadata": {
+                "name": "Auto Linter",
+                "description": "Runs appropriate linter after code modifications"
+              }
+            },
+            {
+              "type": "command",
+              "command": "if [[ \"$CLAUDE_COMMAND\" == *\"test\"* ]]; then echo 'Test command detected, monitoring results'; fi",
+              "matcher": "Bash",
+              "output": "context"
+            }
+          ],
+          "ErrorOccurred": [
+            {
+              "type": "script",
+              "script": "./scripts/error-recovery.sh",
+              "output": "context",
+              "timeout": 15000,
+              "metadata": {
+                "name": "Auto Error Recovery",
+                "description": "Attempts automatic error recovery"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "minimal_example": {
+      "description": "Minimal hook configuration for basic logging",
+      "config": {
+        "hooks": {
+          "SessionStart": [
+            {
+              "type": "command",
+              "command": "echo 'Session started'",
+              "output": "log"
+            }
+          ]
+        }
+      }
+    },
+    "advanced_conditional": {
+      "description": "Advanced conditional hooks with nested execution",
+      "config": {
+        "hooks": {
+          "UserPromptSubmit": [
+            {
+              "type": "command",
+              "command": "echo 'Production deployment detected - running safety checks'",
+              "matcher": ".*deploy.*|.*production.*",
+              "output": "context",
+              "hooks": [
+                {
+                  "type": "script",
+                  "script": "./scripts/safety-check.sh",
+                  "output": "context",
+                  "timeout": 30000
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+correlation_thresholds:
+  high_correlation: 0.7
+  low_correlation: 0.2
+  medium_correlation: 0.4
+max_risk_multiplier: 0.3
+risk_level_thresholds:
+  critical: 0.9
+  high: 0.75
+  low: 0.3
+  medium: 0.5
+risk_weights:
+  architectural: 0.25
+  change: 0.15
+  performance: 0.25
+  security: 0.35

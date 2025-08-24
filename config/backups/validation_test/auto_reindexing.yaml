@@ -1,0 +1,218 @@
+# Auto-Reindexing Scheduler Configuration
+# Issue #69: Build auto-reindexing scheduler
+#
+# This configuration file defines the behavior of the auto-reindexing scheduler
+# including resource thresholds, priority settings, and performance parameters.
+
+auto_reindexing:
+  # Core scheduling settings
+  scheduling:
+    # Interval between queue checks (seconds)
+    queue_check_interval: 2.0
+    
+    # How often to report metrics (seconds)  
+    metrics_report_interval: 30.0
+    
+    # Resource monitoring interval (seconds)
+    resource_check_interval: 5.0
+    
+    # Maximum number of concurrent reindexing jobs
+    max_concurrent_jobs: 2
+    
+    # Enable adaptive scheduling (learns from performance)
+    enable_adaptive_scheduling: true
+    
+    # Boost priority after N queue cycles without processing
+    priority_boost_threshold: 10
+
+  # Resource management thresholds by priority level
+  # Values are 0.0-1.0 representing maximum resource utilization allowed
+  resource_thresholds:
+    critical: 0.95    # Critical jobs can use up to 95% of resources
+    high: 0.75        # High priority jobs can use up to 75% 
+    medium: 0.50      # Medium priority jobs can use up to 50%
+    low: 0.30         # Low priority jobs can use up to 30%
+
+  # Batch processing configuration
+  batch_processing:
+    # Enable job batching for performance optimization
+    enabled: true
+    
+    # Maximum number of jobs in a single batch
+    max_batch_size: 50
+    
+    # Maximum time to wait for batch completion (seconds)
+    timeout_seconds: 300
+    
+    # Batch formation strategies
+    strategies:
+      - file_based      # Group jobs by file/directory
+      - entity_based    # Group jobs by entity type
+      - priority_based  # Group jobs by priority level
+
+  # Job retry configuration
+  retry_policy:
+    # Default maximum retry attempts
+    default_max_retries: 3
+    
+    # Base delay between retries (seconds)
+    retry_delay_seconds: 60.0
+    
+    # Use exponential backoff for retry delays
+    exponential_backoff: true
+    
+    # Maximum retry delay (seconds)
+    max_retry_delay: 1800.0  # 30 minutes
+
+  # Integration settings
+  integrations:
+    # File change detection integration
+    file_change_monitoring:
+      enabled: true
+      # Paths to monitor for changes (relative to project root)
+      monitored_paths:
+        - "src/"
+        - "lib/"
+        - "config/"
+      
+    # Graph validation system integration  
+    graph_validation:
+      enabled: true
+      # Validation categories that trigger reindexing
+      trigger_categories:
+        - "referential_integrity"
+        - "constraint_validation"
+        - "data_consistency"
+      
+    # Performance monitoring integration
+    performance_monitoring:
+      enabled: true
+      # Collect detailed performance metrics
+      detailed_metrics: true
+
+  # Priority calculation weights
+  # These weights determine how different factors influence job priority
+  priority_weights:
+    urgency: 2.0          # How urgent (trigger-based)
+    impact: 1.5           # How impactful (entity type, dependencies)  
+    staleness: 1.0        # How stale the data is
+    dependency: 1.2       # How many things depend on this
+    system_load: 0.8      # Current system performance
+    historical: 0.5       # Based on past performance
+
+  # Entity type priority modifiers  
+  # These adjust priority based on the type of entity being reindexed
+  entity_type_modifiers:
+    module: 1.2           # Modules are very important
+    class: 1.1            # Classes are important
+    interface: 1.1        # Interfaces affect many things
+    function: 1.0         # Functions are baseline
+    relationship: 0.9     # Relationships are moderately important
+    constant: 0.8         # Constants are less critical
+    variable: 0.7         # Variables are least critical
+
+  # Trigger-based priority mappings
+  trigger_priorities:
+    validation_issue:
+      critical: 0         # CRITICAL priority
+      error: 1           # HIGH priority  
+      warning: 2         # MEDIUM priority
+      info: 3           # LOW priority
+      
+    file_change:
+      source_code: 1      # HIGH priority
+      configuration: 1    # HIGH priority
+      documentation: 2    # MEDIUM priority
+      test_file: 2       # MEDIUM priority
+      other: 3           # LOW priority
+      
+    manual_request: 2     # MEDIUM priority
+    scheduled_maintenance: 3  # LOW priority
+    dependency_update: 2  # MEDIUM priority
+    system_startup: 1    # HIGH priority
+    performance_optimization: 3  # LOW priority
+
+  # Performance optimization settings
+  performance:
+    # Enable job result caching to avoid duplicate work
+    enable_caching: true
+    
+    # Cache TTL in seconds
+    cache_ttl: 3600  # 1 hour
+    
+    # Enable incremental reindexing (only process changed parts)
+    incremental_reindexing: true
+    
+    # Minimum time between reindexing the same entity (seconds)
+    min_reindex_interval: 300  # 5 minutes
+
+  # Monitoring and alerting
+  monitoring:
+    # Enable performance alerts
+    enable_alerts: true
+    
+    # Alert thresholds
+    alert_thresholds:
+      # Alert if queue size exceeds this number
+      max_queue_size: 1000
+      
+      # Alert if job failure rate exceeds this percentage
+      max_failure_rate: 10.0
+      
+      # Alert if average processing time exceeds this (seconds)  
+      max_processing_time: 30.0
+      
+      # Alert if resource utilization stays above this for too long
+      sustained_high_utilization: 0.90
+      
+      # Duration for sustained utilization alert (seconds)
+      utilization_alert_duration: 300
+
+    # Metrics retention
+    metrics_retention:
+      # How long to keep detailed job history (days)
+      job_history_days: 7
+      
+      # How long to keep performance metrics (days)  
+      performance_metrics_days: 30
+      
+      # How long to keep resource utilization data (days)
+      resource_data_days: 14
+
+  # Advanced settings
+  advanced:
+    # Enable experimental features
+    experimental_features: false
+    
+    # Debug mode (more verbose logging)
+    debug_mode: false
+    
+    # Enable profiling for performance analysis
+    enable_profiling: false
+    
+    # Custom scheduler plugins (future extension point)
+    plugins: []
+
+# Storage paths for scheduler data
+storage:
+  # Base directory for scheduler data
+  base_path: "knowledge/indexing"
+  
+  # Subdirectories for different data types
+  paths:
+    logs: "logs"
+    metrics: "metrics" 
+    checkpoints: "checkpoints"
+    cache: "cache"
+    
+# Logging configuration for the scheduler
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Separate log files for different components
+  files:
+    scheduler: "auto_reindexing.log"
+    resource_manager: "resource_manager.log"
+    job_manager: "job_manager.log" 
+    priority_calculator: "priority_calculator.log"

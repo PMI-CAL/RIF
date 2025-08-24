@@ -1,0 +1,183 @@
+# Threshold Optimization Rules Configuration
+# Issue #95: Adaptive Threshold Learning System
+# Defines rules for adaptive threshold optimization
+
+rules:
+  performance_based:
+    - rule_id: low_pass_rate
+      name: "Low Pass Rate Adjustment"
+      description: "Lower threshold when pass rate is consistently low"
+      priority: 8
+      confidence_impact: 0.8
+      conditions:
+        pass_rate: { operator: "<", value: 0.6 }
+        sample_size: { operator: ">", value: 10 }
+      actions:
+        adjustment: -0.1
+        max_change: 0.15
+      
+    - rule_id: high_override_rate
+      name: "High Override Rate Adjustment"
+      description: "Lower threshold when manual override rate is high"
+      priority: 9
+      confidence_impact: 0.85
+      conditions:
+        override_rate: { operator: ">", value: 0.25 }
+        sample_size: { operator: ">", value: 5 }
+      actions:
+        adjustment: -0.12
+        max_change: 0.2
+      
+    - rule_id: excellent_performance
+      name: "Excellent Performance Optimization"
+      description: "Slightly increase threshold when performance is excellent"
+      priority: 4
+      confidence_impact: 0.7
+      conditions:
+        pass_rate: { operator: ">", value: 0.9 }
+        override_rate: { operator: "<", value: 0.1 }
+        sample_size: { operator: ">", value: 20 }
+      actions:
+        adjustment: 0.05
+        max_change: 0.08
+
+  trend_based:
+    - rule_id: improving_trend
+      name: "Improving Quality Trend"
+      description: "Gradually increase threshold when quality is consistently improving"
+      priority: 5
+      confidence_impact: 0.6
+      conditions:
+        quality_trend: { operator: "==", value: "improving" }
+        trend_periods: { operator: ">", value: 3 }
+      actions:
+        adjustment: 0.03
+        max_change: 0.06
+      
+    - rule_id: degrading_trend
+      name: "Degrading Quality Trend"
+      description: "Lower threshold when quality is degrading to maintain pass rates"
+      priority: 7
+      confidence_impact: 0.75
+      conditions:
+        quality_trend: { operator: "==", value: "degrading" }
+        trend_periods: { operator: ">", value: 2 }
+      actions:
+        adjustment: -0.08
+        max_change: 0.12
+
+  component_specific:
+    - rule_id: critical_component_safety
+      name: "Critical Component Safety"
+      description: "Maintain higher thresholds for critical components"
+      priority: 10
+      confidence_impact: 0.9
+      conditions:
+        component_type: { operator: "==", value: "critical_algorithms" }
+        threshold: { operator: "<", value: 0.9 }
+      actions:
+        adjustment: 0.1
+        min_threshold: 0.9
+      
+    - rule_id: test_utility_leniency
+      name: "Test Utility Leniency"
+      description: "Allow lower thresholds for test utilities"
+      priority: 3
+      confidence_impact: 0.8
+      conditions:
+        component_type: { operator: "==", value: "test_utilities" }
+        threshold: { operator: ">", value: 0.8 }
+      actions:
+        adjustment: -0.1
+        min_threshold: 0.6
+
+  statistical:
+    - rule_id: threshold_variance_optimization
+      name: "Threshold Variance Optimization" 
+      description: "Optimize when threshold usage shows high variance"
+      priority: 6
+      confidence_impact: 0.65
+      conditions:
+        threshold_variance: { operator: ">", value: 15 }
+        sample_size: { operator: ">", value: 15 }
+      actions:
+        method: "statistical_optimization"
+        
+    - rule_id: large_sample_confidence_boost
+      name: "Large Sample Confidence Boost"
+      description: "Increase confidence for optimizations with large samples"
+      priority: 2
+      confidence_impact: 1.1
+      conditions:
+        sample_size: { operator: ">", value: 50 }
+      actions:
+        confidence_boost: 0.1
+
+  safety:
+    - rule_id: insufficient_data_safety
+      name: "Insufficient Data Safety"
+      description: "Conservative approach when sample size is small"
+      priority: 2
+      confidence_impact: 0.3
+      conditions:
+        sample_size: { operator: "<", value: 10 }
+      actions:
+        adjustment: 0
+        require_more_data: true
+      
+    - rule_id: recent_failure_safety
+      name: "Recent Failure Safety"
+      description: "Cautious adjustment after recent failures"
+      priority: 8
+      confidence_impact: 0.7
+      conditions:
+        recent_failures: { operator: ">", value: 0.3 }
+        time_period: { operator: "<", value: 7 }
+      actions:
+        adjustment: -0.05
+        max_change: 0.1
+
+  context_aware:
+    - rule_id: high_risk_project_safety
+      name: "High Risk Project Safety"
+      description: "More conservative thresholds for high-risk projects"
+      priority: 7
+      confidence_impact: 0.8
+      conditions:
+        risk_level: { operator: "==", value: "high" }
+      actions:
+        adjustment: 0.05
+        min_confidence_required: 0.8
+      
+    - rule_id: team_experience_factor
+      name: "Team Experience Factor"
+      description: "Adjust thresholds based on team experience level"
+      priority: 4
+      confidence_impact: 0.6
+      conditions:
+        team_experience: { operator: "==", value: "junior" }
+      actions:
+        adjustment: -0.03
+        rationale: "Lower thresholds for junior teams"
+
+# Rule application settings
+rule_application:
+  max_rules_per_optimization: 5
+  require_unanimous_direction: false  # Allow conflicting rule directions
+  weight_by_priority: true
+  weight_by_confidence: true
+  
+  # Rule conflict resolution
+  conflict_resolution_strategy: "weighted_average"  # "highest_priority", "weighted_average", "most_confident"
+  
+  # Safety overrides
+  safety_rules_always_apply: true
+  component_minimums_enforced: true
+  absolute_bounds_enforced: true
+
+# Rule debugging and monitoring
+monitoring:
+  log_rule_applications: true
+  track_rule_effectiveness: true
+  learn_from_outcomes: true
+  adjust_rule_weights: false  # Future: automatic rule weight learning

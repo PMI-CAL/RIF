@@ -1,0 +1,354 @@
+# Context-Aware Quality Thresholds Configuration - Issue #93 Phase 2
+# Component-specific thresholds based on criticality and business impact
+
+# Component Type Threshold Matrix
+component_thresholds:
+  # Mission-critical algorithms and core processing
+  critical_algorithms:
+    weight: 1.2
+    description: "Core algorithms, data processing, mathematical calculations"
+    quality_thresholds:
+      test_coverage: 95.0
+      security_validation: "zero_tolerance"  # No vulnerabilities allowed
+      performance_impact: 2.0              # Max 2% regression
+      code_quality: "strict"               # Highest maintainability standards
+    risk_tolerance: "minimal"
+    review_requirements:
+      - "architecture_review"
+      - "algorithm_verification" 
+      - "performance_benchmarking"
+    patterns:
+      - "**/algorithm/**"
+      - "**/core/**" 
+      - "**/engine/**"
+      - "**/calculation/**"
+      - "**/processor/**"
+      - "**/math/**"
+    
+  # Public-facing APIs and interfaces
+  public_apis:
+    weight: 1.1
+    description: "Public-facing APIs, REST endpoints, GraphQL resolvers"
+    quality_thresholds:
+      test_coverage: 90.0
+      security_validation: "zero_critical"  # No critical vulnerabilities
+      performance_impact: 3.0              # Max 3% regression
+      code_quality: "high"                 # High maintainability standards
+    risk_tolerance: "low"
+    review_requirements:
+      - "api_contract_review"
+      - "security_scan"
+      - "integration_testing"
+    patterns:
+      - "**/api/**"
+      - "**/rest/**"
+      - "**/graphql/**"
+      - "**/public/**"
+      - "**/endpoint/**"
+      - "**/route/**"
+      
+  # Core business logic and domain models  
+  business_logic:
+    weight: 1.0
+    description: "Core business logic, domain models, service layers"
+    quality_thresholds:
+      test_coverage: 85.0
+      security_validation: "standard"       # Standard security requirements
+      performance_impact: 5.0              # Max 5% regression  
+      code_quality: "standard"             # Standard maintainability
+    risk_tolerance: "moderate"
+    review_requirements:
+      - "business_logic_review"
+      - "unit_testing"
+    patterns:
+      - "**/business/**"
+      - "**/service/**" 
+      - "**/logic/**"
+      - "**/domain/**"
+      - "**/model/**"
+      - "**/entity/**"
+      
+  # Integration and middleware components
+  integration_code:
+    weight: 0.9
+    description: "Integration code, middleware, adapters, connectors"
+    quality_thresholds:
+      test_coverage: 80.0
+      security_validation: "standard"       # Standard security requirements
+      performance_impact: 7.0              # Max 7% regression
+      code_quality: "standard"             # Standard maintainability  
+    risk_tolerance: "moderate"
+    review_requirements:
+      - "integration_testing"
+      - "connectivity_verification"
+    patterns:
+      - "**/integration/**"
+      - "**/middleware/**"
+      - "**/adapter/**"
+      - "**/connector/**"
+      - "**/gateway/**"
+      - "**/proxy/**"
+      
+  # User interface components
+  ui_components:
+    weight: 0.8
+    description: "User interface components, templates, styling"
+    quality_thresholds:
+      test_coverage: 70.0
+      security_validation: "standard"       # Standard security (XSS, etc.)
+      performance_impact: 10.0             # Max 10% regression
+      code_quality: "relaxed"              # Relaxed maintainability
+    risk_tolerance: "moderate" 
+    review_requirements:
+      - "ui_testing"
+      - "accessibility_check"
+    patterns:
+      - "**/ui/**"
+      - "**/component/**"
+      - "**/view/**"
+      - "**/template/**"
+      - "**/style/**"
+      - "**/css/**"
+      - "**/scss/**"
+      
+  # Configuration and infrastructure code
+  configuration:
+    weight: 0.7
+    description: "Configuration files, environment setup, infrastructure"
+    quality_thresholds:
+      test_coverage: 60.0
+      security_validation: "high"           # High security for config (secrets, etc.)
+      performance_impact: 5.0              # Max 5% regression
+      code_quality: "relaxed"              # Relaxed maintainability
+    risk_tolerance: "low"                   # Config changes can be risky
+    review_requirements:
+      - "security_review"
+      - "deployment_testing"
+    patterns:
+      - "**/config/**"
+      - "**/settings/**" 
+      - "**/.env*"
+      - "**/docker/**"
+      - "**/k8s/**"
+      - "**/terraform/**"
+      - "**/ansible/**"
+      
+  # Test and mock code
+  test_code:
+    weight: 0.6
+    description: "Test code, mock objects, test utilities"
+    quality_thresholds:
+      test_coverage: 50.0                  # Tests don't need as much coverage
+      security_validation: "standard"       # Standard security
+      performance_impact: 20.0             # Tests can be slower
+      code_quality: "relaxed"              # Relaxed maintainability
+    risk_tolerance: "high"                 # Test changes are less risky
+    review_requirements:
+      - "test_effectiveness_review"
+    patterns:
+      - "**/test/**"
+      - "**/tests/**"
+      - "**/mock/**"
+      - "**/spec/**"
+      - "**/fixture/**"
+      - "**/*_test.*"
+      - "**/*Test.*"
+      - "**/*.test.*"
+      - "**/*.spec.*"
+
+# Quality Threshold Definitions
+quality_definitions:
+  # Security validation levels
+  security_levels:
+    zero_tolerance:
+      critical_vulnerabilities: 0
+      high_vulnerabilities: 0
+      medium_vulnerabilities: 0
+      description: "No vulnerabilities of any severity allowed"
+      
+    zero_critical:
+      critical_vulnerabilities: 0
+      high_vulnerabilities: 2
+      medium_vulnerabilities: 5
+      description: "No critical vulnerabilities, limited high/medium allowed"
+      
+    standard:
+      critical_vulnerabilities: 0
+      high_vulnerabilities: 3
+      medium_vulnerabilities: 10
+      description: "Standard security requirements"
+      
+    high:
+      critical_vulnerabilities: 0
+      high_vulnerabilities: 1
+      medium_vulnerabilities: 3
+      description: "High security requirements"
+  
+  # Code quality levels  
+  code_quality_levels:
+    strict:
+      max_critical_issues: 0
+      max_major_issues: 1
+      max_minor_issues: 3
+      maintainability_threshold: 80
+      description: "Strictest code quality standards"
+      
+    high:
+      max_critical_issues: 0
+      max_major_issues: 2
+      max_minor_issues: 5
+      maintainability_threshold: 70
+      description: "High code quality standards"
+      
+    standard:
+      max_critical_issues: 0
+      max_major_issues: 3
+      max_minor_issues: 10
+      maintainability_threshold: 60
+      description: "Standard code quality requirements"
+      
+    relaxed:
+      max_critical_issues: 0
+      max_major_issues: 5
+      max_minor_issues: 15
+      maintainability_threshold: 50
+      description: "Relaxed code quality for non-critical components"
+
+# Multi-Component Change Handling Strategies
+multi_component_strategies:
+  # Use weighted average of all component thresholds
+  weighted_average:
+    description: "Calculate weighted average threshold based on component distribution"
+    formula: "sum(threshold_i * weight_i) / sum(weight_i)"
+    use_case: "Balanced changes across multiple component types"
+    
+  # Use the highest (most strict) threshold  
+  most_conservative:
+    description: "Use the most conservative (highest) threshold among components"
+    formula: "max(threshold_i for all components)"
+    use_case: "Safety-critical changes, risk-averse approach"
+    
+  # Use threshold of the primary component type
+  primary_component:
+    description: "Use threshold of the component type with highest representation"
+    formula: "threshold[primary_component_type]"
+    use_case: "Changes heavily concentrated in one component type"
+    
+  # Use size-based weighting (larger changes get stricter thresholds)
+  size_based:
+    description: "Weight thresholds by change size in each component"
+    formula: "sum(threshold_i * change_size_i) / total_change_size" 
+    use_case: "Changes with varying sizes across components"
+    
+  # Use risk-based weighting (higher risk components get more weight)
+  risk_based:
+    description: "Weight thresholds by risk level of each component"
+    formula: "sum(threshold_i * risk_weight_i) / sum(risk_weight_i)"
+    use_case: "Changes affecting components with different risk profiles"
+
+# Adaptive Threshold Configuration
+adaptive_thresholds:
+  # Enable adaptive threshold adjustment based on historical data
+  enabled: true
+  
+  # Learning parameters
+  learning_rate: 0.1                       # How quickly to adjust thresholds
+  historical_window_days: 90               # Look back period for trend analysis
+  minimum_samples: 10                      # Minimum samples needed for adjustment
+  
+  # Adjustment bounds
+  max_adjustment_percent: 20               # Maximum threshold adjustment (±20%)
+  adjustment_frequency_days: 30            # How often to recalculate adjustments
+  
+  # Trend analysis
+  trend_analysis:
+    enabled: true
+    metrics:
+      - "false_positive_rate"              # Threshold too strict
+      - "false_negative_rate"              # Threshold too lenient
+      - "quality_correlation"              # Correlation with actual defects
+    target_false_positive_rate: 0.05       # Target 5% false positive rate
+    target_false_negative_rate: 0.02       # Target 2% false negative rate
+    
+  # Component-specific learning
+  component_learning:
+    enabled: true
+    track_by_component: true
+    independent_adjustment: true            # Adjust each component independently
+
+# Validation Rules
+validation_rules:
+  # Ensure thresholds make sense
+  sanity_checks:
+    - name: "coverage_bounds"
+      description: "Coverage thresholds must be between 0-100%"
+      rule: "0 <= coverage <= 100"
+      
+    - name: "performance_bounds" 
+      description: "Performance regression thresholds must be positive"
+      rule: "performance_impact > 0"
+      
+    - name: "security_consistency"
+      description: "Security levels must be consistent with severity ordering"
+      rule: "zero_tolerance >= zero_critical >= standard"
+      
+    - name: "weight_ordering"
+      description: "Critical components should have higher weights"
+      rule: "critical_algorithms.weight >= business_logic.weight >= test_code.weight"
+  
+  # Configuration completeness checks
+  completeness_checks:
+    - "All component types have defined thresholds"
+    - "All quality dimensions are covered"
+    - "All security levels are defined"
+    - "All code quality levels are defined"
+    
+  # Performance validation
+  performance_checks:
+    - name: "threshold_calculation_time"
+      description: "Threshold calculation must be fast"
+      limit_ms: 50
+      
+    - name: "pattern_matching_time"
+      description: "Component classification must be rapid"  
+      limit_ms: 100
+
+# Integration Configuration
+integration:
+  # Integration with existing quality gates
+  quality_gates_integration:
+    enabled: true
+    override_existing: true                 # Override existing static thresholds
+    fallback_to_legacy: true               # Fallback to legacy 80% if context detection fails
+    
+  # Workflow integration
+  workflow_integration:
+    config_path: "config/rif-workflow.yaml"
+    update_adaptive_coverage_section: true
+    preserve_backward_compatibility: true
+    
+  # Monitoring and metrics
+  monitoring:
+    track_threshold_effectiveness: true
+    log_threshold_decisions: true
+    export_metrics: true
+    metrics_export_path: "knowledge/metrics/threshold-effectiveness.jsonl"
+
+# Default Fallback Configuration
+fallback:
+  # If component detection fails
+  default_component_type: "business_logic"
+  default_weight: 1.0
+  
+  # If threshold calculation fails
+  fallback_thresholds:
+    test_coverage: 80.0                    # Legacy 80% threshold
+    security_validation: "standard" 
+    performance_impact: 5.0
+    code_quality: "standard"
+    
+  # Emergency fallback to legacy system
+  legacy_fallback:
+    enabled: true
+    formula: "100 - (20 × FAILs) - (10 × CONCERNs)"
+    threshold: 80

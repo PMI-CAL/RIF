@@ -1,0 +1,18 @@
+{
+  "pattern_id": "c576263e4804",
+  "pattern_name": "network_network_error",
+  "error_signature": "network|network_error|GitHub API timeout after N seconds",
+  "frequency": 1,
+  "first_seen": "2025-08-24T04:04:14.899996+00:00",
+  "last_seen": "2025-08-24T04:04:14.899996+00:00",
+  "affected_systems": [
+    "github"
+  ],
+  "resolution_success_rate": 0.0,
+  "recommended_actions": [
+    "Check internet connectivity",
+    "Verify API endpoints are accessible",
+    "Consider retry with exponential backoff",
+    "Increase timeout value or check service responsiveness"
+  ]
+}

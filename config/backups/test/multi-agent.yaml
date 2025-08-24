@@ -1,0 +1,198 @@
+# Multi-Agent Workflow Configuration
+
+# Core agent settings
+agents:
+  # Maximum number of parallel subagents per agent
+  max_parallel_subagents: 4
+  
+  # Default timeout for agent operations (seconds)
+  default_timeout: 3600
+  
+  # Retry configuration
+  retry_attempts: 3
+  retry_delay_seconds: 60
+  
+  # Agent-specific configurations
+  analyst:
+    enabled: true
+    parallel_tasks: 4
+    timeout: 3600
+    priority: high
+    
+  pm:
+    enabled: true
+    parallel_tasks: 4
+    timeout: 1800
+    priority: high
+    
+  architect:
+    enabled: true
+    parallel_tasks: 4
+    timeout: 3600
+    priority: high
+    
+  developer:
+    enabled: true
+    parallel_tasks: 4
+    timeout: 7200
+    priority: high
+    
+  qa:
+    enabled: true
+    parallel_tasks: 4
+    timeout: 3600
+    priority: high
+    
+  scrum_master:
+    enabled: true
+    parallel_tasks: 4
+    timeout: 1800
+    priority: medium
+    
+  context_discovery:
+    enabled: true
+    parallel_tasks: 2
+    timeout: 1800
+    priority: medium
+
+# Workflow configuration
+workflow:
+  # State transitions
+  transitions:
+    new:
+      next_state: analyzing
+      assigned_agent: analyst
+      
+    analyzing:
+      next_state: planning
+      assigned_agent: pm
+      
+    planning:
+      next_state: designing
+      assigned_agent: architect
+      
+    designing:
+      next_state: implementing
+      assigned_agent: developer
+      
+    implementing:
+      next_state: testing
+      assigned_agent: qa
+      
+    testing:
+      next_state: complete
+      assigned_agent: none
+  
+  # Parallel execution settings
+  parallel_execution:
+    enabled: true
+    max_concurrent_tasks: 4
+    queue_size: 100
+    
+  # GitHub integration
+  github:
+    # Label prefixes
+    state_label_prefix: "workflow-state:"
+    agent_label_prefix: "workflow-agent:"
+    parallel_label: "workflow-parallel:active"
+    
+    # Auto-label new issues
+    auto_label_new_issues: true
+    
+    # Comment formatting
+    use_markdown: true
+    include_metrics: true
+
+# Resource management
+resources:
+  # Memory limits (MB)
+  max_memory_per_agent: 2048
+  total_memory_limit: 8192
+  
+  # CPU limits (percentage)
+  max_cpu_per_agent: 25
+  total_cpu_limit: 80
+  
+  # I/O limits
+  max_concurrent_io: 10
+  io_timeout_seconds: 300
+
+# Communication settings
+communication:
+  # Message bus configuration
+  message_retention_days: 30
+  max_message_size_kb: 1024
+  
+  # Inter-agent communication
+  enable_direct_messaging: true
+  message_queue_size: 1000
+  
+  # Notification settings
+  notify_on_completion: true
+  notify_on_error: true
+
+# Performance monitoring
+monitoring:
+  # Metrics collection
+  collect_metrics: true
+  metrics_interval_seconds: 60
+  
+  # Performance thresholds
+  task_completion_warning_seconds: 1800
+  task_completion_error_seconds: 3600
+  
+  # Resource usage alerts
+  memory_usage_warning_percent: 80
+  cpu_usage_warning_percent: 70
+  
+  # Success rate monitoring
+  minimum_success_rate: 0.95
+  evaluation_window_hours: 24
+
+# Error handling
+error_handling:
+  # Retry configuration
+  enable_auto_retry: true
+  max_retry_attempts: 3
+  
+  # Backoff strategy
+  backoff_type: exponential
+  initial_backoff_seconds: 60
+  max_backoff_seconds: 3600
+  
+  # Error escalation
+  escalate_after_failures: 3
+  escalation_labels:
+    - "needs-human-review"
+    - "workflow-error"
+
+# Quality gates
+quality_gates:
+  # Code quality standards
+  enforce_quality_checks: true
+  block_on_quality_failure: true
+  
+  # Testing requirements
+  minimum_test_coverage: 80
+  require_all_tests_pass: true
+  
+  # Documentation requirements
+  require_documentation: true
+  documentation_completeness: 0.9
+
+# Environment-specific overrides
+environments:
+  development:
+    agents:
+      max_parallel_subagents: 2
+    resources:
+      total_memory_limit: 4096
+      
+  staging:
+    monitoring:
+      collect_metrics: true
+      
+  production:
+    error_handling:
+      enable_auto_retry: true
+      escalate_after_failures: 2

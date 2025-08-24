@@ -1,0 +1,32 @@
+{
+  "error_id": "err_20250823_ed8e1099",
+  "conversation_id": "test_session",
+  "timestamp": "2025-08-24T04:04:14.899245+00:00",
+  "error_type": "database_error",
+  "error_message": "Database connection failed: Connection refused",
+  "error_context": {
+    "database": "conversations.duckdb",
+    "system": {
+      "timestamp": "2025-08-24T04:04:14.899088+00:00",
+      "working_directory": "/Users/cal/DEV/RIF",
+      "python_version": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
+      "platform": "darwin"
+    },
+    "environment": {
+      "user": "cal",
+      "home": "/Users/cal",
+      "path": "/Users/cal/Library/pnpm:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/"
+    }
+  },
+  "severity": "high",
+  "category": "database",
+  "stack_trace": null,
+  "affected_components": [
+    "database"
+  ],
+  "recovery_suggestions": [
+    "Check database connection configuration",
+    "Verify database file permissions",
+    "Consider database repair or recreation"
+  ]
+}

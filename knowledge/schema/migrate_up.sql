@@ -115,10 +115,8 @@ SELECT * FROM validate_migration();
 -- =============================================================================
 
 -- Insert initial sample data for testing
-INSERT INTO entities (type, name, file_path, line_start, line_end, metadata) VALUES
-('module', 'rif_framework', '/claude/agents/orchestrator.py', 1, 500, '{"language": "python", "framework": "RIF"}'),
-('class', 'RIFOrchestrator', '/claude/agents/orchestrator.py', 25, 400, '{"agents": ["analyst", "implementer", "validator"]}'),
-('function', 'orchestrate', '/claude/agents/orchestrator.py', 50, 100, '{"triggers": ["github_webhook", "issue_update"]}');
+-- Note: Removed references to orchestrator.py as Claude Code IS the orchestrator
+-- The RIF system uses Claude Code directly for orchestration, launching multiple Task agents in parallel
 
 INSERT INTO agent_memory (agent_type, issue_number, context, decision, outcome) VALUES
 ('RIF-Implementer', 28, 'Schema migration deployment', 'Deploy comprehensive knowledge graph schema', 'success');

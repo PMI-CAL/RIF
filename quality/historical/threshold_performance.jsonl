@@ -1,0 +1,1 @@
+{"timestamp": "2025-08-24T03:22:10.868593Z", "component_type": "validation_test", "threshold": 88.0, "success_rate": 0.95, "false_positive_rate": 0.02, "false_negative_rate": 0.03, "sample_size": 50, "time_period_days": 30}

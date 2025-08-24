@@ -1,0 +1,273 @@
+# Quality Dimensions Configuration - Issue #93
+# Multi-dimensional quality scoring system with configurable weights and thresholds
+
+quality_dimensions:
+  # Test Coverage dimension - 30% weight
+  test_coverage:
+    weight: 30
+    measurement: 'percentage_covered'
+    threshold_type: 'context_dependent'
+    min_threshold: 60
+    default_threshold: 80
+    max_threshold: 95
+    critical_threshold: 95  # For critical components
+    description: "Code test coverage percentage"
+    validation_commands:
+      - "npm test -- --coverage --json"
+      - "pytest --cov=. --cov-report=json"
+      - "go test -coverprofile=coverage.out -covermode=count ./..."
+    
+  # Security Validation dimension - 40% weight (highest priority)
+  security_validation:
+    weight: 40
+    measurement: 'vulnerability_score'
+    threshold_type: 'zero_critical'
+    critical_vulnerabilities: 0  # Must be zero
+    high_vulnerabilities: 2      # Max 2 high vulnerabilities
+    medium_vulnerabilities: 5    # Max 5 medium vulnerabilities
+    description: "Security vulnerability assessment"
+    validation_commands:
+      - "npm audit --json"
+      - "safety check --json"
+      - "snyk test --json"
+      - "gosec -fmt json ./..."
+    
+  # Performance Impact dimension - 20% weight
+  performance_impact:
+    weight: 20
+    measurement: 'regression_percentage'
+    threshold_type: 'no_regression_gt_5_percent'
+    max_regression: 5.0          # Maximum 5% performance regression
+    baseline_required: true
+    benchmark_tolerance: 10.0    # 10% tolerance for benchmarks
+    description: "Performance impact assessment"
+    validation_commands:
+      - "npm run benchmark --json"
+      - "python -m pytest --benchmark-json=benchmark.json"
+      - "go test -bench=. -benchmem"
+    
+  # Code Quality dimension - 10% weight
+  code_quality:
+    weight: 10
+    measurement: 'maintainability_index'
+    threshold_type: 'no_critical_smells'
+    max_critical_issues: 0       # No critical code smells
+    max_major_issues: 3          # Max 3 major issues
+    max_minor_issues: 10         # Max 10 minor issues
+    maintainability_threshold: 60 # Minimum maintainability score
+    description: "Code quality and maintainability assessment"
+    validation_commands:
+      - "npm run lint --format json"
+      - "flake8 --format=json ."
+      - "golangci-lint run --out-format json"
+      - "sonar-scanner -Dsonar.analysis.mode=preview"
+
+# Risk Adjustment Configuration
+risk_adjustment:
+  max_risk_multiplier: 0.3  # Maximum 30% reduction from risk
+  risk_factors:
+    # Change characteristics
+    large_change:
+      threshold: 500  # Lines of code
+      multiplier: 0.1
+      description: "Large code changes increase risk"
+      
+    security_files:
+      patterns:
+        - "**/auth/**"
+        - "**/security/**" 
+        - "**/login/**"
+        - "**/password/**"
+      multiplier: 0.15
+      description: "Security-related file changes"
+      
+    critical_paths:
+      patterns:
+        - "**/payment/**"
+        - "**/billing/**"
+        - "**/api/core/**"
+        - "**/database/**"
+      multiplier: 0.1
+      description: "Critical business logic paths"
+      
+    external_dependencies:
+      patterns:
+        - "package.json"
+        - "requirements.txt"
+        - "go.mod"
+        - "Gemfile"
+      multiplier: 0.05
+      description: "External dependency changes"
+      
+    # Historical factors
+    previous_failures:
+      lookback_days: 30
+      failure_count_threshold: 2
+      multiplier: 0.1
+      description: "Recent failures in similar areas"
+      
+    no_tests:
+      multiplier: 0.2
+      description: "Changes without accompanying tests"
+      
+    low_coverage_area:
+      threshold: 50  # Below 50% coverage
+      multiplier: 0.1
+      description: "Changes in low-coverage areas"
+
+# Context Weighting Configuration
+context_weights:
+  # Component type classifications with different quality expectations
+  critical_algorithms:
+    weight: 1.2
+    description: "Core algorithms, data processing"
+    patterns:
+      - "**/algorithm/**"
+      - "**/core/**"
+      - "**/engine/**"
+    thresholds:
+      test_coverage: 95
+      security_validation: "zero_tolerance"
+      performance_impact: 2.0
+      code_quality: "strict"
+      
+  public_apis:
+    weight: 1.1
+    description: "Public-facing APIs and interfaces"
+    patterns:
+      - "**/api/**"
+      - "**/rest/**"
+      - "**/graphql/**"
+      - "**/public/**"
+    thresholds:
+      test_coverage: 90
+      security_validation: "zero_critical"
+      performance_impact: 3.0
+      code_quality: "high"
+      
+  business_logic:
+    weight: 1.0
+    description: "Core business logic"
+    patterns:
+      - "**/business/**"
+      - "**/service/**"
+      - "**/logic/**"
+      - "**/domain/**"
+    thresholds:
+      test_coverage: 85
+      security_validation: "standard"
+      performance_impact: 5.0
+      code_quality: "standard"
+      
+  integration_code:
+    weight: 0.9
+    description: "Integration and middleware code"
+    patterns:
+      - "**/integration/**"
+      - "**/middleware/**"
+      - "**/adapter/**"
+      - "**/connector/**"
+    thresholds:
+      test_coverage: 80
+      security_validation: "standard"
+      performance_impact: 7.0
+      code_quality: "standard"
+      
+  ui_components:
+    weight: 0.8
+    description: "User interface components"
+    patterns:
+      - "**/ui/**"
+      - "**/component/**"
+      - "**/view/**"
+      - "**/template/**"
+    thresholds:
+      test_coverage: 70
+      security_validation: "standard"
+      performance_impact: 10.0
+      code_quality: "relaxed"
+      
+  configuration:
+    weight: 0.7
+    description: "Configuration and setup files"
+    patterns:
+      - "**/config/**"
+      - "**/settings/**"
+      - "**/.env*"
+      - "**/docker/**"
+    thresholds:
+      test_coverage: 60
+      security_validation: "high"  # Config often contains sensitive info
+      performance_impact: 5.0
+      code_quality: "relaxed"
+      
+  test_code:
+    weight: 0.6
+    description: "Test and mock code"
+    patterns:
+      - "**/test/**"
+      - "**/tests/**"
+      - "**/mock/**"
+      - "**/spec/**"
+    thresholds:
+      test_coverage: 50  # Tests don't need as much coverage
+      security_validation: "standard"
+      performance_impact: 20.0  # Tests can be slower
+      code_quality: "relaxed"
+
+# Quality Decision Matrix
+decision_matrix:
+  # PASS: Risk_Adjusted_Score >= context_threshold AND no_critical_security_issues
+  pass:
+    conditions:
+      - "risk_adjusted_score >= context_threshold"
+      - "critical_security_issues == 0"
+      - "all_dimension_minimums_met"
+    description: "All quality requirements met"
+    
+  # CONCERNS: 60 <= Risk_Adjusted_Score < context_threshold AND fixable_issues  
+  concerns:
+    conditions:
+      - "risk_adjusted_score >= 60"
+      - "risk_adjusted_score < context_threshold"
+      - "fixable_issues_only"
+      - "no_critical_blockers"
+    description: "Generally good quality with minor concerns"
+    
+  # FAIL: Risk_Adjusted_Score < 60 OR critical_security_issues
+  fail:
+    conditions:
+      - "risk_adjusted_score < 60 OR critical_security_issues > 0"
+      - "major_quality_issues_present"
+    description: "Significant quality issues requiring fixes"
+    
+  # BLOCKED: High_risk_changes OR multiple_gate_failures
+  blocked:
+    conditions:
+      - "risk_level == 'critical'"
+      - "multiple_gate_failures >= 3"
+      - "security_escalation_required"
+    description: "Critical issues requiring manual review"
+
+# Performance Configuration
+performance:
+  calculation_time_limit_ms: 100
+  classification_time_limit_ms: 50
+  cache_results: true
+  cache_duration_minutes: 30
+  
+# Backward Compatibility
+backward_compatibility:
+  maintain_legacy_api: true
+  legacy_formula: "100 - (20 × FAILs) - (10 × CONCERNS)"
+  legacy_threshold: 80
+  feature_flag: "enhanced_quality_scoring"
+  fallback_mode: "legacy"
+  
+# Integration Configuration
+integration:
+  workflow_config_path: "config/rif-workflow.yaml"
+  quality_gates_integration: true
+  github_integration: true
+  comment_format: "enhanced_explanation"
+  checkpoint_storage: "knowledge/checkpoints/"

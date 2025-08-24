@@ -7,8 +7,7 @@
   "homepage": "https://github.com/your-org/rif",
   
   "mcpVersion": "2024-11-05",
-  "
-": {
+  "capabilities_schema": {
     "tools": [
       {
         "name": "check_compatibility",

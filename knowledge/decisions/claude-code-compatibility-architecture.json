@@ -1,0 +1,141 @@
+{
+  "decision_record": {
+    "id": "DR-2025-001",
+    "title": "Claude Code Compatibility First Architecture",
+    "date": "2025-08-24",
+    "status": "accepted",
+    "context": "Issue #96 compatibility audit",
+    "decision_maker": "RIF-Learner",
+    "stakeholders": ["RIF Development Team", "Claude Code Users"]
+  },
+
+  "context": {
+    "problem": "Systematic architectural incompatibilities with Claude Code platform",
+    "discovery": "Issue #96 revealed 20+ issues based on incorrect platform assumptions",
+    "impact": "Fundamental RIF orchestration system based on non-existent capabilities",
+    "urgency": "Critical - preventing further incompatible development"
+  },
+
+  "decision": {
+    "title": "All RIF Architecture Must Be Claude Code Compatible",
+    "description": "Every RIF component and integration must work within Claude Code's actual capabilities, not assumed capabilities",
+    "scope": "All current and future RIF development",
+    "enforcement": "Mandatory compatibility verification before implementation"
+  },
+
+  "rationale": {
+    "platform_reality": {
+      "claude_code_is": "Single AI assistant with file/command tools and GitHub CLI integration",
+      "claude_code_is_not": "Orchestration platform for external services or persistent processes",
+      "evidence": "Comprehensive research of official Anthropic documentation"
+    },
+    "failed_assumptions": {
+      "task_tool": "Task() tool for parallel agent execution does not exist",
+      "external_orchestration": "Cannot orchestrate external services or monitor background processes", 
+      "persistent_agents": "Agents are session-based subagents, not persistent processes",
+      "mcp_misunderstanding": "MCP servers ARE supported but require proper local setup"
+    },
+    "impact_of_incompatibility": {
+      "wasted_development": "20+ issues implemented incompatible solutions",
+      "system_failure": "Core orchestration system non-functional",
+      "quality_degradation": "RIF value proposition undermined by broken components"
+    }
+  },
+
+  "compatible_architecture": {
+    "orchestration_model": {
+      "correct": "Claude Code IS the orchestrator using file coordination",
+      "incorrect": "External orchestrator service monitoring agents",
+      "implementation": "GitHub labels for state, file storage for data, hooks for events"
+    },
+    "agent_model": {
+      "correct": "Subagents within same Claude Code session",
+      "incorrect": "Independent processes running externally",
+      "implementation": "Specialized prompts and context windows within session"
+    },
+    "automation_model": {
+      "correct": "Event-triggered hooks and file-based workflows",
+      "incorrect": "Background scheduling and persistent monitoring", 
+      "implementation": "Claude hooks responding to tool usage, user prompts, file changes"
+    },
+    "github_integration": {
+      "correct": "MCP servers for OAuth GitHub API access",
+      "incorrect": "Direct agent posting or external service integration",
+      "implementation": "Local MCP server with GitHub OAuth for issue management"
+    }
+  },
+
+  "implementation_requirements": {
+    "compatibility_verification": {
+      "mandatory": "Every component must pass compatibility audit before implementation",
+      "process": "Research official capabilities, validate assumptions, test patterns",
+      "documentation": "Maintain knowledge base of compatible/incompatible patterns"
+    },
+    "architecture_patterns": {
+      "required_patterns": [
+        "File-based data storage and retrieval",
+        "GitHub CLI integration for issue management",
+        "Hook-based event automation",
+        "Session-based processing workflows",
+        "MCP servers for external service integration"
+      ],
+      "forbidden_patterns": [
+        "External service orchestration assumptions",
+        "Persistent background process management",
+        "Inter-agent communication systems",
+        "Task-based parallel execution",
+        "Real-time monitoring dashboards"
+      ]
+    },
+    "migration_strategy": {
+      "existing_incompatible": "Identify and redesign using compatible patterns",
+      "new_development": "Compatibility verification before any implementation",
+      "knowledge_transfer": "Document lessons learned for team education"
+    }
+  },
+
+  "consequences": {
+    "positive_outcomes": {
+      "reliability": "All RIF components will actually work in Claude Code",
+      "maintainability": "Architecture aligned with platform capabilities",
+      "scalability": "Future development builds on solid foundation",
+      "user_experience": "RIF delivers promised functionality without failures"
+    },
+    "trade_offs": {
+      "complexity": "Some desired features may not be possible within platform constraints",
+      "performance": "File-based coordination may be slower than in-memory systems",
+      "migration_effort": "Existing incompatible components require redesign"
+    },
+    "risks_mitigated": {
+      "implementation_failure": "No more components that can't run in Claude Code",
+      "wasted_development": "Compatibility check prevents building non-functional systems", 
+      "user_disappointment": "RIF actually delivers on its promises"
+    }
+  },
+
+  "success_metrics": {
+    "compatibility_rate": "100% of new components must pass compatibility audit",
+    "implementation_success": "100% of implemented components must function in Claude Code",
+    "migration_progress": "Track incompatible components converted to compatible versions",
+    "knowledge_accuracy": "Maintain accurate knowledge base of platform capabilities"
+  },
+
+  "review_schedule": {
+    "regular_review": "Monthly review of platform capability changes",
+    "trigger_events": "Claude Code updates, new feature releases, compatibility issues",
+    "update_process": "Research new capabilities, update knowledge base, validate patterns"
+  },
+
+  "related_decisions": [
+    "DR-2025-002: File-Based Coordination Architecture",
+    "DR-2025-003: Hard Quality Gate Enforcement Policy",
+    "DR-2025-004: MCP Server Integration Strategy"
+  ],
+
+  "approval": {
+    "approved_by": "RIF-Learner",
+    "approval_date": "2025-08-24",
+    "implementation_status": "active",
+    "next_review": "2025-09-24"
+  }
+}

@@ -111,6 +111,13 @@ class InputValidator:
         
         return errors
     
+    def validate_compatibility_params(self, params: Dict[str, Any]) -> tuple[bool, Optional[str]]:
+        """Public method for compatibility parameter validation."""
+        errors = self._validate_compatibility_params(params)
+        if errors:
+            return False, errors[0].message
+        return True, None
+    
     def _validate_compatibility_params(self, params: Dict[str, Any]) -> List[ValidationError]:
         """Validate check_compatibility parameters."""
         errors = []
@@ -400,6 +407,10 @@ class OutputSanitizer:
         except Exception as e:
             self.logger.error(f"Output sanitization failed: {e}")
             return {"error": "Response sanitization failed"}
+    
+    def sanitize(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Public method for sanitizing data."""
+        return self.sanitize_response(data)
     
     def _sanitize_recursive(self, data: Any) -> Any:
         """Recursively sanitize data structure."""

@@ -1,0 +1,7 @@
+{"error_id": "977a480a771c", "issue_number": 100, "created": "2025-08-24T01:44:50.688753Z", "session_id": "20250823_184449_71992", "severity": "critical", "error_type": "security"}
+{"error_id": "0ebcd804bac5", "issue_number": 101, "created": "2025-08-24T02:04:15.091635Z", "session_id": "20250823_190413_76438", "severity": "high", "error_type": "unknown"}
+{"error_id": "2d94e7713bbb", "issue_number": 102, "created": "2025-08-24T02:04:16.181883Z", "session_id": "20250823_190415_76452", "severity": "critical", "error_type": "integration"}
+{"error_id": "cf594a0339e5", "issue_number": 105, "created": "2025-08-24T02:48:43.642521Z", "session_id": "20250823_194842_85330", "severity": "critical", "error_type": "integration"}
+{"error_id": "e7646f4f0e0b", "issue_number": 106, "created": "2025-08-24T02:48:57.664223Z", "session_id": "20250823_194856_85456", "severity": "high", "error_type": "unknown"}
+{"error_id": "18e783a1c49f", "issue_number": 107, "created": "2025-08-24T03:46:24.773596Z", "session_id": "20250823_204623_539", "severity": "high", "error_type": "unknown"}
+{"error_id": "390368933504", "issue_number": 108, "created": "2025-08-24T03:53:09.556074Z", "session_id": "20250823_205308_3359", "severity": "high", "error_type": "unknown"}

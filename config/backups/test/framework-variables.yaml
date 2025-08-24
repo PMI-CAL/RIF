@@ -1,0 +1,108 @@
+# Framework Variable Definitions
+# This file defines all the template variables used in the development framework
+
+project:
+  name: "{{PROJECT_NAME}}"
+  display_name: "{{PROJECT_DISPLAY_NAME}}"
+  package_name: "{{PROJECT_PACKAGE_NAME}}"
+  description: "{{PROJECT_DESCRIPTION}}"
+
+core_functionality:
+  description: "{{CORE_FUNCTIONALITY_DESCRIPTION}}"
+  business_rules: "{{BUSINESS_RULES}}"
+  classification_criteria: "{{CLASSIFICATION_CRITERIA}}"
+  output_generation: "{{OUTPUT_GENERATION}}"
+  target_users: "{{TARGET_USERS}}"
+
+technology_stack:
+  ui_framework: "{{UI_FRAMEWORK}}"
+  orm_framework: "{{ORM_FRAMEWORK}}"
+  ai_provider: "{{AI_PROVIDER}}"
+  ai_model: "{{AI_MODEL}}"
+  ai_provider_package: "{{AI_PROVIDER_PACKAGE}}"
+  ai_use_case: "{{AI_USE_CASE}}"
+  auth_method: "{{AUTH_METHOD}}"
+  platform_service: "{{PLATFORM_SERVICE_INTEGRATION}}"
+
+external_integrations:
+  api_1:
+    name: "{{EXTERNAL_API_1}}"
+    purpose: "{{EXTERNAL_API_1_PURPOSE}}"
+    client_class: "{{API_CLIENT_CLASS}}"
+    client_module: "{{API_CLIENT_MODULE}}"
+    setup_method: "{{SETUP_METHOD}}"
+    credentials_file: "{{EXTERNAL_API_CREDENTIALS_FILE}}"
+  api_2:
+    name: "{{EXTERNAL_API_2}}"
+    purpose: "{{EXTERNAL_API_2_PURPOSE}}"
+
+modules:
+  core_module:
+    name: "{{CORE_MODULE}}"
+    function: "{{CORE_FUNCTION}}"
+  core_module_1:
+    name: "{{CORE_MODULE_1_NAME}}"
+    path: "{{CORE_MODULE_1_PATH}}"
+    description: "{{CORE_MODULE_1_DESCRIPTION}}"
+    classifier_module: "{{CLASSIFIER_MODULE}}"
+    classifier_class: "{{CLASSIFIER_CLASS}}"
+    ai_processor_module: "{{AI_PROCESSOR_MODULE}}"
+    ai_processor_class: "{{AI_PROCESSOR_CLASS}}"
+    calculator_module: "{{CALCULATOR_MODULE}}"
+    external_client_module: "{{EXTERNAL_CLIENT_MODULE}}"
+  feature_module_1:
+    name: "{{FEATURE_MODULE_1_NAME}}"
+    path: "{{FEATURE_MODULE_1_PATH}}"
+  external_integration_1:
+    name: "{{EXTERNAL_INTEGRATION_1_NAME}}"
+    path: "{{EXTERNAL_INTEGRATION_1_PATH}}"
+
+ui:
+  main_launcher: "{{MAIN_UI_LAUNCHER}}"
+  default_mode: "{{DEFAULT_UI_MODE}}"
+  review_mode: "{{REVIEW_MODE}}"
+  review_mode_description: "{{REVIEW_MODE_DESCRIPTION}}"
+  ml_mode: "{{ML_MODE}}"
+  ml_mode_description: "{{ML_MODE_DESCRIPTION}}"
+  main_window_module: "{{MAIN_WINDOW_MODULE}}"
+  main_window_class: "{{MAIN_WINDOW_CLASS}}"
+
+cli:
+  main_command: "{{CLI_COMMAND}}"
+  status_command: "{{CLI_STATUS_COMMAND}}"
+
+quality:
+  quality_module: "{{QUALITY_MODULE}}"
+  quality_gate_class: "{{QUALITY_GATE_CLASS}}"
+  quality_report_class: "{{QUALITY_REPORT_CLASS}}"
+
+data:
+  external_data_sync: "{{EXTERNAL_DATA_SYNC}}"
+  classification_step: "{{CLASSIFICATION_STEP}}"
+  calculation_step: "{{CALCULATION_STEP}}"
+  business_calculation_rules: "{{BUSINESS_CALCULATION_RULES}}"
+  classification_threshold: "{{CLASSIFICATION_THRESHOLD}}"
+  default_threshold_value: "{{DEFAULT_THRESHOLD_VALUE}}"
+
+logging:
+  sync_logger: "{{SYNC_LOGGER}}"
+  classifier_logger: "{{CLASSIFIER_LOGGER}}"
+
+user_profiles:
+  profile_type: "{{USER_PROFILE_TYPE}}"
+  profile_1: "{{USER_PROFILE_1}}"
+  profile_2: "{{USER_PROFILE_2}}"
+
+paths:
+  project_root: "{{PROJECT_ROOT}}"
+  src_path: "{{SRC_PATH}}"
+  main_module: "{{MAIN_MODULE}}"
+
+placeholders:
+  issue_number: "{{ISSUE_NUMBER}}"
+  feature_description: "{{FEATURE_DESCRIPTION}}"
+  commit_description: "{{COMMIT_DESCRIPTION}}"
+  domain: "{{DOMAIN}}"
+  project_type: "{{PROJECT_TYPE}}"
+  email_service: "{{EMAIL_SERVICE}}"
+  external_service: "{{EXTERNAL_SERVICE}}"

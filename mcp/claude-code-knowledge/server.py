@@ -197,6 +197,12 @@ class ClaudeCodeKnowledgeServer:
             
         except Exception as e:
             self.logger.error(f"Failed to initialize knowledge graph connection: {e}")
+            if self.config.get('graceful_degradation', True):
+                self.logger.info("Enabling graceful degradation mode")
+                # Initialize graceful degradation handler
+                from safety import GracefulDegradation
+                self.graceful_handler = GracefulDegradation()
+                return True  # Continue operating with fallback responses
             return False
     
     async def _verify_claude_knowledge(self):
@@ -279,6 +285,14 @@ class ClaudeCodeKnowledgeServer:
             if not issue_description:
                 return {"error": "issue_description parameter is required"}
             
+            # Check if we have a working knowledge graph
+            if not self.rif_db or hasattr(self, 'graceful_handler'):
+                # Use graceful degradation
+                if hasattr(self, 'graceful_handler'):
+                    return self.graceful_handler.get_fallback_response("check_compatibility", params)
+                else:
+                    return {"error": "Knowledge graph not available and graceful degradation not initialized"}
+            
             # Create cache key
             cache_key = f"compat:{hash(issue_description + approach)}"
             cached_result = self.query_cache.get(cache_key)
@@ -326,6 +340,9 @@ class ClaudeCodeKnowledgeServer:
             
         except Exception as e:
             self.logger.error(f"Compatibility check failed: {e}")
+            # Try graceful degradation on error
+            if hasattr(self, 'graceful_handler'):
+                return self.graceful_handler.get_fallback_response("check_compatibility", params)
             return {"error": f"Compatibility check failed: {str(e)}"}
     
     async def _recommend_pattern(self, params: Dict[str, Any]) -> Dict[str, Any]:

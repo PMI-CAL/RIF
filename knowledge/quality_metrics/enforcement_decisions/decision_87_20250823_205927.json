@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-08-24T03:59:27.200953+00:00",
+  "issue_number": 87,
+  "quality_score": 0.8906250000000002,
+  "threshold": 1.0,
+  "can_proceed": false,
+  "enforcement_action": "block",
+  "violation_count": 6,
+  "blocking_violations": 2,
+  "specialist_required": true,
+  "fallback_used": false
+}

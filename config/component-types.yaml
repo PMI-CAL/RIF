@@ -1,0 +1,318 @@
+# Component Type Registry for Context-Aware Quality Thresholds
+# Issue #91: Context-Aware Quality Thresholds System
+#
+# This file defines component types, their patterns, and threshold configurations
+# for intelligent quality gate enforcement based on code criticality.
+
+component_types:
+  critical_algorithms:
+    description: "Mission-critical algorithms and core computational logic"
+    priority: 1
+    min_threshold: 95
+    target_threshold: 100
+    risk_factor: 1.5
+    
+    # Path-based patterns (fnmatch style)
+    patterns:
+      - "**/algorithms/**"
+      - "**/core/**"
+      - "**/engine/**"
+      - "**/*algorithm*"
+      - "**/*_algo.py"
+      - "**/crypto/**"
+      - "**/security/core/**"
+      
+    # Content-based patterns (regex)
+    content_patterns:
+      - "def.*algorithm"
+      - "class.*Algorithm"
+      - "@critical"
+      - "@algorithm"
+      - "def.*compute"
+      - "def.*calculate"
+      - "def.*process.*data"
+      
+    # File extensions with high priority
+    critical_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".go"
+      - ".rs"
+      
+  public_apis:
+    description: "Public-facing APIs and external interfaces"
+    priority: 2
+    min_threshold: 90
+    target_threshold: 95
+    risk_factor: 1.3
+    
+    patterns:
+      - "**/api/**"
+      - "**/endpoints/**"
+      - "**/routes/**"
+      - "**/*_api.py"
+      - "**/controllers/**"
+      - "**/handlers/**"
+      - "**/views/**"
+      
+    content_patterns:
+      - "@app\\.route"
+      - "@api_view"
+      - "class.*API"
+      - "class.*Handler"
+      - "class.*Controller"
+      - "def get\\("
+      - "def post\\("
+      - "def put\\("
+      - "def delete\\("
+      - "def patch\\("
+      - "@router"
+      
+    critical_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".go"
+      - ".java"
+      
+  business_logic:
+    description: "Core business logic and service layer components"
+    priority: 3
+    min_threshold: 85
+    target_threshold: 90
+    risk_factor: 1.2
+    
+    patterns:
+      - "**/services/**"
+      - "**/logic/**"
+      - "**/models/**"
+      - "**/domain/**"
+      - "**/business/**"
+      - "**/*_service.py"
+      - "**/*_logic.py"
+      - "**/*order*"
+      - "**/*management*"
+      
+    content_patterns:
+      - "class.*Service"
+      - "class.*Manager"
+      - "class.*Handler"
+      - "@service"
+      - "@business_logic"
+      - "def.*business"
+      - "def.*process"
+      - "class.*Model"
+      - "order"
+      - "management"
+      
+    critical_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".java"
+      - ".cs"
+      
+  integration_code:
+    description: "External integrations and third-party service connectors"
+    priority: 4
+    min_threshold: 80
+    target_threshold: 85
+    risk_factor: 1.1
+    
+    patterns:
+      - "**/integrations/**"
+      - "**/external/**"
+      - "**/connectors/**"
+      - "**/adapters/**"
+      - "**/*client.py"
+      - "**/*_integration.py"
+      - "**/webhooks/**"
+      
+    content_patterns:
+      - "requests\\."
+      - "httpx\\."
+      - "urllib\\."
+      - "class.*Client"
+      - "class.*Connector"
+      - "class.*Integration"
+      - "class.*Adapter"
+      - "@integration"
+      
+    critical_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".java"
+      - ".go"
+      
+  ui_components:
+    description: "User interface components and frontend logic"
+    priority: 5
+    min_threshold: 70
+    target_threshold: 80
+    risk_factor: 1.0
+    
+    patterns:
+      - "**/components/**"
+      - "**/views/**"
+      - "**/pages/**"
+      - "**/templates/**"
+      - "**/static/**"
+      - "**/*.jsx"
+      - "**/*.vue"
+      - "**/*.svelte"
+      - "**/*.tsx"
+      - "**/*template*"
+      - "**/*view*"
+      - "**/*component*"
+      
+    content_patterns:
+      - "return.*<"
+      - "render\\("
+      - "component"
+      - "@Component"
+      - "React\\."
+      - "Vue\\."
+      - "useState"
+      - "useEffect"
+      
+    critical_extensions:
+      - ".jsx"
+      - ".tsx"
+      - ".vue"
+      - ".svelte"
+      - ".html"
+      - ".js"
+      - ".ts"
+      
+  test_utilities:
+    description: "Test helpers, fixtures, and utility functions"
+    priority: 6
+    min_threshold: 60
+    target_threshold: 70
+    risk_factor: 0.8
+    
+    patterns:
+      - "**/test_utils/**"
+      - "**/fixtures/**"
+      - "**/helpers/**"
+      - "**/mocks/**"
+      - "**/*_helper.py"
+      - "**/conftest.py"
+      - "**/test_*.py"
+      - "**/*_test.py"
+      - "**/tests/**"
+      - "**/__tests__/**"
+      - "tests/*"
+      - "test/*"
+      - "tests/**"
+      - "**/test*.py"
+      
+    content_patterns:
+      - "@fixture"
+      - "def test_"
+      - "mock"
+      - "Mock"
+      - "patch"
+      - "assert"
+      - "@pytest"
+      - "@test"
+      - "setUp"
+      - "tearDown"
+      - "TestCase"
+      - "unittest"
+      
+    critical_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".java"
+      - ".go"
+
+# Global configuration
+configuration:
+  # Classification engine settings
+  classification:
+    # Three-stage pipeline configuration
+    pattern_matching_weight: 0.6      # Stage 1: Fast path-based matching
+    content_analysis_weight: 0.3      # Stage 2: Content pattern matching
+    heuristic_fallback_weight: 0.1    # Stage 3: Fallback logic
+    
+    # Performance targets
+    max_classification_time_ms: 100   # Per file classification target
+    batch_optimization: true          # Enable batch processing optimizations
+    
+    # Confidence thresholds
+    high_confidence_threshold: 0.9    # Direct classification acceptance
+    medium_confidence_threshold: 0.7  # Requires content analysis
+    low_confidence_threshold: 0.5     # Requires fallback logic
+    
+  # Threshold calculation settings  
+  thresholds:
+    # Backward compatibility
+    fallback_threshold: 80            # Legacy 80% threshold for unknown types
+    
+    # Size adjustment factors
+    small_change_bonus: 5             # Bonus for < 50 lines changed
+    large_change_penalty: 10          # Penalty for > 1000 lines changed
+    
+    # Context modifiers
+    hotfix_modifier: 1.2              # Increase thresholds for hotfixes
+    experimental_modifier: 0.9        # Decrease thresholds for experimental features
+    
+    # Multi-component calculation
+    weighted_average: true            # Use weighted averaging for multi-component changes
+    min_component_weight: 0.1         # Minimum weight for any component
+    
+  # Performance monitoring
+  performance:
+    track_classification_time: true   # Monitor classification performance
+    track_accuracy_metrics: true      # Monitor classification accuracy
+    benchmark_against_baseline: true  # Compare with 80% baseline
+    
+    # Performance targets
+    target_classification_accuracy: 95.0  # >95% accuracy requirement
+    target_performance_overhead: 300      # <300ms total overhead
+    
+  # Integration settings
+  integration:
+    rif_workflow_integration: true    # Integrate with config/rif-workflow.yaml
+    claude_hooks_integration: true    # Update .claude/settings.json hooks
+    github_actions_integration: true  # Integrate with GitHub Actions workflows
+    
+    # Fallback behavior
+    graceful_degradation: true        # Fall back to 80% on errors
+    log_classification_decisions: true # Log all classification decisions
+    
+# Validation rules for component type detection
+validation:
+  # Accuracy requirements
+  minimum_accuracy_threshold: 95.0   # Must achieve >95% accuracy
+  accuracy_measurement_method: "historical_validation"
+  
+  # Test dataset requirements
+  test_dataset_size: 1000           # Minimum test files for accuracy validation
+  cross_validation_folds: 5         # K-fold cross-validation
+  
+  # Quality assurance
+  manual_review_threshold: 0.6      # Manual review for low-confidence classifications
+  conflict_resolution_strategy: "highest_priority_wins"
+  
+  # Performance validation
+  benchmark_dataset_size: 10000     # Files for performance benchmarking
+  max_acceptable_latency_ms: 300    # Maximum total processing latency
+  
+# Learning and adaptation
+learning:
+  # Continuous improvement
+  enable_pattern_learning: true     # Learn new patterns from successful classifications
+  pattern_update_frequency: "weekly" # How often to update patterns
+  
+  # Historical analysis
+  analyze_classification_errors: true # Learn from misclassifications
+  maintain_accuracy_metrics: true    # Track accuracy over time
+  
+  # Adaptation triggers
+  accuracy_degradation_threshold: 2.0 # Alert if accuracy drops by 2%
+  performance_degradation_threshold: 50 # Alert if performance degrades by 50ms

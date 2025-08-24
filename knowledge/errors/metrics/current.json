@@ -1,8 +1,8 @@
 {
-  "total_errors": 9,
+  "total_errors": 10,
   "by_severity": {
     "critical": 1,
-    "high": 6,
+    "high": 7,
     "medium": 2,
     "low": 0
   },
@@ -13,14 +13,14 @@
     "integration": 2,
     "performance": 0,
     "security": 1,
-    "unknown": 5
+    "unknown": 6
   },
   "by_source": {
     "user_code": 0,
     "rif_system": 0,
     "claude_code": 0,
     "external": 0,
-    "unknown": 9
+    "unknown": 10
   },
-  "last_updated": "2025-08-18T22:20:47.941306Z"
+  "last_updated": "2025-08-24T03:53:22.494907Z"
 }

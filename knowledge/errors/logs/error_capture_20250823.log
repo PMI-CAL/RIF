@@ -1,0 +1,8 @@
+2025-08-23 21:04:14,899 - ErrorCaptureSystem - INFO - 🚨 Error Capture System initialized with storage: knowledge/errors
+2025-08-23 21:04:14,899 - ErrorCaptureSystem - INFO - 🔍 Starting Five Whys analysis for err_20250823_ed8e1099
+2025-08-23 21:04:14,899 - ErrorCaptureSystem - INFO - 📊 Stored Five Whys analysis: analysis_err_20250823_ed8e1099_20250823_210414
+2025-08-23 21:04:14,899 - ErrorCaptureSystem - INFO - 🚨 Captured high database error: err_20250823_ed8e1099
+2025-08-23 21:04:14,900 - ErrorCaptureSystem - INFO - 🔍 Starting Five Whys analysis for err_20250823_20b66aa5
+2025-08-23 21:04:14,900 - ErrorCaptureSystem - INFO - 📊 Stored Five Whys analysis: analysis_err_20250823_20b66aa5_20250823_210414
+2025-08-23 21:04:14,900 - ErrorCaptureSystem - INFO - 🚨 Captured high network error: err_20250823_20b66aa5
+2025-08-23 21:04:14,900 - ErrorCaptureSystem - INFO - 🚨 Captured medium validation error: err_20250823_da905ca1

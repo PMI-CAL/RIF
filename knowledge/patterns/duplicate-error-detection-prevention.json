@@ -1,0 +1,158 @@
+{
+  "pattern_name": "Duplicate Error Detection Prevention",
+  "pattern_type": "error_handling",
+  "domain": "automated_issue_management",
+  "created_date": "2025-08-24T02:48:43Z",
+  "created_by": "RIF-Analyst",
+  "source_issue": "#105 (duplicate of #102)",
+  
+  "problem_description": {
+    "title": "Automated error detection creating duplicate GitHub issues",
+    "symptoms": [
+      "Same session ID generating multiple GitHub issues",
+      "Already resolved errors being re-reported as critical", 
+      "False positive errors bypassing resolution status checks",
+      "Critical priority assignment without validation"
+    ],
+    "impact": "workflow_disruption, resource_misallocation, false_urgency"
+  },
+  
+  "pattern_context": {
+    "when_applicable": [
+      "Automated error detection systems",
+      "GitHub issue auto-creation",
+      "Error monitoring with session tracking",
+      "Multi-agent workflow systems"
+    ],
+    "environments": ["development", "production", "CI/CD"],
+    "technologies": ["GitHub API", "error detection", "session management"]
+  },
+  
+  "solution_pattern": {
+    "core_principle": "Validate resolution status before creating duplicate issues",
+    "implementation_steps": [
+      {
+        "step": 1,
+        "action": "session_resolution_tracking", 
+        "description": "Track which session IDs have been resolved",
+        "implementation": "Maintain session_id -> resolution_status mapping"
+      },
+      {
+        "step": 2,
+        "action": "duplicate_detection_filter",
+        "description": "Check for existing issues with same session ID",
+        "implementation": "Query GitHub API for issues with matching session ID before creation"
+      },
+      {
+        "step": 3,
+        "action": "resolution_validation",
+        "description": "Verify if error source has been resolved",
+        "implementation": "Check resolution timestamp vs error timestamp"
+      },
+      {
+        "step": 4,
+        "action": "priority_validation",
+        "description": "Require validation for critical priority assignment",
+        "implementation": "Health check before marking as critical"
+      }
+    ]
+  },
+  
+  "prevention_mechanisms": {
+    "session_tracking": {
+      "file": "knowledge/errors/session_resolutions.json",
+      "structure": {
+        "session_id": "string",
+        "status": "resolved|active|false_positive", 
+        "resolution_date": "ISO timestamp",
+        "related_issues": ["issue_numbers"],
+        "resolution_verified": "boolean"
+      }
+    },
+    "error_filters": {
+      "file": "knowledge/errors/config/database_monitoring.json",
+      "enhancements": [
+        "Add session_id resolution checking",
+        "Implement duplicate prevention rules",
+        "Add priority validation requirements"
+      ]
+    },
+    "github_integration": {
+      "pre_creation_checks": [
+        "Search for existing issues with same session_id",
+        "Check if error pattern is in false_positive_filters",
+        "Validate current system health before critical assignment"
+      ]
+    }
+  },
+  
+  "implementation_example": {
+    "language": "python",
+    "code": "# Before creating GitHub issue\ndef should_create_issue(error_data):\n    session_id = error_data.get('session_id')\n    \n    # Check if session already resolved\n    if is_session_resolved(session_id):\n        logger.info(f'Session {session_id} already resolved, skipping issue creation')\n        return False\n        \n    # Check for existing GitHub issues with same session\n    existing_issues = gh_api.search_issues(f'in:body {session_id} is:open')\n    if existing_issues:\n        logger.info(f'Found existing issue for session {session_id}')\n        return False\n        \n    # For critical priority, validate system health\n    if error_data.get('severity') == 'critical':\n        health_status = run_health_check()\n        if health_status.get('all_systems_operational'):\n            logger.warning(f'System healthy but critical error detected - marking as false positive')\n            add_to_false_positive_filters(error_data['message'])\n            return False\n            \n    return True"
+  },
+  
+  "validation_criteria": {
+    "success_metrics": [
+      "Zero duplicate issues created for resolved sessions",
+      "False positive rate < 5%",
+      "Critical priority accuracy > 95%",
+      "Resolution time for duplicates < 5 minutes"
+    ],
+    "testing_approach": [
+      "Simulate resolved session errors",
+      "Test duplicate detection filters", 
+      "Validate health check integration",
+      "Verify GitHub API integration"
+    ]
+  },
+  
+  "related_patterns": [
+    "error_monitoring_optimization",
+    "automated_issue_management",
+    "false_positive_reduction",
+    "system_health_validation"
+  ],
+  
+  "lessons_learned": {
+    "from_issue_105": [
+      "Session ID reuse indicates previously resolved error",
+      "Health checks prevent false critical escalation",
+      "Duplicate detection requires GitHub API integration",
+      "Resolution tracking essential for automation"
+    ],
+    "general_principles": [
+      "Always validate before escalating to critical",
+      "Track resolution status to prevent duplicates",
+      "Health checks provide ground truth for system status",
+      "Automated systems need robust duplicate prevention"
+    ]
+  },
+  
+  "configuration_updates": {
+    "required_files": [
+      "knowledge/errors/config/database_monitoring.json",
+      "knowledge/errors/session_resolutions.json",
+      ".github/workflows/issue-creation.yml"
+    ],
+    "new_settings": {
+      "duplicate_prevention_enabled": true,
+      "session_resolution_tracking": true,
+      "critical_priority_validation": true,
+      "health_check_before_critical": true
+    }
+  },
+  
+  "monitoring_and_alerts": {
+    "metrics_to_track": [
+      "duplicate_issues_prevented", 
+      "false_positive_detection_rate",
+      "critical_priority_accuracy",
+      "resolution_verification_time"
+    ],
+    "alert_conditions": [
+      "Duplicate issue creation detected",
+      "False positive rate > threshold", 
+      "Critical priority assigned to healthy system"
+    ]
+  }
+}

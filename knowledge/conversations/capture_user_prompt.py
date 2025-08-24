@@ -1,0 +1,176 @@
+#!/usr/bin/env python3
+"""
+User Prompt Capture Hook for Claude Code.
+
+Captures user prompts submitted to Claude Code and stores them in the
+conversation_events table via ConversationStorageBackend.
+
+This is a foundation component for the Claude Code hook system, enabling
+comprehensive conversation tracking and analysis.
+"""
+
+import os
+import sys
+import json
+import uuid
+import hashlib
+from datetime import datetime
+from typing import Dict, Any, Optional
+import logging
+
+# Add the knowledge directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    from conversations.storage_backend import ConversationStorageBackend
+except ImportError:
+    # Fallback import for direct execution
+    from storage_backend import ConversationStorageBackend
+
+# Configure logging to be silent for Claude Code integration
+logging.basicConfig(
+    level=logging.ERROR,  # Only log errors
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('/Users/cal/DEV/RIF/knowledge/conversations/capture_hooks.log', mode='a'),
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+
+def get_conversation_id() -> str:
+    """
+    Generate or retrieve conversation ID for the current session.
+    
+    Uses a combination of Claude Code session context and timestamp-based
+    session detection to maintain conversation continuity.
+    
+    Returns:
+        Conversation ID for current session
+    """
+    try:
+        # Try to get existing conversation ID from environment or session file
+        session_file = '/tmp/claude_code_conversation_id'
+        
+        # Check if we have an existing conversation ID from this session
+        if os.path.exists(session_file):
+            with open(session_file, 'r') as f:
+                existing_id = f.read().strip()
+                # Validate the ID format
+                if existing_id and len(existing_id) == 36:  # UUID length
+                    return existing_id
+        
+        # Generate new conversation ID for new session
+        conversation_id = str(uuid.uuid4())
+        
+        # Store for session continuity
+        try:
+            with open(session_file, 'w') as f:
+                f.write(conversation_id)
+        except Exception as e:
+            logger.warning(f"Failed to store conversation ID: {e}")
+        
+        return conversation_id
+        
+    except Exception as e:
+        logger.error(f"Failed to generate conversation ID: {e}")
+        return str(uuid.uuid4())  # Fallback to new ID
+
+
+def get_user_context() -> Dict[str, Any]:
+    """
+    Extract user context from environment variables and system state.
+    
+    Returns:
+        Dictionary containing user context information
+    """
+    context = {
+        'timestamp': datetime.now().isoformat(),
+        'session_id': os.environ.get('CLAUDE_SESSION_ID', 'unknown'),
+        'working_directory': os.getcwd(),
+        'user': os.environ.get('USER', 'unknown'),
+    }
+    
+    # Add Claude Code specific context if available
+    claude_context = {}
+    for key, value in os.environ.items():
+        if key.startswith('CLAUDE_'):
+            claude_context[key.lower()] = value
+    
+    if claude_context:
+        context['claude_context'] = claude_context
+    
+    return context
+
+
+def capture_user_prompt():
+    """
+    Main function to capture user prompt and store in conversation system.
+    
+    Reads the user prompt from stdin, generates necessary metadata,
+    and stores the event using ConversationStorageBackend.
+    """
+    try:
+        # Read user prompt from stdin (Claude Code hook mechanism)
+        prompt_text = sys.stdin.read().strip()
+        
+        # Skip empty prompts
+        if not prompt_text:
+            return
+        
+        # Initialize storage backend with correct path
+        db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "conversations.duckdb")
+        storage = ConversationStorageBackend(db_path=db_path)
+        
+        # Get conversation context
+        conversation_id = get_conversation_id()
+        user_context = get_user_context()
+        
+        # Prepare event data
+        event_data = {
+            'prompt_text': prompt_text,
+            'prompt_length': len(prompt_text),
+            'user_context': user_context,
+            'capture_method': 'UserPromptSubmit_hook',
+            'hook_version': '1.0.0'
+        }
+        
+        # Store the conversation event
+        event_id = storage.store_conversation_event(
+            conversation_id=conversation_id,
+            agent_type='claude-code',
+            event_type='user_prompt',
+            event_data=event_data,
+            issue_number=None,  # Will be populated by session manager later
+            parent_event_id=None,
+            embedding=None  # Will be generated by embedding service later
+        )
+        
+        # Log successful capture (debug level)
+        logger.debug(f"Captured user prompt: {event_id} (length: {len(prompt_text)})")
+        
+        # Update conversation metadata if this is first prompt
+        conversation_metadata = storage.connection.execute("""
+            SELECT total_events FROM conversation_metadata 
+            WHERE conversation_id = ?
+        """, [conversation_id]).fetchone()
+        
+        if conversation_metadata and conversation_metadata[0] == 1:
+            # This is the first event - initialize conversation
+            storage.connection.execute("""
+                UPDATE conversation_metadata 
+                SET context_summary = ?
+                WHERE conversation_id = ?
+            """, [f"User prompt: {prompt_text[:100]}...", conversation_id])
+        
+        storage.close()
+        
+    except Exception as e:
+        # Log error but don't disrupt Claude Code operation
+        logger.error(f"Failed to capture user prompt: {e}")
+        sys.exit(0)  # Silent failure for hook system
+
+
+if __name__ == '__main__':
+    capture_user_prompt()

@@ -131,7 +131,14 @@ class DuckDBConnectionManager:
         for setting, value in config_dict.items():
             try:
                 if setting == 'wal_autocheckpoint' and value > 0:
-                    conn.execute(f"PRAGMA wal_autocheckpoint={value}")
+                    try:
+                        conn.execute(f"PRAGMA wal_autocheckpoint={value}")
+                    except Exception as pragma_error:
+                        # Try alternative format for WAL checkpoint
+                        try:
+                            conn.execute(f"SET wal_autocheckpoint={value}")
+                        except Exception:
+                            self.logger.debug(f"WAL autocheckpoint setting skipped: {pragma_error}")
                 elif setting in ['memory_limit', 'max_memory'] and value:
                     conn.execute(f"SET {setting}='{value}'")
                 elif setting in ['threads'] and value:

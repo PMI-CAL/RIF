@@ -1,0 +1,36 @@
+{
+  "id": "error_analysis_81f496edde1e",
+  "type": "error_analysis",
+  "source": "session_error_handler",
+  "timestamp": "2025-08-24T02:04:16.299562Z",
+  "error_details": {
+    "id": "81f496edde1e",
+    "timestamp": "2025-08-24T02:04:16.269089Z",
+    "severity": "medium",
+    "error_type": "unknown",
+    "source": "unknown",
+    "message": "Integration test error for RIF processing",
+    "context": {
+      "test": true,
+      "integration": "rif",
+      "session_id": "20250823_190416_76467"
+    },
+    "command": null,
+    "exit_code": null,
+    "session_id": "20250823_190416_76467",
+    "auto_handled": false
+  },
+  "analysis_status": "pending",
+  "complexity": "low",
+  "priority": "normal",
+  "suggested_agent": "rif-error-analyst",
+  "estimated_effort": "medium",
+  "root_cause_hypothesis": [],
+  "similar_patterns": [],
+  "prevention_opportunities": [],
+  "knowledge_gaps": [],
+  "rif_state": "error:analyzing",
+  "requires_human_attention": false,
+  "auto_resolution_possible": false,
+  "learning_value": "low"
+}

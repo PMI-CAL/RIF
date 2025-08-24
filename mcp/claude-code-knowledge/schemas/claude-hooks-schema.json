@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude.ai/schemas/claude-hooks-v1.json",
+  "title": "Claude Code Hooks Configuration Schema",
+  "description": "JSON schema for validating Claude Code hooks configuration in .claude/settings.json",
+  "type": "object",
+  "properties": {
+    "hooks": {
+      "type": "object",
+      "description": "Hook configuration object containing hook types and their definitions",
+      "properties": {
+        "SessionStart": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Hooks that execute when a Claude Code session starts"
+        },
+        "SessionEnd": {
+          "$ref": "#/definitions/hookArray", 
+          "description": "Hooks that execute when a Claude Code session ends"
+        },
+        "UserPromptSubmit": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Hooks that execute when a user submits a prompt"
+        },
+        "AssistantResponse": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Hooks that execute when the assistant provides a response"
+        },
+        "ToolUse": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Hooks that execute when a tool is used"
+        },
+        "PostToolUse": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Hooks that execute after a tool has been used"
+        },
+        "ErrorOccurred": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Hooks that execute when an error occurs"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["hooks"],
+  "additionalProperties": true,
+  "definitions": {
+    "hookArray": {
+      "type": "array",
+      "description": "Array of hook definitions",
+      "items": {
+        "$ref": "#/definitions/hookDefinition"
+      }
+    },
+    "hookDefinition": {
+      "type": "object",
+      "description": "A single hook definition",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["command", "script", "function", "webhook"],
+          "description": "Type of hook execution method"
+        },
+        "command": {
+          "type": "string",
+          "description": "Shell command to execute (required for type: command)"
+        },
+        "script": {
+          "type": "string",
+          "description": "Path to script file to execute (required for type: script)"
+        },
+        "function": {
+          "type": "string",
+          "description": "Function name to call (required for type: function)"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Webhook URL to call (required for type: webhook)"
+        },
+        "matcher": {
+          "type": "string",
+          "description": "Regular expression to match against trigger conditions"
+        },
+        "output": {
+          "type": "string",
+          "enum": ["context", "silent", "stream", "log"],
+          "default": "silent",
+          "description": "How to handle the hook output"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 300000,
+          "default": 30000,
+          "description": "Timeout in milliseconds for hook execution"
+        },
+        "async": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to execute the hook asynchronously"
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether this hook is enabled"
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 5,
+          "description": "Hook execution priority (1=highest, 10=lowest)"
+        },
+        "conditions": {
+          "type": "object",
+          "description": "Additional conditions for hook execution",
+          "properties": {
+            "file_patterns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "File patterns that must match for hook to execute"
+            },
+            "environment": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Required environment variables"
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific tools that trigger this hook (for ToolUse/PostToolUse)"
+            }
+          },
+          "additionalProperties": false
+        },
+        "hooks": {
+          "$ref": "#/definitions/hookArray",
+          "description": "Nested hooks for conditional execution"
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Additional metadata for the hook",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Human-readable name for the hook"
+            },
+            "description": {
+              "type": "string", 
+              "description": "Description of what this hook does"
+            },
+            "version": {
+              "type": "string",
+              "description": "Version of the hook"
+            },
+            "author": {
+              "type": "string",
+              "description": "Author of the hook"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": ["type"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "command"
+              }
+            }
+          },
+          "then": {
+            "required": ["command"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "script"
+              }
+            }
+          },
+          "then": {
+            "required": ["script"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "function"
+              }
+            }
+          },
+          "then": {
+            "required": ["function"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "webhook"
+              }
+            }
+          },
+          "then": {
+            "required": ["url"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}
