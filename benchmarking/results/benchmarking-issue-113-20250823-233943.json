@@ -1,0 +1,264 @@
+{
+  "issue_number": 113,
+  "specifications": [
+    {
+      "id": "spec-113-1",
+      "type": "functional_requirements",
+      "description": "be CRITICAL for system integrity",
+      "acceptance_criteria": [
+        "which agents actually query knowledge database",
+        "Issue #111 fixed with correct \"think harder\" implementation (prompt-based)",
+        "No more attempts to create functionality that already exists in Claude Code",
+        "All agents demonstrate knowledge database consultation before major decisions",
+        "90%+ agent knowledge query utilization rate"
+      ],
+      "constraints": [],
+      "success_metrics": {},
+      "priority": "must_have",
+      "measurable": false,
+      "testable": false,
+      "created_at": "2025-08-23T23:39:43.095009",
+      "issue_number": 113
+    },
+    {
+      "id": "spec-113-2",
+      "type": "functional_requirements",
+      "description": "inform Issue #112 (development process context) as well",
+      "acceptance_criteria": [
+        "which agents actually query knowledge database",
+        "Issue #111 fixed with correct \"think harder\" implementation (prompt-based)",
+        "No more attempts to create functionality that already exists in Claude Code",
+        "All agents demonstrate knowledge database consultation before major decisions",
+        "90%+ agent knowledge query utilization rate"
+      ],
+      "constraints": [],
+      "success_metrics": {},
+      "priority": "could_have",
+      "measurable": true,
+      "testable": false,
+      "created_at": "2025-08-23T23:39:43.098291",
+      "issue_number": 113
+    },
+    {
+      "id": "spec-113-3",
+      "type": "functional_requirements",
+      "description": "follow this pattern.",
+      "acceptance_criteria": [
+        "which agents actually query knowledge database",
+        "Issue #111 fixed with correct \"think harder\" implementation (prompt-based)",
+        "No more attempts to create functionality that already exists in Claude Code",
+        "All agents demonstrate knowledge database consultation before major decisions",
+        "90%+ agent knowledge query utilization rate"
+      ],
+      "constraints": [],
+      "success_metrics": {},
+      "priority": "could_have",
+      "measurable": false,
+      "testable": false,
+      "created_at": "2025-08-23T23:39:43.101197",
+      "issue_number": 113
+    },
+    {
+      "id": "spec-113-1",
+      "type": "functional_requirements",
+      "description": "automatically query for system overview context",
+      "acceptance_criteria": [
+        "which agents have proper `mcp__rif-knowledge__*` tool usage instructions",
+        "no existing functionality is being recreated",
+        "Emergency fix needed for Issue #111 incorrect implementation",
+        "All agents potentially making decisions without knowledge context",
+        "Knowledge database providing zero ROI despite significant investment"
+      ],
+      "constraints": [
+        "Issue #112 objectives:"
+      ],
+      "success_metrics": {},
+      "priority": "could_have",
+      "measurable": false,
+      "testable": false,
+      "created_at": "2025-08-23T23:39:43.106014",
+      "issue_number": 113
+    },
+    {
+      "id": "spec-113-2",
+      "type": "functional_requirements",
+      "description": "progress in coordinated manner",
+      "acceptance_criteria": [
+        "which agents have proper `mcp__rif-knowledge__*` tool usage instructions",
+        "no existing functionality is being recreated",
+        "Emergency fix needed for Issue #111 incorrect implementation",
+        "All agents potentially making decisions without knowledge context",
+        "Knowledge database providing zero ROI despite significant investment"
+      ],
+      "constraints": [
+        "Issue #112 objectives:"
+      ],
+      "success_metrics": {},
+      "priority": "could_have",
+      "measurable": false,
+      "testable": false,
+      "created_at": "2025-08-23T23:39:43.108933",
+      "issue_number": 113
+    }
+  ],
+  "evidence": [
+    {
+      "spec_id": "spec-113-1",
+      "implementation_details": "Spec keywords found: critical, system, integrity | LOC: ~391 | Functions: __init__, main | Classes: LearningSystemTester | Key imports: time, os, json, pathlib, sys | Functions: __init__, __init__, strongconnect, _update_avg_processing_time, reset_statistics | Classes: Change, UpdateResult, GraphState | Key imports: time, uuid, defaultdict, logging, collections",
+      "code_files": [
+        "knowledge/learning/critical-compatibility-audit-learnings.json",
+        "test_learning_system.py",
+        "knowledge/cascade_update_system.py",
+        "knowledge/integration/system_monitor.py",
+        "knowledge/patterns/system-decoupling-architecture-pattern.json",
+        "knowledge/patterns/cascade-update-system-planning-strategy.json",
+        "architecture/hybrid-knowledge-system-prd.md",
+        "tests/test_pattern_reinforcement_system.py",
+        "claude/commands/pattern_reinforcement_system.py",
+        "knowledge/metrics/orchestrator-system-performance-metrics.json"
+      ],
+      "test_files": [
+        "lightrag/tests/test_learning_system.py",
+        "tests/test_vote_weighting_system.py",
+        "tests/test_pattern_reinforcement_system.py",
+        "tests/test_arbitration_system.py",
+        "tests/test_mcp_alert_system.py"
+      ],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 0.8,
+      "compliance_level": "mostly_compliant",
+      "issues_found": [],
+      "recommendations": [],
+      "evidence_timestamp": "2025-08-23T23:39:43.210539"
+    },
+    {
+      "spec_id": "spec-113-2",
+      "implementation_details": "Spec keywords found: context | LOC: ~133 | Spec keywords found: issue | LOC: ~22 | Spec keywords found: issue, context | LOC: ~108",
+      "code_files": [
+        "knowledge/checkpoints/issue-27-cache-complete.json",
+        "knowledge/validation/issue-95-test-report.json",
+        "knowledge/checkpoints/issue-57-implementation-complete.json",
+        "knowledge/issues/issue-29-file-monitoring-resolution.json",
+        "knowledge/checkpoints/issue-37-implementation-start.json",
+        "knowledge/issues/issue-82-dynamic-mcp-loader-analysis.json",
+        "knowledge/issues/issue-44-user-prompt-capture-analysis.json",
+        "RIF_LEARNING_REPORT_ISSUES_67_68_78.md",
+        "knowledge/checkpoints/issue-97-planning-complete.json",
+        "knowledge/checkpoints/issue-75-implementation-start.json"
+      ],
+      "test_files": [
+        "tests/test_mcp_context_aggregator.py",
+        "tests/test_context_aware_thresholds.py",
+        "tests/test_issue_101_validation.py",
+        "knowledge/context/tests.py",
+        "knowledge/patterns/test-issue-analysis-validation.json"
+      ],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 0.8400000000000001,
+      "compliance_level": "mostly_compliant",
+      "issues_found": [
+        "Specification is measurable but no metrics evidence found"
+      ],
+      "recommendations": [
+        "Add metrics collection to demonstrate measurable outcomes"
+      ],
+      "evidence_timestamp": "2025-08-23T23:39:43.257650"
+    },
+    {
+      "spec_id": "spec-113-3",
+      "implementation_details": "LOC: ~158 | Spec keywords found: pattern | LOC: ~9 | Functions: __init__, store_knowledge, retrieve_knowledge, create_sample_completed_issue, __init__ | Classes: MockKnowledgeSystem, PatternDiscoveryEngine, SuccessMetricsCalculator | Key imports: time, datetime, json, completed, sys",
+      "code_files": [
+        "quality/patterns/quality_patterns.json",
+        "knowledge/patterns/patterns_20250823_020400_234a062e.json",
+        "demo_pattern_extraction_engine.py",
+        "knowledge/pattern_application/success_tracker.py",
+        "knowledge/patterns/patterns_20250823_041941_234a062e.json",
+        "knowledge/patterns/system-decoupling-architecture-pattern.json",
+        "knowledge/patterns/cascade-update-system-planning-strategy.json",
+        "demo_pattern_visualization.py",
+        "tests/test_pattern_reinforcement_system.py",
+        "knowledge/patterns/pr-automation-architecture-pattern.json"
+      ],
+      "test_files": [
+        "tests/test_pattern_visualization.py",
+        "tests/test_pattern_reinforcement_system.py",
+        "tests/test_pattern_matching_system.py",
+        "tests/test_pattern_portability.py",
+        "tests/test_pattern_extraction.py"
+      ],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 1.0,
+      "compliance_level": "fully_compliant",
+      "issues_found": [],
+      "recommendations": [],
+      "evidence_timestamp": "2025-08-23T23:39:43.304041"
+    },
+    {
+      "spec_id": "spec-113-1",
+      "implementation_details": "Functions: __init__, main | Classes: LearningSystemTester | Key imports: time, os, json, pathlib, sys | Functions: setup_method, test_entity_search_parsing, test_similarity_search_parsing, test_dependency_analysis_parsing, test_impact_analysis_parsing | Classes: TestQueryParser, TestStrategyPlanner, TestResultRanker | Key imports: pytest, time, os, json, tempfile | Functions: __init__, set_embedding_generator, _update_query_stats | Classes: ConversationQueryEngine | Key imports: Dict, datetime, json, typing",
+      "code_files": [
+        "test_learning_system.py",
+        "knowledge/query/tests/test_query_planner.py",
+        "knowledge/conversations/query_engine.py",
+        "knowledge/cascade_update_system.py",
+        "knowledge/integration/system_monitor.py",
+        "knowledge/patterns/system-decoupling-architecture-pattern.json",
+        "knowledge/patterns/cascade-update-system-planning-strategy.json",
+        "architecture/hybrid-knowledge-system-prd.md",
+        "tests/test_pattern_reinforcement_system.py",
+        "knowledge/query/query_parser.py"
+      ],
+      "test_files": [
+        "lightrag/tests/test_learning_system.py",
+        "tests/test_mcp_context_aggregator.py",
+        "tests/test_context_aware_thresholds.py",
+        "tests/test_vote_weighting_system.py",
+        "tests/test_pattern_reinforcement_system.py"
+      ],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 0.8,
+      "compliance_level": "mostly_compliant",
+      "issues_found": [],
+      "recommendations": [],
+      "evidence_timestamp": "2025-08-23T23:39:43.349758"
+    },
+    {
+      "spec_id": "spec-113-2",
+      "implementation_details": "Spec keywords found: progress | LOC: ~182 | LOC: ~187",
+      "code_files": [
+        "knowledge/checkpoints/issue-81-implementation-progress.json",
+        "knowledge/checkpoints/issue-82-implementation-progress.json"
+      ],
+      "test_files": [],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 0.6000000000000001,
+      "compliance_level": "partially_compliant",
+      "issues_found": [],
+      "recommendations": [
+        "Improve implementation to better match specification requirements"
+      ],
+      "evidence_timestamp": "2025-08-23T23:39:43.398029"
+    }
+  ],
+  "overall_adherence_score": 0.8080000000000002,
+  "overall_compliance_level": "mostly_compliant",
+  "constraint_violations": [],
+  "goal_achievement": {
+    "functional_requirements": 0.8560000000000001,
+    "quality_gates": 0.0,
+    "performance_requirements": 0.0,
+    "testability": 0.0,
+    "measurability": 0.0
+  },
+  "quality_grade": "B-",
+  "recommendations": [
+    "Documentation gaps identified - add specification documentation"
+  ],
+  "benchmarking_timestamp": "2025-08-23T23:39:43.398066",
+  "validator_notes": "Testing benchmarking framework"
+}

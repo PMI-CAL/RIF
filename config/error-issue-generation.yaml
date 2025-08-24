@@ -1,0 +1,112 @@
+# Error Issue Generation Configuration
+# Controls when automated GitHub issues are created from captured error events
+
+# Issue Creation Settings
+issue_creation:
+  # Severity levels that trigger GitHub issue creation
+  enabled_severities:
+    - "critical"    # Always create issues for critical errors
+    - "high"        # Create issues for high severity errors (NEW - was missing)
+    # - "medium"    # Optional: enable for medium severity if needed
+    # - "low"       # Optional: enable for low severity if needed
+  
+  # Issue Priority Mapping
+  priority_mapping:
+    critical: "priority:critical"
+    high: "priority:high" 
+    medium: "priority:medium"
+    low: "priority:low"
+  
+  # Issue Template Customization
+  templates:
+    critical:
+      emoji: "🚨"
+      title_prefix: "Critical Error Investigation"
+      header: "Critical Error Investigation Required"
+      urgency: "IMMEDIATE ACTION REQUIRED"
+    high:
+      emoji: "⚠️"
+      title_prefix: "High Priority Error Investigation"
+      header: "High Priority Error Investigation Required"
+      urgency: "Prompt investigation needed"
+    medium:
+      emoji: "⚡"
+      title_prefix: "Error Investigation"
+      header: "Error Investigation Recommended"
+      urgency: "Investigation when convenient"
+  
+  # Duplicate Detection
+  duplicate_prevention:
+    enabled: true
+    # Check for existing issues with same error pattern within this time window
+    time_window_hours: 24
+    # Maximum issues created per error pattern per day
+    max_issues_per_pattern_per_day: 3
+
+# Category-specific Overrides
+category_overrides:
+  # Override issue creation threshold for specific error categories
+  authentication:
+    min_severity: "high"      # Always create issues for auth errors at HIGH+
+    max_issues_per_hour: 5    # Rate limit auth error issues
+  
+  database:
+    min_severity: "high"      # Database errors are always important
+    include_connection_info: true
+  
+  network:
+    min_severity: "high"      # Network failures need attention
+    retry_analysis: true
+  
+  user_error:
+    min_severity: "critical"  # Most user errors don't need GitHub issues
+    filter_test_commands: true
+
+# Integration Settings
+integration:
+  # RIF Workflow Integration
+  rif_labels:
+    - "state:new"           # Trigger RIF-Analyst pickup
+    - "error:auto-detected" # Mark as automatically detected
+  
+  # Agent Assignment based on error category
+  agent_routing:
+    database: ["rif-implementer", "rif-validator"]
+    network: ["rif-implementer", "rif-analyst"] 
+    authentication: ["rif-implementer", "rif-validator"]
+    system: ["rif-implementer"]
+    integration: ["rif-analyst", "rif-implementer"]
+
+# Emergency Settings
+emergency:
+  # Suspend issue creation if too many errors
+  circuit_breaker:
+    enabled: true
+    max_issues_per_hour: 20   # Emergency brake if error storm
+    cooldown_minutes: 30      # Wait before resuming issue creation
+  
+  # Critical error escalation
+  critical_escalation:
+    enabled: true
+    notification_webhook: null  # Optional: webhook for critical errors
+    assign_on_creation: true    # Assign issues immediately
+
+# Logging and Monitoring
+monitoring:
+  # Track issue creation rates and success
+  metrics_enabled: true
+  log_all_decisions: true     # Log why issues were/weren't created
+  
+  # Performance monitoring
+  track_resolution_times: true
+  success_rate_threshold: 0.8  # Alert if issue resolution rate drops
+
+# Retroactive Processing
+retroactive:
+  # Process existing high-severity errors without GitHub issues
+  enabled: true
+  # Only process errors newer than this
+  max_age_days: 7
+  # Batch processing limits
+  max_batch_size: 10
+  processing_delay_seconds: 2  # Avoid API rate limits

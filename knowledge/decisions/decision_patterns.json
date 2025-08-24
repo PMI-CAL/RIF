@@ -1,0 +1,46 @@
+{
+  "manual_decision_approve_916": {
+    "pattern_id": "manual_decision_approve_916",
+    "pattern_type": "manual_decision_approve",
+    "conditions": [
+      "Decision: approve",
+      "Security review completed - no issues found"
+    ],
+    "outcomes": [
+      "Security scan passed",
+      "Code review completed"
+    ],
+    "frequency": 1,
+    "success_rate": 1.0,
+    "risk_factors": [
+      "security"
+    ],
+    "specialist_types": [
+      "security"
+    ],
+    "average_resolution_time": 0.0,
+    "confidence": 0.8
+  },
+  "manual_decision_approve_625": {
+    "pattern_id": "manual_decision_approve_625",
+    "pattern_type": "manual_decision_approve",
+    "conditions": [
+      "Test security review",
+      "Low risk change approved after review"
+    ],
+    "outcomes": [
+      "Security scan passed",
+      "Code review completed"
+    ],
+    "frequency": 1,
+    "success_rate": 1.0,
+    "risk_factors": [
+      "security"
+    ],
+    "specialist_types": [
+      "security"
+    ],
+    "average_resolution_time": 0.0,
+    "confidence": 0.8
+  }
+}

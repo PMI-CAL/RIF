@@ -22,15 +22,24 @@ import numpy as np
 from typing import List, Dict, Any, Optional, Tuple, Union
 from datetime import datetime, timedelta
 from pathlib import Path
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.decomposition import TruncatedSVD
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 import re
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
+
+# Check optional dependencies at usage time to avoid import errors
+def check_sklearn_available():
+    try:
+        import sklearn
+        return True
+    except (ImportError, ValueError):
+        # ValueError can occur with version incompatibilities
+        return False
+
+def check_nltk_available():
+    try:
+        import nltk
+        return True
+    except (ImportError, ValueError):
+        # ValueError can occur with dependency version issues
+        return False
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -68,35 +77,63 @@ class ConversationEmbeddingGenerator:
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(parents=True, exist_ok=True)
         
-        # Initialize TF-IDF pipeline
-        self.tfidf_vectorizer = TfidfVectorizer(
-            max_features=max_features,
-            min_df=min_df,
-            max_df=max_df,
-            lowercase=True,
-            stop_words='english',
-            tokenizer=self._tokenize_text,
-            ngram_range=(1, 2)  # Use unigrams and bigrams
-        )
+        # Check if dependencies are available
+        self.sklearn_available = check_sklearn_available()
+        self.nltk_available = check_nltk_available()
         
-        # Dimensionality reduction to get to target vector size
-        self.svd_reducer = TruncatedSVD(
-            n_components=min(vector_dim, max_features),
-            random_state=42
-        )
+        if not self.sklearn_available:
+            logger.warning("scikit-learn not available - using simplified hashing embedding")
         
-        # Standardization for better similarity calculations
-        self.scaler = StandardScaler()
-        
-        # Combined pipeline
-        self.pipeline = Pipeline([
-            ('tfidf', self.tfidf_vectorizer),
-            ('svd', self.svd_reducer),
-            ('scaler', self.scaler)
-        ])
+        # Initialize components based on availability
+        if self.sklearn_available:
+            try:
+                from sklearn.feature_extraction.text import TfidfVectorizer
+                from sklearn.decomposition import TruncatedSVD
+                from sklearn.pipeline import Pipeline
+                from sklearn.preprocessing import StandardScaler
+                
+                # Initialize TF-IDF pipeline
+                self.tfidf_vectorizer = TfidfVectorizer(
+                    max_features=max_features,
+                    min_df=min_df,
+                    max_df=max_df,
+                    lowercase=True,
+                    stop_words='english',
+                    tokenizer=self._tokenize_text,
+                    ngram_range=(1, 2)  # Use unigrams and bigrams
+                )
+                
+                # Dimensionality reduction to get to target vector size
+                self.svd_reducer = TruncatedSVD(
+                    n_components=min(vector_dim, max_features),
+                    random_state=42
+                )
+                
+                # Standardization for better similarity calculations
+                self.scaler = StandardScaler()
+                
+                # Combined pipeline
+                self.pipeline = Pipeline([
+                    ('tfidf', self.tfidf_vectorizer),
+                    ('svd', self.svd_reducer),
+                    ('scaler', self.scaler)
+                ])
+            except ImportError as e:
+                logger.warning(f"sklearn import failed: {e}")
+                self.pipeline = None
+                self.sklearn_available = False
+        else:
+            self.pipeline = None
         
         # Stemmer for text preprocessing
-        self.stemmer = PorterStemmer()
+        if self.nltk_available:
+            try:
+                from nltk.stem import PorterStemmer
+                self.stemmer = PorterStemmer()
+            except ImportError:
+                self.stemmer = None
+        else:
+            self.stemmer = None
         
         # Training state
         self.is_trained = False
@@ -113,7 +150,8 @@ class ConversationEmbeddingGenerator:
         }
         
         # Try to download required NLTK data
-        self._setup_nltk_data()
+        if self.nltk_available:
+            self._setup_nltk_data()
         
         logger.info(f"ConversationEmbeddingGenerator initialized with {vector_dim}D vectors, batch size {batch_size}")
     
@@ -128,6 +166,7 @@ class ConversationEmbeddingGenerator:
             else:
                 ssl._create_default_https_context = _create_unverified_https_context
             
+            import nltk
             nltk.download('punkt', quiet=True)
             nltk.download('stopwords', quiet=True)
         except Exception as e:
@@ -139,8 +178,16 @@ class ConversationEmbeddingGenerator:
             return []
         
         try:
-            # Basic tokenization if NLTK not available
-            tokens = word_tokenize(text.lower()) if 'word_tokenize' in globals() else text.lower().split()
+            # Use NLTK if available
+            if self.nltk_available:
+                try:
+                    from nltk.tokenize import word_tokenize
+                    tokens = word_tokenize(text.lower())
+                except ImportError:
+                    tokens = re.findall(r'\b\w+\b', text.lower())
+            else:
+                # Basic tokenization fallback
+                tokens = re.findall(r'\b\w+\b', text.lower())
         except:
             tokens = text.lower().split()
         
@@ -149,7 +196,10 @@ class ConversationEmbeddingGenerator:
         for token in tokens:
             # Remove non-alphabetic tokens and very short tokens
             if token.isalpha() and len(token) > 2:
-                stemmed = self.stemmer.stem(token)
+                if self.stemmer:
+                    stemmed = self.stemmer.stem(token)
+                else:
+                    stemmed = token
                 cleaned_tokens.append(stemmed)
         
         return cleaned_tokens
@@ -192,7 +242,17 @@ class ConversationEmbeddingGenerator:
         
         if not self.training_texts:
             logger.warning("No training texts available. Cannot train embedding model.")
+            # For fallback mode, we don't need training
+            if not self.sklearn_available:
+                self.is_trained = True
+                logger.info("Using hash-based embeddings (no training required)")
+                return True
             return False
+        
+        if not self.sklearn_available:
+            logger.info("scikit-learn not available - using hash-based embeddings")
+            self.is_trained = True
+            return True
         
         try:
             logger.info(f"Training embedding model on {len(self.training_texts)} texts...")
@@ -240,16 +300,16 @@ class ConversationEmbeddingGenerator:
             self.generation_stats['cache_hits'] += 1
             return self.embedding_cache[text_hash]
         
-        if not self.is_trained:
-            logger.warning("Embedding model not trained. Cannot generate embeddings.")
-            return None
-        
         start_time = time.time()
         
         try:
-            # Generate embedding using trained pipeline
-            embedding_matrix = self.pipeline.transform([text])
-            embedding = embedding_matrix[0].tolist()
+            if self.sklearn_available and self.is_trained:
+                # Generate embedding using trained pipeline
+                embedding_matrix = self.pipeline.transform([text])
+                embedding = embedding_matrix[0].tolist()
+            else:
+                # Use fallback hash-based embedding
+                embedding = self._generate_hash_embedding(text)
             
             # Pad or truncate to target dimension
             embedding = self._adjust_embedding_dimension(embedding)
@@ -280,7 +340,7 @@ class ConversationEmbeddingGenerator:
         if not texts:
             return []
         
-        if not self.is_trained:
+        if not self.is_trained and self.sklearn_available:
             logger.warning("Embedding model not trained. Cannot generate embeddings.")
             return [None] * len(texts)
         
@@ -333,18 +393,29 @@ class ConversationEmbeddingGenerator:
         # Generate embeddings for uncached texts
         if uncached_texts:
             try:
-                embedding_matrix = self.pipeline.transform(uncached_texts)
-                
-                for j, (embedding_vec, original_index) in enumerate(zip(embedding_matrix, uncached_indices)):
-                    embedding = embedding_vec.tolist()
-                    embedding = self._adjust_embedding_dimension(embedding)
+                if self.sklearn_available and self.pipeline:
+                    embedding_matrix = self.pipeline.transform(uncached_texts)
                     
-                    # Update cache and results
-                    text = batch_texts[original_index]
-                    text_hash = self._get_text_hash(text)
-                    self.embedding_cache[text_hash] = embedding
-                    embeddings[original_index] = embedding
-                    
+                    for j, (embedding_vec, original_index) in enumerate(zip(embedding_matrix, uncached_indices)):
+                        embedding = embedding_vec.tolist()
+                        embedding = self._adjust_embedding_dimension(embedding)
+                        
+                        # Update cache and results
+                        text = batch_texts[original_index]
+                        text_hash = self._get_text_hash(text)
+                        self.embedding_cache[text_hash] = embedding
+                        embeddings[original_index] = embedding
+                else:
+                    # Use fallback for all uncached texts
+                    for original_index in uncached_indices:
+                        text = batch_texts[original_index]
+                        embedding = self._generate_hash_embedding(text)
+                        embedding = self._adjust_embedding_dimension(embedding)
+                        
+                        text_hash = self._get_text_hash(text)
+                        self.embedding_cache[text_hash] = embedding
+                        embeddings[original_index] = embedding
+                        
             except Exception as e:
                 logger.error(f"Failed to generate batch embeddings: {e}")
                 # Fill remaining with None
@@ -462,6 +533,33 @@ class ConversationEmbeddingGenerator:
             # Pad with zeros
             padding = [0.0] * (self.vector_dim - len(embedding))
             return embedding + padding
+    
+    def _generate_hash_embedding(self, text: str) -> List[float]:
+        """Generate hash-based embedding when sklearn is not available"""
+        # Tokenize the text
+        tokens = self._tokenize_text(text)
+        
+        # Create a simple feature vector based on word hashes
+        embedding = [0.0] * min(self.vector_dim, 512)  # Limit to 512 dimensions for fallback
+        
+        # Use word frequency and position-based features
+        for i, token in enumerate(tokens[:100]):  # Limit to first 100 tokens
+            # Multiple hash functions to distribute features
+            hash1 = hash(token) % len(embedding)
+            hash2 = hash(token + str(i)) % len(embedding)
+            hash3 = hash(token[::-1]) % len(embedding)  # Reverse token
+            
+            # Add weighted features
+            embedding[hash1] += 1.0 / (i + 1)  # Position weight
+            embedding[hash2] += 0.5
+            embedding[hash3] += 0.3
+        
+        # Normalize the embedding
+        magnitude = sum(x * x for x in embedding) ** 0.5
+        if magnitude > 0:
+            embedding = [x / magnitude for x in embedding]
+        
+        return embedding
     
     def _get_text_hash(self, text: str) -> str:
         """Generate hash for text caching"""

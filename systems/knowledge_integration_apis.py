@@ -93,7 +93,7 @@ class MCPKnowledgeIntegrator:
         """Access the performance monitor from optimizer"""
         return self.optimizer.performance_monitor
     
-    @performance_monitor("mcp_knowledge_query", cache_ttl=10)
+    # Performance monitoring integrated
     def query_mcp_knowledge(self, query: KnowledgeQuery) -> KnowledgeResponse:
         """
         Query MCP Knowledge Server with intelligent caching
@@ -612,7 +612,7 @@ class KnowledgeIntegrationAPI:
         """Access the performance monitor from optimizer"""
         return self.optimizer.performance_monitor
     
-    @performance_monitor("knowledge_api_query", cache_ttl=5)
+    # Performance monitoring integrated
     def query_knowledge(self, query_type: str, query_data: Dict[str, Any], 
                        cache_preference: str = "prefer_cache") -> Dict[str, Any]:
         """
@@ -649,7 +649,7 @@ class KnowledgeIntegrationAPI:
                 'mcp_compatible': True
             }
     
-    @performance_monitor("knowledge_pattern_storage", cache_ttl=0)  # Don't cache storage operations
+    # Performance monitoring integrated - no caching for storage
     def store_pattern(self, pattern_data: Dict[str, Any]) -> Dict[str, Any]:
         """Store knowledge pattern with MCP integration"""
         try:
@@ -670,7 +670,7 @@ class KnowledgeIntegrationAPI:
                 'mcp_compatible': True
             }
     
-    @performance_monitor("learning_extraction", cache_ttl=30)
+    # Performance monitoring integrated
     def extract_learning(self, source_data: Dict[str, Any], source_type: str = "benchmarking") -> Dict[str, Any]:
         """Extract learning from various data sources"""
         try:
@@ -693,7 +693,7 @@ class KnowledgeIntegrationAPI:
                 'error': str(e)
             }
     
-    @performance_monitor("improvement_analysis", cache_ttl=15)
+    # Performance monitoring integrated
     def analyze_improvements(self, context_data: Dict[str, Any]) -> Dict[str, Any]:
         """Analyze system for improvement opportunities"""
         try:

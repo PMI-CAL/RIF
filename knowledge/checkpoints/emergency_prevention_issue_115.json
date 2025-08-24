@@ -1,0 +1,19 @@
+{
+  "checkpoint_type": "emergency_prevention",
+  "issue_number": 115,
+  "timestamp": "2025-08-24T11:27:07.664587",
+  "prevention_measures": {
+    "full_issue_context_required": true,
+    "research_methodology_validation": true,
+    "validation_requirements_verification": true,
+    "evidence_documentation_required": true
+  },
+  "reference_emergency": "issue_145_context_failure_prevention",
+  "critical_validations": [
+    "full_issue_read",
+    "requirements_extracted",
+    "research_methodology_identified",
+    "validation_requirements_understood"
+  ],
+  "minimum_compliance_score": 0.8
+}

@@ -1,0 +1,205 @@
+# RIF Dependency Patterns Configuration
+# Defines regex patterns for parsing dependency declarations from GitHub issue bodies
+# This file supports the dependency management system in claude/commands/dependency_manager.py
+
+dependency_patterns:
+  # Direct dependency declarations
+  depends_on:
+    - pattern: 'depends on:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Standard 'depends on' declaration"
+    - pattern: 'dependency:?\s*#?(\d+)' 
+      confidence: 0.9
+      description: "Generic dependency declaration"
+    - pattern: 'needs:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Needs-based dependency"
+    - pattern: 'dependent on:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Dependent on phrasing"
+    - pattern: 'depends upon:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Formal depends upon phrasing"
+
+  # Blocking relationships  
+  blocked_by:
+    - pattern: 'blocked by:?\s*#?(\d+)'
+      confidence: 0.95
+      description: "Direct blocking relationship"
+    - pattern: 'waiting for:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Waiting for completion"
+    - pattern: 'cannot proceed until:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Cannot proceed conditional"
+    - pattern: 'held up by:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Held up by phrasing"
+    - pattern: 'stuck on:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Stuck on dependency"
+    - pattern: 'waiting on:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Waiting on completion"
+
+  # Sequential dependencies
+  after:
+    - pattern: 'after:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Sequential after dependency"
+    - pattern: 'following:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Following completion"
+    - pattern: 'once:?\s*#?(\d+)(?:\s+(?:is\s+)?(?:complete|done|finished))?'
+      confidence: 0.7
+      description: "Once completion conditional"
+    - pattern: 'subsequent to:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Subsequent to completion"
+    - pattern: 'post:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Post completion"
+
+  # Requirement dependencies
+  requires:
+    - pattern: 'requires:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Direct requirement"
+    - pattern: 'requirement:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Requirement declaration"
+    - pattern: 'must have:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Must have requirement"
+    - pattern: 'needs to have:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Needs to have requirement"
+    - pattern: 'contingent on:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Contingent on requirement"
+
+  # Prerequisite dependencies
+  prerequisite:
+    - pattern: 'prerequisite:?\s*#?(\d+)'
+      confidence: 0.95
+      description: "Direct prerequisite"
+    - pattern: 'pre-req:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Abbreviated prerequisite"
+    - pattern: 'prerequisite:?\s*issue\s*#?(\d+)'
+      confidence: 0.95
+      description: "Prerequisite issue format"
+    - pattern: 'pre-requisite:?\s*#?(\d+)'
+      confidence: 0.95
+      description: "Hyphenated prerequisite"
+    - pattern: 'prereq:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Short form prerequisite"
+
+  # Implementation-specific dependencies (DPIBS pattern)
+  implementation_dependencies:
+    - pattern: 'Implementation Dependencies:.*?Issue #(\d+)'
+      confidence: 0.95
+      description: "DPIBS Implementation Dependencies format"
+    - pattern: 'Implementation Dependencies:.*?#(\d+)'
+      confidence: 0.9
+      description: "Implementation Dependencies with hash"
+    - pattern: 'Impl\s+Deps?:.*?#(\d+)'
+      confidence: 0.8
+      description: "Abbreviated Implementation Dependencies"
+    - pattern: 'Implementation Deps:.*?#(\d+)'
+      confidence: 0.85
+      description: "Implementation Deps format"
+
+  # Parent-child relationships  
+  child_of:
+    - pattern: 'child of:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Child relationship"
+    - pattern: 'sub-task of:?\s*#?(\d+)'
+      confidence: 0.9
+      description: "Sub-task relationship"
+    - pattern: 'part of:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Part of relationship"
+    - pattern: 'subtask:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Subtask format"
+    - pattern: '\*\*Parent Issue\*\*:?\s*#?(\d+)'
+      confidence: 0.95
+      description: "DPIBS Parent Issue format"
+    - pattern: 'Parent Issue:?\s*#?(\d+)'
+      confidence: 0.95
+      description: "DPIBS Parent Issue without bold"
+
+  # Built upon dependencies
+  builds_on:
+    - pattern: 'builds on:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Builds on relationship"
+    - pattern: 'extends:?\s*#?(\d+)'
+      confidence: 0.8
+      description: "Extends relationship"
+    - pattern: 'based on:?\s*#?(\d+)'
+      confidence: 0.75
+      description: "Based on relationship"
+    - pattern: 'building upon:?\s*#?(\d+)'
+      confidence: 0.85
+      description: "Building upon format"
+
+  # Multi-issue dependencies (comma-separated)
+  multiple_dependencies:
+    - pattern: 'depends on:?\s*(?:#?(\d+)(?:,\s*#?(\d+))*)'
+      confidence: 0.8
+      description: "Multiple comma-separated dependencies"
+    - pattern: 'requires:?\s*(?:issues?\s*)?(?:#?(\d+)(?:,\s*#?(\d+))*)'
+      confidence: 0.8
+      description: "Multiple requirements"
+    - pattern: 'blocked by:?\s*(?:issues?\s*)?(?:#?(\d+)(?:,\s*#?(\d+))*)'
+      confidence: 0.85
+      description: "Multiple blocking issues"
+
+  # Range dependencies (Issues #X-Y)
+  range_dependencies:
+    - pattern: 'depends on:?\s*(?:issues?\s*)?#?(\d+)-(\d+)'
+      confidence: 0.8
+      description: "Range of dependent issues"
+    - pattern: 'requires:?\s*(?:issues?\s*)?#?(\d+)-(\d+)'
+      confidence: 0.8
+      description: "Range of required issues"
+    - pattern: 'Implementation Dependencies:.*?Issues #(\d+)-(\d+)'
+      confidence: 0.9
+      description: "DPIBS range dependencies"
+
+# Pattern matching configuration
+matching_options:
+  case_sensitive: false
+  multiline: true
+  ignore_whitespace: true
+  max_line_length: 500  # Skip very long lines to avoid performance issues
+  
+# Performance settings
+performance:
+  max_patterns_per_type: 15
+  pattern_timeout_ms: 100
+  cache_compiled_patterns: true
+  
+# Validation settings
+validation:
+  validate_issue_numbers: true
+  max_issue_number: 999999
+  min_issue_number: 1
+  allow_self_dependency: false
+
+# Confidence thresholds
+confidence:
+  minimum_confidence: 0.5
+  high_confidence_threshold: 0.9
+  require_high_confidence_for_blocking: false
+
+# Output formatting
+output:
+  include_source_line: true
+  include_confidence_score: true
+  group_by_dependency_type: true
+  sort_by_confidence: true

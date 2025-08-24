@@ -1,13 +1,13 @@
 {
   "error_id": "err_20250823_20b66aa5",
   "conversation_id": "test_session",
-  "timestamp": "2025-08-24T04:04:14.899996+00:00",
+  "timestamp": "2025-08-24T05:17:10.697944+00:00",
   "error_type": "network_error",
   "error_message": "GitHub API timeout after 30 seconds",
   "error_context": {
     "api_endpoint": "https://api.github.com",
     "system": {
-      "timestamp": "2025-08-24T04:04:14.899980+00:00",
+      "timestamp": "2025-08-24T05:17:10.697926+00:00",
       "working_directory": "/Users/cal/DEV/RIF",
       "python_version": "3.9.6 (default, Apr 30 2025, 02:07:17) \n[Clang 17.0.0 (clang-1700.0.13.5)]",
       "platform": "darwin"

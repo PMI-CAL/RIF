@@ -94,6 +94,12 @@
             "command": "echo 'RIF: Analyzing file for adaptive thresholds...' && python3 ./claude/commands/quality_gates/component_classifier.py classify \"$1\" 2>/dev/null | jq -r 'if .component_type then \"File \\(.file_path): \\(.component_type) (\\(.confidence*100|floor)% confidence)\" else empty end' || true",
             "output": "context",
             "description": "Context-aware quality threshold analysis for modified files"
+          },
+          {
+            "type": "command",
+            "command": "echo 'RIF: Checking for shadow issue triggers...' && python3 systems/shadow_issue_monitor.py scan >/dev/null 2>&1 && echo 'Shadow issue check complete' || echo 'Shadow monitoring failed' >> ./knowledge/errors/logs/shadow-monitor-failures.log",
+            "output": "silent",
+            "description": "Trigger shadow issue creation for critical changes"
           }
         ]
       },

@@ -1,0 +1,35 @@
+{
+  "verification_system_active": true,
+  "activation_timestamp": "2025-08-24T17:50:43.853388Z",
+  "integration_points": [
+    {
+      "trigger": "state_transition_to_implementing",
+      "verification": "requirement_extraction_verifier",
+      "enforcement_level": "warning"
+    },
+    {
+      "trigger": "state_transition_to_validating",
+      "verification": "evidence_requirement_enforcer",
+      "enforcement_level": "blocking"
+    },
+    {
+      "trigger": "state_transition_to_complete",
+      "verification": [
+        "literature_review_verifier",
+        "success_criteria_validator",
+        "evidence_requirement_enforcer"
+      ],
+      "enforcement_level": "blocking"
+    },
+    {
+      "trigger": "agent_activation",
+      "verification": "context_consumption_monitor",
+      "enforcement_level": "advisory"
+    }
+  ],
+  "escalation_procedures": {
+    "blocking_violations": "create_github_comment_and_prevent_transition",
+    "warning_violations": "create_github_comment_and_log",
+    "advisory_violations": "log_only"
+  }
+}

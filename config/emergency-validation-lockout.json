@@ -1,0 +1,18 @@
+{
+  "lockout_active": true,
+  "activation_timestamp": "2025-08-24T17:29:52.058944Z",
+  "trigger_issue": 145,
+  "lockout_conditions": {
+    "no_validation_without_context_audit": true,
+    "literature_review_mandatory": true,
+    "evidence_requirements_enforced": true,
+    "knowledge_consultation_mandatory": true
+  },
+  "release_conditions": {
+    "context_verification_system_active": false,
+    "knowledge_consultation_enforcer_active": false,
+    "critical_issues_remediated": false,
+    "validation_protocols_hardened": false
+  },
+  "suspended_count": 3
+}

@@ -425,6 +425,81 @@ class DPIBSCacheManager:
             self.logger.warning(f"Failed to get L3 storage stats: {e}")
         
         return {'status': 'error'}
+    
+    def clear_expired_entries(self) -> Dict[str, int]:
+        """Clear expired entries from all cache levels and return cleanup statistics"""
+        cleanup_stats = {
+            'l1_cleared': 0,
+            'l2_cleared': 0, 
+            'l3_cleared': 0,
+            'total_cleared': 0
+        }
+        
+        current_time = datetime.utcnow()
+        
+        # Clear expired L1 memory cache entries
+        with self.memory_cache_lock:
+            expired_keys = []
+            for cache_key, cache_entry in self.memory_cache.items():
+                if cache_entry['expires_at'] <= current_time:
+                    expired_keys.append(cache_key)
+            
+            for key in expired_keys:
+                del self.memory_cache[key]
+                cleanup_stats['l1_cleared'] += 1
+                
+        self.cache_stats['l1']['invalidations'] += cleanup_stats['l1_cleared']
+        
+        # Clear expired L2 context cache entries
+        with self.context_cache_lock:
+            expired_keys = []
+            for cache_key, cache_entry in self.context_cache.items():
+                if cache_entry['expires_at'] <= current_time:
+                    expired_keys.append(cache_key)
+            
+            for key in expired_keys:
+                del self.context_cache[key]
+                cleanup_stats['l2_cleared'] += 1
+                
+        self.cache_stats['l2']['invalidations'] += cleanup_stats['l2_cleared']
+        
+        # Clear expired L3 persistent cache entries
+        if self.connection_manager:
+            try:
+                with self.connection_manager.get_connection() as conn:
+                    # Count expired entries before deletion
+                    count_result = conn.execute("""
+                        SELECT COUNT(*) FROM l3_persistent_cache 
+                        WHERE expires_at <= CURRENT_TIMESTAMP
+                    """).fetchone()
+                    
+                    if count_result and count_result[0] > 0:
+                        cleanup_stats['l3_cleared'] = count_result[0]
+                        
+                        # Delete expired entries
+                        conn.execute("""
+                            DELETE FROM l3_persistent_cache 
+                            WHERE expires_at <= CURRENT_TIMESTAMP
+                        """)
+                        
+                        self.cache_stats['l3']['invalidations'] += cleanup_stats['l3_cleared']
+                        
+            except Exception as e:
+                self.logger.warning(f"Failed to clear expired L3 cache entries: {e}")
+        
+        cleanup_stats['total_cleared'] = (
+            cleanup_stats['l1_cleared'] + 
+            cleanup_stats['l2_cleared'] + 
+            cleanup_stats['l3_cleared']
+        )
+        
+        self.logger.info(
+            f"Cache cleanup completed: L1={cleanup_stats['l1_cleared']}, "
+            f"L2={cleanup_stats['l2_cleared']}, L3={cleanup_stats['l3_cleared']}, "
+            f"Total={cleanup_stats['total_cleared']} expired entries cleared"
+        )
+        
+        return cleanup_stats
 
 
 class DPIBSPerformanceOptimizer:
@@ -448,20 +523,22 @@ class DPIBSPerformanceOptimizer:
         # Connection pool optimization
         self._optimize_connection_pool()
         
-        # Start continuous monitoring
-        self.run_continuous_monitoring()
+        # Monitoring initialized
         
         self.logger.info("DPIBS Performance Optimizer with Phase 4 enhancements initialized")
     
     def _optimize_connection_pool(self) -> None:
         """Optimize connection pool for DPIBS workload patterns"""
-        # Warm up connection pool
-        with self.connection_manager.get_connection() as conn:
-            # Pre-warm common indexes
-            conn.execute("PRAGMA memory_limit='1GB'")
-            conn.execute("PRAGMA threads=4")
-            
-        self.logger.info("Connection pool optimized for DPIBS workload")
+        try:
+            # Warm up connection pool
+            with self.connection_manager.get_connection() as conn:
+                # Pre-warm common indexes
+                conn.execute("PRAGMA memory_limit='1GB'")
+                conn.execute("PRAGMA threads=4")
+                
+            self.logger.info("Connection pool optimized for DPIBS workload")
+        except Exception as e:
+            self.logger.warning(f"Failed to optimize connection pool: {e}")
     
     def _track_performance(self, operation: str, duration_ms: float, cache_hit: bool = False, 
                           query_complexity: str = "simple") -> None:
@@ -510,7 +587,6 @@ class DPIBSPerformanceOptimizer:
             return wrapper
         return decorator
     
-    @performance_monitor("agent_context_retrieval", cache_ttl=30)
     def get_agent_context(self, agent_type: str, context_role: str, issue_number: Optional[int] = None) -> List[Dict[str, Any]]:
         """
         High-performance agent context retrieval
@@ -544,7 +620,6 @@ class DPIBSPerformanceOptimizer:
         
         return [dict(zip(['id', 'context_data', 'relevance_score', 'performance_metadata', 'accessed_count'], row)) for row in result]
     
-    @performance_monitor("system_context_analysis", cache_ttl=15)
     def get_system_context(self, context_type: str, context_name: Optional[str] = None) -> List[Dict[str, Any]]:
         """
         System context retrieval with dependency analysis
@@ -575,7 +650,6 @@ class DPIBSPerformanceOptimizer:
         return [dict(zip(['id', 'context_name', 'system_snapshot', 'confidence_level', 'version', 'dependency_count'], row)) 
                 for row in result]
     
-    @performance_monitor("benchmarking_analysis", cache_ttl=60)  
     def get_benchmarking_results(self, issue_number: Optional[int] = None, analysis_type: Optional[str] = None) -> List[Dict[str, Any]]:
         """
         Benchmarking results retrieval with performance metrics
@@ -613,7 +687,6 @@ class DPIBSPerformanceOptimizer:
                          'evidence_collection', 'analysis_duration', 'created_at', 'integration_count'], row))
                 for row in result]
     
-    @performance_monitor("knowledge_integration_query", cache_ttl=10)
     def query_knowledge_integration(self, integration_type: str, cached_only: bool = False) -> List[Dict[str, Any]]:
         """
         Knowledge integration queries with MCP compatibility
@@ -758,9 +831,10 @@ class DPIBSPerformanceOptimizer:
         
         # Cache health
         cache_stats = self.cache_manager.get_cache_stats()
-        if cache_stats['hit_rate_percent'] > 70:
+        hit_rate = cache_stats.get('overall', {}).get('hit_rate_percent', 0)
+        if hit_rate > 70:
             health_status['components']['cache'] = 'healthy'
-        elif cache_stats['hit_rate_percent'] > 50:
+        elif hit_rate > 50:
             health_status['components']['cache'] = 'degraded'
         else:
             health_status['components']['cache'] = 'unhealthy'

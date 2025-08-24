@@ -99,9 +99,34 @@ workflow:
       description: "Work finished successfully"
       final: true
       
+    requirement_validating:
+      description: "Mandatory requirement interpretation validation before context consumption"
+      timeout: "20m"
+      required_before: ["context_reviewing", "analyzing", "planning", "implementing", "validating", "architecting", "learning", "pr_creating", "error-analysis"]
+      requirement_interpretation_required: true
+      blocker_on_incomplete: true
+      blocking_mechanism: "critical"
+      
+    context_reviewing:
+      description: "Agent conducting mandatory full context consumption"
+      timeout: "30m"
+      required_before: ["analyzing", "planning", "implementing", "validating", "architecting", "learning", "pr_creating", "error-analysis"]
+      context_consumption_required: true
+      blocker_on_incomplete: true
+      
+    recommendation_auditing:
+      description: "Verifying all recommendations addressed or delegated"
+      timeout: "20m"
+      required_before: ["complete"]
+      blocker_on_incomplete: true
+      recommendation_resolution_required: true
+      
     blocked:
-      description: "Work blocked, needs intervention"
+      description: "Work blocked by dependencies or other issues"
       alert: true
+      dependency_management: true
+      auto_unblock_check: true
+      timeout: "auto"  # Will unblock automatically when dependencies satisfied
       
     failed:
       description: "Work failed, needs recovery"
@@ -128,13 +153,47 @@ workflow:
       agent: "rif-expert-panel"
       timeout: "1h"
       expertise_based: true
+      
+    # CRITICAL INTEGRATION: Consensus states for issue #148
+    consensus_voting:
+      description: "Multi-agent consensus voting in progress"
+      agent: "consensus-coordinator"
+      timeout: "15m"
+      parallel: true
+      consensus_required: true
+      voting_mechanism: "auto_select"
+      
+    consensus_arbitration:
+      description: "Consensus arbitration resolving conflicts"
+      agent: "rif-arbitrator"
+      timeout: "30m"
+      escalation_enabled: true
+      conflict_resolution: true
+      
+    consensus_escalation:
+      description: "Human intervention for consensus deadlock"
+      agent: "human"
+      timeout: "2h"
+      alert: true
+      human_required: true
+      consensus_deadlock: true
 
   # Automatic state transitions
   transitions:
     - from: "new"
-      to: "analyzing"
+      to: "requirement_validating"
       trigger: "auto"
       condition: "always"
+      
+    - from: "requirement_validating"
+      to: "context_reviewing"
+      trigger: "requirement_interpretation_verified"
+      condition: "requirement_validation_posted AND deliverable_type_confirmed"
+      
+    - from: "context_reviewing"
+      to: "analyzing"
+      trigger: "context_summary_posted"
+      condition: "full_comprehension_verified AND requirement_validation_complete"
       
     - from: "analyzing"
       to: "planning"
@@ -232,7 +291,7 @@ workflow:
       condition: "major_changes"
       
     - from: "learning"
-      to: "complete"
+      to: "recommendation_auditing"
       trigger: "knowledge_updated"
       condition: "always"
       
@@ -259,14 +318,24 @@ workflow:
       condition: "evidence_insufficient OR quality_score < 60"
       
     - from: "quality_tracking"
-      to: "complete"
+      to: "recommendation_auditing"
       trigger: "main_issue_complete"
       condition: "shadow_issue_closed"
+      
+    - from: "recommendation_auditing"
+      to: "complete"
+      trigger: "all_recommendations_resolved"
+      condition: "no_outstanding_concerns OR follow_up_issues_created"
       
     # Recovery transitions
     - from: "blocked"
       to: "analyzing"
       trigger: "unblocked"
+      condition: "dependencies_satisfied"
+      
+    - from: "blocked"
+      to: "analyzing"
+      trigger: "manual_unblock"
       condition: "manual_intervention"
       
     - from: "failed"
@@ -311,6 +380,47 @@ workflow:
       condition: "conflict_resolved_by_human"
       
     - from: "escalating"
+      to: "blocked"
+      trigger: "escalation_timeout"
+      condition: "human_intervention_timeout"
+      
+    # CRITICAL INTEGRATION: Consensus state transitions for issue #148
+    - from: "validating"
+      to: "consensus_voting"
+      trigger: "consensus_required"
+      condition: "risk_level >= high OR security_critical = true"
+      
+    - from: "implementing"
+      to: "consensus_voting"
+      trigger: "multi_agent_decision_required"
+      condition: "agent_confidence < 0.7 OR complexity >= high"
+      
+    - from: "consensus_voting"
+      to: "consensus_arbitration"
+      trigger: "disagreement_detected"
+      condition: "agreement_level < consensus_threshold"
+      
+    - from: "consensus_arbitration"
+      to: "consensus_escalation"
+      trigger: "arbitration_failed"
+      condition: "automated_resolution_impossible"
+      
+    - from: "consensus_voting"
+      to: "validating"
+      trigger: "consensus_achieved"
+      condition: "agreement_level >= consensus_threshold"
+      
+    - from: "consensus_arbitration"
+      to: "validating"
+      trigger: "arbitration_resolved"
+      condition: "conflict_resolved AND confidence >= 0.7"
+      
+    - from: "consensus_escalation"
+      to: "validating"
+      trigger: "human_decision_made"
+      condition: "consensus_deadlock_resolved"
+      
+    - from: "consensus_escalation"
       to: "blocked"
       trigger: "escalation_timeout"
       condition: "human_intervention_timeout"
@@ -459,6 +569,46 @@ workflow:
       required: true
       blocker: false
       description: "Human escalations must be properly justified"
+      
+    # Dependency management quality gate
+    dependency_satisfaction:
+      threshold: "all_satisfied"
+      required: true
+      blocker: true
+      description: "All issue dependencies must be satisfied before agent launch"
+      check_frequency: "on_agent_launch"
+      auto_block_unsatisfied: true
+      auto_unblock_satisfied: true
+      
+    # CRITICAL INTEGRATION: Consensus quality gates for issue #148
+    consensus_decision:
+      threshold: "resolved"
+      required: true
+      blocker: true
+      description: "Critical decisions must achieve consensus"
+      applies_to: ["risk_level >= high", "security_critical = true", "complexity >= high"]
+      
+    consensus_confidence:
+      threshold: 0.75
+      required: true
+      blocker: true
+      description: "Consensus confidence must meet minimum threshold"
+      voting_mechanisms: ["unanimous", "supermajority", "veto_power", "weighted_voting"]
+      
+    consensus_audit_trail:
+      threshold: "complete"
+      required: true
+      blocker: false
+      description: "All consensus decisions must be auditable"
+      includes: ["voting_record", "rationale", "evidence", "decision_path"]
+      
+    consensus_participation:
+      threshold: "minimum_agents_met"
+      required: true
+      blocker: true
+      description: "Minimum required agents must participate in consensus"
+      minimum_agents: 2
+      security_critical_minimum: 3
 
   # Complexity assessment
   complexity:

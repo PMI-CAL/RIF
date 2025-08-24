@@ -1,0 +1,154 @@
+{
+  "issue_number": 125,
+  "specifications": [
+    {
+      "id": "spec-125-1",
+      "type": "performance_requirements",
+      "description": ": - Context queries: <200ms response time \u2705",
+      "acceptance_criteria": [
+        "Context queries: <200ms response time \u2705 Development Phase 3: Live System Context Maintenance Implementation",
+        "Development Process Intelligence & Benchmarking System"
+      ],
+      "constraints": [],
+      "success_metrics": {},
+      "priority": "should_have",
+      "measurable": true,
+      "testable": true,
+      "created_at": "2025-08-24T08:33:14.318323",
+      "issue_number": 125
+    },
+    {
+      "id": "spec-125-2",
+      "type": "performance_requirements",
+      "description": "achievable with targeted enhancements",
+      "acceptance_criteria": [
+        "Development Process Intelligence & Benchmarking System"
+      ],
+      "constraints": [],
+      "success_metrics": {},
+      "priority": "must_have",
+      "measurable": false,
+      "testable": false,
+      "created_at": "2025-08-24T08:33:14.318615",
+      "issue_number": 125
+    },
+    {
+      "id": "spec-125-3",
+      "type": "architectural_constraints",
+      "description": "context optimization for system understanding propagation",
+      "acceptance_criteria": [
+        "Development Process Intelligence & Benchmarking System"
+      ],
+      "constraints": [],
+      "success_metrics": {},
+      "priority": "should_have",
+      "measurable": false,
+      "testable": false,
+      "created_at": "2025-08-24T08:33:14.320341",
+      "issue_number": 125
+    }
+  ],
+  "evidence": [
+    {
+      "spec_id": "spec-125-1",
+      "implementation_details": "Enhanced analysis for performance_requirements: : - Context queries: <200ms response time \u2705...",
+      "code_files": [
+        "systems/mock_file_spec-125-1.py"
+      ],
+      "test_files": [
+        "tests/test_spec-125-1.py"
+      ],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 1.0,
+      "compliance_level": "fully_compliant",
+      "issues_found": [
+        "Measurable specification lacks concrete success metrics"
+      ],
+      "recommendations": [
+        "Implement metrics collection and monitoring"
+      ],
+      "evidence_timestamp": "2025-08-24T08:33:14.320962"
+    },
+    {
+      "spec_id": "spec-125-2",
+      "implementation_details": "Enhanced analysis for performance_requirements: achievable with targeted enhancements...",
+      "code_files": [
+        "systems/mock_file_spec-125-2.py"
+      ],
+      "test_files": [],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 0.8500000000000001,
+      "compliance_level": "mostly_compliant",
+      "issues_found": [],
+      "recommendations": [
+        "Prioritize this requirement for immediate improvement"
+      ],
+      "evidence_timestamp": "2025-08-24T08:33:14.320981"
+    },
+    {
+      "spec_id": "spec-125-3",
+      "implementation_details": "Enhanced analysis for architectural_constraints: context optimization for system understanding propagation...",
+      "code_files": [
+        "systems/mock_file_spec-125-3.py"
+      ],
+      "test_files": [],
+      "documentation_refs": [],
+      "metrics_achieved": {},
+      "compliance_score": 0.75,
+      "compliance_level": "mostly_compliant",
+      "issues_found": [],
+      "recommendations": [],
+      "evidence_timestamp": "2025-08-24T08:33:14.320987"
+    }
+  ],
+  "overall_adherence_score": 0.6849999999999999,
+  "overall_compliance_level": "partially_compliant",
+  "constraint_violations": [
+    {
+      "dimension": "requirement_completeness",
+      "score": 0.5,
+      "severity": "medium",
+      "description": "Low performance in requirement completeness: 50.0%"
+    },
+    {
+      "dimension": "specification_clarity",
+      "score": 0.6666666666666666,
+      "severity": "medium",
+      "description": "Low performance in specification clarity: 66.7%"
+    },
+    {
+      "dimension": "quality_metrics_alignment",
+      "score": 0.5,
+      "severity": "medium",
+      "description": "Low performance in quality metrics alignment: 50.0%"
+    }
+  ],
+  "goal_achievement": {
+    "requirement_completeness": 0.5,
+    "specification_clarity": 0.6666666666666666,
+    "implementation_adherence": 0.8666666666666667,
+    "quality_metrics_alignment": 0.5,
+    "testing_coverage": 1.0
+  },
+  "quality_grade": "D",
+  "recommendations": [
+    "Overall performance needs improvement across multiple dimensions",
+    "Add more comprehensive requirement specifications",
+    "Improve specification clarity with better acceptance criteria"
+  ],
+  "benchmarking_timestamp": "2025-08-24T08:33:14.321048",
+  "validator_notes": "",
+  "performance_metrics": {
+    "total_time_seconds": 0.7442169189453125,
+    "extraction_time": 0.7440998554229736,
+    "analysis_time": 3.886222839355469e-05,
+    "grading_time": 5.602836608886719e-05,
+    "performance_target_met": true,
+    "extraction_accuracy": 35.666666666666664,
+    "confidence_score": 90,
+    "specifications_found": 3,
+    "evidence_items": 3
+  }
+}

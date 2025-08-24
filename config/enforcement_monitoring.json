@@ -1,0 +1,15 @@
+{
+  "monitoring_active": true,
+  "monitoring_interval_minutes": 15,
+  "alert_thresholds": {
+    "compliance_rate_below": 90.0,
+    "blocked_decisions_above": 5,
+    "non_compliant_agents_above": 2
+  },
+  "monitoring_actions": [
+    "log_compliance_metrics",
+    "generate_agent_reports",
+    "alert_on_threshold_breach",
+    "escalate_repeated_violations"
+  ]
+}

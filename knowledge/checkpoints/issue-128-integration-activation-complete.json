@@ -1,0 +1,53 @@
+{
+  "issue_number": 128,
+  "activation_results": {
+    "activation_successful": false,
+    "layers_activated": [
+      "layer_5_compatibility",
+      "layer_1_agent_integration",
+      "layer_2_mcp_integration",
+      "layer_3_github_integration",
+      "layer_4_state_machine_integration"
+    ],
+    "layers_failed": [],
+    "validation_results": {
+      "Agent Context Integration": {
+        "success": true,
+        "response_time_ms": 1.9867420196533203,
+        "context_count": 0
+      },
+      "MCP Knowledge Integration": {
+        "success": true,
+        "response_time_ms": 0.9562969207763672,
+        "cache_hit": false
+      },
+      "GitHub Workflow Integration": {
+        "success": true,
+        "processing_time_ms": 4.152059555053711,
+        "enhancements_applied": 3
+      },
+      "State Machine Integration": {
+        "success": true,
+        "transition_time_ms": 2.229928970336914,
+        "context_enhanced": true
+      },
+      "Cross-Layer Communication": {
+        "success": true,
+        "processing_time_ms": 0.025987625122070312,
+        "layers_involved": 1
+      }
+    },
+    "performance_metrics": {
+      "avg_response_time_ms": 2.934539318084717,
+      "cache_hit_rate_percent": 16.666666666666664,
+      "error_rate_percent": 0.0,
+      "targets_met": false
+    },
+    "compatibility_verified": true,
+    "zero_regression_confirmed": false,
+    "activation_duration_seconds": 0.180665,
+    "errors": []
+  },
+  "timestamp": "2025-08-24T16:15:11.387379",
+  "status": "failed"
+}

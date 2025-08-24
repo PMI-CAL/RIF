@@ -18,7 +18,7 @@ import subprocess
 import logging
 import os
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Optional, Any, Tuple
 from pathlib import Path
 from dataclasses import dataclass, asdict
@@ -26,6 +26,7 @@ from enum import Enum
 import hashlib
 import traceback
 import re
+import shutil
 
 # Add knowledge directory to path
 knowledge_path = Path(__file__).parent.parent / "knowledge"
@@ -201,6 +202,16 @@ class ErrorCaptureSystem:
         """Classify error severity based on error characteristics."""
         error_type = error_data.get('type', '').lower()
         error_message = error_data.get('message', '').lower()
+        error_context = error_data.get('context', {})
+        
+        # First check for user input errors - these should have lower severity
+        if self._is_user_input_error(error_data):
+            # Command not found errors are user input issues, not system failures
+            if 'command not found' in error_message or error_context.get('exit_code') == 127:
+                return ErrorSeverity.MEDIUM  # Reduced from HIGH
+            # Other user validation errors
+            if any(keyword in error_message for keyword in ['invalid input', 'user error', 'bad command']):
+                return ErrorSeverity.LOW
         
         # Critical severity indicators
         critical_keywords = [
@@ -212,20 +223,21 @@ class ErrorCaptureSystem:
         if any(keyword in error_message for keyword in critical_keywords):
             return ErrorSeverity.CRITICAL
         
-        # High severity indicators
+        # High severity indicators (excluding command not found which is handled above)
         high_keywords = [
             'connection refused', 'permission denied', 'timeout',
             'validation failed', 'authentication error', 'access denied',
-            'command failed', 'operation failed'
+            'operation failed'
         ]
         
-        if any(keyword in error_message for keyword in high_keywords):
+        # Only apply high severity if it's NOT a user input error
+        if any(keyword in error_message for keyword in high_keywords) and not self._is_user_input_error(error_data):
             return ErrorSeverity.HIGH
         
         # Medium severity indicators
         medium_keywords = [
             'warning', 'deprecated', 'retry', 'fallback',
-            'configuration error', 'missing file'
+            'configuration error', 'missing file', 'command failed'
         ]
         
         if any(keyword in error_message for keyword in medium_keywords):
@@ -270,6 +282,10 @@ class ErrorCaptureSystem:
         if any(keyword in error_message for keyword in ['performance', 'slow', 'memory', 'cpu', 'resource']):
             return ErrorCategory.PERFORMANCE
         
+        # User input errors - new category for better classification
+        if self._is_user_input_error(error_data):
+            return ErrorCategory.USER_ERROR
+        
         # System errors
         if any(keyword in error_message for keyword in ['system', 'os', 'file', 'directory', 'path']):
             return ErrorCategory.SYSTEM
@@ -304,6 +320,58 @@ class ErrorCaptureSystem:
         }
         
         return context
+    
+    def _is_user_input_error(self, error_data: Dict[str, Any]) -> bool:
+        """Determine if error is caused by user input rather than system failure."""
+        error_message = error_data.get('message', '').lower()
+        error_context = error_data.get('context', {})
+        
+        # Exit code 127 specifically indicates command not found (user input issue)
+        if error_context.get('exit_code') == 127:
+            return True
+        
+        # Check for command not found patterns
+        command_not_found_patterns = [
+            'command not found',
+            ': not found',
+            'no such file or directory',
+            'bad command or file name'
+        ]
+        
+        if any(pattern in error_message for pattern in command_not_found_patterns):
+            # Additional check: if command looks like a test/placeholder, it's definitely user input
+            command = error_context.get('command', '')
+            if command and self._is_test_command(command):
+                return True
+            # Otherwise still likely user input if it's command not found
+            return True
+        
+        # Other user input error patterns
+        user_input_patterns = [
+            'invalid syntax',
+            'invalid argument',
+            'bad option',
+            'usage error',
+            'invalid input'
+        ]
+        
+        return any(pattern in error_message for pattern in user_input_patterns)
+    
+    def _is_test_command(self, command: str) -> bool:
+        """Check if command appears to be a test or placeholder command."""
+        test_indicators = [
+            'test', 'fake', 'dummy', 'placeholder', 'mock',
+            'definitely_not', 'nonexistent', 'invalid'
+        ]
+        command_lower = command.lower()
+        return any(indicator in command_lower for indicator in test_indicators)
+    
+    def _check_command_exists(self, command: str) -> bool:
+        """Check if a command exists in the system PATH."""
+        try:
+            return shutil.which(command) is not None
+        except Exception:
+            return False
     
     def _identify_affected_components(self, error_data: Dict[str, Any]) -> List[str]:
         """Identify system components affected by the error."""
@@ -376,9 +444,35 @@ class ErrorCaptureSystem:
                 "Review service status"
             ])
         
-        # Message-specific suggestions
+        elif category == ErrorCategory.USER_ERROR:
+            suggestions.extend([
+                "Verify command spelling and syntax",
+                "Check that required tools are installed",
+                "Review command documentation and usage"
+            ])
+        
+        # Message-specific suggestions with enhanced command checking
         if 'command not found' in error_message:
-            suggestions.append("Install missing command or check PATH")
+            error_context = error_data.get('context', {})
+            command = error_context.get('command', '')
+            
+            if command:
+                # Check if it's a test command
+                if self._is_test_command(command):
+                    suggestions.append(f"Command '{command}' appears to be a test/placeholder - replace with valid command")
+                else:
+                    # Check if command exists and provide specific guidance
+                    if not self._check_command_exists(command):
+                        suggestions.append(f"Install missing command '{command}' or check PATH configuration")
+                        # Suggest common installation methods for known commands
+                        if command in ['gh', 'git']:
+                            suggestions.append("Install GitHub CLI or Git if needed")
+                        elif command in ['python', 'python3', 'pip']:
+                            suggestions.append("Install Python and pip if needed")
+                        elif command in ['node', 'npm', 'yarn']:
+                            suggestions.append("Install Node.js and npm if needed")
+            else:
+                suggestions.append("Install missing command or check PATH")
         
         if 'file not found' in error_message:
             suggestions.append("Verify file path and existence")
@@ -420,7 +514,7 @@ class ErrorCaptureSystem:
             self._store_five_whys_analysis(analysis)
             
             # Create GitHub issue for manual review if needed
-            if error_event.severity == ErrorSeverity.CRITICAL:
+            if error_event.severity in [ErrorSeverity.CRITICAL, ErrorSeverity.HIGH]:
                 self._create_error_investigation_issue(error_event, analysis)
                 
         except Exception as e:
@@ -582,11 +676,15 @@ class ErrorCaptureSystem:
             self.logger.error(f"Error storing Five Whys analysis: {e}")
     
     def _create_error_investigation_issue(self, error_event: ErrorEvent, analysis: FiveWhysAnalysis):
-        """Create GitHub issue for critical error investigation."""
+        """Create GitHub issue for high/critical error investigation."""
         try:
-            title = f"🚨 Critical Error Investigation: {error_event.error_id}"
+            # Dynamic title and header based on severity
+            severity_emoji = "🚨" if error_event.severity == ErrorSeverity.CRITICAL else "⚠️"
+            severity_title = "Critical" if error_event.severity == ErrorSeverity.CRITICAL else "High Priority"
             
-            body = f"""# Critical Error Investigation Required
+            title = f"{severity_emoji} {severity_title} Error Investigation: {error_event.error_id}"
+            
+            body = f"""# {severity_title} Error Investigation Required
             
 ## Error Details
 - **Error ID**: {error_event.error_id}
@@ -629,18 +727,26 @@ class ErrorCaptureSystem:
 *Automatically generated by RIF Error Capture System*
 """
             
-            # Create GitHub issue
+            # Create GitHub issue with appropriate labels (use existing labels only)
+            if error_event.severity == ErrorSeverity.CRITICAL:
+                labels = "priority:critical,state:new"
+            else:  # HIGH severity
+                labels = "priority:high,state:new"
+            
             result = subprocess.run([
                 'gh', 'issue', 'create',
                 '--title', title,
                 '--body', body,
-                '--label', 'error:critical,severity:high,error:auto-detected'
+                '--label', labels
             ], capture_output=True, text=True)
             
             if result.returncode == 0:
-                self.logger.info(f"🎟️ Created GitHub issue for critical error: {error_event.error_id}")
+                issue_url = result.stdout.strip()
+                self.logger.info(f"🎟️ Created GitHub issue for {error_event.severity.value} error: {error_event.error_id} -> {issue_url}")
+                return issue_url
             else:
-                self.logger.warning(f"Failed to create GitHub issue: {result.stderr}")
+                self.logger.warning(f"Failed to create GitHub issue: {result.stderr}")                
+                return None
                 
         except Exception as e:
             self.logger.error(f"Error creating GitHub issue: {e}")

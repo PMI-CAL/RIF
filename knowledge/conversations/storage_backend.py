@@ -3,15 +3,23 @@ DuckDB storage backend for agent conversations.
 
 Implements the database layer for storing conversation events, decisions, and errors
 with vector embedding support for semantic search capabilities.
+
+Enhanced with resilient connection management and retry logic (Issue #152).
 """
 
 import json
 import uuid
 import hashlib
+import time
 from datetime import datetime
 from typing import Dict, List, Any, Optional, Tuple
 import logging
 import duckdb
+
+# Import resilient connection manager
+from ..database.resilient_connection_manager import ResilientConnectionManager, create_resilient_manager
+from ..database.database_config import DatabaseConfig
+from ..database.retry_manager import RetryConfig
 
 logger = logging.getLogger(__name__)
 
@@ -22,21 +30,52 @@ class ConversationStorageBackend:
     
     Provides high-performance storage and retrieval of conversation events,
     decisions, and error patterns with vector embedding support.
+    
+    Enhanced with resilient connection management and retry logic.
     """
     
-    def __init__(self, db_path: str = "knowledge/conversations.duckdb"):
+    def __init__(self, 
+                 db_path: str = "knowledge/conversations.duckdb",
+                 use_resilient_manager: bool = True):
         """
         Initialize conversation storage backend.
         
         Args:
             db_path: Path to DuckDB database file
+            use_resilient_manager: Use resilient connection manager with retry logic
         """
         self.db_path = db_path
-        self.connection = None
-        self._initialize_database()
+        self.use_resilient_manager = use_resilient_manager
+        
+        if use_resilient_manager:
+            # Use resilient connection manager
+            self.connection_manager = create_resilient_manager(
+                db_path=db_path,
+                max_retries=3,
+                base_delay=1.0
+            )
+            self.connection = None  # Will use manager's connections
+            self._initialize_database_resilient()
+        else:
+            # Use legacy direct connection
+            self.connection_manager = None
+            self.connection = None
+            self._initialize_database_legacy()
     
-    def _initialize_database(self):
-        """Initialize database connection and create tables."""
+    def _initialize_database_resilient(self):
+        """Initialize database with resilient connection manager."""
+        try:
+            # Create schema using resilient manager
+            self._create_schema_resilient()
+            
+            logger.info(f"Resilient conversation storage backend initialized: {self.db_path}")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize resilient conversation storage: {e}")
+            raise
+    
+    def _initialize_database_legacy(self):
+        """Initialize database connection and create tables (legacy method)."""
         try:
             self.connection = duckdb.connect(self.db_path)
             
@@ -45,7 +84,7 @@ class ConversationStorageBackend:
             self.connection.execute("LOAD vss;")
             
             # Create schema
-            self._create_schema()
+            self._create_schema_legacy()
             
             logger.info(f"Conversation storage backend initialized: {self.db_path}")
             
@@ -53,8 +92,85 @@ class ConversationStorageBackend:
             logger.error(f"Failed to initialize conversation storage: {e}")
             raise
     
-    def _create_schema(self):
-        """Create database schema for conversation storage."""
+    def _create_schema_resilient(self):
+        """Create database schema using resilient connection manager."""
+        schema_operations = [
+            # Install VSS extension
+            ("INSTALL vss", []),
+            ("LOAD vss", []),
+            
+            # Create conversation events table
+            ("""CREATE TABLE IF NOT EXISTS conversation_events (
+                event_id VARCHAR PRIMARY KEY,
+                conversation_id VARCHAR NOT NULL,
+                agent_type VARCHAR(50) NOT NULL,
+                issue_number INTEGER,
+                timestamp TIMESTAMP NOT NULL,
+                event_type VARCHAR(50) NOT NULL,
+                event_data JSON NOT NULL,
+                parent_event_id VARCHAR,
+                embedding FLOAT[768],
+                context_hash VARCHAR(64),
+                created_at TIMESTAMP DEFAULT NOW()
+            )""", []),
+            
+            # Create agent decisions table
+            ("""CREATE TABLE IF NOT EXISTS agent_decisions (
+                decision_id VARCHAR PRIMARY KEY,
+                conversation_id VARCHAR NOT NULL,
+                agent_type VARCHAR(50) NOT NULL,
+                decision_point TEXT NOT NULL,
+                options_considered JSON NOT NULL,
+                chosen_option TEXT NOT NULL,
+                rationale TEXT,
+                confidence_score FLOAT DEFAULT 0.5,
+                outcome VARCHAR(50),
+                outcome_timestamp TIMESTAMP,
+                learning_value FLOAT DEFAULT 0.0,
+                embedding FLOAT[768],
+                created_at TIMESTAMP DEFAULT NOW()
+            )""", []),
+            
+            # Create conversation errors table
+            ("""CREATE TABLE IF NOT EXISTS conversation_errors (
+                error_id VARCHAR PRIMARY KEY,
+                conversation_id VARCHAR NOT NULL,
+                agent_type VARCHAR(50) NOT NULL,
+                error_type VARCHAR(100) NOT NULL,
+                error_message TEXT NOT NULL,
+                error_context JSON,
+                resolution_attempted TEXT,
+                resolution_success BOOLEAN,
+                pattern_signature VARCHAR(128),
+                embedding FLOAT[768],
+                created_at TIMESTAMP DEFAULT NOW()
+            )""", []),
+            
+            # Create conversation metadata table
+            ("""CREATE TABLE IF NOT EXISTS conversation_metadata (
+                conversation_id VARCHAR PRIMARY KEY,
+                agent_type VARCHAR(50) NOT NULL,
+                issue_number INTEGER,
+                start_timestamp TIMESTAMP NOT NULL,
+                end_timestamp TIMESTAMP,
+                status VARCHAR(50) DEFAULT 'active',
+                total_events INTEGER DEFAULT 0,
+                success BOOLEAN,
+                error_count INTEGER DEFAULT 0,
+                decision_count INTEGER DEFAULT 0,
+                context_summary TEXT,
+                created_at TIMESTAMP DEFAULT NOW()
+            )""", [])
+        ]
+        
+        # Execute schema operations in a transaction
+        self.connection_manager.execute_transaction(schema_operations)
+        
+        # Create indexes using separate operations
+        self._create_indexes_resilient()
+    
+    def _create_schema_legacy(self):
+        """Create database schema for conversation storage (legacy method)."""
         
         # Conversation events table
         self.connection.execute("""
@@ -128,10 +244,32 @@ class ConversationStorageBackend:
         """)
         
         # Create indexes for performance
-        self._create_indexes()
+        self._create_indexes_legacy()
     
-    def _create_indexes(self):
-        """Create indexes for query performance."""
+    def _create_indexes_resilient(self):
+        """Create indexes using resilient connection manager."""
+        index_operations = [
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_events_conversation_id ON conversation_events(conversation_id)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_events_agent_type ON conversation_events(agent_type)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_events_timestamp ON conversation_events(timestamp)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_events_event_type ON conversation_events(event_type)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_agent_decisions_conversation_id ON agent_decisions(conversation_id)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_agent_decisions_outcome ON agent_decisions(outcome)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_errors_pattern ON conversation_errors(pattern_signature)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_errors_type ON conversation_errors(error_type)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_metadata_agent_type ON conversation_metadata(agent_type)", []),
+            ("CREATE INDEX IF NOT EXISTS idx_conversation_metadata_issue ON conversation_metadata(issue_number)", [])
+        ]
+        
+        # Execute index creation operations individually (indexes can be created independently)
+        for index_sql, params in index_operations:
+            try:
+                self.connection_manager.execute_query(index_sql, params, "none")
+            except Exception as e:
+                logger.warning(f"Index creation failed: {e}")
+    
+    def _create_indexes_legacy(self):
+        """Create indexes for query performance (legacy method)."""
         indexes = [
             "CREATE INDEX IF NOT EXISTS idx_conversation_events_conversation_id ON conversation_events(conversation_id)",
             "CREATE INDEX IF NOT EXISTS idx_conversation_events_agent_type ON conversation_events(agent_type)",
@@ -186,17 +324,34 @@ class ConversationStorageBackend:
         context_hash = hashlib.md5(json.dumps(context_data, sort_keys=True).encode()).hexdigest()
         
         try:
-            self.connection.execute("""
-                INSERT INTO conversation_events (
+            if self.use_resilient_manager:
+                # Use resilient connection manager
+                insert_sql = """
+                    INSERT INTO conversation_events (
+                        event_id, conversation_id, agent_type, issue_number,
+                        timestamp, event_type, event_data, parent_event_id,
+                        embedding, context_hash
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """
+                params = [
                     event_id, conversation_id, agent_type, issue_number,
-                    timestamp, event_type, event_data, parent_event_id,
+                    timestamp, event_type, json.dumps(event_data), parent_event_id,
                     embedding, context_hash
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, [
-                event_id, conversation_id, agent_type, issue_number,
-                timestamp, event_type, json.dumps(event_data), parent_event_id,
-                embedding, context_hash
-            ])
+                ]
+                self.connection_manager.execute_query(insert_sql, params, "none")
+            else:
+                # Legacy direct connection
+                self.connection.execute("""
+                    INSERT INTO conversation_events (
+                        event_id, conversation_id, agent_type, issue_number,
+                        timestamp, event_type, event_data, parent_event_id,
+                        embedding, context_hash
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, [
+                    event_id, conversation_id, agent_type, issue_number,
+                    timestamp, event_type, json.dumps(event_data), parent_event_id,
+                    embedding, context_hash
+                ])
             
             # Update conversation metadata
             self._update_conversation_metadata(conversation_id, agent_type, issue_number)
@@ -611,8 +766,48 @@ class ConversationStorageBackend:
             logger.error(f"Failed to get storage stats: {e}")
             return {}
     
+    def get_connection_health(self) -> Dict[str, Any]:
+        """Get connection health and resilience metrics."""
+        if self.use_resilient_manager and self.connection_manager:
+            return self.connection_manager.get_connection_health()
+        else:
+            # Legacy connection - basic health check
+            try:
+                if self.connection:
+                    self.connection.execute("SELECT 1").fetchone()
+                    return {
+                        'health_status': 'HEALTHY',
+                        'connection_type': 'legacy',
+                        'timestamp': time.time()
+                    }
+                else:
+                    return {
+                        'health_status': 'FAILED',
+                        'connection_type': 'legacy',
+                        'error': 'No connection available',
+                        'timestamp': time.time()
+                    }
+            except Exception as e:
+                return {
+                    'health_status': 'FAILED',
+                    'connection_type': 'legacy',
+                    'error': str(e),
+                    'timestamp': time.time()
+                }
+    
+    def reset_connection_health(self):
+        """Reset connection health metrics (resilient manager only)."""
+        if self.use_resilient_manager and self.connection_manager:
+            self.connection_manager.reset_connection_health()
+            logger.info("Connection health metrics reset")
+        else:
+            logger.warning("Connection health reset not available for legacy connections")
+    
     def close(self):
         """Close database connection."""
-        if self.connection:
+        if self.use_resilient_manager and self.connection_manager:
+            self.connection_manager.shutdown()
+            logger.info("Resilient conversation storage backend closed")
+        elif self.connection:
             self.connection.close()
             logger.info("Conversation storage backend closed")

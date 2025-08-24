@@ -19,6 +19,23 @@ from datetime import datetime, timedelta
 import logging
 from pathlib import Path
 
+# Import dependency management system
+try:
+    from .dependency_manager import create_dependency_manager, DependencyManager
+    DEPENDENCY_MANAGEMENT_AVAILABLE = True
+except ImportError:
+    DEPENDENCY_MANAGEMENT_AVAILABLE = False
+
+# Import resilient GitHub client
+try:
+    import sys
+    import os
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+    from systems.github_api_client import get_github_client, GitHubAPIError
+    RESILIENT_GITHUB_CLIENT_AVAILABLE = True
+except ImportError:
+    RESILIENT_GITHUB_CLIENT_AVAILABLE = False
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -86,14 +103,24 @@ class ContextAnalyzer:
             IssueContext with comprehensive analysis
         """
         try:
-            # Get issue data from GitHub
-            cmd = f"gh issue view {issue_number} --json number,title,body,labels,state,createdAt,updatedAt,comments"
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-            
-            if result.returncode != 0:
-                raise Exception(f"Failed to fetch issue {issue_number}: {result.stderr}")
-            
-            issue_data = json.loads(result.stdout)
+            # Get issue data from GitHub using resilient client if available
+            if RESILIENT_GITHUB_CLIENT_AVAILABLE:
+                client = get_github_client()
+                result = client.get_issue(issue_number)
+                
+                if not result['success']:
+                    raise Exception(f"Failed to fetch issue {issue_number}: {result['stderr']}")
+                
+                issue_data = result['data']
+            else:
+                # Fallback to direct subprocess call
+                cmd = f"gh issue view {issue_number} --json number,title,body,labels,state,createdAt,updatedAt,comments"
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                
+                if result.returncode != 0:
+                    raise Exception(f"Failed to fetch issue {issue_number}: {result.stderr}")
+                
+                issue_data = json.loads(result.stdout)
             
             # Extract label information
             labels = [label['name'] for label in issue_data.get('labels', [])]
@@ -177,19 +204,35 @@ class ContextAnalyzer:
     def _extract_agent_history(self, issue_number: int) -> List[str]:
         """Extract history of RIF agents that have worked on this issue"""
         try:
-            cmd = f"gh issue view {issue_number} --json comments --jq '.comments[] | select(.body | contains(\"**Agent**:\")) | .body'"
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-            
-            if result.returncode == 0:
-                agent_comments = result.stdout.strip().split('\n')
-                agents = []
-                for comment in agent_comments:
-                    if '**Agent**:' in comment:
-                        # Extract agent name from comment
-                        match = re.search(r'\*\*Agent\*\*:\s*([^\n]*)', comment)
-                        if match:
-                            agents.append(match.group(1).strip())
-                return agents
+            if RESILIENT_GITHUB_CLIENT_AVAILABLE:
+                client = get_github_client()
+                result = client.execute_gh_command(f"issue view {issue_number} --json comments --jq '.comments[] | select(.body | contains(\"**Agent**:\")) | .body'")
+                
+                if result['success']:
+                    agent_comments = result['stdout'].strip().split('\n')
+                    agents = []
+                    for comment in agent_comments:
+                        if '**Agent**:' in comment:
+                            # Extract agent name from comment
+                            match = re.search(r'\*\*Agent\*\*:\s*([^\n]*)', comment)
+                            if match:
+                                agents.append(match.group(1).strip())
+                    return agents
+            else:
+                # Fallback to direct subprocess call
+                cmd = f"gh issue view {issue_number} --json comments --jq '.comments[] | select(.body | contains(\"**Agent**:\")) | .body'"
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                
+                if result.returncode == 0:
+                    agent_comments = result.stdout.strip().split('\n')
+                    agents = []
+                    for comment in agent_comments:
+                        if '**Agent**:' in comment:
+                            # Extract agent name from comment
+                            match = re.search(r'\*\*Agent\*\*:\s*([^\n]*)', comment)
+                            if match:
+                                agents.append(match.group(1).strip())
+                    return agents
             
         except Exception as e:
             logger.warning(f"Could not extract agent history for issue {issue_number}: {e}")
@@ -322,6 +365,18 @@ class OrchestrationHelper:
         self.context_analyzer = ContextAnalyzer()
         self.state_validator = StateValidator()
         self.logger = logging.getLogger(self.__class__.__name__)
+        
+        # Initialize dependency management if available
+        if DEPENDENCY_MANAGEMENT_AVAILABLE:
+            try:
+                self.dependency_manager = create_dependency_manager()
+                self.logger.info("Dependency management system initialized")
+            except Exception as e:
+                self.logger.warning(f"Failed to initialize dependency management: {e}")
+                self.dependency_manager = None
+        else:
+            self.dependency_manager = None
+            self.logger.warning("Dependency management system not available")
     
     def generate_task_launch_code(self, issue_context: IssueContext, agent_name: str) -> str:
         """
@@ -349,31 +404,130 @@ class OrchestrationHelper:
     
     def generate_orchestration_plan(self, issue_numbers: List[int]) -> Dict[str, Any]:
         """
-        Generate a complete orchestration plan for multiple issues.
-        Returns Task launch codes for Claude Code to execute.
+        Generate a complete orchestration plan for multiple issues using enhanced dependency intelligence.
+        Returns Task launch codes for Claude Code to execute following the intelligent decision framework.
+        
+        CRITICAL: Now uses dependency intelligence orchestrator for sophisticated decision-making.
         
         Args:
             issue_numbers: List of GitHub issue numbers to orchestrate
             
         Returns:
-            Dict containing orchestration plan with Task launch codes
+            Dict containing intelligent orchestration plan with Task launch codes
         """
         plan = {
             'timestamp': datetime.now().isoformat(),
             'total_issues': len(issue_numbers),
             'parallel_tasks': [],
             'sequential_tasks': [],
+            'blocked_issues': [],
+            'recommendations': []
+        }
+        
+        try:
+            # Import dependency intelligence orchestrator for enhanced decision-making
+            from dependency_intelligence_orchestrator import DependencyIntelligenceOrchestrator
+            intelligence = DependencyIntelligenceOrchestrator()
+            
+            # Use intelligent orchestration decision framework
+            decision = intelligence.make_intelligent_orchestration_decision(issue_numbers)
+            
+            # Convert decision to orchestration plan format
+            plan['decision_type'] = decision.decision_type
+            plan['reasoning'] = decision.reasoning
+            plan['recommended_issues'] = decision.recommended_issues
+            plan['blocked_issues'] = decision.blocked_issues
+            plan['task_launch_codes'] = decision.task_launch_codes
+            plan['dependencies_analysis'] = decision.dependencies_analysis
+            
+            # Convert recommended issues to task format for backward compatibility
+            for issue_num in decision.recommended_issues:
+                context = self.context_analyzer.analyze_issue(issue_num)
+                current_state = context.current_state_label
+                if current_state:
+                    state_name = current_state.replace('state:', '')
+                    required_agent = self.state_validator.get_required_agent(state_name)
+                    
+                    if required_agent:
+                        plan['parallel_tasks'].append({
+                            'issue': issue_num,
+                            'agent': required_agent,
+                            'state': state_name,
+                            'priority': context.priority,
+                            'dependencies_satisfied': True,
+                            'intelligence_decision': decision.decision_type
+                        })
+            
+            # Add intelligent recommendations
+            if decision.decision_type == 'launch_blocking_only':
+                plan['recommendations'].append("🚨 Focus all resources on blocking issues - critical infrastructure must complete first")
+            elif decision.decision_type == 'launch_foundation_only':
+                plan['recommendations'].append("🏗️ Complete foundation issues before dependent work to prevent integration conflicts")
+            elif decision.decision_type == 'launch_research_only':
+                plan['recommendations'].append("🔬 Complete research phase before implementation to prevent rework")
+            else:
+                plan['recommendations'].append("✅ Dependencies satisfied - launch parallel agents for optimal throughput")
+            
+            if decision.dependencies_analysis.get('critical_path_depth', 0) > 3:
+                plan['recommendations'].append("📊 Deep dependency chain detected - monitor progress closely")
+            
+            self.logger.info(f"Intelligent orchestration plan generated: {decision.decision_type} - {len(decision.recommended_issues)} recommended, {len(decision.blocked_issues)} blocked")
+            
+        except ImportError:
+            self.logger.warning("Dependency intelligence orchestrator not available - falling back to basic orchestration")
+            # Fall back to basic orchestration logic (existing code)
+            return self._generate_basic_orchestration_plan(issue_numbers)
+        
+        except Exception as e:
+            self.logger.error(f"Error in intelligent orchestration planning: {e}")
+            # Fall back to basic orchestration logic
+            return self._generate_basic_orchestration_plan(issue_numbers)
+        
+        return plan
+    
+    def _generate_basic_orchestration_plan(self, issue_numbers: List[int]) -> Dict[str, Any]:
+        """Fallback basic orchestration plan when intelligence system is unavailable"""
+        plan = {
+            'timestamp': datetime.now().isoformat(),
+            'total_issues': len(issue_numbers),
+            'parallel_tasks': [],
+            'sequential_tasks': [],
+            'blocked_issues': [],
             'recommendations': []
         }
         
         # Analyze all issues
         contexts = self.context_analyzer.analyze_multiple_issues(issue_numbers)
         
-        # Group by required actions
+        # Group by required actions, checking dependencies
         immediate_tasks = []
+        blocked_issues = []
         
         for context in contexts:
-            # Determine what agent is needed
+            # Check dependencies first if dependency management is available
+            if self.dependency_manager:
+                can_proceed, block_reason, dep_result = self.dependency_manager.can_work_on_issue(context.number)
+                
+                if not can_proceed:
+                    # Issue is blocked by dependencies
+                    blocked_issues.append({
+                        'issue': context.number,
+                        'title': context.title,
+                        'reason': block_reason,
+                        'blocking_dependencies': [dep.issue_number for dep in dep_result.blocking_dependencies] if dep_result else [],
+                        'action_taken': 'blocked_label_applied'
+                    })
+                    
+                    # Apply blocked label
+                    try:
+                        self.dependency_manager.add_blocked_label(context.number, block_reason)
+                        self.logger.info(f"Applied blocked label to issue #{context.number}: {block_reason}")
+                    except Exception as e:
+                        self.logger.error(f"Failed to apply blocked label to issue #{context.number}: {e}")
+                    
+                    continue  # Skip this issue for now
+            
+            # Issue can proceed - determine what agent is needed
             current_state = context.current_state_label
             if current_state:
                 state_name = current_state.replace('state:', '')
@@ -386,14 +540,24 @@ class OrchestrationHelper:
                         'agent': required_agent,
                         'state': state_name,
                         'priority': context.priority,
-                        'task_code': task_code
+                        'task_code': task_code,
+                        'dependencies_satisfied': True
                     })
         
         # Sort by priority and complexity for optimal execution
-        immediate_tasks.sort(key=lambda x: (x['priority'] != 'high', -contexts[0].complexity_score))
+        if contexts:  # Only sort if we have contexts
+            immediate_tasks.sort(key=lambda x: (x['priority'] != 'high', -contexts[0].complexity_score))
         
         plan['parallel_tasks'] = immediate_tasks
+        plan['blocked_issues'] = blocked_issues
         plan['task_launch_codes'] = [task['task_code'] for task in immediate_tasks]
+        
+        # Add dependency management recommendations
+        if self.dependency_manager and blocked_issues:
+            plan['recommendations'].append(
+                f"🚨 {len(blocked_issues)} issues blocked by dependencies. " +
+                f"Run dependency unblocking check after completing prerequisite issues."
+            )
         
         return plan
     
@@ -443,6 +607,8 @@ class OrchestrationHelper:
         """
         Analyze an issue and recommend what orchestration action Claude Code should take.
         
+        CRITICAL: Now includes dependency checking to prevent launching agents on blocked issues.
+        
         Args:
             issue_number: GitHub issue number to analyze
             
@@ -450,6 +616,26 @@ class OrchestrationHelper:
             Dict with recommended action and Task launch code
         """
         context = self.context_analyzer.analyze_issue(issue_number)
+        
+        # Check dependencies first if dependency management is available
+        if self.dependency_manager:
+            can_proceed, block_reason, dep_result = self.dependency_manager.can_work_on_issue(issue_number)
+            
+            if not can_proceed:
+                # Issue is blocked by dependencies
+                try:
+                    self.dependency_manager.add_blocked_label(issue_number, block_reason)
+                    self.logger.info(f"Applied blocked label to issue #{issue_number}: {block_reason}")
+                except Exception as e:
+                    self.logger.error(f"Failed to apply blocked label to issue #{issue_number}: {e}")
+                
+                return {
+                    'action': 'blocked_by_dependencies',
+                    'issue': issue_number,
+                    'reason': block_reason,
+                    'blocking_dependencies': [dep.issue_number for dep in dep_result.blocking_dependencies] if dep_result else [],
+                    'recommendation': 'Wait for prerequisite issues to complete before launching agents'
+                }
         
         # Determine current state and next action
         current_state = context.current_state_label
@@ -477,8 +663,48 @@ class OrchestrationHelper:
             'recommended_agent': recommended_agent,
             'next_state': next_state,
             'task_launch_code': task_code,
-            'context': asdict(context)
+            'context': asdict(context),
+            'dependencies_satisfied': True
         }
+    
+    def check_and_unblock_issues(self) -> Dict[str, Any]:
+        """
+        Check all blocked issues and unblock those whose dependencies are now satisfied.
+        
+        Returns:
+            Dict with results of unblocking check
+        """
+        if not self.dependency_manager:
+            return {
+                'action': 'dependency_management_unavailable',
+                'message': 'Dependency management system not available'
+            }
+        
+        try:
+            unblocked_issues = self.dependency_manager.check_blocked_issues_for_unblocking()
+            
+            results = {
+                'action': 'unblocking_check_complete',
+                'timestamp': datetime.now().isoformat(),
+                'unblocked_issues': unblocked_issues,
+                'unblocked_count': len(unblocked_issues)
+            }
+            
+            if unblocked_issues:
+                results['recommendation'] = f"✅ {len(unblocked_issues)} issues unblocked and ready for agents"
+                self.logger.info(f"Unblocked {len(unblocked_issues)} issues: {unblocked_issues}")
+            else:
+                results['recommendation'] = "No issues were unblocked - all blocked issues still have unsatisfied dependencies"
+            
+            return results
+            
+        except Exception as e:
+            self.logger.error(f"Error during unblocking check: {e}")
+            return {
+                'action': 'unblocking_check_failed',
+                'error': str(e),
+                'recommendation': 'Check dependency management system configuration'
+            }
 
 
 class GitHubStateManager:
@@ -503,22 +729,42 @@ class GitHubStateManager:
             True if successful, False otherwise
         """
         try:
-            # Remove old state labels
-            cmd_remove = f"gh issue edit {issue_number} --remove-label 'state:new,state:analyzing,state:planning,state:architecting,state:implementing,state:validating,state:learning,state:complete'"
-            subprocess.run(cmd_remove, shell=True, capture_output=True)
-            
-            # Add new state label
-            cmd_add = f"gh issue edit {issue_number} --add-label 'state:{new_state}'"
-            result = subprocess.run(cmd_add, shell=True, capture_output=True, text=True)
-            
-            if result.returncode != 0:
-                self.logger.error(f"Failed to update state for issue {issue_number}: {result.stderr}")
-                return False
-            
-            # Add comment if provided
-            if comment:
-                cmd_comment = f"gh issue comment {issue_number} --body {json.dumps(comment)}"
-                subprocess.run(cmd_comment, shell=True, capture_output=True)
+            if RESILIENT_GITHUB_CLIENT_AVAILABLE:
+                client = get_github_client()
+                
+                # Remove old state labels and add new one
+                old_states = ['state:new', 'state:analyzing', 'state:planning', 'state:architecting', 
+                             'state:implementing', 'state:validating', 'state:learning', 'state:complete']
+                result = client.update_issue_labels(
+                    issue_number,
+                    add_labels=[f'state:{new_state}'],
+                    remove_labels=old_states
+                )
+                
+                if not result['success']:
+                    self.logger.error(f"Failed to update state for issue {issue_number}: {result['stderr']}")
+                    return False
+                
+                # Add comment if provided
+                if comment:
+                    client.add_issue_comment(issue_number, comment)
+            else:
+                # Fallback to direct subprocess calls
+                cmd_remove = f"gh issue edit {issue_number} --remove-label 'state:new,state:analyzing,state:planning,state:architecting,state:implementing,state:validating,state:learning,state:complete'"
+                subprocess.run(cmd_remove, shell=True, capture_output=True)
+                
+                # Add new state label
+                cmd_add = f"gh issue edit {issue_number} --add-label 'state:{new_state}'"
+                result = subprocess.run(cmd_add, shell=True, capture_output=True, text=True)
+                
+                if result.returncode != 0:
+                    self.logger.error(f"Failed to update state for issue {issue_number}: {result.stderr}")
+                    return False
+                
+                # Add comment if provided
+                if comment:
+                    cmd_comment = f"gh issue comment {issue_number} --body {json.dumps(comment)}"
+                    subprocess.run(cmd_comment, shell=True, capture_output=True)
             
             self.logger.info(f"Updated issue {issue_number} to state:{new_state}")
             return True
@@ -530,14 +776,25 @@ class GitHubStateManager:
     def get_active_issues(self) -> List[Dict[str, Any]]:
         """Get all active issues with state labels"""
         try:
-            cmd = "gh issue list --state open --label 'state:*' --json number,title,labels --limit 50"
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-            
-            if result.returncode == 0:
-                return json.loads(result.stdout)
+            if RESILIENT_GITHUB_CLIENT_AVAILABLE:
+                client = get_github_client()
+                result = client.list_issues(state="open", labels=["state:*"], limit=50)
+                
+                if result['success']:
+                    return result['data']
+                else:
+                    self.logger.error(f"Failed to fetch active issues: {result['stderr']}")
+                    return []
             else:
-                self.logger.error(f"Failed to fetch active issues: {result.stderr}")
-                return []
+                # Fallback to direct subprocess call
+                cmd = "gh issue list --state open --label 'state:*' --json number,title,labels --limit 50"
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                
+                if result.returncode == 0:
+                    return json.loads(result.stdout)
+                else:
+                    self.logger.error(f"Failed to fetch active issues: {result.stderr}")
+                    return []
                 
         except Exception as e:
             self.logger.error(f"Error fetching active issues: {e}")
@@ -547,9 +804,17 @@ class GitHubStateManager:
         """Add agent tracking label to issue"""
         try:
             agent_label = f"agent:{agent_name.lower()}"
-            cmd = f"gh issue edit {issue_number} --add-label '{agent_label}'"
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-            return result.returncode == 0
+            
+            if RESILIENT_GITHUB_CLIENT_AVAILABLE:
+                client = get_github_client()
+                result = client.update_issue_labels(issue_number, add_labels=[agent_label])
+                return result['success']
+            else:
+                # Fallback to direct subprocess call
+                cmd = f"gh issue edit {issue_number} --add-label '{agent_label}'"
+                result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                return result.returncode == 0
+                
         except Exception as e:
             self.logger.error(f"Error adding agent label to issue {issue_number}: {e}")
             return False

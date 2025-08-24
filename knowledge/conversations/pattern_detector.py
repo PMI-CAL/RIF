@@ -621,3 +621,6 @@ class ConversationPatternDetector:
         except Exception as e:
             logger.error(f"Pattern detection summary failed: {e}")
             return {'error': str(e)}
+
+# Create alias for backward compatibility
+PatternDetectionEngine = ConversationPatternDetector

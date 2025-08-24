@@ -814,7 +814,6 @@ class DPIBSBenchmarkingEngine:
         """Access the performance monitor from optimizer"""
         return self.optimizer.performance_monitor
     
-    @performance_monitor("complete_benchmarking_analysis", cache_ttl=60)
     def benchmark_issue(self, issue_number: int, include_evidence: bool = True) -> EnhancedBenchmarkingResult:
         """
         Perform complete benchmarking analysis for an issue

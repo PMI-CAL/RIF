@@ -1,0 +1,223 @@
+{
+  "pattern_id": "context-aware-quality-assessment-pattern",
+  "name": "Context-Aware Quality Assessment Pattern",
+  "category": "quality",
+  "confidence": 0.92,
+  "created_date": "2025-08-24",
+  "source_issue": "#87",
+  "description": "Quality thresholds must vary by component criticality and risk profile rather than using a single universal threshold",
+
+  "problem": {
+    "description": "Single quality threshold (80%) applied universally regardless of component criticality leads to inefficient resource allocation",
+    "symptoms": [
+      "Critical algorithms getting same treatment as UI components",
+      "Over-testing of low-risk components",
+      "Under-testing of high-risk components",
+      "Binary pass/fail without risk consideration"
+    ],
+    "impact": "Inefficient quality assurance with suboptimal defect detection"
+  },
+
+  "solution": {
+    "principle": "Quality requirements should match component criticality and risk profile",
+    "threshold_matrix": {
+      "critical_algorithms": {
+        "min_coverage": 95,
+        "target_coverage": 100,
+        "security_validation": 100,
+        "rationale": "System-critical code requires highest assurance"
+      },
+      "public_apis": {
+        "min_coverage": 90,
+        "target_coverage": 95,
+        "security_validation": 95,
+        "rationale": "External interfaces need high reliability"
+      },
+      "business_logic": {
+        "min_coverage": 85,
+        "target_coverage": 90,
+        "security_validation": 90,
+        "rationale": "Core functionality requires good coverage"
+      },
+      "integration_code": {
+        "min_coverage": 80,
+        "target_coverage": 85,
+        "security_validation": 85,
+        "rationale": "Integration points need solid testing"
+      },
+      "ui_components": {
+        "min_coverage": 70,
+        "target_coverage": 80,
+        "security_validation": 85,
+        "rationale": "Visual components focus on functional testing"
+      },
+      "test_utilities": {
+        "min_coverage": 60,
+        "target_coverage": 70,
+        "security_validation": 70,
+        "rationale": "Testing code has lower coverage requirements"
+      }
+    }
+  },
+
+  "risk_assessment": {
+    "formula": "Risk_Adjusted_Score = Base_Quality × (1 - Risk_Multiplier) × Context_Weight",
+    "components": {
+      "base_quality": {
+        "test_coverage": 0.30,
+        "security_validation": 0.40,
+        "performance_impact": 0.20,
+        "code_quality": 0.10
+      },
+      "risk_multiplier": {
+        "security_risk": 0.4,
+        "complexity_risk": 0.2,
+        "impact_risk": 0.2,
+        "historical_risk": 0.1,
+        "time_pressure": 0.1
+      },
+      "context_weight": {
+        "calculated_from": "threshold_matrix[component_type].context_factor"
+      }
+    }
+  },
+
+  "decision_framework": {
+    "pass": {
+      "condition": "Risk_Adjusted_Score >= context_threshold AND no_critical_security_issues",
+      "action": "Approve for production"
+    },
+    "concerns": {
+      "condition": "60 <= Risk_Adjusted_Score < context_threshold AND fixable_issues",
+      "action": "Return with improvement requirements"
+    },
+    "fail": {
+      "condition": "Risk_Adjusted_Score < 60 OR critical_security_issues",
+      "action": "Reject and require significant rework"
+    },
+    "blocked": {
+      "condition": "high_risk_changes OR multiple_gate_failures",
+      "action": "Escalate to specialist review"
+    }
+  },
+
+  "implementation_approach": {
+    "phase_1": {
+      "name": "Foundation Layer",
+      "components": ["Context-aware thresholds", "Risk assessment engine"],
+      "duration": "1-2 weeks"
+    },
+    "phase_2": {
+      "name": "Enhanced Scoring",
+      "components": ["Multi-dimensional scoring", "Decision engine"],
+      "duration": "2-3 weeks"
+    },
+    "phase_3": {
+      "name": "Manual Intervention",
+      "components": ["Risk-based escalation", "Specialist assignment"],
+      "duration": "3-4 weeks"
+    },
+    "phase_4": {
+      "name": "Optimization",
+      "components": ["ML-based threshold tuning", "Continuous improvement"],
+      "duration": "4-8 weeks"
+    }
+  },
+
+  "escalation_triggers": {
+    "security_changes": {
+      "patterns": ["auth/**", "**/security/**", "*/payment/**"],
+      "specialist": "security-specialist",
+      "sla_hours": 4,
+      "blocking": true
+    },
+    "architecture_changes": {
+      "patterns": [">500 LOC", ">10 files", "*/database/**", "*/api/**"],
+      "specialist": "architecture-specialist",
+      "sla_hours": 12,
+      "blocking": "conditional"
+    },
+    "compliance_areas": {
+      "patterns": ["*/audit/**", "*/privacy/**", "*/regulatory/**"],
+      "specialist": "compliance-specialist",
+      "sla_hours": 6,
+      "blocking": true
+    }
+  },
+
+  "expected_benefits": {
+    "quality_improvements": {
+      "defect_detection": "+20%",
+      "testing_efficiency": "+10%",
+      "defect_escape_rate": "<2%"
+    },
+    "resource_optimization": {
+      "testing_overhead_reduction": "10%",
+      "false_positive_reduction": "50%",
+      "specialist_utilization": "+30%"
+    },
+    "development_velocity": {
+      "initial_impact": "-5% to -10%",
+      "long_term_impact": "+10% to +15%",
+      "reason": "Fewer production issues"
+    }
+  },
+
+  "validation_criteria": [
+    "Component classification accuracy >90%",
+    "Risk assessment correlation with production defects >0.8",
+    "Specialist escalation appropriateness >95%",
+    "Quality gate decision accuracy >90%"
+  ],
+
+  "evidence": {
+    "source_analysis": "Industry standard development practices research 2024-2025",
+    "current_system_issues": [
+      "Configuration inconsistency: Workflow specifies 80% but validation expects 95%",
+      "Single threshold for all component types",
+      "No clear manual intervention criteria",
+      "Binary pass/fail without risk assessment"
+    ],
+    "success_examples": [
+      "Issue #82: 75% score → CONCERNS → additional work → success",
+      "Issues #55-56: 95% rate → APPROVED → production success",
+      "Issue #68: 95% coverage → APPROVED → quality maintained"
+    ]
+  },
+
+  "metrics": {
+    "baseline_performance": {
+      "single_threshold": "80%",
+      "false_positive_rate": "15-20%",
+      "defect_escape_rate": "3-5%"
+    },
+    "target_performance": {
+      "context_aware_thresholds": "70-100% range",
+      "false_positive_rate": "<10%",
+      "defect_escape_rate": "<2%"
+    }
+  },
+
+  "related_patterns": [
+    "multi-dimensional-quality-scoring-pattern",
+    "risk-based-escalation-pattern",
+    "adaptive-threshold-learning-pattern",
+    "quality-gate-enforcement-pattern"
+  ],
+
+  "implementation_files": [
+    "config/quality_thresholds.yaml",
+    "src/quality/context_aware_thresholds.py",
+    "src/quality/risk_assessment_engine.py",
+    "src/quality/decision_engine.py",
+    "src/quality/escalation_manager.py"
+  ],
+
+  "lessons_learned": [
+    "One-size-fits-all quality thresholds are inefficient",
+    "Component context drives appropriate quality requirements",
+    "Risk assessment improves resource allocation",
+    "Automated escalation prevents quality bypasses",
+    "ML optimization enables continuous improvement"
+  ]
+}

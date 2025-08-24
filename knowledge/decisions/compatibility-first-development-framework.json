@@ -1,0 +1,208 @@
+{
+  "decision_id": "compatibility-first-development-framework",
+  "title": "Compatibility-First Development Framework",
+  "date": "2025-08-24",
+  "status": "accepted",
+  "context": {
+    "problem": "Systematic compatibility audit revealed 37 of 92 issues (40.2%) contained implementations fundamentally incompatible with Claude Code's operational model",
+    "impact": "Significant technical debt, wasted development effort, and non-functional implementations",
+    "urgency": "Critical - prevents further compatibility issues",
+    "stakeholders": ["RIF Development Team", "Claude Code Users", "System Architects"]
+  },
+
+  "decision": "Implement mandatory compatibility validation framework using MCP Knowledge Server before any implementation begins",
+
+  "rationale": [
+    "Prevention is more cost-effective than remediation - fixing 37 issues requires extensive rework",
+    "Compatibility issues stem from fundamental architectural misunderstandings",
+    "MCP Knowledge Server provides authoritative Claude Code capability information",
+    "Early validation prevents accumulation of technical debt",
+    "Systematic approach prevents recurring compatibility problems"
+  ],
+
+  "alternatives_considered": [
+    {
+      "alternative": "Fix issues reactively as discovered",
+      "pros": ["No process overhead", "Immediate implementation possible"],
+      "cons": ["High rework cost", "Continued compatibility issues", "Technical debt accumulation"],
+      "rejected_reason": "40.2% failure rate demonstrates reactive approach is insufficient"
+    },
+    {
+      "alternative": "Manual compatibility reviews",
+      "pros": ["Human expertise", "Flexible evaluation"],
+      "cons": ["Inconsistent application", "Resource intensive", "Subjective decisions"],
+      "rejected_reason": "Manual reviews failed to catch existing compatibility issues"
+    },
+    {
+      "alternative": "Documentation-based guidelines",
+      "pros": ["Low implementation cost", "Clear reference"],
+      "cons": ["Requires manual adherence", "Can become outdated", "Not enforced"],
+      "rejected_reason": "Existing documentation did not prevent compatibility issues"
+    }
+  ],
+
+  "implementation": {
+    "components": [
+      {
+        "component": "MCP Knowledge Server Integration",
+        "description": "Use completed Issue #97 MCP server for compatibility validation",
+        "tools": [
+          "check_compatibility: Validate architectural patterns",
+          "recommend_pattern: Suggest corrected implementations", 
+          "find_alternatives: Alternative approaches for incompatible designs",
+          "validate_architecture: System-wide compatibility checking"
+        ]
+      },
+      {
+        "component": "Pre-Design Compatibility Gate",
+        "description": "Mandatory compatibility check before implementation",
+        "process": [
+          "Issue creation requires compatibility validation",
+          "MCP server validates proposed approach", 
+          "Incompatible approaches must be redesigned",
+          "No implementation without compatibility approval"
+        ]
+      },
+      {
+        "component": "Implementation Review Gate",
+        "description": "Compatibility validation during code review",
+        "criteria": [
+          "Code demonstrates working with Claude Code",
+          "No external orchestration of Claude Code",
+          "Session-scoped operation verified",
+          "Evidence of testing in Claude Code environment"
+        ]
+      },
+      {
+        "component": "Knowledge Base Integration",
+        "description": "Continuous learning and pattern updates",
+        "features": [
+          "Compatibility patterns stored in knowledge base",
+          "Anti-patterns documented with alternatives",
+          "Regular updates based on Claude Code changes",
+          "Pattern validation through usage evidence"
+        ]
+      }
+    ]
+  },
+
+  "enforcement": {
+    "mandatory_gates": [
+      "No issue can proceed to implementation without compatibility validation",
+      "All implementations must demonstrate Claude Code compatibility",
+      "Code reviews must include compatibility assessment",
+      "No issue marked complete without evidence of working implementation"
+    ],
+    "tools": [
+      "MCP Knowledge Server tools for automated validation",
+      "GitHub issue templates with compatibility requirements",
+      "Code review checklists with compatibility criteria",
+      "Evidence collection standards for compatibility proof"
+    ],
+    "escalation": [
+      "Compatibility failures escalate to architecture review",
+      "Repeated compatibility issues require process improvement",
+      "Major compatibility changes require system-wide impact assessment"
+    ]
+  },
+
+  "consequences": {
+    "positive": [
+      "Prevents compatibility issues from entering development",
+      "Reduces technical debt and rework costs",
+      "Improves development velocity by avoiding dead ends",
+      "Ensures all RIF functionality works with Claude Code",
+      "Creates authoritative compatibility knowledge base"
+    ],
+    "negative": [
+      "Additional process overhead for all new development",
+      "Potential initial slowdown in development velocity", 
+      "Requires developer education on compatibility requirements",
+      "Dependency on MCP Knowledge Server availability"
+    ],
+    "risks": [
+      "Developers may find ways to bypass compatibility gates",
+      "MCP Knowledge Server may become outdated",
+      "Process may become bureaucratic if not well-managed"
+    ],
+    "mitigations": [
+      "Regular training on compatibility requirements",
+      "Automated enforcement where possible",
+      "Regular MCP Knowledge Server updates",
+      "Streamlined process design to minimize overhead"
+    ]
+  },
+
+  "success_metrics": [
+    "Zero new compatibility issues after framework implementation",
+    "100% of new issues pass initial compatibility validation",
+    "Reduced rework time from compatibility fixes",
+    "Developer feedback on framework effectiveness",
+    "MCP Knowledge Server usage and accuracy metrics"
+  ],
+
+  "monitoring": {
+    "indicators": [
+      "Compatibility validation pass/fail rates",
+      "Time spent on compatibility fixes",
+      "Developer adoption of validation tools",
+      "Quality of compatibility assessments"
+    ],
+    "review_schedule": "Monthly compatibility framework effectiveness review",
+    "improvement_process": "Quarterly process optimization based on usage data"
+  },
+
+  "implementation_plan": {
+    "phase_1": {
+      "name": "Framework Setup",
+      "duration": "1 week",
+      "deliverables": [
+        "MCP Knowledge Server integration verified",
+        "Compatibility validation tools documented",
+        "GitHub issue templates updated",
+        "Developer training materials created"
+      ]
+    },
+    "phase_2": {
+      "name": "Process Integration",
+      "duration": "2 weeks", 
+      "deliverables": [
+        "Compatibility gates integrated into workflow",
+        "Code review processes updated",
+        "Evidence collection standards established",
+        "Initial developer training completed"
+      ]
+    },
+    "phase_3": {
+      "name": "Enforcement Activation",
+      "duration": "1 week",
+      "deliverables": [
+        "Mandatory compatibility validation active",
+        "Process monitoring systems operational",
+        "Escalation procedures documented",
+        "Success metrics baseline established"
+      ]
+    }
+  },
+
+  "related_decisions": [
+    "claude-code-orchestration-model",
+    "mcp-knowledge-server-implementation",
+    "quality-gate-enhancement-framework",
+    "technical-debt-reduction-strategy"
+  ],
+
+  "references": [
+    "Issue #98: Audit and Fix All Compatibility Issues",
+    "Issue #97: Claude Code Knowledge MCP Server", 
+    "RIF Compatibility Audit Report",
+    "Claude Code Operational Model Documentation"
+  ],
+
+  "approval": {
+    "decision_maker": "RIF Architecture Team",
+    "approved_by": ["RIF-Learner", "System Architects"],
+    "approval_date": "2025-08-24",
+    "review_date": "2025-09-24"
+  }
+}

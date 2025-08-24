@@ -1,35 +1,47 @@
 #!/usr/bin/env python3
 """
-Test Suite for Shadow Quality Tracking System
-Tests the parallel quality monitoring functionality.
+Test Suite for Shadow Quality Tracking System - Issue #142
+Comprehensive testing for quality monitoring, adversarial analysis, and evidence consolidation
+
+Tests cover:
+- Quality metric tracking and validation
+- Adversarial finding recording and analysis  
+- Quality decision making and evidence consolidation
+- Integration with DPIBS benchmarking system
+- GitHub integration and automated reporting
+- Continuous monitoring and alert systems
 """
 
+import os
+import sys
 import json
-import subprocess
+import time
 import tempfile
 import unittest
-from unittest.mock import Mock, patch
-import sys
-import os
+import threading
+from datetime import datetime, timedelta
+from unittest.mock import Mock, patch, MagicMock
 
-# Add the commands directory to the path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../claude/commands'))
+# Add RIF to path
+sys.path.insert(0, '/Users/cal/DEV/RIF')
 
-from shadow_quality_tracking import ShadowQualityTracker
+from systems.shadow_quality_tracking import (
+    ShadowQualityTracker, QualityMetricType, QualityMetric, QualitySession,
+    create_shadow_quality_tracker
+)
+from systems.shadow_quality_integration import (
+    ShadowQualityIntegrator, ValidationContext,
+    create_shadow_quality_integrator
+)
 
 class TestShadowQualityTracker(unittest.TestCase):
-    """Test cases for the Shadow Quality Tracker."""
+    """Test suite for core shadow quality tracking functionality"""
     
     def setUp(self):
-        """Set up test fixtures."""
-        self.tracker = ShadowQualityTracker()
-        self.sample_issue = {
-            "title": "Implement user authentication",
-            "body": "Add secure login functionality with JWT tokens",
-            "labels": [{"name": "complexity:high"}, {"name": "feature"}],
-            "state": "open",
-            "createdAt": "2025-01-01T00:00:00Z"
-        }
+        """Set up test environment"""
+        self.temp_dir = tempfile.mkdtemp(prefix='shadow_quality_test_')
+        self.test_db_path = os.path.join(self.temp_dir, 'test_quality.db')
+        self.tracker = ShadowQualityTracker(self.test_db_path)
     
     def test_shadow_prefix_initialization(self):
         """Test that tracker initializes with correct prefix."""

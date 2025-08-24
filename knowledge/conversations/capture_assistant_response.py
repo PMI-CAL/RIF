@@ -87,7 +87,7 @@ def get_conversation_id() -> str:
 
 def analyze_response_structure(response_text: str) -> Dict[str, Any]:
     """
-    Analyze the structure and characteristics of the assistant response.
+    Analyze the structure and characteristics of the assistant response with optimized performance.
     
     Args:
         response_text: The full text of the assistant's response
@@ -95,55 +95,52 @@ def analyze_response_structure(response_text: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing response analysis
     """
+    # Basic metrics (optimized calculations)
     analysis = {
         'response_length': len(response_text),
         'word_count': len(response_text.split()),
-        'paragraph_count': len([p for p in response_text.split('\n\n') if p.strip()]),
-        'line_count': len(response_text.split('\n')),
+        'paragraph_count': response_text.count('\n\n') + 1,  # Optimized counting
+        'line_count': response_text.count('\n') + 1,
     }
     
+    # Pre-compile regex patterns for better performance
+    tool_call_pattern = re.compile(r'<function_calls>', re.MULTILINE)
+    tool_name_pattern = re.compile(r'<invoke name="([^"]+)">', re.MULTILINE)
+    code_block_pattern = re.compile(r'```[\w]*\n.*?\n```', re.DOTALL)
+    file_path_pattern = re.compile(r'[/\\][\w.-]+(?:[/\\][\w.-]+)*\.[\w]+|[/\\][\w.-]+(?:[/\\][\w.-]+)*[/\\]')
+    
     # Detect tool calls in the response
-    tool_call_pattern = r'<function_calls>'
-    tool_calls = re.findall(tool_call_pattern, response_text)
+    tool_calls = tool_call_pattern.findall(response_text)
     analysis['tool_calls_count'] = len(tool_calls)
     
     # Extract tool names if present
-    tool_name_pattern = r'<invoke name="([^"]+)">'
-    tool_names = re.findall(tool_name_pattern, response_text)
+    tool_names = tool_name_pattern.findall(response_text)
     analysis['tools_used'] = list(set(tool_names))  # Unique tools
     
     # Detect code blocks
-    code_block_pattern = r'```[\w]*\n.*?\n```'
-    code_blocks = re.findall(code_block_pattern, response_text, re.DOTALL)
+    code_blocks = code_block_pattern.findall(response_text)
     analysis['code_blocks_count'] = len(code_blocks)
     
-    # Detect file paths and references
-    file_path_pattern = r'[/\\][\w.-]+(?:[/\\][\w.-]+)*\.[\w]+|[/\\][\w.-]+(?:[/\\][\w.-]+)*[/\\]'
-    file_paths = re.findall(file_path_pattern, response_text)
-    analysis['file_references'] = list(set(file_paths))
+    # Detect file paths and references (limit to avoid performance issues)
+    file_paths = file_path_pattern.findall(response_text)
+    analysis['file_references'] = list(set(file_paths))[:20]  # Limit to 20 unique paths
     
-    # Detect reasoning patterns
-    reasoning_indicators = [
-        'Let me', 'First, I', 'Then I', 'Next, I', 'Now I',
-        'I need to', 'I should', 'I will', 'I can',
-        'Based on', 'Looking at', 'Given that', 'Since',
-        'Therefore', 'However', 'Additionally', 'Moreover'
-    ]
+    # Optimized reasoning pattern detection
+    reasoning_patterns = re.compile(
+        r'\b(let me|first[,\s]i|then[,\s]i|next[,\s]i|now[,\s]i|'
+        r'i need to|i should|i will|i can|'
+        r'based on|looking at|given that|since|'
+        r'therefore|however|additionally|moreover)\b',
+        re.IGNORECASE
+    )
+    analysis['reasoning_indicators_count'] = len(reasoning_patterns.findall(response_text))
     
-    reasoning_count = 0
-    for indicator in reasoning_indicators:
-        reasoning_count += len(re.findall(re.escape(indicator), response_text, re.IGNORECASE))
+    # Optimized question and explanation detection
+    analysis['questions_count'] = response_text.count('?')
+    explanation_pattern = re.compile(r'\b(because|since|due to|as a result)\b', re.IGNORECASE)
+    analysis['explanations_count'] = len(explanation_pattern.findall(response_text))
     
-    analysis['reasoning_indicators_count'] = reasoning_count
-    
-    # Detect question or explanation patterns
-    questions = len(re.findall(r'\?', response_text))
-    explanations = len(re.findall(r'\b(because|since|due to|as a result)\b', response_text, re.IGNORECASE))
-    
-    analysis['questions_count'] = questions
-    analysis['explanations_count'] = explanations
-    
-    # Response type classification
+    # Response type classification with enhanced logic
     response_types = []
     
     if analysis['tool_calls_count'] > 0:
@@ -152,15 +149,33 @@ def analyze_response_structure(response_text: str) -> Dict[str, Any]:
         response_types.append('code')
     if analysis['explanations_count'] > 2:
         response_types.append('explanation')
-    if questions > 0:
+    if analysis['questions_count'] > 0:
         response_types.append('question')
     if analysis['file_references']:
         response_types.append('file_operation')
+    
+    # Enhanced classification based on content
+    response_lower = response_text.lower()
+    if 'error' in response_lower and ('fix' in response_lower or 'solve' in response_lower):
+        response_types.append('problem_solving')
+    if any(word in response_lower for word in ['analyze', 'review', 'examine', 'investigate']):
+        response_types.append('analysis')
+    if any(word in response_lower for word in ['implement', 'create', 'build', 'develop']):
+        response_types.append('implementation')
     
     if not response_types:
         response_types.append('general')
     
     analysis['response_types'] = response_types
+    
+    # Add complexity scoring
+    complexity_score = 0
+    complexity_score += min(analysis['tool_calls_count'] * 2, 10)  # Tool calls add complexity
+    complexity_score += min(analysis['code_blocks_count'], 5)     # Code blocks add complexity
+    complexity_score += min(analysis['reasoning_indicators_count'] // 2, 5)  # Reasoning adds complexity
+    complexity_score += min(len(analysis['file_references']), 5)  # File operations add complexity
+    
+    analysis['complexity_score'] = min(complexity_score, 20)  # Cap at 20
     
     return analysis
 
@@ -211,6 +226,8 @@ def capture_assistant_response():
     Reads the assistant response from stdin, analyzes its structure and content,
     and stores the event using ConversationStorageBackend.
     """
+    start_time = time.time()  # Track performance
+    
     try:
         # Read assistant response from stdin (Claude Code hook mechanism)
         response_text = sys.stdin.read().strip()
@@ -257,35 +274,86 @@ def capture_assistant_response():
             embedding=None  # Will be generated by embedding service later
         )
         
-        # If the response contains tool usage, extract decision information
+        # Enhanced decision extraction for tool usage and response patterns
+        decisions_extracted = []
+        
+        # Tool selection decisions
         if response_analysis.get('tools_used'):
             decision_point = f"Tool selection for response"
-            options_considered = [{"option": f"Use {tool}"} for tool in response_analysis['tools_used']]
+            options_considered = [{"option": f"Use {tool}", "reasoning": "Task requirement"} for tool in response_analysis['tools_used']]
             chosen_option = f"Use tools: {', '.join(response_analysis['tools_used'])}"
             
-            rationale = "Selected based on task requirements"
+            # Enhanced rationale based on complexity and context
+            rationale_parts = []
             if response_analysis['tool_calls_count'] > 1:
-                rationale = "Multiple tools selected for complex task"
+                rationale_parts.append("Multiple tools for complex workflow")
+            if response_analysis['complexity_score'] > 10:
+                rationale_parts.append("High complexity task")
+            if 'file_operation' in response_analysis['response_types']:
+                rationale_parts.append("File operations required")
             
-            # Estimate confidence based on response characteristics
-            confidence_score = 0.8  # Default
-            if response_analysis['reasoning_indicators_count'] > 3:
-                confidence_score = 0.9  # High reasoning indicates confidence
+            rationale = "; ".join(rationale_parts) if rationale_parts else "Selected based on task requirements"
+            
+            # Enhanced confidence scoring
+            confidence_score = 0.8  # Base confidence
+            if response_analysis['reasoning_indicators_count'] > 5:
+                confidence_score = 0.95  # High reasoning indicates high confidence
+            elif response_analysis['reasoning_indicators_count'] > 3:
+                confidence_score = 0.9
             elif response_analysis['questions_count'] > 0:
-                confidence_score = 0.6  # Questions indicate uncertainty
+                confidence_score = 0.65  # Questions indicate some uncertainty
+            elif response_analysis['complexity_score'] > 15:
+                confidence_score = 0.75  # High complexity reduces confidence slightly
             
+            decisions_extracted.append({
+                'decision_point': decision_point,
+                'options_considered': options_considered,
+                'chosen_option': chosen_option,
+                'rationale': rationale,
+                'confidence_score': confidence_score
+            })
+        
+        # Response approach decisions (new)
+        if len(response_analysis['response_types']) > 1:
+            decision_point = "Response approach selection"
+            options_considered = [{"option": f"Use {rtype} approach"} for rtype in response_analysis['response_types']]
+            chosen_option = f"Multi-approach: {', '.join(response_analysis['response_types'])}"
+            rationale = f"Combined approach for comprehensive response (complexity: {response_analysis['complexity_score']})"
+            confidence_score = 0.85
+            
+            decisions_extracted.append({
+                'decision_point': decision_point,
+                'options_considered': options_considered,
+                'chosen_option': chosen_option,
+                'rationale': rationale,
+                'confidence_score': confidence_score
+            })
+        
+        # Store all extracted decisions
+        for decision in decisions_extracted:
             storage.store_agent_decision(
                 conversation_id=conversation_id,
                 agent_type='claude-code',
-                decision_point=decision_point,
-                options_considered=options_considered,
-                chosen_option=chosen_option,
-                rationale=rationale,
-                confidence_score=confidence_score
+                decision_point=decision['decision_point'],
+                options_considered=decision['options_considered'],
+                chosen_option=decision['chosen_option'],
+                rationale=decision['rationale'],
+                confidence_score=decision['confidence_score']
             )
         
-        # Log successful capture (debug level)
-        logger.debug(f"Captured assistant response: {event_id} (length: {len(response_text)}, tools: {response_analysis.get('tools_used', [])})")
+        # Enhanced logging with performance metrics
+        capture_duration = time.time() - start_time
+        logger.debug(f"Captured assistant response: {event_id} "
+                    f"(length: {len(response_text)}, "
+                    f"tools: {response_analysis.get('tools_used', [])}, "
+                    f"complexity: {response_analysis.get('complexity_score', 0)}, "
+                    f"types: {response_analysis.get('response_types', [])}, "
+                    f"decisions: {len(decisions_extracted)}, "
+                    f"duration: {capture_duration:.3f}s)")
+        
+        # Store performance metrics for monitoring
+        if capture_duration > 0.1:  # Only log slow captures
+            logger.warning(f"Slow response capture: {capture_duration:.3f}s for {len(response_text)} chars")
         
         storage.close()
         

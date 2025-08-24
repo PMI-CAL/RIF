@@ -1,0 +1,543 @@
+# Dynamic Orchestration Configuration
+# Enhanced configuration for the Hybrid Graph-Based Dynamic Orchestration System
+# Extends the existing rif-workflow.yaml with dynamic routing capabilities
+
+dynamic_orchestration:
+  enabled: true
+  version: "1.0.0"
+  
+  # Core orchestration engine settings
+  orchestration_engine:
+    type: "hybrid_graph_based"
+    decision_framework: "evidence_based_dynamic_routing"
+    execution_model: "adaptive_parallel_orchestration"
+    performance_target_ms: 100  # <100ms orchestration cycle
+    
+    # State graph configuration
+    state_graph:
+      type: "any_to_any_transitions"
+      cycle_prevention: true
+      loop_back_enabled: true
+      
+      # Enhanced state definitions with dynamic routing
+      states:
+        analyzing:
+          type: "analysis_state"
+          agents: ["rif-analyst"]
+          transitions:
+            enabled: ["planning", "implementing", "architecting", "analyzing"]
+            conditions:
+              - to: "implementing"
+                condition: "complexity <= low AND patterns_available"
+                confidence_threshold: 0.8
+              - to: "planning"
+                condition: "complexity = medium OR multi_component_change"
+                confidence_threshold: 0.7
+              - to: "architecting"
+                condition: "complexity >= high OR system_design_needed"
+                confidence_threshold: 0.9
+              - to: "analyzing"
+                condition: "requirements_unclear OR validation_failed_analysis"
+                confidence_threshold: 0.6
+          decision_logic: "complexity_based_routing + requirement_completeness_check"
+          loop_back_conditions:
+            - "requirements_unclear"
+            - "validation_failed_analysis"
+            - "scope_changed"
+          parallel_capable: true
+          timeout_minutes: 60
+          
+        planning:
+          type: "strategic_state"
+          agents: ["rif-planner"]
+          transitions:
+            enabled: ["architecting", "implementing", "analyzing"]
+            conditions:
+              - to: "architecting"
+                condition: "complexity >= high AND architectural_concerns_present"
+                confidence_threshold: 0.85
+              - to: "implementing"
+                condition: "plan_complete AND complexity < high"
+                confidence_threshold: 0.8
+              - to: "analyzing"
+                condition: "requirements_changed OR architectural_concerns_raised"
+                confidence_threshold: 0.7
+          decision_logic: "complexity_threshold_evaluation + resource_assessment"
+          loop_back_conditions:
+            - "architectural_concerns_raised"
+            - "requirements_changed"
+            - "plan_validation_failed"
+          parallel_capable: false
+          timeout_minutes: 60
+          
+        architecting:
+          type: "design_state"
+          agents: ["rif-architect"]
+          transitions:
+            enabled: ["implementing", "planning", "analyzing"]
+            conditions:
+              - to: "implementing"
+                condition: "design_complete AND dependencies_mapped"
+                confidence_threshold: 0.9
+              - to: "planning"
+                condition: "plan_revision_required"
+                confidence_threshold: 0.7
+              - to: "analyzing"
+                condition: "requirements_analysis_needed"
+                confidence_threshold: 0.8
+          decision_logic: "design_completeness + dependency_resolution"
+          loop_back_conditions:
+            - "requirements_analysis_needed"
+            - "plan_revision_required"
+            - "design_validation_failed"
+          parallel_capable: false
+          timeout_minutes: 120
+          
+        implementing:
+          type: "execution_state"
+          agents: ["rif-implementer"]
+          transitions:
+            enabled: ["validating", "architecting", "analyzing"]
+            conditions:
+              - to: "validating"
+                condition: "code_complete AND tests_written"
+                confidence_threshold: 0.85
+              - to: "architecting"
+                condition: "architectural_issues_detected"
+                confidence_threshold: 0.8
+              - to: "analyzing"
+                condition: "requirements_misunderstood"
+                confidence_threshold: 0.7
+          decision_logic: "code_completion_check + quality_prerequisites"
+          loop_back_conditions:
+            - "architectural_issues"
+            - "requirements_misunderstood"
+            - "implementation_blocked"
+          parallel_capable: false
+          timeout_minutes: 240
+          checkpoints: true
+          
+        validating:
+          type: "verification_state"
+          agents: ["rif-validator"]
+          transitions:
+            enabled: ["learning", "implementing", "architecting", "analyzing"]
+            conditions:
+              - to: "learning"
+                condition: "all_tests_pass AND quality_gates_pass"
+                confidence_threshold: 0.9
+              - to: "implementing"
+                condition: "fixable_errors_identified"
+                confidence_threshold: 0.7
+              - to: "architecting"
+                condition: "architectural_issues_detected"
+                confidence_threshold: 0.8
+              - to: "analyzing"
+                condition: "requirements_unclear OR scope_changed"
+                confidence_threshold: 0.6
+          decision_logic: "validation_result_evaluation + error_categorization"
+          loop_back_conditions:
+            - "fixable_errors"
+            - "architectural_flaws"
+            - "unclear_requirements"
+          parallel_capable: true
+          timeout_minutes: 120
+          
+        learning:
+          type: "knowledge_state"
+          agents: ["rif-learner"]
+          transitions:
+            enabled: ["complete"]
+            conditions:
+              - to: "complete"
+                condition: "knowledge_extraction_complete"
+                confidence_threshold: 0.8
+          decision_logic: "knowledge_extraction_complete"
+          loop_back_conditions: []
+          parallel_capable: false
+          timeout_minutes: 30
+
+  # Decision engine configuration
+  decision_engine:
+    type: "evidence_based"
+    performance_target_ms: 50  # <50ms decision evaluation
+    
+    # Confidence scoring algorithm weights
+    confidence_factors:
+      evidence_quality: 0.30
+      pattern_matches: 0.20
+      agent_consensus: 0.20
+      historical_success: 0.15
+      context_completeness: 0.10
+      validation_reliability: 0.05
+    
+    # Decision points with dynamic evaluation
+    decision_points:
+      post_validation_decision:
+        type: "dynamic_multi_outcome"
+        trigger_condition: "validation_results_available"
+        evaluator: "ValidationResultsEvaluator"
+        context_factors: ["test_results", "quality_gates", "error_types", "complexity"]
+        confidence_threshold: 0.7
+        timeout_seconds: 300
+        
+        outcomes:
+          - outcome: "proceed_to_learning"
+            condition: "all_tests_pass AND quality_gates_pass"
+            confidence_threshold: 0.9
+            priority: 1
+            
+          - outcome: "return_to_implementation"
+            condition: "fixable_errors_identified"
+            confidence_threshold: 0.7
+            priority: 2
+            
+          - outcome: "escalate_to_architecture"
+            condition: "architectural_issues_detected"
+            confidence_threshold: 0.8
+            priority: 3
+            
+          - outcome: "loop_to_analysis"
+            condition: "requirements_unclear OR scope_changed"
+            confidence_threshold: 0.6
+            priority: 4
+            
+      complexity_routing_decision:
+        type: "complexity_based_router"
+        trigger_condition: "analysis_complete"
+        evaluator: "ComplexityEvaluator"
+        context_factors: ["lines_of_code", "files_affected", "dependencies", "cross_cutting"]
+        confidence_threshold: 0.7
+        timeout_seconds: 180
+        
+        outcomes:
+          - outcome: "direct_to_implementation"
+            condition: "complexity <= low AND patterns_available"
+            confidence_threshold: 0.8
+            priority: 1
+            
+          - outcome: "route_through_planning"
+            condition: "complexity = medium OR multi_component_change"
+            confidence_threshold: 0.7
+            priority: 2
+            
+          - outcome: "require_architecture_phase"
+            condition: "complexity >= high OR system_design_needed"
+            confidence_threshold: 0.9
+            priority: 3
+            
+      error_recovery_decision:
+        type: "error_recovery_router"
+        trigger_condition: "validation_failed"
+        evaluator: "ErrorAnalysisEvaluator"
+        context_factors: ["error_type", "error_severity", "fix_complexity", "time_constraints"]
+        confidence_threshold: 0.6
+        timeout_seconds: 120
+        
+        outcomes:
+          - outcome: "quick_fix_implementation"
+            condition: "error_type = syntax OR error_type = logic AND fix_complexity = low"
+            confidence_threshold: 0.8
+            priority: 1
+            
+          - outcome: "design_revision_needed"
+            condition: "error_type = architectural OR fix_complexity = high"
+            confidence_threshold: 0.8
+            priority: 2
+            
+          - outcome: "requirements_clarification"
+            condition: "error_type = requirements_mismatch"
+            confidence_threshold: 0.7
+            priority: 3
+
+  # Parallel execution configuration
+  parallel_execution:
+    enabled: true
+    max_concurrent_paths: 8
+    performance_target_ms: 20  # <20ms coordination overhead
+    
+    # Resource management
+    resource_management:
+      enabled: true
+      
+      # System resource limits
+      system_limits:
+        max_cpu_cores: 4.0
+        max_memory_mb: 8192
+        max_io_bandwidth: 10.0
+        max_network_bandwidth: 10.0
+        
+      # Resource allocation strategy
+      allocation_strategy: "intelligent_balancing"  # options: "first_fit", "best_fit", "intelligent_balancing"
+      
+      # Workload balancing
+      workload_balancing:
+        enabled: true
+        optimization_strategy: "resource_aware"  # options: "time_based", "resource_aware", "priority_based"
+        rebalancing_interval_seconds: 30
+        
+    # Parallel execution patterns
+    execution_patterns:
+      validation_while_implementing:
+        description: "Continuous validation during implementation phase"
+        enabled: true
+        agents: ["rif-implementer", "rif-validator"]
+        coordination: "shared_state_updates"
+        merge_strategy: "validation_gates_block_progression"
+        resource_sharing: false
+        
+      multi_path_exploration:
+        description: "Explore multiple solution approaches simultaneously"
+        enabled: true
+        agents: ["rif-architect", "rif-implementer"]
+        coordination: "outcome_comparison"
+        merge_strategy: "best_solution_selection"
+        resource_sharing: true
+        
+      parallel_learning:
+        description: "Learn from completed work while processing new requirements"
+        enabled: true
+        agents: ["rif-learner", "rif-analyst"]
+        coordination: "knowledge_sharing"
+        merge_strategy: "enhanced_pattern_availability"
+        resource_sharing: false
+        
+      concurrent_validation:
+        description: "Multiple validation approaches in parallel"
+        enabled: true
+        agents: ["rif-validator", "rif-skeptic"]
+        coordination: "independent_validation"
+        merge_strategy: "consensus_building"
+        resource_sharing: false
+        
+    # Synchronization configuration
+    synchronization:
+      enabled: true
+      
+      # Synchronization points
+      sync_points:
+        pre_implementation_sync:
+          description: "Synchronize analysis/planning before implementation"
+          required_states: ["analyzing", "planning", "architecting"]
+          merge_strategy: "wait_for_all"
+          timeout_minutes: 10
+          
+        pre_learning_sync:
+          description: "Synchronize validation results before learning"
+          required_states: ["validating"]
+          merge_strategy: "wait_for_all"
+          timeout_minutes: 5
+          
+        quality_gate_sync:
+          description: "Synchronize all quality validation paths"
+          required_agents: ["rif-validator", "rif-skeptic"]
+          merge_strategy: "consensus_required"
+          timeout_minutes: 15
+          
+      # Conflict resolution
+      conflict_resolution:
+        enabled: true
+        detection_interval_seconds: 10
+        
+        resolution_strategies:
+          resource_conflicts:
+            strategy: "priority_based_scheduling"
+            escalation_timeout_minutes: 5
+            
+          agent_conflicts:
+            strategy: "sequential_execution"
+            escalation_timeout_minutes: 3
+            
+          dependency_conflicts:
+            strategy: "dependency_graph_optimization"
+            escalation_timeout_minutes: 10
+
+  # Integration with existing systems
+  integration:
+    # State persistence enhancements
+    state_persistence:
+      enabled: true
+      storage_type: "duckdb_enhanced"
+      
+      # Enhanced schema for graph-based workflows
+      enhanced_tables:
+        state_graph_definitions:
+          enabled: true
+          retention_days: 90
+          
+        decision_history:
+          enabled: true
+          retention_days: 365
+          audit_trail: true
+          
+        transition_log:
+          enabled: true
+          retention_days: 180
+          performance_tracking: true
+          
+        parallel_execution_log:
+          enabled: true
+          retention_days: 90
+          resource_tracking: true
+          
+    # Monitoring dashboard extensions
+    monitoring:
+      enabled: true
+      
+      # Graph visualization
+      graph_visualization:
+        enabled: true
+        real_time_updates: true
+        update_interval_ms: 500
+        
+      # Decision point insights
+      decision_insights:
+        enabled: true
+        confidence_tracking: true
+        outcome_analysis: true
+        
+      # Parallel execution monitoring
+      parallel_monitoring:
+        enabled: true
+        resource_utilization: true
+        performance_metrics: true
+        
+      # Performance targets
+      performance_monitoring:
+        orchestration_cycle_target_ms: 100
+        decision_evaluation_target_ms: 50
+        state_transition_target_ms: 10
+        parallel_coordination_target_ms: 20
+        dashboard_generation_target_ms: 10
+        
+    # GitHub integration improvements
+    github_integration:
+      enabled: true
+      
+      # Dynamic label management
+      dynamic_labels:
+        enabled: true
+        state_transitions: true
+        decision_outcomes: true
+        confidence_levels: true
+        
+      # Decision transparency
+      decision_comments:
+        enabled: true
+        include_confidence_scores: true
+        include_reasoning: true
+        include_evidence_summary: true
+        
+      # Workflow visualization
+      workflow_visualization:
+        enabled: true
+        graph_representation: true
+        transition_history: true
+        decision_tree: true
+
+  # Performance optimization
+  performance_optimization:
+    enabled: true
+    
+    # Caching
+    caching:
+      decision_outcomes: true
+      state_transitions: true
+      evidence_analysis: true
+      cache_ttl_minutes: 30
+      
+    # Optimization strategies
+    optimization:
+      lazy_evaluation: true
+      batch_processing: true
+      async_operations: true
+      
+    # Performance monitoring
+    metrics:
+      track_orchestration_time: true
+      track_decision_time: true
+      track_transition_time: true
+      track_parallel_overhead: true
+      alert_on_slow_performance: true
+
+  # Quality gates for dynamic orchestration
+  quality_gates:
+    orchestration_performance:
+      orchestration_cycle_max_ms: 150  # Allow 50% buffer over target
+      decision_evaluation_max_ms: 75
+      state_transition_max_ms: 15
+      required: true
+      blocker: false  # Advisory for performance
+      
+    decision_confidence:
+      minimum_confidence: 0.6
+      required: true
+      blocker: true
+      
+    parallel_execution_success:
+      minimum_success_rate: 0.8
+      required: true
+      blocker: false
+      
+    evidence_completeness:
+      minimum_evidence_count: 1
+      evidence_quality_threshold: 0.5
+      required: true
+      blocker: false
+
+  # Fallback and recovery
+  fallback_strategies:
+    enabled: true
+    
+    # Performance fallback
+    performance_degradation:
+      trigger: "orchestration_time > 200ms"
+      action: "simplified_decision_logic"
+      recovery_check_interval_minutes: 5
+      
+    # Decision failure fallback
+    decision_failure:
+      trigger: "decision_confidence < 0.3"
+      action: "default_linear_progression"
+      escalation_timeout_minutes: 10
+      
+    # Parallel execution fallback
+    parallel_failure:
+      trigger: "resource_allocation_failed OR synchronization_timeout"
+      action: "sequential_execution"
+      retry_attempts: 2
+      
+    # Emergency fallback
+    emergency_fallback:
+      trigger: "critical_error OR system_overload"
+      action: "revert_to_linear_workflow"
+      notification: true
+
+  # Audit and compliance
+  audit:
+    enabled: true
+    
+    # Decision audit trail
+    decision_audit:
+      enabled: true
+      retention_days: 365
+      include_evidence: true
+      include_reasoning: true
+      verification_enabled: true
+      
+    # Compliance tracking
+    compliance:
+      track_decision_rationale: true
+      track_evidence_quality: true
+      track_performance_metrics: true
+      compliance_threshold: 0.8
+      
+    # Audit events
+    audit_events:
+      - "orchestration_initiated"
+      - "decision_point_evaluated"
+      - "state_transition_executed"
+      - "parallel_execution_started"
+      - "synchronization_completed"
+      - "fallback_triggered"
+      - "performance_threshold_exceeded"

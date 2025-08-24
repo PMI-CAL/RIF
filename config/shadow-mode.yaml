@@ -6,6 +6,41 @@ shadow_mode:
   version: "1.0.0"
   description: "Shadow mode for testing new LightRAG system alongside legacy knowledge system"
 
+# Adversarial shadow audit configuration
+adversarial_shadow_audit:
+  enabled: true
+  default_mindset: "adversarial"
+  extended_processing: true
+  
+  audit_modes:
+    standard:
+      processing_time_multiplier: 1.0
+      adversarial_tools: ["basic_verification"]
+      
+    extended:
+      processing_time_multiplier: 3.0
+      adversarial_tools: ["assumption_challenger", "edge_case_hunter", "regression_detector"]
+      think_harder_mode: true
+      
+    comprehensive:
+      processing_time_multiplier: 5.0 
+      adversarial_tools: ["all_tools", "integration_stress_tester", "security_adversary"]
+      think_harder_mode: true
+      deep_analysis_required: true
+
+  problem_detection_focus:
+    seek_failures: true
+    challenge_validation_claims: true
+    independent_verification_required: true
+    assumption_testing: true
+    
+  success_metrics:
+    problems_found_count: true
+    validation_claims_challenged: true
+    edge_cases_discovered: true
+    regressions_detected: true
+    security_vulnerabilities_found: true
+
 # Systems configuration
 systems:
   legacy:
@@ -232,6 +267,13 @@ agent_integration:
   rif_validator:
     shadow_enabled: true
     operations: ["retrieve_knowledge", "search_patterns"]
+    
+  rif_shadow_auditor:
+    shadow_enabled: true
+    operations: ["adversarial_verification", "extended_analysis", "problem_detection"]
+    think_harder_mode: true
+    processing_time_multiplier: 3.0
+    adversarial_tools: ["assumption_challenger", "edge_case_hunter", "regression_detector", "integration_stress_tester", "security_adversary"]
 
 # Safety and rollback
 safety:

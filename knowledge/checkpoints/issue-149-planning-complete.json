@@ -1,0 +1,73 @@
+{
+  "checkpoint_id": "issue-149-planning-complete",
+  "timestamp": "2025-08-24T18:57:30Z",
+  "issue_number": 149,
+  "issue_title": "HIGH PRIORITY FIX: Automated Error Issue Generation Broken",
+  "phase": "planning_complete",
+  "state_transition": {
+    "from": "state:planning",
+    "to": "state:implementing"
+  },
+  "analysis_summary": {
+    "root_cause": "Severity threshold too restrictive (CRITICAL only) while captured errors are HIGH/MEDIUM",
+    "evidence": "6 errors captured, 4 with Five Whys analysis, 0 issues created",
+    "impact": "HIGH severity errors not converted to actionable GitHub issues",
+    "urgency": "HIGH - prevents error automation pipeline"
+  },
+  "repair_plan": {
+    "phase_1": {
+      "objective": "Immediate severity threshold fix",
+      "changes": [
+        "Modify error_capture_trigger_system.py:517 to include HIGH severity",
+        "Add configuration support for severity thresholds",
+        "Update issue templates for HIGH vs CRITICAL severity"
+      ],
+      "validation": "Process 4 existing HIGH severity errors immediately"
+    },
+    "phase_2": {
+      "objective": "Enhanced pipeline with priority mapping",
+      "features": [
+        "Severity-to-priority mapping",
+        "Smart duplicate detection",
+        "Enhanced templates",
+        "Retroactive processing tool"
+      ]
+    },
+    "phase_3": {
+      "objective": "Comprehensive validation and integration",
+      "scope": [
+        "End-to-end testing",
+        "RIF workflow integration",
+        "Production monitoring",
+        "Configuration flexibility"
+      ]
+    }
+  },
+  "retroactive_processing": {
+    "target_errors": [
+      "err_20250823_20b66aa5",
+      "err_20250823_ed8e1099"
+    ],
+    "severity": "HIGH",
+    "analysis_available": true,
+    "expected_issues": 4
+  },
+  "success_criteria": {
+    "immediate": "4 HIGH severity errors → 4 GitHub issues created",
+    "validation": "Issues properly labeled and picked up by RIF workflow",
+    "monitoring": "100% issue creation rate for HIGH+ severity errors"
+  },
+  "next_steps": {
+    "agent": "RIF-Implementer",
+    "priority": "Phase 1 immediate fix (critical path)",
+    "files_to_modify": [
+      "claude/commands/error_capture_trigger_system.py",
+      "config/error-issue-generation.yaml"
+    ]
+  },
+  "risk_assessment": {
+    "implementation_risk": "LOW - Single line change with config",
+    "validation_risk": "LOW - Test with captured errors first",
+    "rollback_plan": "Simple revert to CRITICAL-only threshold"
+  }
+}

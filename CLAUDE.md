@@ -101,21 +101,106 @@ Documentation references to `Task.parallel()` are **pseudocode** meaning:
 
 It is NOT a real function - it represents the pattern of parallel Task execution.
 
-### Key Rules for Orchestration
+## 🧠 ORCHESTRATION INTELLIGENCE FRAMEWORK
 
-1. **NEVER do implementation work directly** - Always delegate to agents
-2. **Launch multiple Tasks in ONE response** for parallel execution  
-3. **Include full agent instructions** in the Task prompt
-4. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
-5. **Let agents handle GitHub interactions** (posting comments, changing labels)
-6. **Trust the agent specialization** - Don't micromanage their work
+**CRITICAL**: Before launching any agents, the orchestrator MUST perform intelligent dependency analysis.
 
-### Quick Reference: Agent Launching Template
+### Dependency Analysis Process (MANDATORY)
+
+**Step 1: Issue Dependency Mapping**
+```python
+# BEFORE launching agents, analyze:
+# 1. Sequential Dependencies: Research → Architecture → Implementation → Validation
+# 2. Foundational Dependencies: Core systems before dependent features  
+# 3. Blocking Dependencies: Critical infrastructure before all other work
+# 4. Integration Dependencies: APIs before integrations that use them
+```
+
+**Step 2: Critical Path Identification**
+- **Blocking Issues**: Must complete before ANY other work (e.g., agent context reading failures)
+- **Foundation Issues**: Core systems that other issues depend on
+- **Sequential Phases**: Research/Architecture must complete before Implementation
+- **Integration Issues**: Cannot start until prerequisite APIs/schemas exist
+
+**Step 3: Intelligent Launch Decision**
+```python
+# DECISION FRAMEWORK:
+if blocking_issues_exist:
+    launch_agents_for_blocking_issues_ONLY()
+elif foundation_incomplete and has_dependent_issues:
+    launch_agents_for_foundation_issues_ONLY()  
+elif research_phase_incomplete:
+    launch_agents_for_research_issues_ONLY()
+else:
+    launch_parallel_agents_for_ready_issues()
+```
+
+### Orchestration Decision Examples
+
+#### ❌ WRONG: Naive Parallel Launching
+```python
+# This ignores dependencies and wastes agent resources:
+Task("Implement feature X", ...)  # Depends on incomplete research
+Task("Validate feature Y", ...)   # Nothing to validate yet  
+Task("Integrate system Z", ...)   # APIs don't exist yet
+```
+
+#### ✅ CORRECT: Dependency-Aware Orchestration
+```python  
+# First: Handle blocking issues
+if critical_infrastructure_broken:
+    Task("Fix agent context reading", ...)
+    # STOP - no other work until this completes
+
+# Then: Foundation before dependent work
+elif core_apis_incomplete:
+    Task("Implement core API framework", ...)
+    Task("Create database schema", ...)
+    # STOP - dependent work waits
+
+# Then: Research before implementation  
+elif research_incomplete:
+    Task("Research live context architecture", ...)
+    Task("Research dependency tracking", ...)
+    # STOP - implementation waits
+
+# Finally: Parallel work on ready issues
+else:
+    Task("Implement validated feature A", ...)
+    Task("Implement validated feature B", ...)
+```
+
+### Key Rules for Intelligent Orchestration
+
+1. **ANALYZE DEPENDENCIES FIRST** - Never launch agents without dependency analysis
+2. **RESPECT SEQUENTIAL PHASES** - Research → Architecture → Implementation → Validation
+3. **PRIORITIZE BLOCKING ISSUES** - Critical infrastructure before all other work
+4. **ONE PHASE AT A TIME** - Don't start implementation until research/architecture complete
+5. **NEVER do implementation work directly** - Always delegate to agents
+6. **Launch multiple Tasks in ONE response** for parallel execution (when appropriate)
+7. **Include full agent instructions** in the Task prompt
+8. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
+9. **Let agents handle GitHub interactions** (posting comments, changing labels)
+10. **Trust the agent specialization** - Don't micromanage their work
+
+### Quick Reference: Intelligent Agent Launching Template
 
 ```python
 # Step 1: Check GitHub issues (Claude Code does this directly)
-# Step 2: Identify which agents need to run
-# Step 3: Launch agents in parallel using this pattern:
+# Step 2: MANDATORY DEPENDENCY ANALYSIS
+#   - Map sequential dependencies (Research → Architecture → Implementation → Validation)
+#   - Identify blocking issues (critical infrastructure, agent failures)
+#   - Identify foundation issues (core APIs, schemas, frameworks)
+#   - Determine if work phases are complete before launching dependent agents
+# Step 3: Launch agents using intelligent decision framework:
+
+# DECISION LOGIC:
+# if blocking_issues: launch_blocking_agents_ONLY()
+# elif foundation_incomplete: launch_foundation_agents_ONLY() 
+# elif research_incomplete: launch_research_agents_ONLY()
+# else: launch_parallel_agents_for_ready_issues()
+
+# Step 4: Launch selected agents using this pattern:
 
 Task(
     description="[AGENT_NAME]: [BRIEF_TASK_DESCRIPTION]",
@@ -130,18 +215,29 @@ Task(
 # Add more Tasks as needed - they all run in parallel
 ```
 
-### Common Orchestration Scenarios
+### Intelligent Orchestration Scenarios
 
-| Scenario | Claude Action | Agent Tasks |
-|----------|---------------|-------------|
-| New issue created | Check issue state | Launch RIF-Analyst |
-| Multiple issues in different states | Identify all states | Launch appropriate agent for each |
-| Complex issue needs planning | Assess complexity | Launch RIF-Analyst + RIF-Planner |
-| Implementation ready | Check state:implementing | Launch RIF-Implementer |
-| Code needs validation | Check state:validating | Launch RIF-Validator |
-| Learning phase | Check completed issues | Launch RIF-Learner |
+| Scenario | Dependency Analysis | Orchestration Decision | Agent Tasks |
+|----------|--------------------|-----------------------|-------------|
+| **Critical infrastructure broken** | Blocking issue affects all agents | Launch blocking agents ONLY | Fix context reading, repair core systems |
+| **Foundation APIs missing** | Implementation depends on APIs | Launch foundation agents ONLY | Core API framework, database schema |
+| **Research phase incomplete** | Implementation depends on research | Launch research agents ONLY | Architecture research, methodology analysis |
+| **Multiple ready issues** | No blocking dependencies | Launch parallel agents | Multiple implementers/validators in parallel |
+| **Mixed states with dependencies** | Some dependent, some ready | Prioritized sequential launch | Foundation first, then dependent work |
+| **New issue in dependent chain** | Check position in dependency chain | Wait or immediate based on prerequisites | RIF-Analyst only if no blocking dependencies |
 
-### Troubleshooting Orchestration
+### DPIBS Orchestration Example
+
+**Current State**: 25+ DPIBS issues in various states
+**Problem**: Implementation/validation issues launched before research/architecture complete
+
+**Correct Orchestration**:
+1. **Phase 1** (Research): Issues #133-136 - Launch research agents ONLY
+2. **Phase 2** (Architecture): Issues #117,#120-122 - Launch after research complete  
+3. **Phase 3** (Implementation): Issues #123,#127-128,#137-138 - Launch after architecture complete
+4. **Phase 4** (Validation): Issues #129-132 - Launch after implementation complete
+
+### Troubleshooting Intelligent Orchestration
 
 **Problem**: Claude is doing work directly instead of launching agents
 **Solution**: Always use Task() tool to delegate work to specialized agents
@@ -149,8 +245,23 @@ Task(
 **Problem**: Agents are not running in parallel  
 **Solution**: Launch all Tasks in a single Claude response, not separate responses
 
+**Problem**: Implementation agents launched for issues with incomplete prerequisites
+**Solution**: Perform mandatory dependency analysis - check research/architecture completion first
+
+**Problem**: Validation agents launched when nothing is ready to validate
+**Solution**: Apply sequential phase logic - implementation must complete before validation
+
+**Problem**: Multiple agents working on dependent issues causing conflicts
+**Solution**: Use foundation-first orchestration - core systems before dependent features
+
+**Problem**: Critical infrastructure issues ignored while other work proceeds  
+**Solution**: Identify blocking issues first - launch blocking agents ONLY until resolved
+
 **Problem**: Agent instructions are incomplete
 **Solution**: Always include "Follow all instructions in claude/agents/[agent-file].md" in prompts
+
+**Problem**: Orchestration decisions appear arbitrary or inefficient
+**Solution**: Document dependency analysis reasoning before launching agents
 
 ## Architecture Overview
 

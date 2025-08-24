@@ -1,0 +1,21 @@
+{
+  "enforcement_active": true,
+  "enforcement_mode": "strict",
+  "activation_trigger": "Issue #145 - Critical context compliance failures",
+  "enforcement_rules": {
+    "knowledge_consultation_mandatory": true,
+    "minimum_mcp_tools_required": 2,
+    "decision_blocking_enabled": true,
+    "evidence_documentation_required": true
+  },
+  "required_mcp_tools": [
+    "mcp__rif-knowledge__get_claude_documentation",
+    "mcp__rif-knowledge__query_knowledge",
+    "mcp__rif-knowledge__check_compatibility"
+  ],
+  "enforcement_thresholds": {
+    "minimum_tools_for_approval": 1,
+    "consultation_depth_required": 2,
+    "compliance_score_threshold": 80.0
+  }
+}
