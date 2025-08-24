@@ -1,0 +1,168 @@
+# Frontend Domain Agent Template - Issue #70
+# Specialized template for frontend development agents with React/Vue/Angular expertise
+
+domain_agent_template:
+  # Template metadata and identification
+  metadata:
+    name: "frontend-specialist"
+    version: "1.0.0"
+    domain: "frontend"
+    description: "Frontend development specialist with React/Vue expertise and UI/UX focus"
+    author: "RIF System"
+    created: "2025-08-23T00:00:00Z"
+    tags: ["frontend", "ui", "react", "vue", "javascript", "typescript"]
+    
+  # Core capabilities - what the frontend agent can do
+  capabilities:
+    primary:
+      - "ui_development"                       # Primary UI development capability
+      - "component_architecture"               # Component system design
+      - "responsive_design"                    # Mobile-first responsive design
+    secondary:
+      - "accessibility_testing"               # WCAG compliance and testing
+      - "performance_optimization"            # Frontend performance tuning
+      - "testing"                             # Unit and integration testing
+    cross_domain:
+      - "code_review"                          # Code quality review
+      - "documentation"                        # Technical documentation
+      
+  # Expertise areas - frontend-specific knowledge
+  expertise:
+    technologies:
+      primary: ["react", "typescript", "javascript", "html", "css"]
+      secondary: ["vue", "webpack", "vite", "jest", "cypress"]
+      emerging: ["solid", "qwik", "astro", "remix"]
+    patterns:
+      architectural: ["component_composition", "state_management", "micro_frontends"]
+      design: ["atomic_design", "design_systems", "responsive_patterns"]
+      testing: ["unit_testing", "integration_testing", "e2e_testing"]
+    domains:
+      core: ["frontend_development", "user_interface_design"]
+      adjacent: ["ux_design", "performance_engineering"]
+      supporting: ["build_systems", "deployment_pipelines"]
+      
+  # Tools and dependencies specific to frontend development
+  tools:
+    required:
+      development: ["node.js", "npm", "typescript", "eslint", "prettier"]
+      testing: ["jest", "testing-library", "cypress"]
+      build: ["webpack", "vite", "rollup"]
+    recommended:
+      quality: ["lighthouse", "axe", "sonarqube", "bundlesize"]
+      performance: ["web-vitals", "webpack-bundle-analyzer"]
+      deployment: ["docker", "netlify", "vercel"]
+    optional:
+      advanced: ["storybook", "chromatic", "percy", "playwright"]
+      
+  # Validation and quality rules for frontend code
+  validation_rules:
+    code_quality:
+      - "accessibility_wcag_2.1_aa"           # WCAG 2.1 AA compliance
+      - "performance_web_vitals"              # Core Web Vitals compliance
+      - "browser_compatibility_modern"        # Modern browser support
+      - "component_documentation"             # Component API documentation
+    testing:
+      - "unit_test_coverage_80"               # 80% unit test coverage
+      - "integration_test_coverage"           # Integration test coverage
+      - "e2e_test_critical_paths"             # End-to-end testing for critical paths
+      - "accessibility_test_coverage"        # Accessibility testing coverage
+    security:
+      - "xss_prevention"                      # Cross-site scripting prevention
+      - "dependency_vulnerability_scan"       # npm audit clean
+      - "csp_headers"                         # Content Security Policy
+    performance:
+      - "lighthouse_score_90"                 # Lighthouse score >= 90
+      - "bundle_size_optimization"            # Optimized bundle sizes
+      - "image_optimization"                  # Optimized images
+      
+  # Agent configuration and behavior
+  configuration:
+    priority_weight: 1.2                      # Higher priority for UI-critical tasks
+    parallel_execution: true                  # Can work with backend agents
+    timeout_overrides:
+      analysis: 240                           # 4 minutes for UI analysis
+      implementation: 2400                    # 40 minutes for complex UI work
+      testing: 900                            # 15 minutes for comprehensive testing
+      validation: 600                         # 10 minutes for accessibility validation
+    resource_limits:
+      memory_mb: 768                          # Higher memory for build processes
+      cpu_cores: 4                            # Multiple cores for parallel builds
+      disk_space_mb: 2048                     # Space for node_modules and builds
+      
+  # Integration points with RIF system
+  integration:
+    rif_workflow: true
+    knowledge_base: true
+    pattern_matching: true
+    learning_system: true
+    github_integration: true
+    design_system_integration: true          # Integration with design systems
+    
+  # Quality gates and success metrics
+  quality_gates:
+    functional:
+      - "all_components_accessible"           # All components meet accessibility standards
+      - "responsive_design_verified"          # Responsive design works on all breakpoints
+      - "browser_compatibility_tested"        # Cross-browser compatibility verified
+      - "performance_benchmarks_met"          # Performance benchmarks achieved
+    performance:
+      - "component_render_under_100ms"        # Component rendering performance
+      - "bundle_size_under_threshold"         # Bundle size within limits
+      - "lighthouse_scores_green"             # All Lighthouse scores in green
+    integration:
+      - "design_system_compliance"            # Follows design system guidelines
+      - "api_integration_seamless"            # Seamless API integration
+      - "state_management_optimized"          # Optimized state management
+      
+  # Template versioning and compatibility
+  compatibility:
+    min_rif_version: "1.0.0"
+    node_version: ">=18.0.0"                  # Modern Node.js
+    npm_version: ">=8.0.0"                    # Modern npm
+    dependencies:
+      - "react>=18.0.0"                      # React 18+
+      - "typescript>=4.5.0"                  # Modern TypeScript
+      - "@testing-library/react>=13.0.0"     # Modern testing library
+    breaking_changes: []
+    
+  # Frontend-specific documentation and examples
+  documentation:
+    usage_guide: "docs/frontend-agent-usage.md"
+    component_library: "docs/component-library.md"
+    accessibility_guide: "docs/accessibility-guidelines.md"
+    performance_guide: "docs/frontend-performance.md"
+    examples:
+      - "examples/react-component-development.md"
+      - "examples/accessibility-testing.md"
+      - "examples/performance-optimization.md"
+    best_practices: "docs/frontend-best-practices.md"
+
+# Frontend-specific template inheritance
+template_inheritance:
+  base_template: "domain-agent-template.yaml"
+  specialization: "frontend"
+  customization_points:
+    - "ui_frameworks"                         # React, Vue, Angular preferences
+    - "styling_approach"                      # CSS-in-JS, SCSS, Tailwind, etc.
+    - "testing_strategy"                      # Jest, Vitest, Cypress, Playwright
+    - "build_tooling"                         # Webpack, Vite, Rollup preferences
+    - "deployment_targets"                    # Netlify, Vercel, AWS S3, etc.
+  protected_sections:
+    - "accessibility_requirements"            # Accessibility cannot be compromised
+    - "performance_thresholds"                # Performance standards are fixed
+    - "browser_support"                       # Browser compatibility requirements
+
+# Frontend-specific schema validation metadata
+schema_validation:
+  version: "1.0.0"
+  specialization: "frontend"
+  validation_tools:
+    - "lighthouse"                           # Performance and accessibility validation
+    - "axe"                                  # Accessibility validation
+    - "bundlesize"                           # Bundle size validation
+    - "eslint"                               # Code quality validation
+  validation_rules:
+    - "react_hooks_rules"                    # React Hooks linting
+    - "typescript_strict_mode"               # Strict TypeScript checking
+    - "accessibility_jsx_rules"              # JSX accessibility rules
+    - "performance_budget_enforcement"       # Performance budget validation

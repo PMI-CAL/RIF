@@ -1,0 +1,71 @@
+{
+  "task_id": "owasp_compliance_test",
+  "status": "completed",
+  "start_time": "2025-08-23T13:16:20.759664",
+  "end_time": "2025-08-23T13:16:20.761344",
+  "duration_seconds": 0.00168,
+  "confidence_score": 0.9,
+  "result_data": {
+    "owasp_top_10": {
+      "overall_score": 0.7142857142857143,
+      "passed_checks": 5,
+      "failed_checks": 2,
+      "total_checks": 7,
+      "findings": [
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "owasp_violations.py",
+          "line": 21,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "owasp_violations.py",
+          "line": 22,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "owasp_violations.py",
+          "line": 22,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "owasp_violations.py",
+          "line": 13,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "MEDIUM",
+          "file": "logging_sensitive.py",
+          "line": 5,
+          "description": "Sensitive information may be logged or exposed."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "MEDIUM",
+          "file": "logging_sensitive.py",
+          "line": 7,
+          "description": "Sensitive information may be logged or exposed."
+        }
+      ],
+      "recommendations": [
+        "Address identified OWASP Top 10 vulnerabilities",
+        "Implement secure coding training for development team",
+        "Add security testing to CI/CD pipeline"
+      ]
+    }
+  },
+  "error_message": "",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "6bf30f29-918c-4572-835e-19b31c4d9941"
+  }
+}

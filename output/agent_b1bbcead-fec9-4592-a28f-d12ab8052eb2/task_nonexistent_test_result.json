@@ -1,0 +1,33 @@
+{
+  "task_id": "nonexistent_test",
+  "status": "completed",
+  "start_time": "2025-08-23T13:14:12.243602",
+  "end_time": "2025-08-23T13:14:12.243649",
+  "duration_seconds": 4.7e-05,
+  "confidence_score": 0.9,
+  "result_data": {
+    "scan_id": "scan_1755980052",
+    "vulnerabilities": [],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "files_scanned": 0,
+    "lines_scanned": 0,
+    "recommendations": [],
+    "scan_duration_seconds": 2.3e-05
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980052.json",
+    "vulnerability_summary_scan_1755980052.md",
+    "remediation_plan_scan_1755980052.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "b1bbcead-fec9-4592-a28f-d12ab8052eb2"
+  }
+}

@@ -1,0 +1,57 @@
+# LightRAG Visualization Tool Configuration
+
+# Application Settings
+app:
+  title: "LightRAG Knowledge Visualization"
+  page_title: "LightRAG Viz"
+  layout: "wide"
+  sidebar_state: "expanded"
+  
+# Database Configuration
+database:
+  chromadb_path: "../knowledge/chromadb"  # Relative to visualization directory
+  backup_path: "../collections"           # Fallback collections directory
+  
+# Visualization Settings
+visualization:
+  max_nodes: 1000          # Maximum nodes in network graphs
+  max_documents: 5000      # Maximum documents to process at once
+  default_k_neighbors: 5   # Default number of neighbors for similarity
+  
+  # Graph Layout Settings
+  graph:
+    physics_enabled: true
+    hierarchical: false
+    spring_length: 200
+    node_distance: 300
+    
+  # Vector Space Visualization
+  vector_space:
+    default_method: "umap"  # umap, tsne, pca
+    perplexity: 30          # For t-SNE
+    n_components: 2         # 2D or 3D
+    
+# Performance Settings  
+performance:
+  cache_timeout: 3600      # Cache timeout in seconds
+  pagination_size: 50      # Documents per page
+  search_limit: 100        # Maximum search results
+  
+# UI Settings
+ui:
+  show_sidebar: true
+  default_tab: "Overview"
+  theme: "auto"            # auto, light, dark
+  
+# Export Settings
+export:
+  formats: ["json", "csv", "xlsx"]
+  max_export_size: 10000   # Maximum documents per export
+  include_embeddings: false # Include vector embeddings in export
+  
+# Logging
+logging:
+  level: "INFO"
+  file: "visualization.log"
+  max_size: "10MB"
+  backup_count: 5

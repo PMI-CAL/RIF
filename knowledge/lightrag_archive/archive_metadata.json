@@ -1,0 +1,11 @@
+{
+  "archive_timestamp": "2025-08-22T23:27:44.684454",
+  "migration_version": "1.0",
+  "original_system": "LightRAG",
+  "archived_collections": [
+    "patterns",
+    "decisions",
+    "learnings"
+  ],
+  "archive_format": "json"
+}

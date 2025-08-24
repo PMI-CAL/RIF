@@ -1,0 +1,92 @@
+{
+  "task_id": "test_scan",
+  "status": "completed",
+  "start_time": "2025-08-23T13:14:12.106332",
+  "end_time": "2025-08-23T13:14:12.109178",
+  "duration_seconds": 0.002846,
+  "confidence_score": 0.8000000000000002,
+  "result_data": {
+    "scan_id": "scan_1755980052",
+    "vulnerabilities": [
+      {
+        "vuln_id": "secret_0ba417b6",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "secrets.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "crypto_4293fe73",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "crypto_vuln.py",
+        "line_number": 4,
+        "code_snippet": "return md5.md5(data).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "xss_909cfbb8",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "xss_vuln.js",
+        "line_number": 3,
+        "code_snippet": "document.getElementById('output').innerHTML = msg;",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 1,
+      "high": 2,
+      "critical": 0
+    },
+    "files_scanned": 5,
+    "lines_scanned": 20,
+    "recommendations": [
+      "Implement Content Security Policy (CSP)",
+      "Use secure DOM manipulation methods",
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Upgrade to strong cryptographic algorithms (SHA-256+, AES)",
+      "Implement proper key management",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.002811
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980052.json",
+    "vulnerability_summary_scan_1755980052.md",
+    "remediation_plan_scan_1755980052.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "4e1f5b1f-3f09-4e95-9e24-c5a2e0f43075"
+  }
+}

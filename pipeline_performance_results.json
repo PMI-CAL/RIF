@@ -1,0 +1,28 @@
+{
+  "entity_extraction": {
+    "error": "attempted relative import beyond top-level package",
+    "meets_target": false
+  },
+  "relationship_detection": {
+    "error": "attempted relative import beyond top-level package",
+    "meets_target": false
+  },
+  "embedding_generation": {
+    "error": "attempted relative import beyond top-level package",
+    "meets_target": false
+  },
+  "query_performance": {
+    "error": "attempted relative import beyond top-level package",
+    "meets_target": false
+  },
+  "resource_usage": {
+    "current_memory_mb": 34.09375,
+    "target_memory_mb": 2048,
+    "memory_within_budget": true,
+    "current_cpu_percent": 0.0,
+    "target_cpu_percent": 80,
+    "cpu_within_budget": true,
+    "available_memory_mb": 5774.71875,
+    "cpu_count": 8
+  }
+}

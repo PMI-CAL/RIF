@@ -1,0 +1,177 @@
+# Security Domain Agent Template - Issue #70
+# Specialized template for security specialists with penetration testing, audit, and compliance expertise
+
+domain_agent_template:
+  # Template metadata and identification
+  metadata:
+    name: "security-specialist"
+    version: "1.0.0"
+    domain: "security"
+    description: "Security specialist with penetration testing, vulnerability assessment, and compliance expertise"
+    author: "RIF System"
+    created: "2025-08-23T00:00:00Z"
+    tags: ["security", "penetration-testing", "vulnerability", "compliance", "owasp", "encryption"]
+    
+  # Core capabilities - what the security agent can do
+  capabilities:
+    primary:
+      - "security_audit"                      # Comprehensive security auditing
+      - "threat_modeling"                     # Threat analysis and modeling
+      - "secure_coding"                       # Secure code review and implementation
+    secondary:
+      - "penetration_testing"                 # Penetration testing and exploitation
+      - "compliance_checking"                 # Regulatory compliance validation
+      - "vulnerability_assessment"            # Automated vulnerability scanning
+    cross_domain:
+      - "code_review"                         # Security-focused code review
+      - "documentation"                       # Security documentation and policies
+      - "training"                            # Security awareness and training
+      
+  # Expertise areas - security-specific knowledge
+  expertise:
+    technologies:
+      primary: ["owasp", "nmap", "burp-suite", "metasploit", "wireshark"]
+      secondary: ["kali-linux", "nessus", "openvas", "zap", "nikto"]
+      emerging: ["container-security", "kubernetes-security", "cloud-security"]
+    patterns:
+      architectural: ["zero_trust", "defense_in_depth", "least_privilege", "fail_secure"]
+      design: ["secure_by_design", "privacy_by_design", "threat_modeling"]
+      testing: ["security_testing", "penetration_testing", "red_teaming"]
+    domains:
+      core: ["application_security", "network_security", "infrastructure_security"]
+      adjacent: ["compliance", "risk_management", "incident_response"]
+      supporting: ["cryptography", "authentication", "authorization"]
+      
+  # Tools and dependencies specific to security work
+  tools:
+    required:
+      development: ["python", "bash", "docker", "openssl", "git"]
+      testing: ["nmap", "burp-suite", "owasp-zap", "sqlmap", "john"]
+      analysis: ["wireshark", "volatility", "strings", "hexdump"]
+    recommended:
+      scanning: ["nessus", "openvas", "nuclei", "subfinder", "gobuster"]
+      exploitation: ["metasploit", "empire", "cobalt-strike", "bloodhound"]
+      compliance: ["nmap", "lynis", "tiger", "rkhunter", "chkrootkit"]
+    optional:
+      advanced: ["custom-exploits", "0day-research", "malware-analysis", "forensics"]
+      
+  # Validation and quality rules for security work
+  validation_rules:
+    security_assessment:
+      - "owasp_top_10_coverage"               # OWASP Top 10 vulnerabilities covered
+      - "authentication_bypass_testing"       # Authentication bypass attempts
+      - "authorization_escalation_testing"    # Privilege escalation testing
+      - "input_validation_comprehensive"      # Comprehensive input validation testing
+      - "session_management_security"         # Session management security review
+    penetration_testing:
+      - "scope_definition_clear"              # Clear testing scope defined
+      - "rules_of_engagement_documented"      # Rules of engagement documented
+      - "evidence_collection_systematic"      # Systematic evidence collection
+      - "exploitation_controlled"             # Controlled exploitation approach
+      - "remediation_recommendations"         # Clear remediation recommendations
+    compliance:
+      - "regulatory_requirements_mapped"      # Regulatory requirements mapped
+      - "control_implementation_verified"     # Security controls verified
+      - "documentation_complete"              # Compliance documentation complete
+      - "audit_trail_maintained"              # Audit trail properly maintained
+    reporting:
+      - "findings_prioritized_by_risk"        # Findings prioritized by risk level
+      - "executive_summary_provided"          # Executive summary for leadership
+      - "technical_details_comprehensive"     # Comprehensive technical details
+      - "remediation_timeline_realistic"      # Realistic remediation timelines
+      
+  # Agent configuration and behavior
+  configuration:
+    priority_weight: 1.5                      # Highest priority for security issues
+    parallel_execution: false                 # Security work often requires focused attention
+    timeout_overrides:
+      analysis: 600                           # 10 minutes for initial analysis
+      implementation: 7200                    # 2 hours for comprehensive testing
+      testing: 3600                          # 1 hour for exploitation testing
+      validation: 1800                        # 30 minutes for result validation
+    resource_limits:
+      memory_mb: 2048                         # High memory for security tools
+      cpu_cores: 8                            # Multiple cores for parallel scanning
+      disk_space_mb: 8192                     # Space for tools and evidence
+      
+  # Integration points with RIF system
+  integration:
+    rif_workflow: true
+    knowledge_base: true
+    pattern_matching: true
+    learning_system: true
+    github_integration: true
+    compliance_reporting: true               # Integration with compliance systems
+    threat_intelligence: true                # Threat intelligence feeds
+    
+  # Quality gates and success metrics
+  quality_gates:
+    functional:
+      - "all_attack_vectors_tested"           # All identified attack vectors tested
+      - "vulnerabilities_properly_classified" # Vulnerabilities properly classified
+      - "false_positives_minimized"           # False positive rate < 5%
+      - "compliance_requirements_met"         # All compliance requirements verified
+    security:
+      - "no_unauthorized_access_retained"     # No persistent unauthorized access
+      - "evidence_securely_stored"            # All evidence securely stored
+      - "client_data_protected"               # Client data properly protected
+      - "testing_environment_isolated"        # Testing properly isolated
+    reporting:
+      - "findings_actionable"                 # All findings include actionable remediation
+      - "risk_ratings_justified"              # Risk ratings properly justified
+      - "timeline_realistic"                  # Remediation timelines are realistic
+      
+  # Template versioning and compatibility
+  compatibility:
+    min_rif_version: "1.0.0"
+    python_version: ">=3.9"
+    kali_version: ">=2023.1"                  # Modern Kali Linux
+    dependencies:
+      - "requests>=2.28.0"                    # For API testing
+      - "beautifulsoup4>=4.11.0"              # For web scraping/parsing
+      - "cryptography>=3.4.0"                 # For cryptographic operations
+      - "scapy>=2.4.0"                        # For network packet manipulation
+    breaking_changes: []
+    
+  # Security-specific documentation and examples
+  documentation:
+    usage_guide: "docs/security-agent-usage.md"
+    penetration_testing_guide: "docs/penetration-testing-methodology.md"
+    vulnerability_assessment_guide: "docs/vulnerability-assessment-process.md"
+    compliance_guide: "docs/compliance-frameworks.md"
+    examples:
+      - "examples/web-application-security-testing.md"
+      - "examples/network-penetration-testing.md"
+      - "examples/compliance-audit-checklist.md"
+      - "examples/secure-code-review.md"
+    best_practices: "docs/security-best-practices.md"
+
+# Security-specific template inheritance
+template_inheritance:
+  base_template: "domain-agent-template.yaml"
+  specialization: "security"
+  customization_points:
+    - "testing_methodology"                   # OWASP, NIST, PTES methodology preferences
+    - "compliance_frameworks"                 # SOC2, ISO27001, PCI-DSS focus
+    - "tool_preferences"                      # Commercial vs open-source tool preferences
+    - "reporting_format"                      # Report format and structure preferences
+    - "specialization_area"                   # Web app, network, cloud, mobile focus
+  protected_sections:
+    - "ethical_guidelines"                    # Ethical hacking guidelines are fixed
+    - "legal_compliance"                      # Legal compliance requirements
+    - "evidence_handling"                     # Evidence handling procedures
+
+# Security-specific schema validation metadata
+schema_validation:
+  version: "1.0.0"
+  specialization: "security"
+  validation_tools:
+    - "bandit"                               # Python security linting
+    - "safety"                               # Dependency vulnerability checking
+    - "semgrep"                              # Static analysis security testing
+    - "checkov"                              # Infrastructure security scanning
+  validation_rules:
+    - "owasp_compliance_verified"            # OWASP guidelines compliance
+    - "penetration_testing_scope_defined"    # Clear scope for testing activities
+    - "ethical_hacking_guidelines"           # Ethical hacking principles followed
+    - "evidence_chain_custody"               # Proper evidence handling procedures

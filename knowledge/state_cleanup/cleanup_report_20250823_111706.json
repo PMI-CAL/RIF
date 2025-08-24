@@ -1,0 +1,486 @@
+{
+  "timestamp": "2025-08-23T11:16:56.192632",
+  "issues_processed": 2,
+  "issues_fixed": 0,
+  "issues_failed": 0,
+  "fixes_applied": [
+    {
+      "issue_number": 85,
+      "problem": "multiple_states",
+      "action": "Would remove 2 state labels and set to 'analyzing'",
+      "dry_run": true
+    },
+    {
+      "issue_number": 84,
+      "problem": "multiple_states",
+      "action": "Would remove 2 state labels and set to 'analyzing'",
+      "dry_run": true
+    }
+  ],
+  "errors": [],
+  "final_audit": {
+    "timestamp": "2025-08-23T11:17:06.942812",
+    "total_issues": 30,
+    "valid_issues": 28,
+    "invalid_issues": 2,
+    "issues_by_problem": {
+      "no_state": [],
+      "multiple_states": [
+        85,
+        84
+      ],
+      "unknown_state": []
+    },
+    "validation_details": [
+      {
+        "issue_number": 88,
+        "timestamp": "2025-08-23T11:17:06.942884",
+        "all_labels": [
+          "state:new",
+          "complexity:high"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 87,
+        "timestamp": "2025-08-23T11:17:06.942910",
+        "all_labels": [
+          "state:new",
+          "complexity:very-high"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 86,
+        "timestamp": "2025-08-23T11:17:06.942920",
+        "all_labels": [
+          "agent:rif-analyst",
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 85,
+        "timestamp": "2025-08-23T11:17:06.942932",
+        "all_labels": [
+          "complexity:very-high",
+          "state:planning",
+          "state:implementing"
+        ],
+        "state_labels": [
+          "state:planning",
+          "state:implementing"
+        ],
+        "state_count": 2,
+        "is_valid": false,
+        "issues": [
+          "Multiple state labels: ['state:planning', 'state:implementing']"
+        ]
+      },
+      {
+        "issue_number": 84,
+        "timestamp": "2025-08-23T11:17:06.942951",
+        "all_labels": [
+          "state:new",
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:new",
+          "state:implementing"
+        ],
+        "state_count": 2,
+        "is_valid": false,
+        "issues": [
+          "Multiple state labels: ['state:new', 'state:implementing']"
+        ]
+      },
+      {
+        "issue_number": 83,
+        "timestamp": "2025-08-23T11:17:06.942963",
+        "all_labels": [
+          "complexity:very-high",
+          "state:implementing"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 82,
+        "timestamp": "2025-08-23T11:17:06.942971",
+        "all_labels": [
+          "complexity:high",
+          "state:implementing"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 81,
+        "timestamp": "2025-08-23T11:17:06.942979",
+        "all_labels": [
+          "agent:rif-analyst",
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 80,
+        "timestamp": "2025-08-23T11:17:06.942987",
+        "all_labels": [
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 79,
+        "timestamp": "2025-08-23T11:17:06.942994",
+        "all_labels": [
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 75,
+        "timestamp": "2025-08-23T11:17:06.943002",
+        "all_labels": [
+          "complexity:high",
+          "state:implementing",
+          "agent:rif-implementer"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 70,
+        "timestamp": "2025-08-23T11:17:06.943011",
+        "all_labels": [
+          "agent:rif-analyst",
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 69,
+        "timestamp": "2025-08-23T11:17:06.943018",
+        "all_labels": [
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 66,
+        "timestamp": "2025-08-23T11:17:06.943025",
+        "all_labels": [
+          "complexity:high",
+          "state:implementing"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 65,
+        "timestamp": "2025-08-23T11:17:06.943033",
+        "all_labels": [
+          "complexity:high",
+          "state:implementing"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 62,
+        "timestamp": "2025-08-23T11:17:06.943040",
+        "all_labels": [
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 61,
+        "timestamp": "2025-08-23T11:17:06.943048",
+        "all_labels": [
+          "agent:rif-analyst",
+          "state:implementing",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 60,
+        "timestamp": "2025-08-23T11:17:06.943059",
+        "all_labels": [
+          "state:complete",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:complete"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 59,
+        "timestamp": "2025-08-23T11:17:06.943066",
+        "all_labels": [
+          "state:complete",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:complete"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 58,
+        "timestamp": "2025-08-23T11:17:06.943075",
+        "all_labels": [
+          "enhancement",
+          "complexity:high",
+          "state:complete"
+        ],
+        "state_labels": [
+          "state:complete"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 57,
+        "timestamp": "2025-08-23T11:17:06.943084",
+        "all_labels": [
+          "complexity:high",
+          "state:implementing",
+          "agent:rif-implementer",
+          "depends-on:52",
+          "depends-on:53",
+          "depends-on:54",
+          "depends-on:55",
+          "depends-on:56"
+        ],
+        "state_labels": [
+          "state:implementing"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 54,
+        "timestamp": "2025-08-23T11:17:06.943092",
+        "all_labels": [
+          "state:planning",
+          "complexity:high",
+          "agent:rif-analyst"
+        ],
+        "state_labels": [
+          "state:planning"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 53,
+        "timestamp": "2025-08-23T11:17:06.943100",
+        "all_labels": [
+          "state:planning",
+          "agent:rif-analyst",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:planning"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 52,
+        "timestamp": "2025-08-23T11:17:06.943106",
+        "all_labels": [
+          "state:planning",
+          "complexity:high",
+          "agent:rif-analyst"
+        ],
+        "state_labels": [
+          "state:planning"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 51,
+        "timestamp": "2025-08-23T11:17:06.943114",
+        "all_labels": [
+          "state:planning",
+          "complexity:high",
+          "agent:rif-analyst"
+        ],
+        "state_labels": [
+          "state:planning"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 50,
+        "timestamp": "2025-08-23T11:17:06.943123",
+        "all_labels": [
+          "state:new",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 49,
+        "timestamp": "2025-08-23T11:17:06.943133",
+        "all_labels": [
+          "state:new",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 48,
+        "timestamp": "2025-08-23T11:17:06.943141",
+        "all_labels": [
+          "state:new",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 47,
+        "timestamp": "2025-08-23T11:17:06.943148",
+        "all_labels": [
+          "state:new",
+          "complexity:medium"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      },
+      {
+        "issue_number": 46,
+        "timestamp": "2025-08-23T11:17:06.943155",
+        "all_labels": [
+          "state:new",
+          "complexity:low"
+        ],
+        "state_labels": [
+          "state:new"
+        ],
+        "state_count": 1,
+        "is_valid": true,
+        "issues": []
+      }
+    ]
+  },
+  "improvement": {
+    "before_invalid": 2,
+    "after_invalid": 2,
+    "issues_fixed": 0
+  }
+}

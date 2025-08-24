@@ -1,0 +1,333 @@
+{
+  "issue_id": 85,
+  "title": "Implement MCP context aggregator",
+  "planning_agent": "rif-planner",
+  "planning_timestamp": "2025-08-23T18:30:00Z",
+  "planning_status": "complete",
+  "complexity_assessment": "very-high",
+  "estimated_duration": "4-5 hours",
+
+  "strategic_analysis": {
+    "component_reuse_opportunity": {
+      "percentage": 85,
+      "key_components": [
+        "ContextOptimizer (knowledge/context/optimizer.py) - Multi-factor relevance scoring",
+        "DynamicMCPLoader (mcp/loader/dynamic_loader.py) - Parallel execution with semaphore",
+        "HealthMonitor (mcp/monitor/health_monitor.py) - Server health management",
+        "SecurityGateway (mcp/security/) - Authentication and validation"
+      ],
+      "strategic_advantage": "Building on battle-tested components reduces implementation risk and ensures proven performance patterns"
+    },
+    "dependency_resolution": {
+      "issue_84_status": "analyzing (non-blocking)",
+      "resolution_strategy": "Mock health interface with seamless upgrade path",
+      "implementation_approach": "Proceed with MockHealthMonitor, upgrade when #84 completes"
+    },
+    "architecture_pattern": "Agent-Aware Context Aggregation with Multi-Layer Integration"
+  },
+
+  "implementation_plan": {
+    "workflow_type": "Parallel with Sequential Phases",
+    "execution_model": "Component Integration with Incremental Validation",
+    
+    "phase_1": {
+      "name": "Core Aggregator Foundation",
+      "duration": "1.5-2 hours",
+      "approach": "Component Integration",
+      "deliverables": [
+        "MCPContextAggregator class with ContextOptimizer integration",
+        "Parallel query execution using DynamicMCPLoader patterns",
+        "Basic response merging with conflict detection",
+        "TTLCache implementation with intelligent key generation",
+        "Mock health monitor interface for immediate implementation"
+      ],
+      "key_integrations": [
+        "ContextOptimizer for response relevance scoring and merging",
+        "DynamicMCPLoader for server management and parallel execution",
+        "MockHealthMonitor for health status integration"
+      ],
+      "validation_criteria": [
+        "Parallel execution of 4 concurrent server queries",
+        "Response merging produces coherent results",
+        "Cache hit rate >70% in basic scenarios",
+        "Mock health integration functions correctly"
+      ],
+      "checkpoint": "core-aggregator-foundation-complete"
+    },
+
+    "phase_2": {
+      "name": "Advanced Aggregation Features",
+      "duration": "1.5-2 hours", 
+      "approach": "Feature Enhancement with Performance Optimization",
+      "deliverables": [
+        "QueryOptimizer with performance characteristic analysis",
+        "Advanced response merging using ContextOptimizer relevance algorithms",
+        "Cache coherency with intelligent invalidation strategies",
+        "Comprehensive error handling with graceful degradation",
+        "Performance metrics collection and optimization"
+      ],
+      "advanced_features": [
+        "Multi-dimensional query optimization based on server capabilities",
+        "Priority-based response merging with conflict resolution",
+        "Health-based cache invalidation coordination",
+        "Circuit breaker pattern for failed server handling",
+        "Performance characteristic learning and adaptation"
+      ],
+      "validation_criteria": [
+        "Query optimization reduces response time by 30%+",
+        "Response merging handles conflicting data sources",
+        "Cache hit rate >80% with intelligent invalidation",
+        "Graceful degradation maintains 90%+ functionality during server failures"
+      ],
+      "checkpoint": "advanced-aggregation-features-complete"
+    },
+
+    "phase_3": {
+      "name": "Production Integration & Validation",
+      "duration": "1-1.5 hours",
+      "approach": "System Integration with Comprehensive Testing",
+      "deliverables": [
+        "Real HealthMonitor integration (when #84 completes)",
+        "SecurityGateway integration for server authentication",
+        "Performance testing leveraging existing optimization metrics",
+        "Integration validation with MCP infrastructure",
+        "Comprehensive test suite and documentation"
+      ],
+      "integration_validations": [
+        "Seamless HealthMonitor upgrade from mock to real implementation",
+        "SecurityGateway authentication flow validation",
+        "End-to-end aggregation pipeline performance testing",
+        "Error propagation through security and health systems",
+        "Cache coherency during server state changes"
+      ],
+      "performance_targets": [
+        "Server queries: <200ms average response time",
+        "Full aggregation: <500ms end-to-end pipeline",
+        "Cache efficiency: >80% hit rate in production scenarios",
+        "Memory usage: <50MB for optimization structures",
+        "Concurrent handling: 4 parallel servers with resource management"
+      ],
+      "checkpoint": "production-integration-complete"
+    }
+  },
+
+  "technical_architecture": {
+    "core_class_design": {
+      "MCPContextAggregator": {
+        "purpose": "Main orchestration class integrating all components",
+        "key_dependencies": [
+          "ContextOptimizer for response merging and relevance scoring",
+          "DynamicMCPLoader for server discovery and management", 
+          "HealthMonitor (mock->real) for server status coordination",
+          "SecurityGateway for authentication and validation"
+        ],
+        "primary_methods": [
+          "async get_context(query, required_servers=None) -> AggregationResult",
+          "async query_servers_parallel(optimized_queries) -> List[ServerResponse]",
+          "merge_responses(server_responses) -> MergedResponse",
+          "generate_cache_key(query, servers) -> str",
+          "handle_server_failures(failed_servers) -> FallbackStrategy"
+        ]
+      },
+      "QueryOptimizer": {
+        "purpose": "Multi-dimensional query analysis and server-specific optimization",
+        "capabilities": [
+          "Query parsing and semantic analysis",
+          "Server capability matching",
+          "Performance characteristic analysis",
+          "Query routing optimization"
+        ],
+        "integration_pattern": "Leverages ContextOptimizer scoring algorithms"
+      },
+      "CacheManager": {
+        "purpose": "Multi-layer intelligent caching with health-based invalidation",
+        "cache_strategies": [
+          "TTLCache for time-based expiration (primary)",
+          "Health-based invalidation on server status changes",
+          "Query-similarity based cache key generation",
+          "LRU eviction for memory management"
+        ]
+      }
+    },
+
+    "parallel_execution_design": {
+      "execution_model": "asyncio.Semaphore with max 4 concurrent",
+      "resource_management": "Memory budget tracking and enforcement",
+      "error_handling": "Per-server exception isolation with graceful degradation",
+      "performance_optimization": "Response time tracking and adaptive routing"
+    },
+
+    "response_merging_strategy": {
+      "algorithm": "ContextOptimizer relevance-based priority merging",
+      "conflict_resolution": [
+        "Source priority weighting based on server reliability",
+        "Temporal preference for recent data",
+        "Semantic similarity consolidation",
+        "Confidence scoring for conflicting information"
+      ],
+      "quality_preservation": "Result diversity and context preservation"
+    }
+  },
+
+  "integration_strategy": {
+    "dependency_management": {
+      "issue_84_approach": "MockHealthMonitor with interface compatibility for seamless upgrade",
+      "existing_systems": [
+        "ContextOptimizer: Direct integration for response merging algorithms",
+        "DynamicMCPLoader: Reuse parallel execution and resource management patterns",
+        "SecurityGateway: Integration for server authentication and validation",
+        "ServerRegistry: Dynamic server discovery and capability lookup"
+      ]
+    },
+    "performance_integration": {
+      "metrics_reuse": "Leverage existing ContextOptimizer performance tracking",
+      "benchmark_baseline": "Use proven optimization metrics for validation",
+      "monitoring_integration": "HealthMonitor coordination for performance tracking"
+    }
+  },
+
+  "workflow_configuration": {
+    "state_transitions": {
+      "current": "analyzing",
+      "next": "implementing",
+      "transition_trigger": "Planning complete with detailed implementation roadmap"
+    },
+    "checkpoint_strategy": [
+      {
+        "name": "core-aggregator-foundation-complete",
+        "validation": "Basic parallel aggregation working with mock health interface",
+        "rollback_condition": "Core integration failures with existing components"
+      },
+      {
+        "name": "advanced-aggregation-features-complete", 
+        "validation": "Advanced features working with performance targets met",
+        "rollback_condition": "Performance degradation or feature integration failures"
+      },
+      {
+        "name": "production-integration-complete",
+        "validation": "Full system integration with real health monitor",
+        "rollback_condition": "Integration failures with production systems"
+      }
+    ],
+    "parallel_execution_opportunities": [
+      "Component integration testing during Phase 1",
+      "Feature development and testing during Phase 2",
+      "Performance validation and integration testing during Phase 3"
+    ]
+  },
+
+  "risk_mitigation": {
+    "high_priority_risks": [
+      {
+        "risk": "Performance degradation from complex merging logic",
+        "mitigation": "Leverage proven ContextOptimizer algorithms with performance baseline validation",
+        "monitoring": "Response time tracking with automatic fallback to simpler merging"
+      },
+      {
+        "risk": "Cache coherency issues with multi-server responses",
+        "mitigation": "Health-based cache invalidation with versioning strategy",
+        "monitoring": "Cache hit rate tracking with coherency validation"
+      },
+      {
+        "risk": "Dependency blocking on Issue #84 health monitor",
+        "mitigation": "MockHealthMonitor implementation with compatible interface",
+        "monitoring": "Seamless upgrade path when real health monitor available"
+      }
+    ],
+    "technical_complexity_risks": [
+      {
+        "risk": "Integration complexity across multiple existing systems",
+        "mitigation": "Incremental integration approach with comprehensive testing at each phase",
+        "validation": "Component-level testing before system integration"
+      },
+      {
+        "risk": "Resource management conflicts with concurrent server queries",
+        "mitigation": "Reuse DynamicMCPLoader resource management patterns",
+        "validation": "Resource tracking and budget enforcement testing"
+      }
+    ]
+  },
+
+  "success_metrics": {
+    "functional_requirements": [
+      "Parallel query execution across 4 concurrent MCP servers",
+      "Intelligent response merging with conflict resolution handling",
+      "TTL-based caching with >80% hit rate achieved",
+      "Query optimization delivering >30% response time improvement",
+      "Graceful degradation maintaining >90% functionality during server failures"
+    ],
+    "performance_targets": [
+      "Individual server queries: <200ms average response time",
+      "Complete aggregation pipeline: <500ms end-to-end processing",
+      "Cache performance: >80% hit rate in production usage patterns",
+      "Memory efficiency: <50MB overhead for optimization data structures",
+      "Resource utilization: Effective management of 4 concurrent server connections"
+    ],
+    "integration_validation": [
+      "Seamless integration with existing ContextOptimizer system",
+      "Proper error propagation through MCP SecurityGateway", 
+      "Effective coordination with HealthMonitor for server failure handling",
+      "Successful MockHealthMonitor to real HealthMonitor upgrade path"
+    ]
+  },
+
+  "implementation_confidence": {
+    "level": "very-high",
+    "justification": [
+      "85% component reuse from proven, production-ready systems",
+      "Clear integration patterns validated in existing codebase",
+      "Non-blocking dependency strategy eliminates critical path risks",
+      "Performance targets backed by existing system benchmarks and metrics"
+    ],
+    "success_factors": [
+      "Building on battle-tested ContextOptimizer and DynamicMCPLoader infrastructure",
+      "Proven parallel execution patterns with resource management",
+      "Established performance baselines and optimization techniques",
+      "Mock-to-real integration pattern reduces dependency risks"
+    ]
+  },
+
+  "next_actions": {
+    "immediate": {
+      "agent": "rif-implementer",
+      "state_transition": "analyzing -> implementing",
+      "priority_tasks": [
+        "Implement MCPContextAggregator class with ContextOptimizer integration",
+        "Set up parallel query execution using DynamicMCPLoader patterns",
+        "Create MockHealthMonitor interface for immediate implementation",
+        "Implement basic TTL caching with intelligent key generation"
+      ]
+    },
+    "handoff_context": {
+      "key_insights": [
+        "Leverage existing ContextOptimizer for response merging - don't reinvent algorithms",
+        "Use DynamicMCPLoader parallel execution patterns for server query coordination",
+        "Implement MockHealthMonitor with interface compatibility for seamless upgrade",
+        "Focus on integration over implementation - most components already exist"
+      ],
+      "implementation_priorities": [
+        "Component integration over custom development",
+        "Performance validation using existing baselines",
+        "Interface compatibility for future health monitor integration",
+        "Incremental validation at each integration checkpoint"
+      ]
+    }
+  },
+
+  "knowledge_patterns_applied": [
+    "Component Reuse Architecture Pattern (85% reuse achieved)",
+    "Agent-Aware Context Optimization Integration Pattern",
+    "Mock-to-Real Integration Pattern for dependency management",
+    "Parallel System Execution Pattern with resource management",
+    "Multi-Layer Caching Pattern with intelligent invalidation"
+  ],
+
+  "planning_metadata": {
+    "planning_duration_minutes": 45,
+    "components_analyzed": 12,
+    "integration_points_mapped": 8,
+    "risk_factors_assessed": 6,
+    "performance_targets_defined": 12,
+    "architectural_patterns_applied": 5
+  }
+}

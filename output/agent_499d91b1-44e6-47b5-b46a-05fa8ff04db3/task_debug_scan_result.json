@@ -1,0 +1,88 @@
+{
+  "task_id": "debug_scan",
+  "status": "completed",
+  "start_time": "2025-08-23T13:18:39.795616",
+  "end_time": "2025-08-23T13:18:39.797359",
+  "duration_seconds": 0.001743,
+  "confidence_score": 0.9,
+  "result_data": {
+    "scan_id": "scan_1755980319",
+    "vulnerabilities": [
+      {
+        "vuln_id": "secret_fbcd3319",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "test_secrets.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_d6b846bc",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "test_secrets.py",
+        "line_number": 3,
+        "code_snippet": "SECRET_KEY = \"super-secret-key-1234567890\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_24cce8f8",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "test_secrets.py",
+        "line_number": 4,
+        "code_snippet": "AWS_ACCESS_KEY = \"AKIAIOSFODNN7EXAMPLE\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 0,
+      "high": 3,
+      "critical": 0
+    },
+    "files_scanned": 1,
+    "lines_scanned": 4,
+    "recommendations": [
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.001686
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980319.json",
+    "vulnerability_summary_scan_1755980319.md",
+    "remediation_plan_scan_1755980319.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "499d91b1-44e6-47b5-b46a-05fa8ff04db3"
+  }
+}

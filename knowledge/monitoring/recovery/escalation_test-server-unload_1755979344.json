@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-08-23T20:02:24.670870",
+  "server_id": "test-server-unload",
+  "server_name": "Test Server Unload",
+  "current_status": "unhealthy",
+  "consecutive_failures": 1,
+  "recovery_attempts": 1,
+  "last_error": "Multiple recovery strategies failed"
+}

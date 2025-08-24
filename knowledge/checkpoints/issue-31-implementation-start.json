@@ -1,0 +1,116 @@
+{
+  "checkpoint_id": "issue-31-implementation-start",
+  "timestamp": "2025-08-23T08:45:00Z",
+  "agent": "rif-implementer",
+  "scope": "Issue #31: Detect and store code relationships - Implementation Start",
+  "issue_number": 31,
+  "status": "in_progress",
+  
+  "implementation_plan": {
+    "description": "Build AST-based code relationship detection system with cross-file reference resolution",
+    "components_to_implement": [
+      "Relationship data types and enums (imports, calls, extends, uses, implements, references, contains)",
+      "Import/Export relationship analyzer",
+      "Function call relationship analyzer", 
+      "Inheritance/extends relationship analyzer",
+      "Main RelationshipDetector coordinator",
+      "Cross-file reference resolution system",
+      "DuckDB storage integration for relationships",
+      "Comprehensive test suite",
+      "Command-line interface"
+    ],
+    "complexity": "high",
+    "estimated_duration": "14 hours as per master plan"
+  },
+  
+  "technical_approach": {
+    "architecture": "modular_analyzer_based",
+    "design_pattern": "plugin_architecture",
+    "core_principles": [
+      "Leverage existing entity data from Issue #30",
+      "Build on tree-sitter AST parsing infrastructure", 
+      "Use confidence scoring for relationship accuracy",
+      "Support incremental relationship updates",
+      "Enable cross-file reference resolution"
+    ],
+    "performance_targets": {
+      "analysis_speed": ">500 relationships/minute",
+      "memory_usage": "<300MB as allocated by master plan",
+      "cpu_cores": "1-2 cores as allocated by master plan",
+      "accuracy": ">85% relationship detection accuracy"
+    }
+  },
+  
+  "dependencies": {
+    "issue_30": "✅ COMPLETE - Entity extraction provides foundation",
+    "entity_registry": "Available for read-only access",
+    "duckdb_schema": "Relationships table already defined", 
+    "tree_queries": "Will extend existing query infrastructure",
+    "parser_manager": "Will leverage existing AST parsing"
+  },
+  
+  "coordination_points": {
+    "issue_32": "Runs in parallel - shared entity registry access",
+    "memory_allocation": "300MB limit enforced", 
+    "cpu_allocation": "2 cores maximum",
+    "database_writes": "Secondary writes to relationships table",
+    "file_system_access": "AST cache read-heavy access"
+  },
+  
+  "resource_allocation": {
+    "memory_budget": "300MB for relationship detection",
+    "cpu_budget": "1-2 cores concurrent with Issue #32",
+    "disk_io": "Read-heavy AST cache access, batch relationship writes",
+    "database_connections": "Secondary write access to relationships table"
+  },
+  
+  "implementation_phases": [
+    {
+      "phase": 1,
+      "focus": "Foundation and data types",
+      "duration": "2 hours",
+      "deliverables": ["RelationshipType enum", "CodeRelationship data class", "base analyzer architecture"]
+    },
+    {
+      "phase": 2, 
+      "focus": "Import/Export analysis",
+      "duration": "4 hours",
+      "deliverables": ["Import statement detection", "Export statement detection", "module dependency mapping"]
+    },
+    {
+      "phase": 3,
+      "focus": "Function call analysis", 
+      "duration": "4 hours",
+      "deliverables": ["Function call detection", "Method invocation tracking", "cross-file call resolution"]
+    },
+    {
+      "phase": 4,
+      "focus": "Inheritance analysis",
+      "duration": "4 hours", 
+      "deliverables": ["Class inheritance detection", "Interface implementation tracking", "type hierarchy mapping"]
+    }
+  ],
+  
+  "quality_gates": {
+    "unit_test_coverage": ">90%",
+    "integration_tests": "Full pipeline from AST to relationship storage",
+    "performance_tests": "Meet speed and memory targets",
+    "accuracy_validation": ">85% relationship detection accuracy on test cases"
+  },
+  
+  "next_steps": [
+    "Implement relationship data types and base architecture",
+    "Build import/export analyzer as first relationship type",
+    "Create storage integration layer",
+    "Implement remaining relationship analyzers",
+    "Add comprehensive testing and validation"
+  ],
+  
+  "success_criteria": [
+    "All relationship types (imports, calls, extends, etc.) detected accurately",
+    "Cross-file references resolved correctly", 
+    "Performance targets met within resource allocation",
+    "Full integration with existing entity extraction system",
+    "Comprehensive test coverage validates all functionality"
+  ]
+}

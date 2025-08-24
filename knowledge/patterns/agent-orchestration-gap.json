@@ -1,0 +1,28 @@
+{
+  "pattern_id": "agent-orchestration-gap",
+  "timestamp": "2025-08-18T20:43:33Z",
+  "issue": 2,
+  "pattern_type": "system_architecture_gap",
+  "description": "Claude Code hook system contains agent definitions but lacks execution mechanism for automatic agent spawning",
+  "problem": "Settings.json defines agents and triggers but hooks are designed for lifecycle events, not external condition-based agent spawning",
+  "solution": "Implement standalone orchestrator service that monitors GitHub events and spawns Claude Code subagents with context",
+  "implementation": {
+    "core_components": [
+      "GitHub event monitor",
+      "State machine engine", 
+      "Agent spawning service",
+      "Context management system"
+    ],
+    "integration_points": [
+      "GitHub API for label monitoring",
+      "Claude Code subagent spawning",
+      "Knowledge base pattern matching",
+      "Checkpoint system for recovery"
+    ]
+  },
+  "learned": "Framework configuration without execution layer creates appearance of functionality without actual automation",
+  "reusable": true,
+  "complexity": "high",
+  "effort_estimate": "20-30 hours",
+  "similar_patterns": []
+}

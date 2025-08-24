@@ -1,0 +1,174 @@
+# Backend Domain Agent Template - Issue #70
+# Specialized template for backend development agents with API/database/microservices expertise
+
+domain_agent_template:
+  # Template metadata and identification
+  metadata:
+    name: "backend-specialist"
+    version: "1.0.0"
+    domain: "backend"
+    description: "Backend development specialist with API design, database optimization, and microservices expertise"
+    author: "RIF System"
+    created: "2025-08-23T00:00:00Z"
+    tags: ["backend", "api", "database", "microservices", "python", "node.js"]
+    
+  # Core capabilities - what the backend agent can do
+  capabilities:
+    primary:
+      - "api_development"                      # REST/GraphQL API development
+      - "database_design"                      # Database schema and optimization
+      - "data_processing"                      # Data transformation and validation
+    secondary:
+      - "microservices"                       # Microservice architecture design
+      - "caching"                             # Caching strategies and implementation
+      - "performance_optimization"            # Backend performance tuning
+    cross_domain:
+      - "testing"                             # API and integration testing
+      - "security_audit"                      # Basic security assessment
+      - "documentation"                       # API and technical documentation
+      
+  # Expertise areas - backend-specific knowledge
+  expertise:
+    technologies:
+      primary: ["python", "postgresql", "redis", "docker", "kubernetes"]
+      secondary: ["node.js", "mongodb", "elasticsearch", "rabbitmq", "nginx"]
+      emerging: ["rust", "go", "graphql", "grpc", "kafka"]
+    patterns:
+      architectural: ["microservices", "event_driven", "cqrs", "clean_architecture"]
+      design: ["repository_pattern", "factory_pattern", "observer_pattern"]
+      testing: ["unit_testing", "integration_testing", "api_testing", "contract_testing"]
+    domains:
+      core: ["backend_development", "api_design", "database_architecture"]
+      adjacent: ["devops", "data_engineering", "system_architecture"]
+      supporting: ["monitoring", "logging", "deployment_automation"]
+      
+  # Tools and dependencies specific to backend development
+  tools:
+    required:
+      development: ["python", "pip", "docker", "postgresql", "redis"]
+      testing: ["pytest", "postman", "newman", "sqlalchemy"]
+      build: ["docker", "docker-compose", "make"]
+    recommended:
+      quality: ["pylint", "black", "bandit", "sonarqube"]
+      performance: ["locust", "apache-bench", "new-relic", "datadog"]
+      deployment: ["kubernetes", "helm", "terraform", "ansible"]
+    optional:
+      advanced: ["istio", "prometheus", "grafana", "jaeger", "vault"]
+      
+  # Validation and quality rules for backend code
+  validation_rules:
+    code_quality:
+      - "api_documentation_complete"          # Complete API documentation
+      - "error_handling_comprehensive"        # Comprehensive error handling
+      - "logging_standards_compliant"         # Structured logging standards
+      - "database_migrations_versioned"       # Versioned database migrations
+    testing:
+      - "unit_test_coverage_85"               # 85% unit test coverage
+      - "integration_test_coverage"           # Integration test coverage
+      - "api_contract_testing"                # API contract testing
+      - "database_test_coverage"              # Database operation testing
+    security:
+      - "authentication_implemented"          # Authentication mechanisms
+      - "authorization_enforced"              # Authorization controls
+      - "input_validation_comprehensive"      # Input validation and sanitization
+      - "sql_injection_prevention"            # SQL injection prevention
+      - "dependency_vulnerability_scan"       # Dependency security scanning
+    performance:
+      - "response_time_under_200ms"           # API response time targets
+      - "database_query_optimization"         # Optimized database queries
+      - "caching_strategy_implemented"        # Caching strategies in place
+      - "connection_pooling_configured"       # Database connection pooling
+      
+  # Agent configuration and behavior
+  configuration:
+    priority_weight: 1.3                      # Higher priority for critical backend tasks
+    parallel_execution: true                  # Can work with frontend/security agents
+    timeout_overrides:
+      analysis: 300                           # 5 minutes for system analysis
+      implementation: 3600                    # 60 minutes for complex backend work
+      testing: 1200                          # 20 minutes for comprehensive API testing
+      validation: 900                         # 15 minutes for security validation
+    resource_limits:
+      memory_mb: 1024                         # Higher memory for data processing
+      cpu_cores: 6                            # Multiple cores for parallel processing
+      disk_space_mb: 4096                     # Space for databases and logs
+      
+  # Integration points with RIF system
+  integration:
+    rif_workflow: true
+    knowledge_base: true
+    pattern_matching: true
+    learning_system: true
+    github_integration: true
+    monitoring_integration: true             # Integration with monitoring systems
+    
+  # Quality gates and success metrics
+  quality_gates:
+    functional:
+      - "all_apis_documented"                 # All APIs have complete documentation
+      - "database_schema_validated"           # Database schema meets standards
+      - "error_handling_comprehensive"        # All error scenarios handled
+      - "authentication_secure"               # Secure authentication implemented
+    performance:
+      - "api_response_times_met"              # API response time targets met
+      - "database_queries_optimized"          # All queries perform within limits
+      - "concurrent_load_handling"            # System handles expected load
+    integration:
+      - "frontend_api_compatibility"          # APIs compatible with frontend
+      - "third_party_integrations_tested"     # External integrations validated
+      - "monitoring_alerts_configured"        # Monitoring and alerting in place
+      
+  # Template versioning and compatibility
+  compatibility:
+    min_rif_version: "1.0.0"
+    python_version: ">=3.9"                  # Modern Python
+    docker_version: ">=20.0.0"               # Modern Docker
+    dependencies:
+      - "fastapi>=0.100.0"                   # Modern FastAPI
+      - "sqlalchemy>=2.0.0"                  # SQLAlchemy 2.0+
+      - "pydantic>=2.0.0"                    # Pydantic v2
+      - "pytest>=7.0.0"                      # Modern pytest
+    breaking_changes: []
+    
+  # Backend-specific documentation and examples
+  documentation:
+    usage_guide: "docs/backend-agent-usage.md"
+    api_design_guide: "docs/api-design-principles.md"
+    database_guide: "docs/database-best-practices.md"
+    deployment_guide: "docs/backend-deployment.md"
+    examples:
+      - "examples/rest-api-development.md"
+      - "examples/database-optimization.md"
+      - "examples/microservices-architecture.md"
+      - "examples/caching-strategies.md"
+    best_practices: "docs/backend-best-practices.md"
+
+# Backend-specific template inheritance
+template_inheritance:
+  base_template: "domain-agent-template.yaml"
+  specialization: "backend"
+  customization_points:
+    - "programming_language"                  # Python, Node.js, Go, Java preferences
+    - "database_technology"                   # PostgreSQL, MongoDB, MySQL preferences
+    - "api_framework"                         # FastAPI, Express, Django, Spring
+    - "deployment_platform"                   # AWS, GCP, Azure, Kubernetes
+    - "monitoring_stack"                      # Prometheus, DataDog, New Relic
+  protected_sections:
+    - "security_requirements"                 # Security standards are non-negotiable
+    - "performance_thresholds"                # Performance requirements are fixed
+    - "data_protection_rules"                 # Data protection cannot be compromised
+
+# Backend-specific schema validation metadata
+schema_validation:
+  version: "1.0.0"
+  specialization: "backend"
+  validation_tools:
+    - "bandit"                               # Security vulnerability scanning
+    - "pylint"                               # Code quality analysis
+    - "postman"                              # API testing and validation
+    - "sqlfluff"                             # SQL code quality
+  validation_rules:
+    - "api_versioning_strategy"              # Proper API versioning
+    - "database_migration_safety"            # Safe database migrations
+    - "authentication_security"              # Secure authentication implementation
+    - "data_validation_comprehensive"        # Comprehensive input validation

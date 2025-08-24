@@ -1,0 +1,46 @@
+{
+  "issue_id": "65",
+  "analysis_date": "2025-08-23T15:59:14Z",
+  "agent": "rif-analyst",
+  "pattern_type": "incremental-entity-extraction-analysis",
+  "complexity": "high",
+  "decomposition_recommended": true,
+  "key_findings": {
+    "existing_infrastructure": [
+      "File change detection (Issue #29 - 138k+ events/sec performance)",
+      "AST caching with hash-based change detection",
+      "Entity storage with incremental updates (upsert operations)",
+      "Tree-sitter parsing integration"
+    ],
+    "reusable_patterns": [
+      "Hash-based change detection from AST cache",
+      "Priority queue processing from file monitor",
+      "Debounced batch processing",
+      "Incremental update strategies"
+    ],
+    "critical_dependencies": [
+      "Issue #64 FileChangeDetector (blocking)"
+    ],
+    "performance_requirements": [
+      "<100ms per file processing",
+      "Memory-bounded batch operations",
+      "Cache efficiency optimization"
+    ]
+  },
+  "decomposition_strategy": {
+    "sub_issues": 3,
+    "estimated_loc_per_component": [200, 150, 200],
+    "validation_approach": "independent_unit_tests_with_integration",
+    "parallel_tracks": "main_development_with_shadow_monitoring"
+  },
+  "evidence_requirements": {
+    "functional": ["unit_tests", "integration_tests", "diff_scenario_coverage"],
+    "performance": ["baseline_metrics", "100ms_constraint_validation", "memory_profiling"],
+    "quality": ["90_percent_coverage", "type_checking", "linting"]
+  },
+  "risk_factors": [
+    "performance_critical_constraint",
+    "integration_complexity_with_existing_systems",
+    "diff_algorithm_accuracy_requirements"
+  ]
+}

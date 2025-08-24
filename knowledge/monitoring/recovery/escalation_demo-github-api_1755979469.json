@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-08-23T20:04:29.128158",
+  "server_id": "demo-github-api",
+  "server_name": "Demo GitHub API Server",
+  "current_status": "unhealthy",
+  "consecutive_failures": 1,
+  "recovery_attempts": 1,
+  "last_error": "Multiple recovery strategies failed"
+}

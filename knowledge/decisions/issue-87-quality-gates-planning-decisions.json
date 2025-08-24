@@ -1,0 +1,537 @@
+{
+  "issue_number": 87,
+  "title": "Issues are being passed/completed with <95% passing values",
+  "planning_timestamp": "2025-08-23T18:30:00Z",
+  "planner_agent": "RIF-Planner",
+  "complexity_level": "very-high",
+  
+  "strategic_planning_decisions": {
+    "implementation_approach": {
+      "strategy": "recursive_phased_implementation",
+      "rationale": "Very high complexity (2000-3000 LOC, 25-30 files) requires systematic decomposition",
+      "phases": 5,
+      "parallel_execution": true,
+      "total_estimated_duration": "20-25 days",
+      "github_issues_to_create": 5
+    },
+    
+    "workflow_design": {
+      "type": "recursive",
+      "max_depth": 10,
+      "decomposition": true,
+      "sub_issues": true,
+      "agents_required": [
+        "rif-analyst",
+        "rif-planner", 
+        "rif-architect",
+        "rif-implementer",
+        "rif-validator",
+        "rif-learner"
+      ]
+    },
+    
+    "risk_mitigation_approach": {
+      "backward_compatibility": "Maintain existing 80% threshold as fallback during transition",
+      "gradual_rollout": "Implement new thresholds incrementally with monitoring",
+      "rollback_strategy": "Complete checkpoint system with automated recovery",
+      "monitoring_intensive": "Comprehensive effectiveness tracking during deployment"
+    }
+  },
+
+  "implementation_phases": {
+    "phase_1_foundation": {
+      "title": "Context-Aware Quality Thresholds Foundation",
+      "duration": "5-7 days",
+      "complexity": "high",
+      "priority": "critical",
+      "agents": ["rif-architect", "rif-implementer", "rif-validator"],
+      "deliverables": [
+        "Component classification system implementation",
+        "Updated workflow configuration with context-aware thresholds",
+        "Backward compatibility layer for existing quality gates",
+        "Initial testing and validation framework"
+      ],
+      "dependencies": [],
+      "risk_level": "medium",
+      "checkpoint_requirements": 3
+    },
+    
+    "phase_2_risk_framework": {
+      "title": "Risk-Based Manual Intervention Framework",
+      "duration": "7-10 days", 
+      "complexity": "very-high",
+      "priority": "critical",
+      "agents": ["rif-architect", "rif-implementer", "rif-validator"],
+      "deliverables": [
+        "Risk scoring algorithm implementation",
+        "Automated escalation system with specialist assignment",
+        "GitHub integration for manual intervention workflow",
+        "SLA enforcement and tracking system",
+        "Decision audit trail and pattern learning"
+      ],
+      "dependencies": ["phase_1_foundation"],
+      "risk_level": "high",
+      "checkpoint_requirements": 4,
+      "parallel_execution": "partial - with phase_1 testing"
+    },
+    
+    "phase_3_scoring_enhancement": {
+      "title": "Multi-Dimensional Quality Scoring System", 
+      "duration": "4-6 days",
+      "complexity": "medium-high",
+      "priority": "high",
+      "agents": ["rif-implementer", "rif-validator"],
+      "deliverables": [
+        "Enhanced quality scoring formula implementation",
+        "Risk weighting and context adjustment algorithms",
+        "Integration with existing quality gate system",
+        "Performance optimization for real-time scoring"
+      ],
+      "dependencies": ["phase_1_foundation", "phase_2_risk_framework"],
+      "risk_level": "medium",
+      "checkpoint_requirements": 2,
+      "parallel_execution": "full - with monitoring implementation"
+    },
+    
+    "phase_4_monitoring": {
+      "title": "Quality Gate Effectiveness Monitoring",
+      "duration": "3-5 days",
+      "complexity": "medium", 
+      "priority": "medium",
+      "agents": ["rif-implementer", "rif-validator"],
+      "deliverables": [
+        "Quality gate performance analytics system",
+        "Historical effectiveness tracking and reporting",
+        "Correlation analysis between gates and production defects",
+        "Dashboard and alerting system for quality metrics"
+      ],
+      "dependencies": ["phase_3_scoring_enhancement"],
+      "risk_level": "low",
+      "checkpoint_requirements": 2,
+      "parallel_execution": "full - independent of other phases"
+    },
+    
+    "phase_5_adaptive_learning": {
+      "title": "Adaptive Threshold Learning System",
+      "duration": "10-12 days",
+      "complexity": "very-high",
+      "priority": "low",
+      "agents": ["rif-architect", "rif-implementer", "rif-validator", "rif-learner"],
+      "deliverables": [
+        "Machine learning threshold optimization engine",
+        "Historical data analysis and pattern recognition",
+        "Automatic threshold adjustment recommendations",
+        "Continuous improvement feedback loops",
+        "A/B testing framework for threshold experiments"
+      ],
+      "dependencies": ["phase_4_monitoring"],
+      "risk_level": "medium",
+      "checkpoint_requirements": 5,
+      "parallel_execution": "none - requires full system stability"
+    }
+  },
+
+  "workflow_configuration": {
+    "state_machine_updates": {
+      "new_states": [
+        "quality_architecting",
+        "risk_framework_implementing", 
+        "scoring_enhancing",
+        "monitoring_implementing",
+        "adaptive_learning",
+        "threshold_testing",
+        "rollback_validating"
+      ],
+      "transition_modifications": {
+        "validating_to_implementing": {
+          "condition": "quality_score < context_threshold AND risk_level = acceptable",
+          "new_logic": "Use context-aware thresholds instead of fixed 80%"
+        },
+        "implementing_to_blocked": {
+          "condition": "risk_score > escalation_threshold OR multiple_gate_failures",
+          "action": "Create manual intervention issue with specialist assignment"
+        }
+      },
+      "parallel_execution_rules": {
+        "quality_architecting": ["implementing", "validating"],
+        "risk_framework_implementing": ["scoring_enhancing", "monitoring_implementing"],
+        "threshold_testing": ["rollback_validating"]
+      }
+    },
+    
+    "quality_gates_enhancement": {
+      "context_aware_thresholds": {
+        "critical_algorithms": {"coverage": "95-100%", "security": "100%"},
+        "public_apis": {"coverage": "90-95%", "security": "95%"},
+        "business_logic": {"coverage": "85-90%", "security": "90%"},
+        "ui_components": {"coverage": "70-80%", "security": "85%"}
+      },
+      "risk_escalation_triggers": [
+        "security_file_changes",
+        "large_architectural_changes",
+        "multiple_gate_failures",
+        "compliance_area_modifications"
+      ],
+      "manual_intervention_workflow": {
+        "blocking_threshold": "risk_score > 0.7",
+        "specialist_assignment": "automatic_based_on_change_type",
+        "sla_enforcement": "4h_critical_24h_normal",
+        "decision_tracking": "audit_trail_required"
+      }
+    },
+    
+    "checkpoint_strategy": {
+      "frequency": "after_each_phase_milestone",
+      "recovery_points": [
+        "foundation_complete",
+        "risk_framework_operational", 
+        "scoring_enhanced",
+        "monitoring_active",
+        "adaptive_learning_deployed"
+      ],
+      "rollback_conditions": [
+        "quality_metrics_degradation > 10%",
+        "development_velocity_impact > 25%",
+        "false_positive_rate > 15%",
+        "escalation_accuracy < 85%"
+      ],
+      "recovery_strategy": "automatic_with_alert_and_manual_confirmation"
+    }
+  },
+
+  "agent_coordination_plan": {
+    "primary_assignments": {
+      "rif_architect": {
+        "phases": ["phase_1_foundation", "phase_2_risk_framework", "phase_5_adaptive_learning"],
+        "responsibilities": [
+          "System architecture design for context-aware quality gates",
+          "Integration architecture for risk-based manual intervention",
+          "Machine learning architecture for adaptive threshold system"
+        ]
+      },
+      "rif_implementer": {
+        "phases": ["phase_1_foundation", "phase_2_risk_framework", "phase_3_scoring_enhancement", "phase_4_monitoring", "phase_5_adaptive_learning"],
+        "responsibilities": [
+          "Core implementation of all quality gate enhancements",
+          "Integration with existing RIF workflow system",
+          "Performance optimization and resource management"
+        ]
+      },
+      "rif_validator": {
+        "phases": ["phase_1_foundation", "phase_2_risk_framework", "phase_3_scoring_enhancement", "phase_4_monitoring", "phase_5_adaptive_learning"],
+        "responsibilities": [
+          "Comprehensive testing of quality gate changes",
+          "Validation of risk assessment accuracy",
+          "Performance and effectiveness monitoring"
+        ]
+      },
+      "rif_learner": {
+        "phases": ["phase_5_adaptive_learning"],
+        "responsibilities": [
+          "Knowledge base integration for learning system",
+          "Pattern extraction from quality gate effectiveness data",
+          "Continuous improvement recommendations"
+        ]
+      }
+    },
+    
+    "parallel_execution_strategy": {
+      "concurrent_phases": {
+        "phase_1_and_2": "Foundation work can proceed with risk framework design",
+        "phase_3_and_4": "Scoring enhancement and monitoring can be developed in parallel",
+        "phase_5": "Requires completion of all previous phases for data availability"
+      },
+      "resource_allocation": {
+        "max_concurrent_agents": 4,
+        "phase_overlap_percentage": "30% for adjacent phases",
+        "critical_path": "phase_1 -> phase_2 -> phase_5"
+      }
+    },
+    
+    "handoff_requirements": {
+      "phase_completion_criteria": [
+        "All deliverables implemented and tested",
+        "Integration testing with existing RIF system passed",
+        "Performance benchmarks met or exceeded",
+        "Documentation complete and reviewed",
+        "Checkpoint created with rollback tested"
+      ],
+      "knowledge_transfer": [
+        "Implementation decisions documented in knowledge base",
+        "Architecture diagrams and design rationale recorded", 
+        "Performance metrics and optimization strategies captured",
+        "Integration points and dependencies mapped"
+      ]
+    }
+  },
+
+  "risk_mitigation_strategies": {
+    "implementation_risks": {
+      "breaking_existing_workflow": {
+        "risk_level": "high",
+        "mitigation": [
+          "Maintain backward compatibility during transition period",
+          "Feature flags for gradual rollout of new quality gates",
+          "Comprehensive regression testing of existing workflows",
+          "Rollback procedures tested and documented"
+        ]
+      },
+      "performance_degradation": {
+        "risk_level": "medium",
+        "mitigation": [
+          "Performance testing throughout implementation phases",
+          "Resource usage monitoring and optimization",
+          "Caching strategies for expensive quality calculations",
+          "Async processing for non-blocking quality assessments"
+        ]
+      },
+      "false_positive_escalations": {
+        "risk_level": "medium", 
+        "mitigation": [
+          "Extensive testing with historical data",
+          "Machine learning model validation with cross-validation",
+          "Manual review of escalation decisions during pilot",
+          "Feedback loop for continuous model improvement"
+        ]
+      },
+      "complexity_management": {
+        "risk_level": "high",
+        "mitigation": [
+          "Recursive planning with clear phase boundaries",
+          "Regular checkpoint reviews and course correction",
+          "Parallel development streams to manage complexity",
+          "Clear agent responsibilities and communication protocols"
+        ]
+      }
+    },
+    
+    "operational_risks": {
+      "adoption_resistance": {
+        "risk_level": "low",
+        "mitigation": [
+          "Clear documentation of quality improvements",
+          "Gradual rollout with opt-in periods for teams",
+          "Training materials and best practices documentation",
+          "Success metrics and improvement demonstration"
+        ]
+      },
+      "configuration_complexity": {
+        "risk_level": "medium",
+        "mitigation": [
+          "Sensible defaults for all new quality thresholds",
+          "Configuration validation and error checking",
+          "Migration tools for existing configurations",
+          "Comprehensive configuration documentation"
+        ]
+      }
+    },
+    
+    "monitoring_and_alerting": {
+      "quality_gate_effectiveness": [
+        "Track correlation between gate results and production defects",
+        "Monitor false positive and false negative rates",
+        "Measure development velocity impact",
+        "Alert on significant threshold effectiveness changes"
+      ],
+      "system_health": [
+        "Monitor performance of quality assessments",
+        "Track resource usage of new quality calculations",
+        "Alert on escalation accuracy degradation", 
+        "Monitor manual intervention SLA compliance"
+      ]
+    }
+  },
+
+  "success_metrics_and_kpis": {
+    "quality_improvement_metrics": {
+      "defect_escape_rate": {
+        "baseline": "3-5% (estimated from <95% acceptance)",
+        "target": "<2% with context-aware thresholds",
+        "measurement": "Production bugs per release cycle"
+      },
+      "quality_gate_effectiveness": {
+        "baseline": "75% average quality score",
+        "target": "90% average with <10% false positives",
+        "measurement": "Gate result vs production quality correlation"
+      },
+      "manual_intervention_accuracy": {
+        "baseline": "Ad-hoc escalation decisions",
+        "target": ">95% appropriate escalations, <5% unnecessary blocks",
+        "measurement": "Post-intervention review of escalation outcomes"
+      }
+    },
+    
+    "development_velocity_metrics": {
+      "implementation_to_production_time": {
+        "baseline": "Current development speed with quality issues",
+        "target": "5-10% slower initially, then 10-15% faster",
+        "measurement": "Average time from code complete to production"
+      },
+      "rework_due_to_quality_issues": {
+        "baseline": "15-25% increase in bug-fix cycles",
+        "target": "10% reduction in quality-related rework",
+        "measurement": "Time spent on production defect fixes"
+      }
+    },
+    
+    "system_performance_metrics": {
+      "quality_assessment_latency": {
+        "target": "<5 seconds for standard assessments",
+        "measurement": "P95 response time for quality gate evaluations"
+      },
+      "escalation_response_time": {
+        "target": "4 hours for critical, 24 hours for normal",
+        "measurement": "Time from escalation to specialist response"
+      }
+    }
+  },
+
+  "github_issues_creation_plan": {
+    "issue_1": {
+      "title": "Implement Context-Aware Quality Thresholds System",
+      "description": "Replace single 80% threshold with component-type-specific quality gates",
+      "labels": ["enhancement", "quality-gates", "priority:high", "complexity:high"],
+      "estimated_effort": "5-7 days",
+      "assignee_agent": "rif-architect -> rif-implementer",
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Component classification system implemented",
+        "Context-aware thresholds configurable per component type",
+        "Backward compatibility maintained",
+        "Performance impact < 5% for quality assessments"
+      ]
+    },
+    
+    "issue_2": {
+      "title": "Build Risk-Based Manual Intervention Framework",
+      "description": "Automated escalation system for high-risk changes requiring specialist review",
+      "labels": ["feature", "escalation", "priority:high", "complexity:very-high"],
+      "estimated_effort": "7-10 days", 
+      "assignee_agent": "rif-architect -> rif-implementer",
+      "dependencies": ["Context-aware thresholds foundation"],
+      "acceptance_criteria": [
+        "Risk scoring algorithm operational",
+        "Automatic specialist assignment based on change type",
+        "GitHub integration for manual intervention workflow",
+        "SLA enforcement and tracking system",
+        "Decision audit trail implementation"
+      ]
+    },
+    
+    "issue_3": {
+      "title": "Enhance Multi-Dimensional Quality Scoring System", 
+      "description": "Risk-weighted quality scoring with context awareness",
+      "labels": ["enhancement", "scoring", "priority:medium", "complexity:medium"],
+      "estimated_effort": "4-6 days",
+      "assignee_agent": "rif-implementer",
+      "dependencies": ["Context-aware thresholds", "Risk framework"],
+      "acceptance_criteria": [
+        "Multi-dimensional scoring formula implemented", 
+        "Risk weighting and context adjustment operational",
+        "Integration with existing quality gate system",
+        "Performance optimization for real-time scoring"
+      ]
+    },
+    
+    "issue_4": {
+      "title": "Create Quality Gate Effectiveness Monitoring",
+      "description": "Track and analyze quality gate performance for continuous improvement", 
+      "labels": ["monitoring", "analytics", "priority:medium", "complexity:medium"],
+      "estimated_effort": "3-5 days",
+      "assignee_agent": "rif-implementer -> rif-validator",
+      "dependencies": ["Enhanced scoring system"],
+      "acceptance_criteria": [
+        "Quality gate performance analytics implemented",
+        "Historical effectiveness tracking operational",
+        "Correlation analysis with production defects",
+        "Dashboard and alerting system functional"
+      ]
+    },
+    
+    "issue_5": {
+      "title": "Implement Adaptive Threshold Learning System",
+      "description": "Machine learning-based optimization of quality thresholds",
+      "labels": ["ml", "optimization", "priority:low", "complexity:very-high"], 
+      "estimated_effort": "10-12 days",
+      "assignee_agent": "rif-architect -> rif-implementer -> rif-learner",
+      "dependencies": ["All monitoring systems operational"],
+      "acceptance_criteria": [
+        "ML threshold optimization engine implemented",
+        "Historical data analysis and pattern recognition",
+        "Automatic threshold adjustment recommendations",
+        "A/B testing framework for threshold experiments",
+        "Continuous improvement feedback loops operational"
+      ]
+    }
+  },
+
+  "deployment_and_rollback_strategy": {
+    "deployment_phases": {
+      "alpha_testing": {
+        "scope": "Internal RIF development only",
+        "duration": "1 week",
+        "success_criteria": "No regression in existing quality gates"
+      },
+      "beta_rollout": {
+        "scope": "Selected projects with opt-in",
+        "duration": "2 weeks", 
+        "success_criteria": "Quality improvements visible, no major issues"
+      },
+      "production_deployment": {
+        "scope": "All projects with gradual threshold migration",
+        "duration": "1 month",
+        "success_criteria": "All success metrics achieved"
+      }
+    },
+    
+    "rollback_triggers": [
+      "Quality gate accuracy < 80%",
+      "Development velocity impact > 25%",
+      "Critical system failures related to quality gates",
+      "User satisfaction scores < baseline"
+    ],
+    
+    "rollback_procedure": [
+      "Immediate fallback to 80% threshold for all components",
+      "Disable risk-based manual intervention",
+      "Revert to simple quality scoring formula",
+      "Investigate root cause and create improvement plan"
+    ]
+  },
+
+  "knowledge_integration_strategy": {
+    "pattern_extraction": [
+      "Document successful quality gate optimization patterns",
+      "Record effective risk assessment strategies",
+      "Capture manual intervention decision patterns",
+      "Archive threshold optimization learnings"
+    ],
+    
+    "decision_documentation": [
+      "Architecture decisions for quality gate enhancements",
+      "Risk assessment algorithm design rationale",
+      "Performance optimization strategies",
+      "Integration approach decisions"
+    ],
+    
+    "continuous_learning": [
+      "Quality gate effectiveness pattern recognition",
+      "Defect correlation analysis and insights",
+      "Developer workflow impact assessment",
+      "System performance optimization opportunities"
+    ]
+  },
+
+  "planning_metadata": {
+    "confidence_level": "high",
+    "planning_completeness": "comprehensive",
+    "risk_assessment_confidence": "high",
+    "estimation_methodology": "historical_data_plus_complexity_analysis",
+    "review_requirements": [
+      "Technical architecture review by senior engineering",
+      "Risk assessment validation by security team",
+      "Performance impact assessment by platform team",
+      "User experience review by development leads"
+    ]
+  }
+}

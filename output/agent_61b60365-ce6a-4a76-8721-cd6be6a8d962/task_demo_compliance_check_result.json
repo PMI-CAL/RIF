@@ -1,0 +1,127 @@
+{
+  "task_id": "demo_compliance_check",
+  "status": "completed",
+  "start_time": "2025-08-23T10:30:10.267473",
+  "end_time": "2025-08-23T10:30:10.269823",
+  "duration_seconds": 0.00235,
+  "confidence_score": 0.9,
+  "result_data": {
+    "owasp_top_10": {
+      "overall_score": 0.5714285714285714,
+      "passed_checks": 4,
+      "failed_checks": 3,
+      "total_checks": 7,
+      "findings": [
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "config.py",
+          "line": 32,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "CRITICAL",
+          "file": "frontend.js",
+          "line": 10,
+          "description": "Dynamic command execution detected. This may allow arbitrary command execution."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "MEDIUM",
+          "file": "frontend.js",
+          "line": 5,
+          "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "MEDIUM",
+          "file": "frontend.js",
+          "line": 10,
+          "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "MEDIUM",
+          "file": "frontend.js",
+          "line": 15,
+          "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "MEDIUM",
+          "file": "webapp.py",
+          "line": 68,
+          "description": "Sensitive information may be logged or exposed."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "MEDIUM",
+          "file": "webapp.py",
+          "line": 69,
+          "description": "Sensitive information may be logged or exposed."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "MEDIUM",
+          "file": "webapp.py",
+          "line": 69,
+          "description": "Sensitive information may be logged or exposed."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "webapp.py",
+          "line": 72,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "webapp.py",
+          "line": 73,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "webapp.py",
+          "line": 73,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "webapp.py",
+          "line": 59,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "webapp.py",
+          "line": 60,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "webapp.py",
+          "line": 65,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        }
+      ],
+      "recommendations": [
+        "Address identified OWASP Top 10 vulnerabilities",
+        "Implement secure coding training for development team",
+        "Add security testing to CI/CD pipeline"
+      ]
+    }
+  },
+  "error_message": "",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "61b60365-ce6a-4a76-8721-cd6be6a8d962"
+  }
+}

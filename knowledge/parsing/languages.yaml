@@ -1,0 +1,116 @@
+# Language configuration for tree-sitter parsing infrastructure
+#
+# This file defines the supported programming languages, their file extensions,
+# grammar sources, and parsing configuration.
+
+languages:
+  javascript:
+    name: "JavaScript"
+    description: "JavaScript and JSX files for web and Node.js applications"
+    extensions: 
+      - ".js"
+      - ".jsx" 
+      - ".mjs"
+      - ".cjs"
+    grammar:
+      name: "tree-sitter-javascript"
+      version: ">=0.20.0"
+      repository: "https://github.com/tree-sitter/tree-sitter-javascript"
+      language_name: "javascript"  # Language identifier for tree-sitter
+    queries_file: "javascript.scm"
+    features:
+      - "functions"
+      - "classes"
+      - "imports"
+      - "exports"
+      - "jsx_elements"
+    performance:
+      expected_parse_time_ms: 100
+      memory_estimate_mb: 2
+      
+  python:
+    name: "Python"
+    description: "Python source files and extensions"
+    extensions:
+      - ".py"
+      - ".pyx"
+      - ".pyi"
+    grammar:
+      name: "tree-sitter-python"
+      version: ">=0.20.0"
+      repository: "https://github.com/tree-sitter/tree-sitter-python"
+      language_name: "python"
+    queries_file: "python.scm"
+    features:
+      - "functions"
+      - "classes"
+      - "imports"
+      - "decorators"
+      - "comprehensions"
+    performance:
+      expected_parse_time_ms: 80
+      memory_estimate_mb: 1.5
+      
+  go:
+    name: "Go"
+    description: "Go programming language source files"
+    extensions:
+      - ".go"
+    grammar:
+      name: "tree-sitter-go"
+      version: ">=0.20.0"
+      repository: "https://github.com/tree-sitter/tree-sitter-go"
+      language_name: "go"
+    queries_file: "go.scm"
+    features:
+      - "functions"
+      - "structs"
+      - "interfaces"
+      - "methods"
+      - "packages"
+    performance:
+      expected_parse_time_ms: 60
+      memory_estimate_mb: 1.2
+      
+  rust:
+    name: "Rust"
+    description: "Rust programming language source files"
+    extensions:
+      - ".rs"
+    grammar:
+      name: "tree-sitter-rust"
+      version: ">=0.20.0"
+      repository: "https://github.com/tree-sitter/tree-sitter-rust"
+      language_name: "rust"
+    queries_file: "rust.scm"
+    features:
+      - "functions"
+      - "structs"
+      - "enums"
+      - "traits"
+      - "implementations"
+      - "macros"
+    performance:
+      expected_parse_time_ms: 120
+      memory_estimate_mb: 2.5
+
+# Grammar compilation settings
+compilation:
+  output_dir: "grammars"
+  cache_compiled: true
+  rebuild_on_version_change: true
+  parallel_compilation: true
+  max_compilation_time_s: 300
+
+# Performance settings  
+performance:
+  default_timeout_s: 30
+  max_file_size_mb: 10
+  memory_limit_mb: 200
+  cache_size: 100
+
+# Development settings
+development:
+  enable_debug_logging: false
+  collect_performance_metrics: true
+  validate_ast_integrity: true

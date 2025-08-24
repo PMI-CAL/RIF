@@ -1,0 +1,626 @@
+{
+  "task_id": "demo_comprehensive_scan",
+  "status": "completed",
+  "start_time": "2025-08-23T10:30:10.256716",
+  "end_time": "2025-08-23T10:30:10.263248",
+  "duration_seconds": 0.006532,
+  "confidence_score": 0.8611111111111109,
+  "result_data": {
+    "scan_id": "scan_1755970210",
+    "vulnerabilities": [
+      {
+        "vuln_id": "cmd_47ea27ad",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "frontend.js",
+        "line_number": 10,
+        "code_snippet": "eval(\"loadPage('\" + url + \"')\");",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_e4c0e466",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: flask",
+        "description": "Package flask version 0.12.0 has known security vulnerabilities (CVE-2018-1000656).",
+        "file_path": "requirements.txt",
+        "line_number": 2,
+        "code_snippet": "flask==0.12.0",
+        "remediation": "Update flask to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1000656"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_1f2029e4",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: django",
+        "description": "Package django version 2.0.0 has known security vulnerabilities (CVE-2020-7471).",
+        "file_path": "requirements.txt",
+        "line_number": 3,
+        "code_snippet": "django==2.0.0",
+        "remediation": "Update django to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-7471"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_2c2f9d2b",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: requests",
+        "description": "Package requests version 2.18.0 has known security vulnerabilities (CVE-2018-18074).",
+        "file_path": "requirements.txt",
+        "line_number": 4,
+        "code_snippet": "requests==2.18.0",
+        "remediation": "Update requests to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-18074"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_07b9b934",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: urllib3",
+        "description": "Package urllib3 version 1.20.0 has known security vulnerabilities (CVE-2019-11324).",
+        "file_path": "requirements.txt",
+        "line_number": 5,
+        "code_snippet": "urllib3==1.20.0",
+        "remediation": "Update urllib3 to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-11324"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_efdbc060",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: express",
+        "description": "Package express version 4.16.0 has known security vulnerabilities (CVE-2019-5413).",
+        "file_path": "package.json",
+        "line_number": 0,
+        "code_snippet": "\"express\": \"4.16.0\"",
+        "remediation": "Update express to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5413"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_3d19ae22",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: lodash",
+        "description": "Package lodash version 4.17.0 has known security vulnerabilities (CVE-2020-8203).",
+        "file_path": "package.json",
+        "line_number": 0,
+        "code_snippet": "\"lodash\": \"4.17.0\"",
+        "remediation": "Update lodash to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-8203"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_d9854c6d",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: axios",
+        "description": "Package axios version 0.19.0 has known security vulnerabilities (CVE-2020-28168).",
+        "file_path": "package.json",
+        "line_number": 0,
+        "code_snippet": "\"axios\": \"0.19.0\"",
+        "remediation": "Update axios to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28168"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_b811a333",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "config.py",
+        "line_number": 7,
+        "code_snippet": "DB_PASSWORD = \"admin123\"  # Weak password",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_f1e68d12",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "config.py",
+        "line_number": 11,
+        "code_snippet": "STRIPE_SECRET_KEY = \"sk_live_1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_e9841e4c",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "config.py",
+        "line_number": 16,
+        "code_snippet": "SENDGRID_API_KEY = \"SG.1234567890abcdef1234567890abcdef.1234567890abcdef1234567890abcdef1234567890abcdef\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_35fa5fce",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "config.py",
+        "line_number": 17,
+        "code_snippet": "TWILIO_AUTH_TOKEN = \"abcdef1234567890abcdef1234567890abcdef12\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_1a36a96e",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "config.py",
+        "line_number": 25,
+        "code_snippet": "DEFAULT_ADMIN_PASSWORD = \"password\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_67e8ec00",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "config.py",
+        "line_number": 28,
+        "code_snippet": "SECRET_KEY = \"insecure-secret-key-do-not-use-in-production\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_8781c6e0",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "frontend.js",
+        "line_number": 20,
+        "code_snippet": "apiKey: \"api-key-exposed-in-client-123456789\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_1bb1c979",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "frontend.js",
+        "line_number": 21,
+        "code_snippet": "secretToken: \"ghp_1234567890abcdef1234567890abcdef123456\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_54cee350",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "frontend.js",
+        "line_number": 21,
+        "code_snippet": "secretToken: \"ghp_1234567890abcdef1234567890abcdef123456\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_05e7a570",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "frontend.js",
+        "line_number": 22,
+        "code_snippet": "databaseUrl: \"mongodb://user:password@localhost/app\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_b5e7527a",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "webapp.py",
+        "line_number": 11,
+        "code_snippet": "SECRET_KEY = \"super-secret-key-123456789\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_cc4be005",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "webapp.py",
+        "line_number": 12,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_057a7712",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "webapp.py",
+        "line_number": 13,
+        "code_snippet": "DATABASE_URL = \"postgresql://admin:password123@localhost/myapp\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_6d242abc",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "safe_code.py",
+        "line_number": 35,
+        "code_snippet": "# api_key = \"get this from environment variables\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "crypto_b8b83244",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "webapp.py",
+        "line_number": 59,
+        "code_snippet": "# Using deprecated MD5 (BAD!)",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_1f67a92e",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "webapp.py",
+        "line_number": 60,
+        "code_snippet": "return md5.md5(password.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_54aabe4d",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "webapp.py",
+        "line_number": 65,
+        "code_snippet": "return hashlib.sha1(data.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "misc_854955cd",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "config.py",
+        "line_number": 32,
+        "code_snippet": "DEBUG = True",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_e33de3e0",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "webapp.py",
+        "line_number": 72,
+        "code_snippet": "# Running with debug=True in production (BAD!)",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_2b3ac020",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "webapp.py",
+        "line_number": 73,
+        "code_snippet": "app.run(debug=True, host='0.0.0.0')",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_68bc8af8",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "webapp.py",
+        "line_number": 73,
+        "code_snippet": "app.run(debug=True, host='0.0.0.0')",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "data_e29bc688",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "webapp.py",
+        "line_number": 68,
+        "code_snippet": "def log_user_credentials(username, password):",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_8acaf55a",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "webapp.py",
+        "line_number": 69,
+        "code_snippet": "print(f\"User login: {username}, password: {password}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_917a2d41",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "webapp.py",
+        "line_number": 69,
+        "code_snippet": "print(f\"User login: {username}, password: {password}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "xss_52ef89dd",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "frontend.js",
+        "line_number": 5,
+        "code_snippet": "document.getElementById('message').innerHTML = userInput;",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_47ea27ad",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "frontend.js",
+        "line_number": 10,
+        "code_snippet": "eval(\"loadPage('\" + url + \"')\");",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_a24829b0",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "frontend.js",
+        "line_number": 15,
+        "code_snippet": "document.write(\"<div class='notification'>\" + message + \"</div>\");",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "auth_d81f25a3",
+        "vuln_type": "broken_authentication",
+        "severity": "MEDIUM",
+        "title": "Weak Password Policy",
+        "description": "Weak or default password detected.",
+        "file_path": "config.py",
+        "line_number": 25,
+        "code_snippet": "DEFAULT_ADMIN_PASSWORD = \"password\"",
+        "remediation": "Implement strong password policy and use secure defaults.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-521",
+        "confidence": 0.7
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 11,
+      "high": 24,
+      "critical": 1
+    },
+    "files_scanned": 4,
+    "lines_scanned": 172,
+    "recommendations": [
+      "Implement parameterized queries to prevent SQL injection",
+      "Add input validation and sanitization",
+      "Implement Content Security Policy (CSP)",
+      "Use secure DOM manipulation methods",
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Upgrade to strong cryptographic algorithms (SHA-256+, AES)",
+      "Implement proper key management",
+      "Update vulnerable dependencies to secure versions",
+      "Implement dependency scanning automation",
+      "Implement multi-factor authentication",
+      "Review session management and timeout policies",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.00644
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755970210.json",
+    "vulnerability_summary_scan_1755970210.md",
+    "remediation_plan_scan_1755970210.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "61b60365-ce6a-4a76-8721-cd6be6a8d962"
+  }
+}

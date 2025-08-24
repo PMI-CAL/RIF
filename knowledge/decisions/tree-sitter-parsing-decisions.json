@@ -1,0 +1,116 @@
+{
+  "decision_id": "tree-sitter-parsing-architecture-2025",
+  "title": "Tree-sitter Multi-Language Parsing Infrastructure",
+  "date": "2025-08-23",
+  "status": "accepted",
+  "context": {
+    "issue": "Issue #27 - Create tree-sitter parsing infrastructure",
+    "problem": "Need multi-language AST parsing for hybrid knowledge system with performance and caching requirements",
+    "constraints": [
+      "Support JavaScript, Python, Go, Rust with extensibility",
+      "LRU cache for 100 files maximum",
+      "Memory usage <200MB with full cache",
+      "Thread-safe concurrent parsing support",
+      "Integration with file monitoring system"
+    ]
+  },
+  "decision": {
+    "chosen_option": "Tree-sitter with singleton manager, LRU caching, and per-language thread safety",
+    "rationale": "Provides optimal balance of performance, functionality, and maintainability for multi-language parsing"
+  },
+  "options_considered": [
+    {
+      "option": "Language-specific native parsers",
+      "pros": ["Maximum performance per language", "Direct language support", "No abstraction overhead"],
+      "cons": ["High maintenance burden", "Inconsistent APIs", "Complex multi-language coordination"],
+      "rejected_reason": "Maintenance complexity not justified when tree-sitter provides consistent performance"
+    },
+    {
+      "option": "AST parsing services (external APIs)",
+      "pros": ["No local dependencies", "Always up-to-date", "Professional support"],
+      "cons": ["Network dependency", "API costs", "Latency for real-time use", "Data privacy concerns"],
+      "rejected_reason": "Latency and dependency requirements incompatible with real-time development workflows"
+    },
+    {
+      "option": "Tree-sitter with comprehensive infrastructure",
+      "pros": ["Consistent multi-language API", "Excellent performance", "Active community", "Local processing"],
+      "cons": ["Grammar compilation complexity", "Version compatibility management"],
+      "chosen_reason": "Best balance of performance, consistency, and control for enterprise deployment"
+    }
+  ],
+  "consequences": {
+    "positive": [
+      "Consistent API across all supported languages",
+      "Sub-50ms parsing performance for typical files",
+      "Sub-millisecond cache retrieval (50x speed improvement)",
+      "Thread-safe concurrent parsing for multi-agent scenarios",
+      "Extensible architecture for additional languages"
+    ],
+    "negative": [
+      "Grammar version compatibility management required",
+      "C compiler dependency for grammar compilation", 
+      "Memory usage scales with codebase size and complexity"
+    ],
+    "mitigation": [
+      "Version pinning and compatibility testing for stable operation",
+      "Documentation and automation for grammar compilation process",
+      "Configurable memory limits and monitoring for resource management"
+    ]
+  },
+  "implementation_details": {
+    "architecture": "Singleton manager with factory pattern for language parsers", 
+    "caching_strategy": "LRU with multi-layer file change detection (mtime + size + hash)",
+    "thread_safety": "Per-language locks for concurrent parsing operations",
+    "memory_management": "Configurable limits with automatic cleanup and monitoring"
+  },
+  "success_metrics": {
+    "language_support": "3/4 languages fully operational (JavaScript, Python, Go)",
+    "performance": "Sub-50ms parsing, <1ms cache retrieval",
+    "memory_efficiency": "Efficient management within 200MB limit",
+    "test_coverage": "97% success rate (37/38 tests passing)",
+    "thread_safety": "Verified under concurrent multi-agent load"
+  },
+  "lessons_learned": [
+    "Tree-sitter provides excellent foundation for unified multi-language parsing",
+    "LRU caching essential for real-time development workflow integration",
+    "Per-language thread safety crucial for multi-agent environments",
+    "Grammar version compatibility requires ongoing attention and testing"
+  ],
+  "related_decisions": [
+    "file-monitoring-architecture-2025",
+    "hybrid-knowledge-system-architecture", 
+    "context-optimization-architecture-2025"
+  ],
+  "future_implications": {
+    "code_analysis": "Enables sophisticated semantic analysis and pattern recognition",
+    "development_tools": "Provides foundation for intelligent IDE integration and automation",
+    "knowledge_extraction": "Supports automated understanding and documentation of codebases",
+    "extensibility": "Architecture supports additional languages and analysis capabilities"
+  },
+  "technical_specifications": {
+    "supported_languages": {
+      "javascript": "v14 grammar - Classes, async/await, JSX, ES6+ imports",
+      "python": "v14 grammar - Classes, async/await, type hints, decorators", 
+      "go": "v14 grammar - Interfaces, structs, methods, packages",
+      "rust": "v15 grammar compatibility issue - requires v13-14 for current tree-sitter"
+    },
+    "caching_configuration": {
+      "capacity": "100 files maximum with LRU eviction",
+      "invalidation": "Multi-layer detection (modification time + size + SHA-256 hash)",
+      "memory_limit": "200MB configurable limit with monitoring",
+      "performance": "Sub-millisecond retrieval for cached parses"
+    },
+    "thread_safety": {
+      "locking_strategy": "Per-language RLock for concurrent parser access",
+      "concurrent_support": "Multiple agents parsing different languages simultaneously",
+      "resource_sharing": "Shared cache with thread-safe operations",
+      "load_testing": "Validated under multi-agent concurrent scenarios"
+    },
+    "semantic_queries": {
+      "javascript": "Function extraction, class hierarchies, import analysis",
+      "python": "Class methods, function definitions, import tracking",
+      "go": "Interface definitions, struct composition, method analysis",
+      "extensibility": "Custom query files for domain-specific analysis"
+    }
+  }
+}

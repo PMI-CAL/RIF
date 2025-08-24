@@ -1,0 +1,35 @@
+{
+  "decision_id": "agent-orchestration-architecture",
+  "timestamp": "2025-08-18T20:43:25Z",
+  "issue": 2,
+  "agent": "rif-planner",
+  "decision": "Multi-Layer Agent Orchestration System",
+  "rationale": "Current framework has excellent configuration but lacks execution engine to trigger agents automatically based on GitHub issue label changes",
+  "architecture": {
+    "components": [
+      "Event Monitor (GitHub webhook/polling)",
+      "Agent Launcher (Claude Code subagent spawning)",
+      "State Machine Engine (workflow validation)",
+      "Progress Tracker (agent lifecycle management)"
+    ],
+    "implementation_strategy": "Standalone orchestrator service with Claude Code integration",
+    "estimated_effort": "20-30 hours across 4 phases"
+  },
+  "alternatives_considered": [
+    "Claude Code plugin extension",
+    "GitHub Actions-based approach",
+    "Event-driven serverless architecture"
+  ],
+  "risks": [
+    "Agent execution failures",
+    "GitHub rate limiting", 
+    "State synchronization issues",
+    "Agent context loss"
+  ],
+  "success_criteria": [
+    "Automatic agent triggering on state labels",
+    "Context preservation across handoffs",
+    "Multiple concurrent issue processing",
+    "Automatic recovery from failures"
+  ]
+}

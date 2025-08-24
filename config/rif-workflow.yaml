@@ -55,6 +55,46 @@ workflow:
       agent: "rif-reviewer"
       timeout: "1h"
       
+    skeptical_review:
+      description: "RIF-Validator conducting adversarial verification"
+      agent: "rif-validator"
+      timeout: "2h"
+      parallel_to: ["implementing", "architecting"]
+      risk_based: true
+      
+    evidence_gathering:
+      description: "RIF-Validator collecting validation evidence"
+      agent: "rif-validator"
+      timeout: "1h"
+      required_for: ["complete"]
+      
+    quality_tracking:
+      description: "Shadow quality monitoring via parallel issue"
+      agent: "rif-validator"
+      shadow_issue: true
+      continuous: true
+      parallel_orchestration: true
+      
+    pr_creating:
+      description: "RIF-PR-Manager creating pull request"
+      agent: "rif-pr-manager"
+      timeout: "30m"
+      
+    pr_validating:
+      description: "RIF-PR-Manager validating PR quality gates"
+      agent: "rif-pr-manager"
+      timeout: "2h"
+      
+    pr_merging:
+      description: "RIF-PR-Manager executing merge strategy"
+      agent: "rif-pr-manager"
+      timeout: "30m"
+      
+    deploying:
+      description: "RIF-PR-Manager coordinating deployment"
+      agent: "rif-pr-manager" 
+      timeout: "1h"
+      
     complete:
       description: "Work finished successfully"
       final: true
@@ -67,6 +107,27 @@ workflow:
       description: "Work failed, needs recovery"
       alert: true
       recovery: true
+      
+    # Arbitration system states (Issue #61)
+    arbitrating:
+      description: "Agent conflict resolution in progress"
+      agent: "rif-arbitrator"
+      timeout: "30m"
+      parallel: true
+      conflict_resolution: true
+      
+    escalating:
+      description: "Human intervention required for unresolved disputes"
+      agent: "human"
+      timeout: "2h"
+      alert: true
+      human_required: true
+      
+    expert_review:
+      description: "Expert panel reviewing conflicting positions"
+      agent: "rif-expert-panel"
+      timeout: "1h"
+      expertise_based: true
 
   # Automatic state transitions
   transitions:
@@ -116,14 +177,44 @@ workflow:
       condition: "critical_errors"
       
     - from: "documenting"
-      to: "reviewing"
+      to: "pr_creating"
       trigger: "docs_complete"
-      condition: "pr_created"
+      condition: "pr_needed"
       
     - from: "documenting"
       to: "learning"
       trigger: "docs_complete"
       condition: "no_pr_needed"
+      
+    - from: "pr_creating"
+      to: "pr_validating"
+      trigger: "pr_created"
+      condition: "quality_gates_triggered"
+      
+    - from: "pr_validating"
+      to: "pr_merging"
+      trigger: "validation_complete"
+      condition: "all_gates_pass"
+      
+    - from: "pr_validating"
+      to: "implementing"
+      trigger: "validation_failed"
+      condition: "fixable_issues"
+      
+    - from: "pr_merging"
+      to: "deploying"
+      trigger: "merge_complete"
+      condition: "deployment_required"
+      
+    - from: "pr_merging"
+      to: "learning"
+      trigger: "merge_complete"
+      condition: "no_deployment_needed"
+      
+    - from: "deploying"
+      to: "learning"
+      trigger: "deployment_complete"
+      condition: "always"
       
     - from: "reviewing"
       to: "learning"
@@ -145,6 +236,33 @@ workflow:
       trigger: "knowledge_updated"
       condition: "always"
       
+    # Adversarial testing flow transitions
+    - from: "implementing"
+      to: "skeptical_review"
+      trigger: "code_ready"
+      condition: "risk_level >= medium"
+      parallel: true
+      
+    - from: "skeptical_review"
+      to: "evidence_gathering"
+      trigger: "missing_evidence"
+      condition: "evidence_incomplete"
+      
+    - from: "evidence_gathering"
+      to: "validating"
+      trigger: "evidence_complete"
+      condition: "all_evidence_provided"
+      
+    - from: "validating"
+      to: "implementing"
+      trigger: "validation_failed"
+      condition: "evidence_insufficient OR quality_score < 60"
+      
+    - from: "quality_tracking"
+      to: "complete"
+      trigger: "main_issue_complete"
+      condition: "shadow_issue_closed"
+      
     # Recovery transitions
     - from: "blocked"
       to: "analyzing"
@@ -155,6 +273,47 @@ workflow:
       to: "analyzing"
       trigger: "retry"
       condition: "checkpoint_available"
+      
+    # Arbitration system transitions (Issue #61)
+    - from: "validating"
+      to: "arbitrating"
+      trigger: "agent_conflict_detected"
+      condition: "disagreement_threshold_exceeded"
+      
+    - from: "implementing"
+      to: "arbitrating"
+      trigger: "design_conflict"
+      condition: "conflicting_agent_decisions"
+      
+    - from: "arbitrating"
+      to: "expert_review"
+      trigger: "escalation_required"
+      condition: "automated_resolution_failed"
+      
+    - from: "expert_review"
+      to: "validating"
+      trigger: "expert_consensus_reached"
+      condition: "conflict_resolved"
+      
+    - from: "expert_review"
+      to: "escalating"
+      trigger: "expert_disagreement"
+      condition: "expert_panel_deadlocked"
+      
+    - from: "arbitrating"
+      to: "escalating"
+      trigger: "arbitration_timeout"
+      condition: "timeout_exceeded OR critical_security_conflict"
+      
+    - from: "escalating"
+      to: "validating"
+      trigger: "human_decision_made"
+      condition: "conflict_resolved_by_human"
+      
+    - from: "escalating"
+      to: "blocked"
+      trigger: "escalation_timeout"
+      condition: "human_intervention_timeout"
 
   # Parallel execution rules
   parallel:
@@ -165,6 +324,13 @@ workflow:
       - "implementing"
       - "validating"
       - "documenting"
+      - "pr_validating"
+      - "deploying"
+      - "skeptical_review"
+      - "evidence_gathering"
+      - "quality_tracking"
+      - "arbitrating"
+      - "expert_review"
       
     constraints:
       - "Cannot parallelize across different issues"
@@ -216,6 +382,49 @@ workflow:
       threshold: "complete"
       required: true
       blocker: false
+      
+    evidence_requirements:
+      threshold: "100%"
+      required: true
+      blocker: true
+      validation: "All claims must have verifiable evidence"
+      
+    quality_score:
+      threshold: 80
+      formula: "100 - (20 × FAILs) - (10 × CONCERNS)"
+      required: true
+      blocker: true
+      deterministic: true
+      
+    risk_assessment:
+      threshold: "acceptable"
+      escalation_triggers:
+        - "security_changes"
+        - "auth_modifications"
+        - "payment_processing"
+        - "large_diff"
+        - "no_tests"
+      blocker: false
+      advisory: true
+      
+    # Arbitration system quality gates (Issue #61)
+    conflict_resolution:
+      threshold: "resolved"
+      required: true
+      blocker: true
+      description: "Agent conflicts must be resolved before proceeding"
+      
+    arbitration_confidence:
+      threshold: 0.7
+      required: true
+      blocker: true
+      description: "Arbitration decisions must meet minimum confidence threshold"
+      
+    escalation_justification:
+      threshold: "documented"
+      required: true
+      blocker: false
+      description: "Human escalations must be properly justified"
 
   # Complexity assessment
   complexity:
@@ -298,6 +507,106 @@ workflow:
         condition: "failure_count > 3"
         action: "manual_review"
 
+  # Evidence requirements by claim type
+  evidence_requirements:
+    feature_complete:
+      mandatory:
+        - unit_tests_passing
+        - integration_tests_passing
+        - coverage_report
+        - functional_testing_results
+      optional:
+        - performance_metrics
+        - user_acceptance_testing
+        - accessibility_audit
+        
+    bug_fixed:
+      mandatory:
+        - regression_test_added
+        - root_cause_analysis
+        - fix_verification_test
+        - before_after_comparison
+      optional:
+        - prevention_measures_documented
+        - related_bug_tests_added
+        - monitoring_alerting_updated
+        
+    performance_improved:
+      mandatory:
+        - baseline_performance_metrics
+        - after_performance_metrics
+        - statistical_comparison_analysis
+        - load_testing_results
+      optional:
+        - profiling_data
+        - resource_utilization_analysis
+        - scalability_testing
+        
+    security_validated:
+      mandatory:
+        - automated_vulnerability_scan
+        - security_test_results
+        - threat_model_review
+        - penetration_testing_summary
+      optional:
+        - compliance_checklist
+        - security_audit_trail
+        - third_party_security_review
+        
+    refactoring_complete:
+      mandatory:
+        - before_after_code_metrics
+        - test_suite_still_passing
+        - performance_unchanged_proof
+        - api_compatibility_verified
+      optional:
+        - code_quality_improvements
+        - technical_debt_reduction
+        - maintainability_metrics
+
+  # Shadow quality tracking configuration
+  shadow_quality_tracking:
+    enabled: true
+    auto_create: true
+    prefix: "Quality Tracking:"
+    labels:
+      - "quality:shadow"
+      - "state:quality-tracking"
+    triggers:
+      complexity: ["medium", "high", "very-high"]
+      risk_level: ["medium", "high", "critical"]
+      security_changes: true
+      large_changes: ">500 lines"
+      
+  # Verification parallelism configuration  
+  verification_parallelism:
+    enabled: true
+    strategies:
+      main_development:
+        states: ["implementing", "architecting", "planning"]
+        description: "Primary development workflow"
+      quality_assurance:
+        states: ["skeptical_review", "quality_tracking", "evidence_gathering"]
+        description: "Parallel quality verification"
+      can_run_simultaneously: true
+      max_parallel_streams: 2
+      
+  # Adversarial testing configuration
+  adversarial_testing:
+    enabled: true
+    default_mindset: "skeptical"
+    evidence_based_decisions: true
+    risk_escalation:
+      enabled: true
+      auto_triggers: true
+      escalation_factors:
+        - security_file_changes
+        - authentication_modifications  
+        - payment_processing_changes
+        - large_diffs
+        - missing_tests
+        - previous_failures
+
   # GitHub integration
   github:
     auto_labels:
@@ -318,3 +627,140 @@ workflow:
       enabled: true
       on_complete: true
       add_comment: true
+
+  # Arbitration system configuration (Issue #61)
+  arbitration:
+    enabled: true
+    
+    # Conflict detection thresholds
+    conflict_detection:
+      disagreement_threshold: 0.3
+      confidence_threshold: 0.5
+      split_decision_threshold: 0.4
+      outlier_detection_stddev: 2.0
+      low_confidence_threshold: 0.4
+      expertise_coverage_threshold: 0.7
+      
+    # Escalation configuration
+    escalation:
+      max_levels: 3
+      timeout_minutes:
+        automated_resolution: 5
+        weighted_consensus: 10
+        expert_panel: 30
+        arbitrator_agent: 45
+        evidence_review: 30
+        human_intervention: 1440  # 24 hours
+      
+      strategies:
+        conservative:
+          enabled: true
+          use_case: "security_critical OR risk_level >= high"
+          
+        balanced:
+          enabled: true
+          use_case: "default"
+          
+        aggressive:
+          enabled: true
+          use_case: "risk_level <= low AND complexity <= medium"
+          
+        security_focused:
+          enabled: true
+          use_case: "security_critical = true"
+          
+        efficiency_focused:
+          enabled: true
+          use_case: "time_critical = true"
+    
+    # Arbitrator agent configuration
+    arbitrator_agents:
+      default:
+        mode: "balanced"
+        skills:
+          - "evidence_analysis"
+          - "reasoning_evaluation"
+          - "bias_detection"
+          - "conflict_mediation"
+        confidence_threshold: 0.75
+        max_analysis_time_minutes: 30
+        
+      security_specialist:
+        mode: "analytical"
+        skills:
+          - "evidence_analysis"
+          - "reasoning_evaluation"
+          - "technical_expertise"
+          - "risk_assessment"
+        expertise_domains: ["security", "compliance"]
+        confidence_threshold: 0.85
+        max_analysis_time_minutes: 45
+        
+      consensus_builder:
+        mode: "consensus_building"
+        skills:
+          - "conflict_mediation"
+          - "pattern_recognition"
+          - "bias_detection"
+          - "reasoning_evaluation"
+        confidence_threshold: 0.7
+        max_analysis_time_minutes: 60
+    
+    # Decision recording and audit
+    decision_recording:
+      enabled: true
+      retention_days: 365
+      verification_enabled: true
+      compliance_threshold: 0.8
+      
+      audit_events:
+        - "decision_initiated"
+        - "conflict_detected"
+        - "escalation_triggered"
+        - "resolution_achieved"
+        - "human_escalated"
+        - "decision_overridden"
+        
+    # Human escalation configuration
+    human_escalation:
+      enabled: true
+      notification_channels:
+        - "github_issue_comment"
+        - "slack_alert"
+        - "email_notification"
+      timeout_hours: 24
+      auto_reminder_hours: 4
+      
+      escalation_triggers:
+        - "arbitration_timeout"
+        - "critical_security_conflict"
+        - "expert_panel_deadlock"
+        - "compliance_violation"
+        
+    # Integration with existing workflow
+    workflow_integration:
+      trigger_states:
+        - "validating"
+        - "implementing"
+        - "pr_validating"
+      
+      conflict_detection_points:
+        - "agent_vote_collection"
+        - "quality_gate_evaluation"
+        - "pr_review_conflicts"
+        
+      parallel_execution: true
+      checkpoint_integration: true
+      
+    # Performance monitoring
+    metrics:
+      track_resolution_time: true
+      track_escalation_patterns: true
+      track_confidence_accuracy: true
+      track_human_intervention_rate: true
+      
+      performance_targets:
+        average_resolution_time_minutes: 15
+        escalation_rate_threshold: 0.2
+        human_intervention_rate_threshold: 0.1
+        confidence_accuracy_threshold: 0.85

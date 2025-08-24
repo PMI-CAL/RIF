@@ -1,0 +1,33 @@
+{
+  "task_id": "artifacts_test",
+  "status": "completed",
+  "start_time": "2025-08-23T13:14:12.321508",
+  "end_time": "2025-08-23T13:14:12.321625",
+  "duration_seconds": 0.000117,
+  "confidence_score": 0.9,
+  "result_data": {
+    "scan_id": "scan_1755980052",
+    "vulnerabilities": [],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "files_scanned": 0,
+    "lines_scanned": 0,
+    "recommendations": [],
+    "scan_duration_seconds": 9.3e-05
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980052.json",
+    "vulnerability_summary_scan_1755980052.md",
+    "remediation_plan_scan_1755980052.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "5bbe59fe-abe6-44ff-a3e8-6f10822e2c72"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "task_id": "perf_test_comprehensive",
+  "status": "completed",
+  "start_time": "2025-08-23T13:17:09.567705",
+  "end_time": "2025-08-23T13:17:09.644054",
+  "duration_seconds": 0.076349,
+  "confidence_score": 0.9,
+  "result_data": {
+    "scan_id": "scan_1755980229",
+    "vulnerabilities": [
+      {
+        "vuln_id": "secret_be02c617",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "small.py",
+        "line_number": 101,
+        "code_snippet": "API_KEY = \"sk-test123456789\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 0,
+      "high": 1,
+      "critical": 0
+    },
+    "files_scanned": 3,
+    "lines_scanned": 4353,
+    "recommendations": [
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.076284
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980229.json",
+    "vulnerability_summary_scan_1755980229.md",
+    "remediation_plan_scan_1755980229.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "115c769f-942e-406c-b570-ac08d1dbcfb6"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "task_id": "invalid_scan",
+  "status": "failed",
+  "start_time": "2025-08-23T13:17:34.519346",
+  "end_time": "2025-08-23T13:17:34.519370",
+  "duration_seconds": 2.4e-05,
+  "confidence_score": 0.0,
+  "result_data": null,
+  "error_message": "Unknown scan type: nonexistent",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "516e9260-a9d1-4718-8ce6-0079a5a89768"
+  }
+}

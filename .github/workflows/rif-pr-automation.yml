@@ -1,0 +1,198 @@
+name: RIF PR Automation
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, review_requested]
+    branches: [main, develop]
+  check_run:
+    types: [completed]
+  workflow_run:
+    workflows: ["RIF PR Quality Gates"]
+    types: [completed]
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  # PR Setup and Enhancement
+  pr-setup:
+    name: PR Setup and Enhancement
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'opened'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Auto-assign reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Check for CODEOWNERS file
+            let reviewers = [];
+            try {
+              const codeowners = fs.readFileSync('.github/CODEOWNERS', 'utf8');
+              const lines = codeowners.split('\n');
+              
+              // Extract reviewers from CODEOWNERS (simplified)
+              lines.forEach(line => {
+                if (line.trim() && !line.startsWith('#')) {
+                  const parts = line.split(/\s+/);
+                  if (parts.length > 1) {
+                    reviewers.push(...parts.slice(1).map(r => r.replace('@', '')));
+                  }
+                }
+              });
+            } catch (error) {
+              console.log('No CODEOWNERS file found, using default reviewers');
+              reviewers = ['maintainer']; // fallback
+            }
+            
+            // Remove duplicates and author
+            reviewers = [...new Set(reviewers)].filter(r => r !== context.actor);
+            
+            if (reviewers.length > 0) {
+              await github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.issue.number,
+                reviewers: reviewers.slice(0, 3) // Max 3 reviewers
+              });
+            }
+
+      - name: Add RIF labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = ['rif-managed', 'state:pr_validating'];
+            
+            // Determine change type based on files
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            // Add labels based on file patterns
+            if (files.some(f => f.filename.includes('test'))) {
+              labels.push('testing');
+            }
+            if (files.some(f => f.filename.includes('doc'))) {
+              labels.push('documentation');
+            }
+            if (files.some(f => f.filename.includes('security'))) {
+              labels.push('security');
+            }
+            
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: labels
+            });
+
+  # Monitor Quality Gates
+  quality-gate-monitor:
+    name: Quality Gate Monitoring
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_run'
+    steps:
+      - name: Update PR with quality gate results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Find associated PR
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${github.event.workflow_run.head_branch}`,
+              state: 'open'
+            });
+            
+            if (prs.length === 0) return;
+            
+            const pr = prs[0];
+            const success = github.event.workflow_run.conclusion === 'success';
+            
+            // Update PR labels
+            if (success) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: ['quality-gates-passed', 'ready-for-merge']
+              });
+            } else {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: ['quality-gates-failed', 'needs-work']
+              });
+            }
+
+  # Auto-merge when conditions are met
+  auto-merge:
+    name: Auto-merge PR
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Check merge conditions and auto-merge
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Find associated PR
+            const { data: prs } = await github.rest.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              head: `${context.repo.owner}:${github.event.workflow_run.head_branch}`,
+              state: 'open'
+            });
+            
+            if (prs.length === 0) return;
+            
+            const pr = prs[0];
+            
+            // Check if PR has required labels for auto-merge
+            const labels = pr.labels.map(l => l.name);
+            const hasQualityGatesPassed = labels.includes('quality-gates-passed');
+            const isRifManaged = labels.includes('rif-managed');
+            const isReadyForMerge = labels.includes('ready-for-merge');
+            
+            if (!hasQualityGatesPassed || !isRifManaged || !isReadyForMerge) {
+              console.log('PR not ready for auto-merge');
+              return;
+            }
+            
+            // Check for required reviews
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+            
+            const approvedReviews = reviews.filter(r => r.state === 'APPROVED');
+            const hasApprovals = approvedReviews.length > 0;
+            
+            if (hasApprovals) {
+              try {
+                await github.rest.pulls.merge({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  merge_method: 'squash'
+                });
+                
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  labels: ['auto-merged']
+                });
+                
+                console.log(`PR #${pr.number} auto-merged successfully`);
+              } catch (error) {
+                console.error('Auto-merge failed:', error.message);
+              }
+            }

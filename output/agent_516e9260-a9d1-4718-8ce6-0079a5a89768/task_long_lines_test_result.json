@@ -1,0 +1,72 @@
+{
+  "task_id": "long_lines_test",
+  "status": "completed",
+  "start_time": "2025-08-23T13:17:34.520948",
+  "end_time": "2025-08-23T13:17:34.524108",
+  "duration_seconds": 0.00316,
+  "confidence_score": 0.9,
+  "result_data": {
+    "scan_id": "scan_1755980254",
+    "vulnerabilities": [
+      {
+        "vuln_id": "secret_8926a662",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "long_lines.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = \"sk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_8aec392d",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "long_lines.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = \"sk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 0,
+      "high": 2,
+      "critical": 0
+    },
+    "files_scanned": 1,
+    "lines_scanned": 2,
+    "recommendations": [
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.003115
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980254.json",
+    "vulnerability_summary_scan_1755980254.md",
+    "remediation_plan_scan_1755980254.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "516e9260-a9d1-4718-8ce6-0079a5a89768"
+  }
+}

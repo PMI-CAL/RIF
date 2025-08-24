@@ -1,0 +1,347 @@
+# RIF Monitoring and Metrics Configuration
+# Tracks system performance, knowledge migration progress, and anomalies
+version: "1.0.0"
+name: "RIF System Monitoring"
+
+# Core monitoring settings
+monitoring:
+  enabled: true
+  
+  # Sampling and collection intervals
+  collection:
+    metrics_interval: "30s"       # How often to collect metrics
+    log_interval: "60s"          # How often to flush logs
+    alert_check_interval: "15s"   # How often to check for alerts
+    dashboard_refresh: "10s"      # Dashboard update frequency
+    
+  # Data retention policies
+  retention:
+    metrics:
+      high_frequency: "24h"      # Sub-minute data
+      medium_frequency: "7d"     # Minute-level data
+      low_frequency: "90d"       # Hour/day aggregates
+    logs:
+      debug: "24h"
+      info: "7d"
+      warn: "30d"
+      error: "90d"
+    alerts:
+      resolved: "7d"
+      active: "until_resolved"
+      
+# Performance metrics to track
+metrics:
+  memory:
+    enabled: true
+    targets:
+      - "lightrag_process"
+      - "knowledge_system"
+      - "claude_code_session"
+      - "shadow_mode_comparison"
+    thresholds:
+      warning: "75%"          # Memory usage warning
+      critical: "90%"         # Memory usage critical
+      oom_risk: "95%"        # Out of memory risk
+    collection_method: "psutil"
+    
+  latency:
+    enabled: true
+    targets:
+      - name: "knowledge_query"
+        description: "Time to query knowledge base"
+        threshold_warning: "500ms"
+        threshold_critical: "2000ms"
+      - name: "knowledge_store"
+        description: "Time to store new knowledge"
+        threshold_warning: "1000ms"
+        threshold_critical: "5000ms"
+      - name: "agent_activation"
+        description: "Time to activate an agent"
+        threshold_warning: "2000ms"
+        threshold_critical: "10000ms"
+      - name: "shadow_mode_comparison"
+        description: "Time to compare shadow vs primary results"
+        threshold_warning: "1000ms"
+        threshold_critical: "3000ms"
+    collection_method: "timer_decorators"
+    
+  indexing:
+    enabled: true
+    targets:
+      - name: "documents_per_second"
+        description: "Knowledge indexing throughput"
+        threshold_warning: "10/s"    # Below 10 docs per second
+        threshold_critical: "5/s"    # Below 5 docs per second
+      - name: "index_size"
+        description: "Total index size in MB"
+        threshold_warning: "1000MB"
+        threshold_critical: "5000MB"
+      - name: "embedding_generation_rate"
+        description: "Embeddings generated per second"
+        threshold_warning: "5/s"
+        threshold_critical: "2/s"
+    collection_method: "lightrag_hooks"
+    
+  workflow:
+    enabled: true
+    targets:
+      - "issue_processing_time"
+      - "state_transition_latency"
+      - "agent_success_rate"
+      - "checkpoint_creation_rate"
+      - "error_recovery_time"
+    collection_method: "github_webhooks"
+    
+  consensus:
+    enabled: true
+    targets:
+      - name: "agreement_level"
+        description: "Level of agreement in voting sessions (0.0-1.0)"
+        threshold_warning: "0.6"      # Below 60% agreement
+        threshold_critical: "0.4"     # Below 40% agreement
+      - name: "decision_time"
+        description: "Time to reach consensus decision"
+        threshold_warning: "1800000ms"  # 30 minutes
+        threshold_critical: "3600000ms" # 1 hour
+      - name: "dissenter_count"
+        description: "Number of dissenting agents per session"
+        threshold_warning: "2"        # More than 2 dissenters
+        threshold_critical: "4"       # More than 4 dissenters
+      - name: "confidence_avg"
+        description: "Average confidence across all votes"
+        threshold_warning: "0.5"      # Below 50% average confidence
+        threshold_critical: "0.3"     # Below 30% average confidence
+    collection_method: "voting_session_hooks"
+
+# Shadow mode specific monitoring
+shadow_mode:
+  enabled: true
+  comparison_tracking:
+    - metric: "response_accuracy"
+      description: "Percentage match between old and new system responses"
+      threshold: "90%"
+    - metric: "performance_delta"
+      description: "Performance difference between systems"
+      threshold: "20%"
+    - metric: "error_rate_delta"
+      description: "Error rate difference"
+      threshold: "5%"
+  log_differences: true
+  alert_on_significant_differences: true
+
+# Anomaly detection configuration
+anomaly_detection:
+  enabled: true
+  
+  algorithms:
+    - name: "statistical_threshold"
+      description: "Simple threshold-based detection"
+      enabled: true
+      sensitivity: "medium"
+      
+    - name: "moving_average"
+      description: "Detect deviations from moving average"
+      enabled: true
+      window_size: "1h"
+      deviation_multiplier: 3
+      
+    - name: "seasonal_decomposition"
+      description: "Account for daily/weekly patterns"
+      enabled: false  # Disabled for now, needs historical data
+      
+  metrics_to_monitor:
+    - "memory.usage_percent"
+    - "latency.knowledge_query"
+    - "latency.knowledge_store"
+    - "indexing.documents_per_second"
+    - "workflow.issue_processing_time"
+    - "consensus.agreement_level"
+    - "consensus.decision_time"
+    - "consensus.confidence_avg"
+    
+  notification_channels:
+    - "github_issue_comment"
+    - "log_file"
+
+# Alerting configuration
+alerts:
+  enabled: true
+  
+  channels:
+    github:
+      enabled: true
+      repository: "cal/RIF"
+      comment_on_issues: true
+      create_issues_for_critical: true
+      
+    log_file:
+      enabled: true
+      path: "/Users/cal/DEV/RIF/knowledge/monitoring/alerts.log"
+      
+    console:
+      enabled: true
+      format: "structured"
+      
+  rules:
+    - name: "high_memory_usage"
+      condition: "memory.usage_percent > 85"
+      severity: "warning"
+      frequency: "5m"  # Don't spam alerts
+      message: "Memory usage is high: {{value}}%"
+      
+    - name: "critical_memory_usage"
+      condition: "memory.usage_percent > 95"
+      severity: "critical"
+      frequency: "1m"
+      message: "CRITICAL: Memory usage at {{value}}%, system may crash"
+      
+    - name: "slow_knowledge_queries"
+      condition: "latency.knowledge_query > 2000"
+      severity: "warning"
+      frequency: "10m"
+      message: "Knowledge queries are slow: {{value}}ms average"
+      
+    - name: "indexing_stalled"
+      condition: "indexing.documents_per_second < 1"
+      severity: "critical" 
+      frequency: "5m"
+      message: "Knowledge indexing has stalled: {{value}} docs/second"
+      
+    - name: "shadow_mode_divergence"
+      condition: "shadow_mode.response_accuracy < 80"
+      severity: "warning"
+      frequency: "15m"
+      message: "Shadow mode showing {{value}}% accuracy - investigate differences"
+      
+    - name: "low_consensus_agreement"
+      condition: "consensus.agreement_level < 0.6"
+      severity: "warning"
+      frequency: "5m"
+      message: "Low consensus agreement detected: {{value}} - consider additional discussion"
+      
+    - name: "critical_consensus_disagreement"
+      condition: "consensus.agreement_level < 0.4"
+      severity: "critical"
+      frequency: "1m"
+      message: "Critical consensus disagreement: {{value}} - arbitration may be required"
+      
+    - name: "slow_consensus_formation"
+      condition: "consensus.decision_time > 1800000"
+      severity: "warning"
+      frequency: "10m"
+      message: "Consensus taking too long: {{value}}ms - check for blockers"
+      
+    - name: "low_consensus_confidence"
+      condition: "consensus.confidence_avg < 0.5"
+      severity: "warning"
+      frequency: "5m"
+      message: "Low consensus confidence: {{value}} - agents need more evidence"
+
+# Dashboard configuration  
+dashboard:
+  enabled: true
+  
+  layout:
+    - panel: "system_overview"
+      metrics: ["memory", "cpu", "disk_usage"]
+      type: "gauge"
+      
+    - panel: "knowledge_performance"
+      metrics: ["latency.knowledge_query", "latency.knowledge_store", "indexing.documents_per_second"]
+      type: "timeseries"
+      timerange: "1h"
+      
+    - panel: "workflow_health"
+      metrics: ["workflow.issue_processing_time", "workflow.agent_success_rate"]
+      type: "timeseries"
+      timerange: "6h"
+      
+    - panel: "shadow_mode_comparison"
+      metrics: ["shadow_mode.response_accuracy", "shadow_mode.performance_delta"]
+      type: "comparison"
+      timerange: "24h"
+      
+    - panel: "consensus_health"
+      metrics: ["consensus.agreement_level", "consensus.confidence_avg", "consensus.dissenter_count"]
+      type: "gauge"
+      
+    - panel: "consensus_trends"
+      metrics: ["consensus.agreement_level", "consensus.decision_time"]
+      type: "timeseries"
+      timerange: "12h"
+      
+    - panel: "recent_alerts"
+      type: "alert_list"
+      limit: 10
+      
+  export:
+    enabled: true
+    formats: ["json", "csv"]
+    schedule: "daily"
+    path: "/Users/cal/DEV/RIF/knowledge/monitoring/reports/"
+
+# Storage configuration
+storage:
+  backend: "file"  # Simple file-based storage for now
+  
+  paths:
+    metrics: "/Users/cal/DEV/RIF/knowledge/monitoring/metrics/"
+    logs: "/Users/cal/DEV/RIF/knowledge/monitoring/logs/"  
+    alerts: "/Users/cal/DEV/RIF/knowledge/monitoring/alerts/"
+    reports: "/Users/cal/DEV/RIF/knowledge/monitoring/reports/"
+    consensus: "/Users/cal/DEV/RIF/knowledge/monitoring/consensus/"
+    
+  compression:
+    enabled: true
+    algorithm: "gzip"
+    older_than: "24h"
+
+# Integration settings
+integrations:
+  lightrag:
+    enabled: true
+    track_operations: true
+    hook_into_methods: ["query", "store", "index", "embed"]
+    
+  github:
+    enabled: true
+    webhook_monitoring: true
+    api_rate_limiting_alerts: true
+    
+  rif_workflow:
+    enabled: true
+    state_transition_tracking: true
+    checkpoint_monitoring: true
+    
+  claude_code:
+    enabled: true
+    session_monitoring: true
+    tool_usage_tracking: true
+
+# Development and debugging
+debug:
+  enabled: false  # Set to true for verbose logging
+  log_all_metrics: false
+  performance_profiling: false
+  mock_data_generation: false
+
+# Health check configuration
+health_checks:
+  enabled: true
+  interval: "60s"
+  
+  checks:
+    - name: "monitoring_process"
+      type: "process"
+      
+    - name: "disk_space"
+      type: "disk_usage"
+      threshold: "90%"
+      
+    - name: "knowledge_base_accessible"
+      type: "service"
+      endpoint: "lightrag"
+      
+    - name: "github_api_reachable"
+      type: "network"
+      target: "api.github.com"

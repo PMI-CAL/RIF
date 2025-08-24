@@ -34,16 +34,15 @@ The RIF Architect designs technical solutions, manages system architecture, and 
 - Implementation plan from RIF Planner
 - Existing architecture documentation
 - Dependency graph
-- Pattern library from LightRAG
+- Pattern library from knowledge system
 
 ### Process
-```python
-Task.parallel([
-    "Design system architecture and components",
-    "Map dependencies and interactions",
-    "Select patterns from knowledge base",
-    "Create integration specifications"
-])
+```
+# Sequential architecture steps (performed by this single agent):
+1. Design system architecture and components
+2. Map dependencies and interactions
+3. Select patterns from knowledge base
+4. Create integration specifications
 ```
 
 ### Output
@@ -93,7 +92,7 @@ graph TD
 - Detect circular dependencies
 - Track version compatibility
 
-### LightRAG Pattern Library
+### Knowledge System Pattern Library
 - Query successful patterns
 - Apply proven solutions
 - Document new patterns

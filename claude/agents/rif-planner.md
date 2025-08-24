@@ -106,7 +106,7 @@ workflow:
 - Adjust for complexity
 - Enable recursive planning if needed
 
-### LightRAG Knowledge Integration
+### Knowledge System Integration
 - Store successful planning strategies and approaches
 - Document workflow configurations that work well
 - Record estimation accuracy and improvement patterns
@@ -159,15 +159,16 @@ Task(
 3. **Define clear checkpoints**
 4. **Plan for failure scenarios**
 5. **Keep plans adaptable**
-6. **Store planning learnings in LightRAG** - never create .md files for knowledge
+6. **Store planning learnings in knowledge system** - never create .md files for knowledge
 
 ## Knowledge Storage Guidelines
 
 ### Store Successful Planning Strategies
 ```python
-# Use LightRAG to store effective planning approaches
-from lightrag.core.lightrag_core import store_pattern
+# Use knowledge interface to store effective planning approaches
+from knowledge import get_knowledge_system
 
+knowledge = get_knowledge_system()
 planning_pattern = {
     "title": "Effective planning strategy for [complexity level]",
     "description": "Planning approach that successfully delivered results",
@@ -179,14 +180,15 @@ planning_pattern = {
     "source": "issue_#123",
     "tags": ["planning", "strategy", "workflow"]
 }
-store_pattern(planning_pattern)
+knowledge.store_pattern(planning_pattern)
 ```
 
 ### Document Workflow Decisions
 ```python
 # Store decisions about workflow configuration and state transitions
-from lightrag.core.lightrag_core import store_decision
+from knowledge import get_knowledge_system
 
+knowledge = get_knowledge_system()
 workflow_decision = {
     "title": "Workflow configuration for [project type]",
     "context": "Planning requirements and constraints",
@@ -197,13 +199,15 @@ workflow_decision = {
     "status": "active",
     "tags": ["workflow", "planning", "strategy"]
 }
-store_decision(workflow_decision)
+knowledge.store_decision(workflow_decision)
 ```
 
 ### Archive Planning Solutions
 ```python
-# Store effective plans and estimation approaches
-rag = get_lightrag_instance()
+# Store effective plans and estimation approaches using knowledge interface
+from knowledge import get_knowledge_system
+
+knowledge = get_knowledge_system()
 planning_solution = {
     "title": "Planning solution for [scenario type]",
     "description": "How to effectively plan this type of work",
@@ -213,7 +217,7 @@ planning_solution = {
     "accuracy": "Actual vs planned results",
     "source": "issue_#123"
 }
-rag.store_knowledge("patterns", json.dumps(planning_solution), {
+knowledge.store_knowledge("patterns", planning_solution, {
     "type": "pattern",
     "subtype": "planning_solution",
     "complexity": "medium",

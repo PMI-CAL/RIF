@@ -1,0 +1,12 @@
+{
+  "id": "patterns_20250823_042025_46b7cac0",
+  "content": "{\n  \"title\": \"Issue #37 Parallel Testing Pattern\",\n  \"description\": \"Pattern for running new system alongside legacy system for testing\",\n  \"implementation\": \"Use shadow mode to run both systems in parallel\",\n  \"benefits\": \"Compare results, log differences, no agent impact\",\n  \"complexity\": \"low\",\n  \"source\": \"issue_37_testing\"\n}",
+  "metadata": {
+    "issue": "37",
+    "type": "implementation_pattern",
+    "complexity": "low",
+    "testing": true
+  },
+  "timestamp": "2025-08-23T04:20:25.383686",
+  "collection": "patterns"
+}

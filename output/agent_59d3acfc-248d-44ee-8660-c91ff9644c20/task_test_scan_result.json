@@ -1,0 +1,74 @@
+{
+  "task_id": "test_scan",
+  "status": "completed",
+  "start_time": "2025-08-23T13:14:40.855118",
+  "end_time": "2025-08-23T13:14:40.858106",
+  "duration_seconds": 0.002988,
+  "confidence_score": 0.8,
+  "result_data": {
+    "scan_id": "scan_1755980080",
+    "vulnerabilities": [
+      {
+        "vuln_id": "secret_d977e9e2",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "secrets.py",
+        "line_number": 2,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "xss_046af337",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "xss.js",
+        "line_number": 3,
+        "code_snippet": "document.getElementById('output').innerHTML = msg;",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 1,
+      "high": 1,
+      "critical": 0
+    },
+    "files_scanned": 3,
+    "lines_scanned": 11,
+    "recommendations": [
+      "Implement Content Security Policy (CSP)",
+      "Use secure DOM manipulation methods",
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.002923
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980080.json",
+    "vulnerability_summary_scan_1755980080.md",
+    "remediation_plan_scan_1755980080.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "59d3acfc-248d-44ee-8660-c91ff9644c20"
+  }
+}

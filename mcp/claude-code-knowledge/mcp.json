@@ -1,0 +1,217 @@
+{
+  "name": "claude-code-knowledge",
+  "version": "1.0.0",
+  "description": "MCP server providing Claude Code capability knowledge and implementation guidance",
+  "author": "RIF Team",
+  "license": "MIT",
+  "homepage": "https://github.com/your-org/rif",
+  
+  "mcpVersion": "2024-11-05",
+  "
+": {
+    "tools": [
+      {
+        "name": "check_compatibility",
+        "description": "Validates proposed solution against Claude Code capabilities and limitations",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "issue_description": {
+              "type": "string",
+              "description": "Description of the issue or requirement to analyze"
+            },
+            "approach": {
+              "type": "string", 
+              "description": "Proposed approach or solution (optional)"
+            }
+          },
+          "required": ["issue_description"]
+        }
+      },
+      {
+        "name": "recommend_pattern",
+        "description": "Returns correct implementation patterns for specific technology and task type",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "technology": {
+              "type": "string",
+              "description": "Technology stack (e.g., Python, JavaScript, React)"
+            },
+            "task_type": {
+              "type": "string",
+              "description": "Type of task (e.g., file processing, API integration, testing)"
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Maximum number of patterns to return (default: 5, max: 10)",
+              "minimum": 1,
+              "maximum": 10
+            }
+          },
+          "required": ["technology", "task_type"]
+        }
+      },
+      {
+        "name": "find_alternatives",
+        "description": "Proposes compatible solutions when incompatible approach is detected",
+        "inputSchema": {
+          "type": "object", 
+          "properties": {
+            "problematic_approach": {
+              "type": "string",
+              "description": "The problematic approach that needs alternatives"
+            }
+          },
+          "required": ["problematic_approach"]
+        }
+      },
+      {
+        "name": "validate_architecture", 
+        "description": "Reviews system design against Claude Code architectural constraints",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "system_design": {
+              "type": "string",
+              "description": "Description of the proposed system architecture"
+            }
+          },
+          "required": ["system_design"]
+        }
+      },
+      {
+        "name": "query_limitations",
+        "description": "Returns known limitations for specific capability area",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "capability_area": {
+              "type": "string",
+              "description": "The capability area to query (e.g., orchestration, file operations, networking)"
+            },
+            "severity": {
+              "type": "string",
+              "description": "Filter by severity level (optional)",
+              "enum": ["low", "medium", "high"]
+            }
+          },
+          "required": ["capability_area"]
+        }
+      }
+    ]
+  },
+  
+  "server": {
+    "command": "python",
+    "args": ["-m", "mcp.claude-code-knowledge.server"],
+    "env": {
+      "PYTHONPATH": "${workspaceRoot}"
+    }
+  },
+
+  "requirements": {
+    "python": ">=3.8",
+    "packages": [
+      "duckdb>=0.9.0",
+      "numpy>=1.21.0"
+    ]
+  },
+
+  "configuration": {
+    "log_level": {
+      "type": "string",
+      "description": "Logging level",
+      "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
+      "default": "INFO"
+    },
+    "cache_size": {
+      "type": "integer", 
+      "description": "Maximum number of cached queries",
+      "default": 100,
+      "minimum": 10,
+      "maximum": 1000
+    },
+    "cache_ttl": {
+      "type": "integer",
+      "description": "Cache time-to-live in seconds", 
+      "default": 300,
+      "minimum": 60,
+      "maximum": 3600
+    },
+    "timeout_seconds": {
+      "type": "integer",
+      "description": "Request timeout in seconds",
+      "default": 30,
+      "minimum": 5,
+      "maximum": 120
+    }
+  },
+
+  "capabilities": {
+    "read_only": true,
+    "requires_network": false,
+    "requires_filesystem": true,
+    "supports_caching": true,
+    "supports_streaming": false
+  },
+
+  "resources": {
+    "memory_limit_mb": 256,
+    "cpu_cores": 1,
+    "disk_space_mb": 50
+  },
+
+  "integration": {
+    "knowledge_graph": {
+      "database": "DuckDB",
+      "path": "knowledge/hybrid_knowledge.duckdb",
+      "required_entities": [
+        "claude_capability",
+        "claude_limitation", 
+        "claude_tool",
+        "implementation_pattern",
+        "anti_pattern"
+      ]
+    },
+    "dependencies": [
+      "RIFDatabase",
+      "VectorSearchEngine",
+      "HybridKnowledgeSystem"
+    ]
+  },
+
+  "performance": {
+    "target_response_time_ms": 200,
+    "max_concurrent_requests": 10,
+    "cache_hit_ratio_target": 0.7
+  },
+
+  "monitoring": {
+    "health_check_endpoint": "/health",
+    "metrics_endpoint": "/metrics",
+    "status_codes": {
+      "healthy": 200,
+      "degraded": 503,
+      "unhealthy": 500
+    }
+  },
+
+  "security": {
+    "input_validation": true,
+    "output_sanitization": true,
+    "request_size_limit_mb": 1,
+    "rate_limiting": {
+      "requests_per_minute": 60,
+      "burst_size": 10
+    }
+  },
+
+  "metadata": {
+    "keywords": ["claude-code", "knowledge", "patterns", "compatibility", "mcp"],
+    "categories": ["development", "ai-assistance", "patterns"],
+    "phase": "Phase 2 - MCP Server Implementation",
+    "created_date": "2025-08-23",
+    "api_version": "1.0"
+  }
+}

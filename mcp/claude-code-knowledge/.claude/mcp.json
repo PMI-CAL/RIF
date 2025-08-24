@@ -1,0 +1,170 @@
+{
+  "name": "claude-code-knowledge",
+  "version": "1.0.0",
+  "description": "Claude Code Knowledge MCP Server - Provides access to RIF knowledge graph for Claude Code compatibility checks, pattern recommendations, and architectural guidance.",
+  "author": "RIF Team",
+  "license": "MIT",
+  
+  "server": {
+    "command": "python3",
+    "args": [
+      "/Users/cal/dev/rif/mcp/claude-code-knowledge/server.py"
+    ],
+    "env": {
+      "PYTHONPATH": "/Users/cal/dev/rif/mcp/claude-code-knowledge:/Users/cal/dev/rif",
+      "MCP_LOG_LEVEL": "INFO"
+    }
+  },
+  
+  "capabilities": {
+    "tools": [
+      {
+        "name": "check_compatibility",
+        "description": "Check if a proposed approach is compatible with Claude Code capabilities and limitations. Returns compatibility assessment with confidence score and recommendations.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "issue_description": {
+              "type": "string",
+              "description": "Description of the issue or task to be solved"
+            },
+            "approach": {
+              "type": "string", 
+              "description": "Proposed approach or solution method"
+            }
+          },
+          "required": ["issue_description", "approach"]
+        }
+      },
+      {
+        "name": "recommend_pattern",
+        "description": "Get implementation pattern recommendations based on technology, task type, and complexity. Returns proven patterns from the RIF knowledge base.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "task_description": {
+              "type": "string",
+              "description": "Description of the task or feature to implement"
+            },
+            "technology": {
+              "type": "string",
+              "description": "Technology stack (e.g., Python, JavaScript, React, etc.)"
+            },
+            "complexity": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "very-high"],
+              "description": "Task complexity level"
+            },
+            "limit": {
+              "type": "integer",
+              "default": 5,
+              "description": "Maximum number of patterns to return"
+            }
+          },
+          "required": ["task_description", "technology", "complexity"]
+        }
+      },
+      {
+        "name": "find_alternatives",
+        "description": "Find alternative approaches when a proposed solution is problematic or incompatible. Returns alternative strategies and implementation methods.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "problematic_approach": {
+              "type": "string",
+              "description": "The approach that has issues or is incompatible"
+            },
+            "context": {
+              "type": "string", 
+              "description": "Context or requirements that the alternative should satisfy"
+            },
+            "constraint_type": {
+              "type": "string",
+              "enum": ["technical", "performance", "security", "compatibility"],
+              "description": "Type of constraint the alternative must address"
+            }
+          },
+          "required": ["problematic_approach", "context"]
+        }
+      },
+      {
+        "name": "validate_architecture",
+        "description": "Validate architectural components and design decisions against Claude Code capabilities and best practices. Returns validation results with issues and recommendations.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "architecture_description": {
+              "type": "string",
+              "description": "Description of the system architecture or design"
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of architectural components to validate"
+            },
+            "technology_stack": {
+              "type": "string",
+              "description": "Technology stack being used"
+            }
+          },
+          "required": ["architecture_description", "components"]
+        }
+      },
+      {
+        "name": "query_limitations",
+        "description": "Query specific limitations and constraints for a capability area. Returns detailed limitation information with severity levels and potential workarounds.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "capability_area": {
+              "type": "string",
+              "description": "The capability area to query (e.g., 'file_operations', 'network_access', 'system_commands')"
+            },
+            "severity_filter": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "critical"],
+              "description": "Filter limitations by severity level"
+            },
+            "include_workarounds": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether to include potential workarounds and alternatives"
+            }
+          },
+          "required": ["capability_area"]
+        }
+      }
+    ]
+  },
+  
+  "health_check": {
+    "endpoint": "/health",
+    "timeout_ms": 5000,
+    "expected_status": "healthy"
+  },
+  
+  "performance": {
+    "target_response_time_ms": 200,
+    "max_concurrent_requests": 10,
+    "cache_enabled": true,
+    "cache_ttl_seconds": 300
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  },
+  
+  "metadata": {
+    "category": "knowledge_base",
+    "tags": ["claude-code", "compatibility", "patterns", "architecture", "rif"],
+    "documentation": "https://github.com/PMI-CAL/rif/blob/main/mcp/claude-code-knowledge/README.md",
+    "support": "RIF Team",
+    "version_compatibility": {
+      "mcp": ">=1.0.0",
+      "claude_code": ">=1.0.0"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-08-23T20:01:33.381071",
+  "alert_rule": "server_unhealthy",
+  "severity": "critical",
+  "server_id": "test-server-unload",
+  "server_name": "Test Server Unload",
+  "message": "Server Test Server Unload is unhealthy after 1 consecutive failures",
+  "health_status": "unhealthy",
+  "consecutive_failures": 1,
+  "response_time_ms": 0.11014938354492188
+}

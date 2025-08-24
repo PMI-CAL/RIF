@@ -1,0 +1,61 @@
+{
+  "lightrag_core_integration": {
+    "success": true,
+    "collections": 4,
+    "test_storage": true,
+    "test_retrieval": true
+  },
+  "embedding_manager": {
+    "success": false,
+    "error": "numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject"
+  },
+  "agent_integration": {
+    "success": true,
+    "analyst_collections": 4,
+    "implementer_collections": 4,
+    "pattern_stored": true,
+    "similar_patterns_found": 5
+  },
+  "query_parsing_(issue_#33)": {
+    "success": true,
+    "queries_parsed": 5,
+    "average_parse_time_ms": 0.0007152557373046875,
+    "max_parse_time_ms": 0.0019073486328125,
+    "fast_parsing": true
+  },
+  "database_schema": {
+    "success": true,
+    "schema_exists": true,
+    "tables_found": 2,
+    "required_tables": 3,
+    "indexes_found": 2,
+    "schema_complete": false
+  },
+  "pipeline_checkpoints": {
+    "success": true,
+    "checkpoints_found": 4,
+    "total_expected": 4,
+    "checkpoints": {
+      "30": {
+        "exists": true,
+        "status": "complete",
+        "timestamp": "unknown"
+      },
+      "31": {
+        "exists": true,
+        "status": "complete",
+        "timestamp": "unknown"
+      },
+      "32": {
+        "exists": true,
+        "status": "complete",
+        "timestamp": "unknown"
+      },
+      "33": {
+        "exists": true,
+        "status": "complete",
+        "timestamp": "unknown"
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "task_id": "compliance_test",
+  "status": "completed",
+  "start_time": "2025-08-23T13:14:12.257324",
+  "end_time": "2025-08-23T13:14:12.257802",
+  "duration_seconds": 0.000478,
+  "confidence_score": 0.9,
+  "result_data": {
+    "owasp_top_10": {
+      "overall_score": 0.7142857142857143,
+      "passed_checks": 5,
+      "failed_checks": 2,
+      "total_checks": 7,
+      "findings": [
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "crypto_vuln.py",
+          "line": 4,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "MEDIUM",
+          "file": "xss_vuln.js",
+          "line": 3,
+          "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks."
+        }
+      ],
+      "recommendations": [
+        "Address identified OWASP Top 10 vulnerabilities",
+        "Implement secure coding training for development team",
+        "Add security testing to CI/CD pipeline"
+      ]
+    }
+  },
+  "error_message": "",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "a284ec47-7c11-4352-bc80-279909e3c6fa"
+  }
+}

@@ -1,0 +1,8 @@
+{
+    "project": "testproj-1755548667",
+    "type": "web-app",
+    "created": "2025-08-18T20:24:39Z",
+    "features": "real-time activity tracking, error logging and analysis, task completion metrics, session history, parallel work visualization, knowledge base tracker",
+    "tech_stack": "React, Node.js, WebSocket",
+    "repository": "https://github.com/PMI-CAL/testproj-1755548667"
+}

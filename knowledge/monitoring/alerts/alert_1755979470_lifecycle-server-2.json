@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-08-23T20:04:30.059472",
+  "alert_rule": "server_unhealthy",
+  "severity": "critical",
+  "server_id": "lifecycle-server-2",
+  "server_name": "Lifecycle Server 2",
+  "message": "Server Lifecycle Server 2 is unhealthy after 1 consecutive failures",
+  "health_status": "unhealthy",
+  "consecutive_failures": 1,
+  "response_time_ms": 1.0828971862792969
+}
