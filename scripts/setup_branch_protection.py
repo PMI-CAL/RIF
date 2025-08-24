@@ -24,10 +24,29 @@ logger = logging.getLogger(__name__)
 class BranchProtectionManager:
     """Manages GitHub branch protection rules with progressive activation"""
     
-    def __init__(self, repo: Optional[str] = None, config_path: str = ".github/branch-protection.json"):
-        self.repo = repo
+    def __init__(self, config_path: str = ".github/branch-protection.json", repo: Optional[str] = None):
         self.config_path = Path(config_path)
+        self.repo = repo
         self.audit_log: List[Dict[str, Any]] = []
+        self.config = self._load_config()
+        
+    def _load_config(self) -> Dict[str, Any]:
+        """Load configuration file or raise FileNotFoundError if missing"""
+        if not self.config_path.exists():
+            raise FileNotFoundError(f"Configuration file not found: {self.config_path}")
+        
+        with open(self.config_path, 'r') as f:
+            return json.load(f)
+        
+    def _merge_configs(self, base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
+        """Merge two configurations with override taking precedence"""
+        result = base.copy()
+        for key, value in override.items():
+            if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+                result[key] = self._merge_configs(result[key], value)
+            else:
+                result[key] = value
+        return result
         
     def load_configuration(self) -> Dict[str, Any]:
         """Load branch protection configuration"""
@@ -340,7 +359,7 @@ def main():
     args = parser.parse_args()
     
     try:
-        manager = BranchProtectionManager(args.repo, args.config)
+        manager = BranchProtectionManager(args.config, args.repo)
         
         if args.validate_only:
             config = manager.load_configuration()

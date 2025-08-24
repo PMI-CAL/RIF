@@ -302,7 +302,7 @@ def main():
     )
     parser.add_argument("--branch", default="main",
                        help="Branch to remove protection from (default: main)")
-    parser.add_argument("--reason", required=True,
+    parser.add_argument("--reason", required=False,
                        choices=["critical_security_patch", "emergency_hotfix", 
                                "system_outage_recovery", "deployment_blocker",
                                "quarterly_test", "manual_rollback"],
@@ -325,6 +325,12 @@ def main():
     if args.show_recent:
         manager.show_recent_emergencies(args.show_recent)
         sys.exit(0)
+    
+    # Validate that reason is provided for actual rollback operations
+    if not args.reason:
+        print("❌ ERROR: --reason is required for rollback operations")
+        print("Use --show-recent to view emergency history without performing rollback")
+        sys.exit(1)
     
     try:
         # Validate emergency authorization
