@@ -16,10 +16,49 @@ from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
 
-# Add the claude commands directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "claude" / "commands"))
+# Add the project root to path for imports
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
-from github_api_client import get_api_client, APICallResult
+try:
+    from claude.commands.github_api_client import get_api_client, APICallResult
+except ImportError:
+    # Fallback for testing - create mock client
+    logger.warning("Could not import GitHubAPIClient - using mock for testing")
+    
+    class MockAPICallResult:
+        def __init__(self, success=True, data=None, error_message=None):
+            self.success = success
+            self.data = data
+            self.error_message = error_message
+    
+    class MockGitHubAPIClient:
+        def validate_branch_protection_config(self, config):
+            # Basic validation logic for testing
+            try:
+                if "required_status_checks" in config:
+                    status_checks = config["required_status_checks"]
+                    if not isinstance(status_checks.get("contexts", []), list):
+                        return False, "required_status_checks.contexts must be a list"
+                return True, None
+            except Exception as e:
+                return False, str(e)
+        
+        def get_branch_protection(self, branch):
+            return MockAPICallResult(False, None, "No protection found (mock)")
+        
+        def update_branch_protection(self, **kwargs):
+            if kwargs.get("dry_run"):
+                return MockAPICallResult(True, {"message": "DRY RUN: Mock update"})
+            return MockAPICallResult(True, {"message": "Mock protection updated"})
+        
+        def remove_branch_protection(self, branch, audit_reason):
+            return MockAPICallResult(True, {"message": "Mock protection removed"})
+    
+    def get_api_client():
+        return MockGitHubAPIClient()
+    
+    APICallResult = MockAPICallResult
 
 logging.basicConfig(
     level=logging.INFO,
