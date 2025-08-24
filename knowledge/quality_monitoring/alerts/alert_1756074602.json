@@ -1,0 +1,16 @@
+{
+  "alert_type": "quality_threshold_violation",
+  "metric": {
+    "id": "metric-06510d89",
+    "metric_type": "system_performance",
+    "timestamp": "2025-08-24T15:30:02.676318",
+    "value": 99.8,
+    "target_value": 99.9,
+    "source": "system_monitor",
+    "context": {},
+    "evidence": {},
+    "metadata": {}
+  },
+  "timestamp": "2025-08-24T15:30:02.677583",
+  "message": "Quality Alert: system_performance = 99.80 (target: 99.90) from system_monitor"
+}
