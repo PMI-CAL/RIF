@@ -1,0 +1,33 @@
+{
+  "task_id": "binary_test",
+  "status": "completed",
+  "start_time": "2025-08-23T13:17:34.520450",
+  "end_time": "2025-08-23T13:17:34.520631",
+  "duration_seconds": 0.000181,
+  "confidence_score": 0.9,
+  "result_data": {
+    "scan_id": "scan_1755980254",
+    "vulnerabilities": [],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "files_scanned": 0,
+    "lines_scanned": 0,
+    "recommendations": [],
+    "scan_duration_seconds": 0.000146
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980254.json",
+    "vulnerability_summary_scan_1755980254.md",
+    "remediation_plan_scan_1755980254.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "516e9260-a9d1-4718-8ce6-0079a5a89768"
+  }
+}

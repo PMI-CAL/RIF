@@ -1,0 +1,275 @@
+{
+  "issue_id": 70,
+  "title": "Design domain agent template system",
+  "analysis_type": "requirements_analysis",
+  "analyst": "RIF-Analyst", 
+  "analysis_date": "2025-08-23T21:15:00Z",
+  "complexity": "medium",
+  "planning_depth": "standard",
+  
+  "requirements_analysis": {
+    "primary_objective": "Design comprehensive domain agent template system with YAML schema, capability mapping, expertise definitions, and validation framework",
+    "core_capabilities": [
+      "agent_template_schema_design",
+      "capability_mapping_framework", 
+      "expertise_area_definitions",
+      "configuration_validation"
+    ],
+    "key_components": [
+      "yaml_based_template_schema",
+      "validation_framework", 
+      "capability_to_function_mapping",
+      "expertise_specialization_system"
+    ],
+    "acceptance_criteria": {
+      "template_schema": "Comprehensive YAML schema supporting metadata, capabilities, expertise, tools, validation rules",
+      "capability_mapping": "Framework enabling skill-to-function translation",
+      "expertise_definitions": "Support for technology and pattern specializations",
+      "validation_framework": "Schema compliance and capability verification"
+    }
+  },
+  
+  "context_window_analysis": {
+    "estimated_loc": "450-500",
+    "files_affected": 5,
+    "complexity_factors": {
+      "template_design": "high",
+      "validation_complexity": "medium",
+      "integration_requirements": "medium"
+    },
+    "needs_decomposition": false,
+    "rationale": "Well-scoped foundation implementation within context limits, enables cohesive template system delivery"
+  },
+  
+  "dependencies": {
+    "critical": [
+      {
+        "issue": 71,
+        "title": "Implement DomainAgentFactory class",
+        "status": "state:analyzing", 
+        "impact": "high",
+        "mitigation": "coordinate_interface_design"
+      },
+      {
+        "issue": 72,
+        "title": "Create frontend specialist agent",
+        "status": "state:planning",
+        "impact": "high",
+        "mitigation": "template_foundation_first"
+      },
+      {
+        "issue": 73,
+        "title": "Create backend specialist agent", 
+        "status": "state:planning",
+        "impact": "high",
+        "mitigation": "template_foundation_first"
+      },
+      {
+        "issue": 74,
+        "title": "Create security specialist agent",
+        "status": "state:planning",
+        "impact": "high", 
+        "mitigation": "template_foundation_first"
+      }
+    ],
+    "system": [
+      "claude/agents/ architectural patterns",
+      "config/ configuration management",
+      "knowledge/interface.py integration",
+      "existing RIF workflow system"
+    ]
+  },
+  
+  "complexity_assessment": {
+    "overall": "medium",
+    "factors": {
+      "lines_of_code": {"value": 475, "weight": 0.3, "score": "medium"},
+      "files_affected": {"value": 5, "weight": 0.2, "score": "medium"},
+      "dependencies": {"value": 4, "weight": 0.3, "score": "medium"},
+      "domain_knowledge": {"value": "high", "weight": 0.2, "score": "high"}
+    },
+    "validation_complexity": {
+      "testing_difficulty": "medium",
+      "evidence_requirements": "high", 
+      "risk_level": "medium"
+    }
+  },
+  
+  "similar_patterns": [
+    {
+      "pattern": "system-decoupling-architecture-2025",
+      "score": 0.97,
+      "application": "Factory pattern with interface-based design for agent templates",
+      "lessons": "Abstract interfaces enable clean separation and extensibility"
+    },
+    {
+      "pattern": "consensus-architecture-design-pattern", 
+      "score": 0.89,
+      "application": "Multi-algorithm configuration framework similar to agent template system",
+      "lessons": "Configurable patterns with validation enable systematic scalability"
+    },
+    {
+      "pattern": "agent-conversation-system-2025",
+      "score": 0.82,
+      "application": "Structured agent capability definition similar to template system",
+      "lessons": "Systematic capability mapping improves agent coordination"
+    }
+  ],
+  
+  "evidence_requirements": {
+    "functional_correctness": [
+      "template_validation_tests",
+      "schema_compliance_tests", 
+      "capability_mapping_validation",
+      "yaml_parsing_robustness"
+    ],
+    "performance": [
+      "template_processing_speed",
+      "validation_framework_performance",
+      "memory_usage_optimization"
+    ],
+    "quality": [
+      "schema_validation_coverage_90_percent",
+      "yaml_parsing_error_handling",
+      "configuration_validation_comprehensive"
+    ],
+    "documentation": [
+      "template_usage_guide",
+      "schema_specification", 
+      "integration_examples",
+      "best_practices_documentation"
+    ]
+  },
+  
+  "implementation_strategy": {
+    "approach": "single_phase_comprehensive",
+    "phases": [
+      {
+        "phase": 1,
+        "description": "Complete template system foundation",
+        "components": [
+          "YAML schema design and implementation",
+          "Validation framework with compliance checking", 
+          "Base domain agent class with template integration",
+          "Comprehensive test suite with edge case coverage",
+          "Documentation and usage examples"
+        ],
+        "estimated_time": "3-4 hours"
+      }
+    ]
+  },
+  
+  "file_structure": {
+    "templates/domain-agent-template.yaml": {
+      "purpose": "Core template schema definition",
+      "estimated_lines": 100,
+      "complexity": "medium"
+    },
+    "claude/commands/template_validator.py": {
+      "purpose": "Validation framework implementation", 
+      "estimated_lines": 150,
+      "complexity": "medium"
+    },
+    "claude/agents/domain_agent_base.py": {
+      "purpose": "Base class for domain agents",
+      "estimated_lines": 120,
+      "complexity": "medium"
+    },
+    "tests/test_domain_templates.py": {
+      "purpose": "Comprehensive template testing",
+      "estimated_lines": 80,
+      "complexity": "low-medium"
+    },
+    "docs/domain-agent-templates.md": {
+      "purpose": "Usage documentation and examples",
+      "estimated_lines": 50,
+      "complexity": "low"
+    }
+  },
+  
+  "quality_gates": {
+    "schema_validation_accuracy": ">95%",
+    "template_parsing_success_rate": "100%",
+    "integration_compatibility": "full_agent_support",
+    "validation_performance": "<100ms_per_template",
+    "test_coverage": ">90%"
+  },
+  
+  "risk_assessment": {
+    "level": "medium",
+    "factors": [
+      "foundation_component_impact",
+      "schema_design_complexity",
+      "validation_framework_performance",
+      "integration_compatibility_requirements"
+    ],
+    "mitigation": {
+      "foundation_impact": "comprehensive_testing_early_integration",
+      "schema_complexity": "iterative_design_with_validation",
+      "performance": "benchmarking_during_implementation",
+      "compatibility": "existing_agent_pattern_analysis"
+    }
+  },
+  
+  "parallel_validation_strategy": {
+    "main_development": "Template schema and validation implementation",
+    "quality_assurance": "Continuous validation testing and performance monitoring",
+    "integration_track": "Compatibility verification with existing agents",
+    "synchronization_points": [
+      "schema_completion",
+      "validation_framework_ready", 
+      "integration_testing_complete"
+    ]
+  },
+  
+  "success_metrics": {
+    "technical": {
+      "schema_compliance_validation": ">95%",
+      "template_processing_performance": "<100ms",
+      "yaml_parsing_robustness": "100%_error_handling",
+      "capability_mapping_accuracy": ">90%"
+    },
+    "integration": {
+      "agent_architecture_compatibility": "100%",
+      "factory_integration_readiness": "complete",
+      "knowledge_base_integration": "enabled",
+      "configuration_system_integration": "complete"
+    }
+  },
+  
+  "template_schema_preview": {
+    "metadata": {
+      "name": "string",
+      "version": "semver", 
+      "domain": "string",
+      "description": "string"
+    },
+    "capabilities": "array of capability strings",
+    "expertise": {
+      "technologies": "array of technology strings",
+      "patterns": "array of pattern strings",
+      "domains": "array of domain strings"
+    },
+    "tools": {
+      "required": "array of required tool strings",
+      "optional": "array of optional tool strings"
+    },
+    "validation_rules": "array of validation rule strings",
+    "configuration": {
+      "priority_weight": "number",
+      "parallel_execution": "boolean",
+      "timeout_overrides": "object"
+    }
+  },
+  
+  "next_steps": {
+    "immediate": "transition_to_planning",
+    "handoff_to": "RIF-Planner",
+    "coordination_needed": [
+      "issue_71_factory_interface",
+      "issues_72_74_template_requirements"
+    ],
+    "estimated_total_time": "3-4 hours",
+    "critical_path": "foundation_for_all_domain_agents"
+  }
+}

@@ -1,0 +1,2432 @@
+{
+  "task_id": "missing_data",
+  "status": "completed",
+  "start_time": "2025-08-23T13:17:34.525186",
+  "end_time": "2025-08-23T13:17:38.373996",
+  "duration_seconds": 3.84881,
+  "confidence_score": 0.8248322147650997,
+  "result_data": {
+    "scan_id": "scan_1755980254",
+    "vulnerabilities": [
+      {
+        "vuln_id": "cmd_e5a68697",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 113,
+        "code_snippet": "eval(\"loadPage('\" + url + \"')\");",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_afee4136",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "tests/test_pattern_reinforcement_system.py",
+        "line_number": 292,
+        "code_snippet": "def test_top_patterns_retrieval(self):",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_3f95507a",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "tests/test_arbitration_system.py",
+        "line_number": 551,
+        "code_snippet": "def test_record_storage_and_retrieval(self):",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_a1826adb",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "tests/test_domain_template_system.py",
+        "line_number": 479,
+        "code_snippet": "def test_template_info_retrieval(self, test_template_file, capability_config_file):",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_40c91b5c",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 120,
+        "code_snippet": "eval(\"alert('\" + msg + \"')\");",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_8e36d7a3",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 585,
+        "code_snippet": "('eval(userCode)', True),",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_f3a4bb96",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "knowledge/embeddings/tests/test_embeddings.py",
+        "line_number": 331,
+        "code_snippet": "def test_embedding_storage_and_retrieval(self):",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_54be127d",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "knowledge/pattern_application/htmlcov/coverage_html_cb_6fb7b396.js",
+        "line_number": 234,
+        "code_snippet": "const match = /\\.([0-9]+)/.exec(cell.textContent);",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_a712aa85",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "knowledge/extraction/tests/test_entity_extraction.py",
+        "line_number": 319,
+        "code_snippet": "def test_entity_storage_and_retrieval(self):",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "cmd_b2a368fb",
+        "vuln_type": "injection",
+        "severity": "CRITICAL",
+        "title": "Potential Command Injection",
+        "description": "Dynamic command execution detected. This may allow arbitrary command execution.",
+        "file_path": "htmlcov/coverage_html_cb_6fb7b396.js",
+        "line_number": 234,
+        "code_snippet": "const match = /\\.([0-9]+)/.exec(cell.textContent);",
+        "remediation": "Validate and sanitize all input. Use subprocess with shell=False and a list of arguments.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-78",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_ff3d32a3",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "security_validation_test.py",
+        "line_number": 37,
+        "code_snippet": "api_key = \"test-api-key-12345\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_119a0583",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 36,
+        "code_snippet": "SECRET_KEY = \"super-secret-key-123456789\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_099e58b1",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 37,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_4cbc823c",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 38,
+        "code_snippet": "DATABASE_URL = \"postgresql://admin:password123@localhost/myapp\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_be7c658c",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 123,
+        "code_snippet": "apiKey: \"api-key-exposed-in-client-123456789\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_9d9403bb",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 124,
+        "code_snippet": "secretToken: \"ghp_1234567890abcdef1234567890abcdef123456\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_8e1bf92c",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 124,
+        "code_snippet": "secretToken: \"ghp_1234567890abcdef1234567890abcdef123456\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_908dee66",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 125,
+        "code_snippet": "databaseUrl: \"mongodb://user:password@localhost/app\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_43e2be67",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 146,
+        "code_snippet": "DB_PASSWORD = \"admin123\"  # Weak password",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_e1dc8ef4",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 150,
+        "code_snippet": "STRIPE_SECRET_KEY = \"sk_live_1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_94da8708",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 155,
+        "code_snippet": "SENDGRID_API_KEY = \"SG.1234567890abcdef1234567890abcdef.1234567890abcdef1234567890abcdef1234567890abcdef\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_e6b30eea",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 156,
+        "code_snippet": "TWILIO_AUTH_TOKEN = \"abcdef1234567890abcdef1234567890abcdef12\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_88bf2c13",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 164,
+        "code_snippet": "DEFAULT_ADMIN_PASSWORD = \"password\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_272e2fa0",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 167,
+        "code_snippet": "SECRET_KEY = \"insecure-secret-key-do-not-use-in-production\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_c93cb956",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 247,
+        "code_snippet": "# api_key = \"get this from environment variables\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_f946fd5d",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "comprehensive_security_validation.py",
+        "line_number": 59,
+        "code_snippet": "api_key = \"secure-api-key-12345\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_6c9f32ff",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "comprehensive_security_validation.py",
+        "line_number": 236,
+        "code_snippet": "api_key = \"session-test-key\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_16de38b7",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "demo_mcp_security_gateway.py",
+        "line_number": 315,
+        "code_snippet": "api_key = 'audit_test_key_12345'",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_e1c2994b",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 87,
+        "code_snippet": "query = f\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_eb9b13f2",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 136,
+        "code_snippet": "API_KEY = \"sk-abcdef123456789012345678901234567890abcdef\"  # OpenAI key",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_aceb98b1",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 137,
+        "code_snippet": "SECRET_KEY = \"super-secret-key-1234567890\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_f4dc18f6",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 138,
+        "code_snippet": "AWS_ACCESS_KEY = \"AKIAIOSFODNN7EXAMPLE\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_abd72c24",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 139,
+        "code_snippet": "DATABASE_URL = \"postgresql://user:password123@localhost/db\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_748d982b",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 140,
+        "code_snippet": "PASSWORD = \"hardcoded-password\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_3609f9fd",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 144,
+        "code_snippet": "\"token\": \"ghp_1234567890abcdef1234567890abcdef123456\"  # GitHub token",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_f576c02d",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 215,
+        "code_snippet": "ADMIN_PASSWORD = \"password\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_53b37575",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 451,
+        "code_snippet": "password = \"p\u00e1ssw0rd-sp\u00e9ci\u00e1l\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_816d9c26",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 452,
+        "code_snippet": "api_key = \"api-key-with-\u00e9mojis-\ud83d\udd11\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_f857ae72",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 512,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_0a7b7ce4",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 563,
+        "code_snippet": "('API_KEY = \"sk-abcdef1234567890\"', True),",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_17676f0d",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 564,
+        "code_snippet": "('SECRET_KEY = \"secret123456789\"', True),",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_67ba3c20",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 565,
+        "code_snippet": "('password = \"mypassword123\"', True),",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_a1102e53",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 566,
+        "code_snippet": "('ghp_1234567890abcdef1234567890abcdef123456', True),",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_19599849",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 622,
+        "code_snippet": "API_KEY = \"hardcoded-key-123456789\"  # Secrets exposure",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_d95fd90c",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_516e9260-a9d1-4718-8ce6-0079a5a89768/task_long_lines_test_result.json",
+        "line_number": 19,
+        "code_snippet": "\"code_snippet\": \"API_KEY = \\\"sk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\\"\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_23967649",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_516e9260-a9d1-4718-8ce6-0079a5a89768/task_long_lines_test_result.json",
+        "line_number": 35,
+        "code_snippet": "\"code_snippet\": \"API_KEY = \\\"sk-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\\"\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_0713f0bc",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_61b60365-ce6a-4a76-8721-cd6be6a8d962/task_demo_comprehensive_scan_result.json",
+        "line_number": 259,
+        "code_snippet": "\"code_snippet\": \"secretToken: \\\"ghp_1234567890abcdef1234567890abcdef123456\\\",\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_eabf2bed",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_61b60365-ce6a-4a76-8721-cd6be6a8d962/task_demo_comprehensive_scan_result.json",
+        "line_number": 275,
+        "code_snippet": "\"code_snippet\": \"secretToken: \\\"ghp_1234567890abcdef1234567890abcdef123456\\\",\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_27a4aa00",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_d1d173e6-15b7-4545-a418-744e115c049e/task_vuln_accuracy_test_result.json",
+        "line_number": 99,
+        "code_snippet": "\"code_snippet\": \"GITHUB_TOKEN = \\\"ghp_1234567890abcdef1234567890abcdef123456\\\"  # GitHub token\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_3394ad73",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_d1d173e6-15b7-4545-a418-744e115c049e/task_vuln_accuracy_test_result.json",
+        "line_number": 115,
+        "code_snippet": "\"code_snippet\": \"GITHUB_TOKEN = \\\"ghp_1234567890abcdef1234567890abcdef123456\\\"  # GitHub token\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_e6988165",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "output/agent_d1d173e6-15b7-4545-a418-744e115c049e/task_vuln_accuracy_test_result.json",
+        "line_number": 195,
+        "code_snippet": "\"code_snippet\": \"query = f\\\"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'\\\"  # f-string injection\",",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_4e9bd2d5",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "knowledge/extraction/tests/test_entity_extraction.py",
+        "line_number": 169,
+        "code_snippet": "API_KEY = \"secret_key\"",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "inj_79dc2aaf",
+        "vuln_type": "injection",
+        "severity": "HIGH",
+        "title": "Potential SQL Injection",
+        "description": "Dynamic SQL query construction detected. This may be vulnerable to SQL injection attacks.",
+        "file_path": "demo_backend_specialist.py",
+        "line_number": 466,
+        "code_snippet": "sql = \"SELECT * FROM data WHERE name = '\" + query_param + \"'\"",
+        "remediation": "Use parameterized queries or prepared statements instead of string concatenation.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-89",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_0b6a1e86",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 84,
+        "code_snippet": "# Using deprecated MD5 (BAD!)",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_7d98ebfe",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 85,
+        "code_snippet": "return md5.md5(password.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_2b544257",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 90,
+        "code_snippet": "return hashlib.sha1(data.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_eefef968",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "lightrag/embeddings/embedding_manager.py",
+        "line_number": 113,
+        "code_snippet": "return hashlib.md5(content.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_a8a46f16",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "lightrag/core/lightrag_core.py",
+        "line_number": 109,
+        "code_snippet": "metadata[\"content_hash\"] = hashlib.md5(content.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_9aa09ee9",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/knowledge_adapter.py",
+        "line_number": 356,
+        "code_snippet": "content_hash = hashlib.md5(content.encode()).hexdigest()[:8]",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_9ae8b79f",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/shadow_mode.py",
+        "line_number": 97,
+        "code_snippet": "content_hash = hashlib.md5(content.encode()).hexdigest()[:8]",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_2cd8e283",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 378,
+        "code_snippet": "vuln_id=f\"inj_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_89c6309b",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 404,
+        "code_snippet": "vuln_id=f\"cmd_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_aa7e11b7",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 428,
+        "code_snippet": "vuln_id=f\"xss_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_9a4e2b38",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 459,
+        "code_snippet": "vuln_id=f\"auth_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_0ae6331d",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 492,
+        "code_snippet": "vuln_id=f\"data_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_49b80544",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 523,
+        "code_snippet": "vuln_id=f\"misc_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_ea8d871f",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 549,
+        "code_snippet": "vuln_id=f\"crypto_{hashlib.md5(f'{file_path}:{i}:{pattern}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_dc3e0c6a",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 597,
+        "code_snippet": "vuln_id=f\"secret_{hashlib.md5(f'{file_path}:{i}:{match.group()}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_8d23ebc6",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 674,
+        "code_snippet": "vuln_id=f\"dep_{hashlib.md5(f'{req_file}:{package}:{version}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_96e91029",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 720,
+        "code_snippet": "vuln_id=f\"dep_{hashlib.md5(f'{package_json_path}:{package}:{version}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_fd9f1b55",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 824,
+        "code_snippet": "vuln_id=f\"auth_{hashlib.md5(f'{file_path}:{line_num}:{code}'.encode()).hexdigest()[:8]}\",",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_5e83b6f5",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/pattern_visualization.py",
+        "line_number": 1007,
+        "code_snippet": "return hashlib.md5(key_string.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_7984bdd3",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 171,
+        "code_snippet": "return md5.md5(data).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_043cbeb9",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 175,
+        "code_snippet": "return hashlib.sha1(data).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_42ea41e6",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 522,
+        "code_snippet": "return md5.md5(data).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_e45f93db",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/conversations/storage_backend.py",
+        "line_number": 186,
+        "code_snippet": "context_hash = hashlib.md5(json.dumps(context_data, sort_keys=True).encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_34367b73",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/conversations/storage_backend.py",
+        "line_number": 293,
+        "code_snippet": "pattern_signature = hashlib.md5(json.dumps(pattern_data, sort_keys=True).encode()).hexdigest()[:16]",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_389dd1f6",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/arbitration/arbitration_system.py",
+        "line_number": 656,
+        "code_snippet": "return hashlib.md5(content.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_e91d29e5",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/arbitration/decision_recorder.py",
+        "line_number": 487,
+        "code_snippet": "return f\"rec-{hashlib.md5(content.encode()).hexdigest()[:12]}\"",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_2eea3985",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/query/__init__.py",
+        "line_number": 305,
+        "code_snippet": "return hashlib.md5(cache_input.encode()).hexdigest()",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "inj_38d92190",
+        "vuln_type": "injection",
+        "severity": "HIGH",
+        "title": "Potential SQL Injection",
+        "description": "Dynamic SQL query construction detected. This may be vulnerable to SQL injection attacks.",
+        "file_path": "knowledge/extraction/storage_integration.py",
+        "line_number": 128,
+        "code_snippet": "\"\"\"Insert or update entity based on file_path + name + type.\"\"\"",
+        "remediation": "Use parameterized queries or prepared statements instead of string concatenation.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-89",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "auth_e9410f06",
+        "vuln_type": "broken_authentication",
+        "severity": "HIGH",
+        "title": "JWT Security Issue",
+        "description": "JWT verification disabled or improperly configured.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 210,
+        "code_snippet": "payload = jwt.decode(token, verify=False)",
+        "remediation": "Enable JWT signature verification and use secure algorithms.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-347",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "misc_790f8a9b",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "demo_dynamic_mcp_loader.py",
+        "line_number": 65,
+        "code_snippet": "app.run(debug=True)",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_2ef54f9b",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "demo_dynamic_mcp_loader.py",
+        "line_number": 65,
+        "code_snippet": "app.run(debug=True)",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_3cebf566",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 97,
+        "code_snippet": "# Running with debug=True in production (BAD!)",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_19f26223",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 98,
+        "code_snippet": "app.run(debug=True, host='0.0.0.0')",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_6cb28de8",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 98,
+        "code_snippet": "app.run(debug=True, host='0.0.0.0')",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_c0303cf4",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 171,
+        "code_snippet": "DEBUG = True",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "data_a7e2b54f",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 93,
+        "code_snippet": "def log_user_credentials(username, password):",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_4e4519c6",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 94,
+        "code_snippet": "print(f\"User login: {username}, password: {password}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_4ffb0fc2",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 94,
+        "code_snippet": "print(f\"User login: {username}, password: {password}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_c1fb8973",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "comprehensive_security_validation.py",
+        "line_number": 129,
+        "code_snippet": "self.log_test(\"Authorization Tests\", False, \"No valid session token available\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_6c2fac07",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "comprehensive_security_validation.py",
+        "line_number": 163,
+        "code_snippet": "self.log_test(\"Invalid Token Rejection\", False, \"Should have failed\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_9d2a03ad",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "comprehensive_security_validation.py",
+        "line_number": 165,
+        "code_snippet": "self.log_test(\"Invalid Token Rejection\", True, \"Correctly rejected\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_eff658c6",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "comprehensive_security_validation.py",
+        "line_number": 167,
+        "code_snippet": "self.log_test(\"Invalid Token Rejection\", False, f\"Unexpected error: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_a9235933",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "lightrag/visualization/components/relationships.py",
+        "line_number": 325,
+        "code_snippet": "for node_id, node_data in G.nodes(data=True):",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_d9eda343",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/shadow_quality_tracking.py",
+        "line_number": 364,
+        "code_snippet": "high_risk_keywords = ['security', 'authentication', 'payment', 'auth', 'login', 'password', 'crypto']",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_f0a21bc7",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 481,
+        "code_snippet": "r'(?i)log.*password',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_f1699041",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 482,
+        "code_snippet": "r'(?i)log.*secret',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_9b2b1991",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 483,
+        "code_snippet": "r'(?i)log.*token',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_8e3ecd34",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 484,
+        "code_snippet": "r'(?i)print.*password',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_76a02ea2",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 485,
+        "code_snippet": "r'(?i)console\\.log.*password',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_051ca76e",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 577,
+        "code_snippet": "logger.info(\"Scanning for hardcoded secrets\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_b46ee359",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "claude/commands/security_specialist_agent.py",
+        "line_number": 612,
+        "code_snippet": "logger.warning(f\"Error scanning {file_path} for secrets: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_93af301a",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "claude/commands/orchestrator_monitoring_dashboard.py",
+        "line_number": 438,
+        "code_snippet": "# Build nodes (states)",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_3367a9a2",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "tests/test_shadow_quality_tracking.py",
+        "line_number": 28,
+        "code_snippet": "\"body\": \"Add secure login functionality with JWT tokens\",",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_8f9777c3",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 85,
+        "code_snippet": "def login(username, password):",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_0b09f97a",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/gateway.py",
+        "line_number": 297,
+        "code_snippet": "await self.audit_logger.log_authorization_error(session_token, operation, str(e))",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_f06ea922",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/gateway.py",
+        "line_number": 389,
+        "code_snippet": "self.logger.error(f\"Failed to invalidate session {session_token}: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_5632c881",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 128,
+        "code_snippet": "self.logger.info(\"Session Manager initialized with secure JWT token generation\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_fb0f6cc4",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 219,
+        "code_snippet": "self.logger.info(f\"Session token generated for server {server_id}, expires at {expires_at}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_ff56bdb3",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 223,
+        "code_snippet": "self.logger.error(f\"Failed to generate session token for server {server_id}: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_1fae7e3d",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 306,
+        "code_snippet": "self.logger.error(f\"Session validation error for token: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_8012b8e2",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 403,
+        "code_snippet": "self.logger.info(f\"Session token refreshed for server {current_session.server_id}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_64ee3ec5",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 407,
+        "code_snippet": "self.logger.error(f\"Failed to refresh session token: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_e5d60232",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 555,
+        "code_snippet": "self.logger.error(f\"Failed to invalidate session {session_token}: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_a224b6f7",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/session_manager.py",
+        "line_number": 568,
+        "code_snippet": "self.logger.error(f\"Failed to remove session {session_token}: {e}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_11fb7f1b",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "mcp/security/security_gateway.py",
+        "line_number": 115,
+        "code_snippet": "logger.warning(f\"Missing required GitHub token for {server_id}\")",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_1b39567c",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "knowledge/pattern_matching/similarity_engine.py",
+        "line_number": 72,
+        "code_snippet": "'authentication': ['auth', 'login', 'user', 'session', 'token', 'jwt', 'oauth', 'sso'],",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_b0dbe6d6",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/pattern_application/htmlcov/coverage_html_cb_6fb7b396.js",
+        "line_number": 169,
+        "code_snippet": "if (celltext.includes(text)) {",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_c59688c0",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "knowledge/query/result_ranker.py",
+        "line_number": 87,
+        "code_snippet": "'auth', 'authentication', 'login', 'logout', 'password', 'token',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "data_8c97fff7",
+        "vuln_type": "sensitive_data_exposure",
+        "severity": "MEDIUM",
+        "title": "Potential Sensitive Data Exposure",
+        "description": "Sensitive information may be logged or exposed.",
+        "file_path": "knowledge/query/result_ranker.py",
+        "line_number": 87,
+        "code_snippet": "'auth', 'authentication', 'login', 'logout', 'password', 'token',",
+        "remediation": "Remove sensitive data from logs. Use proper data classification and handling.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-200",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_4a02641e",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/relationships/call_analyzer.py",
+        "line_number": 70,
+        "code_snippet": "call_nodes = self.find_call_nodes(tree.root_node, language)",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_0dd7edf3",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/relationships/call_analyzer.py",
+        "line_number": 84,
+        "code_snippet": "def find_call_nodes(self, root: Node, language: str) -> List[Node]:",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_4682f42e",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/relationships/import_analyzer.py",
+        "line_number": 68,
+        "code_snippet": "import_nodes = self.find_import_export_nodes(tree.root_node, language)",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_203a8871",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/relationships/import_analyzer.py",
+        "line_number": 82,
+        "code_snippet": "def find_import_export_nodes(self, root: Node, language: str) -> List[Node]:",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_93b4e8f7",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/relationships/inheritance_analyzer.py",
+        "line_number": 70,
+        "code_snippet": "inheritance_nodes = self.find_inheritance_nodes(tree.root_node, language)",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_df8142ec",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "knowledge/relationships/inheritance_analyzer.py",
+        "line_number": 84,
+        "code_snippet": "def find_inheritance_nodes(self, root: Node, language: str) -> List[Node]:",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "crypto_a7128ec1",
+        "vuln_type": "cryptographic_failures",
+        "severity": "MEDIUM",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "htmlcov/coverage_html_cb_6fb7b396.js",
+        "line_number": 169,
+        "code_snippet": "if (celltext.includes(text)) {",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "xss_dc7e0a5c",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 108,
+        "code_snippet": "document.getElementById('message').innerHTML = userInput;",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_e5a68697",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 113,
+        "code_snippet": "eval(\"loadPage('\" + url + \"')\");",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_b083543c",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 118,
+        "code_snippet": "document.write(\"<div class='notification'>\" + message + \"</div>\");",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_afee4136",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_pattern_reinforcement_system.py",
+        "line_number": 292,
+        "code_snippet": "def test_top_patterns_retrieval(self):",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_3f95507a",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_arbitration_system.py",
+        "line_number": 551,
+        "code_snippet": "def test_record_storage_and_retrieval(self):",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_a1826adb",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_domain_template_system.py",
+        "line_number": 479,
+        "code_snippet": "def test_template_info_retrieval(self, test_template_file, capability_config_file):",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_3c88d8e8",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 110,
+        "code_snippet": "document.getElementById('output').innerHTML = message;",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_d9b4b24a",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 115,
+        "code_snippet": "document.write(content);",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_40c91b5c",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 120,
+        "code_snippet": "eval(\"alert('\" + msg + \"')\");",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_3cdfc196",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 504,
+        "code_snippet": "document.getElementById('output').innerHTML = msg;",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_1be9ccaf",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 583,
+        "code_snippet": "('element.innerHTML = userInput', True),",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_0841082d",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 584,
+        "code_snippet": "('document.write(content)', True),",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_8e36d7a3",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 585,
+        "code_snippet": "('eval(userCode)', True),",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_f3a4bb96",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "knowledge/embeddings/tests/test_embeddings.py",
+        "line_number": 331,
+        "code_snippet": "def test_embedding_storage_and_retrieval(self):",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "xss_a712aa85",
+        "vuln_type": "cross_site_scripting",
+        "severity": "MEDIUM",
+        "title": "Potential Cross-Site Scripting (XSS)",
+        "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks.",
+        "file_path": "knowledge/extraction/tests/test_entity_extraction.py",
+        "line_number": 319,
+        "code_snippet": "def test_entity_storage_and_retrieval(self):",
+        "remediation": "Sanitize and validate all user input. Use textContent instead of innerHTML where possible.",
+        "references": [
+          "https://owasp.org/Top10/A03_2021-Injection/"
+        ],
+        "cwe_id": "CWE-79",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "auth_62ae9814",
+        "vuln_type": "broken_authentication",
+        "severity": "MEDIUM",
+        "title": "Weak Password Policy",
+        "description": "Weak or default password detected.",
+        "file_path": "demo_backend_specialist.py",
+        "line_number": 290,
+        "code_snippet": "host='localhost', database='myapp', user='user', password='pass'",
+        "remediation": "Implement strong password policy and use secure defaults.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-521",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "auth_04554d6c",
+        "vuln_type": "broken_authentication",
+        "severity": "MEDIUM",
+        "title": "Weak Password Policy",
+        "description": "Weak or default password detected.",
+        "file_path": "demo_security_specialist.py",
+        "line_number": 164,
+        "code_snippet": "DEFAULT_ADMIN_PASSWORD = \"password\"",
+        "remediation": "Implement strong password policy and use secure defaults.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-521",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "auth_c5f24b49",
+        "vuln_type": "broken_authentication",
+        "severity": "MEDIUM",
+        "title": "Weak Password Policy",
+        "description": "Weak or default password detected.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 214,
+        "code_snippet": "DEFAULT_PASSWORD = \"123456\"",
+        "remediation": "Implement strong password policy and use secure defaults.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-521",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "auth_c5f24b49",
+        "vuln_type": "broken_authentication",
+        "severity": "MEDIUM",
+        "title": "Weak Password Policy",
+        "description": "Weak or default password detected.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 214,
+        "code_snippet": "DEFAULT_PASSWORD = \"123456\"",
+        "remediation": "Implement strong password policy and use secure defaults.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-521",
+        "confidence": 0.7
+      },
+      {
+        "vuln_id": "auth_b694fc3c",
+        "vuln_type": "broken_authentication",
+        "severity": "MEDIUM",
+        "title": "Weak Password Policy",
+        "description": "Weak or default password detected.",
+        "file_path": "tests/test_security_specialist_agent.py",
+        "line_number": 215,
+        "code_snippet": "ADMIN_PASSWORD = \"password\"",
+        "remediation": "Implement strong password policy and use secure defaults.",
+        "references": [
+          "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/"
+        ],
+        "cwe_id": "CWE-521",
+        "confidence": 0.7
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 67,
+      "high": 72,
+      "critical": 10
+    },
+    "files_scanned": 307,
+    "lines_scanned": 153479,
+    "recommendations": [
+      "Implement parameterized queries to prevent SQL injection",
+      "Add input validation and sanitization",
+      "Implement Content Security Policy (CSP)",
+      "Use secure DOM manipulation methods",
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Upgrade to strong cryptographic algorithms (SHA-256+, AES)",
+      "Implement proper key management",
+      "Implement multi-factor authentication",
+      "Review session management and timeout policies",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 3.848554
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980254.json",
+    "vulnerability_summary_scan_1755980254.md",
+    "remediation_plan_scan_1755980254.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "516e9260-a9d1-4718-8ce6-0079a5a89768"
+  }
+}

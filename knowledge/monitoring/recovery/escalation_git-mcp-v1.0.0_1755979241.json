@@ -1,0 +1,9 @@
+{
+  "timestamp": "2025-08-23T20:00:41.558602",
+  "server_id": "git-mcp-v1.0.0",
+  "server_name": "Git MCP Server",
+  "current_status": "unhealthy",
+  "consecutive_failures": 1,
+  "recovery_attempts": 1,
+  "last_error": "Multiple recovery strategies failed"
+}

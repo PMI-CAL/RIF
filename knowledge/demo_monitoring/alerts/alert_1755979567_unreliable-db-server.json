@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-08-23T20:06:07.799120",
+  "alert_rule": "server_unhealthy",
+  "severity": "critical",
+  "server_id": "unreliable-db-server",
+  "server_name": "Unreliable Database Server",
+  "message": "Server Unreliable Database Server is unhealthy after 1 consecutive failures",
+  "health_status": "unhealthy",
+  "consecutive_failures": 1,
+  "response_time_ms": 102.84531116485596
+}

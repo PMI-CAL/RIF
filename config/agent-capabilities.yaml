@@ -1,0 +1,458 @@
+# Agent Capability Matrix for Adaptive Agent Selection System
+# Issue #54: Build adaptive agent selection system
+
+agent_capabilities:
+  # Core RIF Agents
+  rif-analyst:
+    primary_capabilities:
+      - requirements_analysis
+      - pattern_recognition
+      - complexity_assessment
+      - stakeholder_analysis
+    secondary_capabilities:
+      - documentation
+      - research
+      - context_extraction
+    complexity_levels:
+      - low
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: low
+      memory_usage: medium
+      execution_time: medium
+    specializations:
+      - business_requirements
+      - technical_requirements
+      - risk_assessment
+      - feasibility_analysis
+    performance_indicators:
+      - requirement_extraction_accuracy
+      - complexity_prediction_accuracy
+      - pattern_identification_rate
+
+  rif-architect:
+    primary_capabilities:
+      - system_design
+      - architecture_planning
+      - dependency_management
+      - integration_design
+    secondary_capabilities:
+      - scalability_planning
+      - performance_design
+      - security_architecture
+    complexity_levels:
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: medium
+      memory_usage: medium
+      execution_time: high
+    specializations:
+      - microservices_architecture
+      - monolithic_architecture
+      - distributed_systems
+      - api_design
+    performance_indicators:
+      - design_quality_score
+      - architecture_consistency
+      - dependency_optimization
+
+  rif-planner:
+    primary_capabilities:
+      - strategic_planning
+      - project_coordination
+      - workflow_design
+      - resource_allocation
+    secondary_capabilities:
+      - risk_planning
+      - timeline_estimation
+      - milestone_definition
+    complexity_levels:
+      - low
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: low
+      memory_usage: low
+      execution_time: medium
+    specializations:
+      - project_management
+      - agile_planning
+      - resource_optimization
+      - coordination_strategies
+    performance_indicators:
+      - planning_accuracy
+      - timeline_adherence
+      - resource_optimization_rate
+
+  rif-implementer:
+    primary_capabilities:
+      - code_implementation
+      - refactoring
+      - optimization
+      - debugging
+    secondary_capabilities:
+      - code_review
+      - documentation
+      - testing_integration
+    complexity_levels:
+      - low
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: high
+      memory_usage: medium
+      execution_time: high
+    specializations:
+      - algorithm_implementation
+      - performance_optimization
+      - code_quality_improvement
+      - integration_development
+    performance_indicators:
+      - code_quality_metrics
+      - implementation_speed
+      - bug_introduction_rate
+
+  rif-validator:
+    primary_capabilities:
+      - testing
+      - quality_assurance
+      - compliance_checking
+      - validation
+    secondary_capabilities:
+      - performance_testing
+      - security_testing
+      - integration_testing
+    complexity_levels:
+      - low
+      - medium
+      - high
+    resource_requirements:
+      cpu_intensity: medium
+      memory_usage: medium
+      execution_time: medium
+    specializations:
+      - automated_testing
+      - manual_testing
+      - performance_validation
+      - security_validation
+    performance_indicators:
+      - test_coverage_achieved
+      - bug_detection_rate
+      - validation_accuracy
+
+  rif-learner:
+    primary_capabilities:
+      - knowledge_extraction
+      - pattern_learning
+      - documentation
+      - continuous_improvement
+    secondary_capabilities:
+      - data_analysis
+      - trend_identification
+      - knowledge_organization
+    complexity_levels:
+      - low
+      - medium
+      - high
+    resource_requirements:
+      cpu_intensity: low
+      memory_usage: high
+      execution_time: medium
+    specializations:
+      - pattern_extraction
+      - knowledge_synthesis
+      - learning_optimization
+      - documentation_generation
+    performance_indicators:
+      - knowledge_extraction_rate
+      - pattern_identification_accuracy
+      - learning_improvement_metrics
+
+  # Specialized Domain Agents
+  frontend-specialist:
+    primary_capabilities:
+      - ui_development
+      - ux_design
+      - frontend_frameworks
+      - user_interaction_design
+    secondary_capabilities:
+      - responsive_design
+      - accessibility
+      - performance_optimization
+    complexity_levels:
+      - low
+      - medium
+      - high
+    resource_requirements:
+      cpu_intensity: medium
+      memory_usage: medium
+      execution_time: medium
+    specializations:
+      - react_development
+      - vue_development
+      - angular_development
+      - vanilla_javascript
+      - css_frameworks
+    technology_focus:
+      - javascript
+      - typescript
+      - html
+      - css
+      - react
+      - vue
+      - angular
+    performance_indicators:
+      - ui_quality_score
+      - user_experience_metrics
+      - frontend_performance_score
+
+  backend-specialist:
+    primary_capabilities:
+      - api_development
+      - database_design
+      - server_architecture
+      - microservices_development
+    secondary_capabilities:
+      - scalability_optimization
+      - data_modeling
+      - integration_development
+    complexity_levels:
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: high
+      memory_usage: high
+      execution_time: high
+    specializations:
+      - rest_api_development
+      - graphql_development
+      - database_optimization
+      - microservices_architecture
+      - distributed_systems
+    technology_focus:
+      - python
+      - node_js
+      - java
+      - go
+      - postgresql
+      - mongodb
+      - redis
+    performance_indicators:
+      - api_performance_metrics
+      - scalability_achievements
+      - database_optimization_rate
+
+  security-specialist:
+    primary_capabilities:
+      - vulnerability_assessment
+      - security_implementation
+      - encryption
+      - authentication_systems
+    secondary_capabilities:
+      - compliance_verification
+      - security_monitoring
+      - incident_response
+    complexity_levels:
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: medium
+      memory_usage: medium
+      execution_time: high
+    specializations:
+      - oauth_implementation
+      - jwt_authentication
+      - encryption_systems
+      - security_auditing
+      - penetration_testing
+    security_domains:
+      - application_security
+      - network_security
+      - data_protection
+      - compliance
+    performance_indicators:
+      - vulnerability_detection_rate
+      - security_implementation_quality
+      - compliance_adherence_score
+
+  performance-specialist:
+    primary_capabilities:
+      - performance_optimization
+      - profiling
+      - scaling_strategies
+      - bottleneck_identification
+    secondary_capabilities:
+      - monitoring_setup
+      - load_testing
+      - capacity_planning
+    complexity_levels:
+      - medium
+      - high
+      - very-high
+    resource_requirements:
+      cpu_intensity: high
+      memory_usage: high
+      execution_time: high
+    specializations:
+      - application_profiling
+      - database_optimization
+      - caching_strategies
+      - load_balancing
+      - cdn_optimization
+    performance_domains:
+      - application_performance
+      - database_performance
+      - network_performance
+      - infrastructure_scaling
+    performance_indicators:
+      - performance_improvement_metrics
+      - optimization_success_rate
+      - scaling_efficiency
+
+# Capability Mapping Rules
+capability_requirements_mapping:
+  frontend_development:
+    required_capabilities:
+      - ui_development
+      - user_interaction_design
+    optimal_agents:
+      - frontend-specialist
+    fallback_agents:
+      - rif-implementer
+
+  backend_development:
+    required_capabilities:
+      - api_development
+      - database_design
+    optimal_agents:
+      - backend-specialist
+    fallback_agents:
+      - rif-implementer
+
+  security_implementation:
+    required_capabilities:
+      - security_implementation
+      - vulnerability_assessment
+    optimal_agents:
+      - security-specialist
+    fallback_agents:
+      - rif-architect
+      - rif-validator
+
+  performance_optimization:
+    required_capabilities:
+      - performance_optimization
+      - bottleneck_identification
+    optimal_agents:
+      - performance-specialist
+    fallback_agents:
+      - rif-implementer
+      - rif-architect
+
+  system_architecture:
+    required_capabilities:
+      - system_design
+      - architecture_planning
+    optimal_agents:
+      - rif-architect
+    fallback_agents:
+      - rif-planner
+
+  requirements_analysis:
+    required_capabilities:
+      - requirements_analysis
+      - complexity_assessment
+    optimal_agents:
+      - rif-analyst
+    fallback_agents:
+      - rif-planner
+
+  testing_validation:
+    required_capabilities:
+      - testing
+      - quality_assurance
+    optimal_agents:
+      - rif-validator
+    fallback_agents:
+      - rif-implementer
+
+  knowledge_learning:
+    required_capabilities:
+      - knowledge_extraction
+      - pattern_learning
+    optimal_agents:
+      - rif-learner
+    fallback_agents:
+      - rif-analyst
+
+# Team Composition Rules
+team_composition_rules:
+  minimal_team_requirements:
+    - at_least_one_implementation_capability
+    - at_least_one_validation_capability
+    - coverage_of_all_required_capabilities
+
+  specialist_addition_criteria:
+    security_critical:
+      - add: security-specialist
+      - when: security_implementation OR vulnerability_assessment required
+    
+    performance_critical:
+      - add: performance-specialist  
+      - when: performance_optimization OR scaling_strategies required
+    
+    frontend_heavy:
+      - add: frontend-specialist
+      - when: ui_development AND complexity >= medium
+    
+    backend_heavy:
+      - add: backend-specialist
+      - when: api_development AND complexity >= medium
+
+  complexity_scaling:
+    low:
+      max_agents: 2
+      preferred_agents: [rif-implementer, rif-validator]
+    
+    medium:
+      max_agents: 3
+      preferred_agents: [rif-analyst, rif-implementer, rif-validator]
+    
+    high:
+      max_agents: 4
+      preferred_agents: [rif-analyst, rif-architect, rif-implementer, rif-validator]
+    
+    very_high:
+      max_agents: 5
+      preferred_agents: [rif-analyst, rif-planner, rif-architect, rif-implementer, rif-validator]
+      additional_specialists: based_on_requirements
+
+# Performance and Learning Configuration
+performance_tracking:
+  success_metrics:
+    - implementation_quality
+    - timeline_adherence
+    - bug_rate
+    - user_satisfaction
+    - performance_improvement
+
+  learning_parameters:
+    pattern_weight_decay: 0.95
+    success_reward_multiplier: 1.2
+    failure_penalty_multiplier: 0.8
+    confidence_threshold: 0.7
+    learning_rate: 0.1
+
+  optimization_targets:
+    selection_accuracy: 0.85
+    team_efficiency: 0.90
+    resource_utilization: 0.80
+    learning_improvement_rate: 0.05

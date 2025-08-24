@@ -91,6 +91,27 @@ metrics:
       - "checkpoint_creation_rate"
       - "error_recovery_time"
     collection_method: "github_webhooks"
+    
+  consensus:
+    enabled: true
+    targets:
+      - name: "agreement_level"
+        description: "Level of agreement in voting sessions (0.0-1.0)"
+        threshold_warning: "0.6"      # Below 60% agreement
+        threshold_critical: "0.4"     # Below 40% agreement
+      - name: "decision_time"
+        description: "Time to reach consensus decision"
+        threshold_warning: "1800000ms"  # 30 minutes
+        threshold_critical: "3600000ms" # 1 hour
+      - name: "dissenter_count"
+        description: "Number of dissenting agents per session"
+        threshold_warning: "2"        # More than 2 dissenters
+        threshold_critical: "4"       # More than 4 dissenters
+      - name: "confidence_avg"
+        description: "Average confidence across all votes"
+        threshold_warning: "0.5"      # Below 50% average confidence
+        threshold_critical: "0.3"     # Below 30% average confidence
+    collection_method: "voting_session_hooks"
 
 # Shadow mode specific monitoring
 shadow_mode:
@@ -134,6 +155,9 @@ anomaly_detection:
     - "latency.knowledge_store"
     - "indexing.documents_per_second"
     - "workflow.issue_processing_time"
+    - "consensus.agreement_level"
+    - "consensus.decision_time"
+    - "consensus.confidence_avg"
     
   notification_channels:
     - "github_issue_comment"
@@ -188,6 +212,30 @@ alerts:
       severity: "warning"
       frequency: "15m"
       message: "Shadow mode showing {{value}}% accuracy - investigate differences"
+      
+    - name: "low_consensus_agreement"
+      condition: "consensus.agreement_level < 0.6"
+      severity: "warning"
+      frequency: "5m"
+      message: "Low consensus agreement detected: {{value}} - consider additional discussion"
+      
+    - name: "critical_consensus_disagreement"
+      condition: "consensus.agreement_level < 0.4"
+      severity: "critical"
+      frequency: "1m"
+      message: "Critical consensus disagreement: {{value}} - arbitration may be required"
+      
+    - name: "slow_consensus_formation"
+      condition: "consensus.decision_time > 1800000"
+      severity: "warning"
+      frequency: "10m"
+      message: "Consensus taking too long: {{value}}ms - check for blockers"
+      
+    - name: "low_consensus_confidence"
+      condition: "consensus.confidence_avg < 0.5"
+      severity: "warning"
+      frequency: "5m"
+      message: "Low consensus confidence: {{value}} - agents need more evidence"
 
 # Dashboard configuration  
 dashboard:
@@ -213,6 +261,15 @@ dashboard:
       type: "comparison"
       timerange: "24h"
       
+    - panel: "consensus_health"
+      metrics: ["consensus.agreement_level", "consensus.confidence_avg", "consensus.dissenter_count"]
+      type: "gauge"
+      
+    - panel: "consensus_trends"
+      metrics: ["consensus.agreement_level", "consensus.decision_time"]
+      type: "timeseries"
+      timerange: "12h"
+      
     - panel: "recent_alerts"
       type: "alert_list"
       limit: 10
@@ -232,6 +289,7 @@ storage:
     logs: "/Users/cal/DEV/RIF/knowledge/monitoring/logs/"  
     alerts: "/Users/cal/DEV/RIF/knowledge/monitoring/alerts/"
     reports: "/Users/cal/DEV/RIF/knowledge/monitoring/reports/"
+    consensus: "/Users/cal/DEV/RIF/knowledge/monitoring/consensus/"
     
   compression:
     enabled: true

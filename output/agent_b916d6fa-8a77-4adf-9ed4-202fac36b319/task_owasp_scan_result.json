@@ -1,0 +1,9 @@
+{
+  "task_id": "owasp_scan",
+  "status": "failed",
+  "start_time": "2025-08-23T13:14:58.509612",
+  "end_time": "2025-08-23T13:14:58.510218",
+  "duration_seconds": 0.000606,
+  "confidence_score": 0.0,
+  "result_data": [
+    

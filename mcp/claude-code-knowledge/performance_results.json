@@ -1,0 +1,75 @@
+{
+  "timestamp": 1755988874.47238,
+  "results": [
+    {
+      "test_name": "single_request",
+      "total_requests": 50,
+      "successful_requests": 0,
+      "failed_requests": 50,
+      "average_response_time_ms": 0,
+      "p50_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "max_response_time_ms": 0,
+      "requests_per_second": 0,
+      "memory_usage_mb": 0.0,
+      "cpu_usage_percent": 0,
+      "cache_hit_rate": 0,
+      "errors": [
+        "Request 0: __init__() got an unexpected keyword argument 'approach'",
+        "Request 1: __init__() got an unexpected keyword argument 'approach'",
+        "Request 2: __init__() got an unexpected keyword argument 'approach'",
+        "Request 3: __init__() got an unexpected keyword argument 'approach'",
+        "Request 4: __init__() got an unexpected keyword argument 'approach'",
+        "Request 5: __init__() got an unexpected keyword argument 'approach'",
+        "Request 6: __init__() got an unexpected keyword argument 'approach'",
+        "Request 7: __init__() got an unexpected keyword argument 'approach'",
+        "Request 8: __init__() got an unexpected keyword argument 'approach'",
+        "Request 9: __init__() got an unexpected keyword argument 'approach'"
+      ]
+    },
+    {
+      "test_name": "concurrent_request",
+      "total_requests": 50,
+      "successful_requests": 0,
+      "failed_requests": 50,
+      "average_response_time_ms": 0,
+      "p50_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "max_response_time_ms": 0,
+      "requests_per_second": 0,
+      "memory_usage_mb": 0.015625,
+      "cpu_usage_percent": 0.0,
+      "cache_hit_rate": 0,
+      "errors": []
+    },
+    {
+      "test_name": "stress_test",
+      "total_requests": 6765,
+      "successful_requests": 0,
+      "failed_requests": 6765,
+      "average_response_time_ms": 0,
+      "p50_response_time_ms": 0,
+      "p95_response_time_ms": 0,
+      "p99_response_time_ms": 0,
+      "max_response_time_ms": 0,
+      "requests_per_second": 0,
+      "memory_usage_mb": 1.171875,
+      "cpu_usage_percent": 0.0,
+      "cache_hit_rate": 0,
+      "errors": [
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'",
+        "__init__() got an unexpected keyword argument 'approach'"
+      ]
+    }
+  ]
+}

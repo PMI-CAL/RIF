@@ -1,0 +1,273 @@
+{
+  "agents": {
+    "FRO-REACT_FRONTEND_SPECIALIST-1755982275404": {
+      "agent_id": "FRO-REACT_FRONTEND_SPECIALIST-1755982275404",
+      "name": "React_Frontend_Specialist",
+      "domain_type": "frontend",
+      "status": "registered",
+      "capabilities": [
+        {
+          "name": "react_development",
+          "description": "React component development",
+          "complexity": "medium",
+          "resource_requirement": "standard",
+          "dependencies": [],
+          "tools": [
+            "react",
+            "jsx"
+          ]
+        },
+        {
+          "name": "ui_design",
+          "description": "User interface design",
+          "complexity": "low",
+          "resource_requirement": "minimal",
+          "dependencies": [],
+          "tools": [
+            "css",
+            "html"
+          ]
+        }
+      ],
+      "expertise": [
+        "react",
+        "javascript",
+        "css",
+        "html"
+      ],
+      "tools": [
+        "react",
+        "webpack",
+        "babel",
+        "css"
+      ],
+      "resources": {
+        "cpu_cores": 2,
+        "memory_mb": 1024,
+        "disk_mb": 200,
+        "max_runtime_minutes": 30,
+        "max_concurrent_tasks": 3,
+        "network_bandwidth_mbps": 10,
+        "allocated_at": "2025-08-23 13:51:15.404041",
+        "expires_at": null
+      },
+      "created_at": "2025-08-23T13:51:15.404029",
+      "last_activity": "2025-08-23T13:51:15.404089",
+      "performance_metrics": {},
+      "metadata": {}
+    },
+    "DAT-DATABASE_AGENT_E-COMMERCE_PLATFORM_5404-1755982275404": {
+      "agent_id": "DAT-DATABASE_AGENT_E-COMMERCE_PLATFORM_5404-1755982275404",
+      "name": "Database_Agent_E-Commerce Platform_5404",
+      "domain_type": "database",
+      "status": "registered",
+      "capabilities": [
+        {
+          "name": "database_general",
+          "description": "General database capabilities",
+          "complexity": "medium",
+          "resource_requirement": "standard",
+          "dependencies": [],
+          "tools": []
+        }
+      ],
+      "expertise": [
+        "database"
+      ],
+      "tools": [
+        "database"
+      ],
+      "resources": {
+        "cpu_cores": 1,
+        "memory_mb": 1024,
+        "disk_mb": 1000,
+        "max_runtime_minutes": 30,
+        "max_concurrent_tasks": 3,
+        "network_bandwidth_mbps": 10,
+        "allocated_at": "2025-08-23 13:51:15.404475",
+        "expires_at": null
+      },
+      "created_at": "2025-08-23T13:51:15.404468",
+      "last_activity": "2025-08-23T13:51:15.404515",
+      "performance_metrics": {},
+      "metadata": {
+        "created_from": "default_template",
+        "project": "E-Commerce Platform"
+      }
+    },
+    "BAC-BACKEND_AGENT_E-COMMERCE_PLATFORM_5404-1755982275404": {
+      "agent_id": "BAC-BACKEND_AGENT_E-COMMERCE_PLATFORM_5404-1755982275404",
+      "name": "Backend_Agent_E-Commerce Platform_5404",
+      "domain_type": "backend",
+      "status": "registered",
+      "capabilities": [
+        {
+          "name": "api_development",
+          "description": "REST API development",
+          "complexity": "medium",
+          "resource_requirement": "standard",
+          "dependencies": [],
+          "tools": [
+            "python",
+            "nodejs"
+          ]
+        },
+        {
+          "name": "database_integration",
+          "description": "Database integration",
+          "complexity": "medium",
+          "resource_requirement": "standard",
+          "dependencies": [],
+          "tools": [
+            "sql",
+            "orm"
+          ]
+        }
+      ],
+      "expertise": [],
+      "tools": [
+        "python",
+        "nodejs",
+        "express",
+        "fastapi",
+        "postgresql",
+        "redis"
+      ],
+      "resources": {
+        "cpu_cores": 1,
+        "memory_mb": 768,
+        "disk_mb": 300,
+        "max_runtime_minutes": 30,
+        "max_concurrent_tasks": 3,
+        "network_bandwidth_mbps": 10,
+        "allocated_at": "2025-08-23 13:51:15.404794",
+        "expires_at": null
+      },
+      "created_at": "2025-08-23T13:51:15.404788",
+      "last_activity": "2025-08-23T13:51:15.404832",
+      "performance_metrics": {},
+      "metadata": {
+        "created_from": "template",
+        "project": "E-Commerce Platform"
+      }
+    },
+    "SEC-SECURITY_AGENT_E-COMMERCE_PLATFORM_5405-1755982275405": {
+      "agent_id": "SEC-SECURITY_AGENT_E-COMMERCE_PLATFORM_5405-1755982275405",
+      "name": "Security_Agent_E-Commerce Platform_5405",
+      "domain_type": "security",
+      "status": "registered",
+      "capabilities": [
+        {
+          "name": "security_audit",
+          "description": "Security vulnerability assessment",
+          "complexity": "high",
+          "resource_requirement": "intensive",
+          "dependencies": [],
+          "tools": [
+            "security_scanner",
+            "penetration_testing"
+          ]
+        },
+        {
+          "name": "authentication",
+          "description": "Authentication and authorization",
+          "complexity": "high",
+          "resource_requirement": "standard",
+          "dependencies": [],
+          "tools": [
+            "oauth",
+            "jwt"
+          ]
+        }
+      ],
+      "expertise": [],
+      "tools": [
+        "owasp_zap",
+        "security_scanner",
+        "oauth",
+        "jwt",
+        "encryption"
+      ],
+      "resources": {
+        "cpu_cores": 1,
+        "memory_mb": 1024,
+        "disk_mb": 500,
+        "max_runtime_minutes": 30,
+        "max_concurrent_tasks": 3,
+        "network_bandwidth_mbps": 10,
+        "allocated_at": "2025-08-23 13:51:15.405181",
+        "expires_at": null
+      },
+      "created_at": "2025-08-23T13:51:15.405173",
+      "last_activity": "2025-08-23T13:51:15.405226",
+      "performance_metrics": {},
+      "metadata": {
+        "created_from": "template",
+        "project": "E-Commerce Platform"
+      }
+    },
+    "FRO-FRONTEND_AGENT_E-COMMERCE_PLATFORM_5405-1755982275405": {
+      "agent_id": "FRO-FRONTEND_AGENT_E-COMMERCE_PLATFORM_5405-1755982275405",
+      "name": "Frontend_Agent_E-Commerce Platform_5405",
+      "domain_type": "frontend",
+      "status": "registered",
+      "capabilities": [
+        {
+          "name": "ui_development",
+          "description": "User interface development",
+          "complexity": "medium",
+          "resource_requirement": "standard",
+          "dependencies": [],
+          "tools": [
+            "react",
+            "css",
+            "html"
+          ]
+        },
+        {
+          "name": "responsive_design",
+          "description": "Responsive web design",
+          "complexity": "low",
+          "resource_requirement": "minimal",
+          "dependencies": [],
+          "tools": [
+            "css",
+            "flexbox"
+          ]
+        }
+      ],
+      "expertise": [],
+      "tools": [
+        "react",
+        "vue",
+        "angular",
+        "css",
+        "html",
+        "javascript",
+        "webpack"
+      ],
+      "resources": {
+        "cpu_cores": 1,
+        "memory_mb": 512,
+        "disk_mb": 200,
+        "max_runtime_minutes": 30,
+        "max_concurrent_tasks": 3,
+        "network_bandwidth_mbps": 10,
+        "allocated_at": "2025-08-23 13:51:15.405647",
+        "expires_at": null
+      },
+      "created_at": "2025-08-23T13:51:15.405641",
+      "last_activity": "2025-08-23T13:51:15.405683",
+      "performance_metrics": {},
+      "metadata": {
+        "created_from": "template",
+        "project": "E-Commerce Platform"
+      }
+    }
+  },
+  "metadata": {
+    "total_agents": 5,
+    "active_agents": 0,
+    "last_updated": "2025-08-23T13:51:15.405829"
+  }
+}

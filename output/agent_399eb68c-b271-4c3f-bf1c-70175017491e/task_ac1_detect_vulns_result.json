@@ -1,0 +1,204 @@
+{
+  "task_id": "ac1_detect_vulns",
+  "status": "completed",
+  "start_time": "2025-08-23T13:18:26.110676",
+  "end_time": "2025-08-23T13:18:26.114321",
+  "duration_seconds": 0.003645,
+  "confidence_score": 0.89,
+  "result_data": {
+    "scan_id": "scan_1755980306",
+    "vulnerabilities": [
+      {
+        "vuln_id": "dep_d1a985ed",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: flask",
+        "description": "Package flask version 0.10.0 has known security vulnerabilities (CVE-2018-1000656).",
+        "file_path": "requirements.txt",
+        "line_number": 3,
+        "code_snippet": "flask==0.10.0",
+        "remediation": "Update flask to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1000656"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "dep_f479841d",
+        "vuln_type": "vulnerable_components",
+        "severity": "HIGH",
+        "title": "Vulnerable Dependency: django",
+        "description": "Package django version 1.8.0 has known security vulnerabilities (CVE-2020-7471).",
+        "file_path": "requirements.txt",
+        "line_number": 5,
+        "code_snippet": "django==1.8.0",
+        "remediation": "Update django to a secure version.",
+        "references": [
+          "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-7471"
+        ],
+        "cwe_id": null,
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_e7b47726",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "secrets_test.py",
+        "line_number": 3,
+        "code_snippet": "API_KEY = \"sk-1234567890abcdef1234567890abcdef12345678\"  # OpenAI API key",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_f8258a9e",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "secrets_test.py",
+        "line_number": 6,
+        "code_snippet": "GITHUB_TOKEN = \"ghp_1234567890abcdef1234567890abcdef123456\"  # GitHub token",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_26fb7dee",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "secrets_test.py",
+        "line_number": 6,
+        "code_snippet": "GITHUB_TOKEN = \"ghp_1234567890abcdef1234567890abcdef123456\"  # GitHub token",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "secret_2e74828b",
+        "vuln_type": "secrets_exposure",
+        "severity": "HIGH",
+        "title": "Hardcoded Secret Detected",
+        "description": "Potential hardcoded secret or API key found in source code.",
+        "file_path": "secrets_test.py",
+        "line_number": 7,
+        "code_snippet": "DATABASE_URL = \"mysql://user:password@localhost/db\"  # DB credentials",
+        "remediation": "Move secrets to environment variables or secure secret management system.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-798",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "crypto_b824cf9f",
+        "vuln_type": "cryptographic_failures",
+        "severity": "HIGH",
+        "title": "Cryptographic Failure",
+        "description": "Weak cryptographic algorithm or implementation detected.",
+        "file_path": "compliance_test.py",
+        "line_number": 7,
+        "code_snippet": "return md5.md5(\"test\").hexdigest()  # Weak crypto",
+        "remediation": "Use strong cryptographic algorithms (SHA-256+, AES, etc.) and proper key management.",
+        "references": [
+          "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+        ],
+        "cwe_id": "CWE-327",
+        "confidence": 0.8
+      },
+      {
+        "vuln_id": "misc_7b7bf95b",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "compliance_test.py",
+        "line_number": 14,
+        "code_snippet": "DEBUG = True  # Debug mode - OWASP A05",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_4973571a",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "compliance_test.py",
+        "line_number": 15,
+        "code_snippet": "app.run(debug=True)",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      },
+      {
+        "vuln_id": "misc_8006cf2f",
+        "vuln_type": "security_misconfiguration",
+        "severity": "MEDIUM",
+        "title": "Security Misconfiguration",
+        "description": "Debug mode enabled. This may expose sensitive information in production.",
+        "file_path": "compliance_test.py",
+        "line_number": 15,
+        "code_snippet": "app.run(debug=True)",
+        "remediation": "Disable debug mode in production environments.",
+        "references": [
+          "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/"
+        ],
+        "cwe_id": "CWE-489",
+        "confidence": 0.9
+      }
+    ],
+    "summary": {
+      "info": 0,
+      "low": 0,
+      "medium": 3,
+      "high": 7,
+      "critical": 0
+    },
+    "files_scanned": 3,
+    "lines_scanned": 35,
+    "recommendations": [
+      "Move secrets to environment variables or secure vault",
+      "Implement secret scanning in CI/CD pipeline",
+      "Upgrade to strong cryptographic algorithms (SHA-256+, AES)",
+      "Implement proper key management",
+      "Update vulnerable dependencies to secure versions",
+      "Implement dependency scanning automation",
+      "Conduct regular security code reviews",
+      "Implement security testing in CI/CD pipeline",
+      "Provide secure coding training for developers"
+    ],
+    "scan_duration_seconds": 0.003575
+  },
+  "error_message": "",
+  "artifacts": [
+    "security_report_scan_1755980306.json",
+    "vulnerability_summary_scan_1755980306.md",
+    "remediation_plan_scan_1755980306.md"
+  ],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "399eb68c-b271-4c3f-bf1c-70175017491e"
+  }
+}

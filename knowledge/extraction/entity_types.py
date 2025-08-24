@@ -18,6 +18,7 @@ class EntityType(Enum):
     CONSTANT = "constant"
     INTERFACE = "interface"
     ENUM = "enum"
+    METHOD = "method"
 
 
 @dataclass

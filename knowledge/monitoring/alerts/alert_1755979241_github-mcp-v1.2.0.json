@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-08-23T20:00:41.558944",
+  "alert_rule": "server_unhealthy",
+  "severity": "critical",
+  "server_id": "github-mcp-v1.2.0",
+  "server_name": "GitHub MCP Server",
+  "message": "Server GitHub MCP Server is unhealthy after 1 consecutive failures",
+  "health_status": "unhealthy",
+  "consecutive_failures": 1,
+  "response_time_ms": 0.4611015319824219
+}

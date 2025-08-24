@@ -1,0 +1,64 @@
+{
+  "task_id": "owasp_compliance",
+  "status": "completed",
+  "start_time": "2025-08-23T13:14:58.506372",
+  "end_time": "2025-08-23T13:14:58.508090",
+  "duration_seconds": 0.001718,
+  "confidence_score": 0.9,
+  "result_data": {
+    "owasp_top_10": {
+      "overall_score": 0.7142857142857143,
+      "passed_checks": 5,
+      "failed_checks": 2,
+      "total_checks": 7,
+      "findings": [
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "CRITICAL",
+          "file": "xss.js",
+          "line": 7,
+          "description": "Dynamic command execution detected. This may allow arbitrary command execution."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "MEDIUM",
+          "file": "xss.js",
+          "line": 3,
+          "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks."
+        },
+        {
+          "category": "A03:2021 \u2013 Injection",
+          "severity": "MEDIUM",
+          "file": "xss.js",
+          "line": 7,
+          "description": "Unsafe DOM manipulation detected. This may be vulnerable to XSS attacks."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "crypto.py",
+          "line": 6,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "crypto.py",
+          "line": 9,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        }
+      ],
+      "recommendations": [
+        "Address identified OWASP Top 10 vulnerabilities",
+        "Implement secure coding training for development team",
+        "Add security testing to CI/CD pipeline"
+      ]
+    }
+  },
+  "error_message": "",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "b916d6fa-8a77-4adf-9ed4-202fac36b319"
+  }
+}

@@ -13,6 +13,7 @@ import numpy as np
 from .connection_manager import DuckDBConnectionManager
 from .vector_search import VectorSearchEngine, VectorSearchResult, SearchQuery
 from .database_config import DatabaseConfig
+from .graph_validator import GraphValidator, ValidationReport
 
 
 class RIFDatabase:
@@ -41,6 +42,7 @@ class RIFDatabase:
         # Initialize components
         self.connection_manager = DuckDBConnectionManager(self.config)
         self.vector_search = VectorSearchEngine(self.connection_manager)
+        self.graph_validator = GraphValidator(self.config)
         
         self.logger.info(f"RIF Database initialized: {self.config}")
     
@@ -539,6 +541,61 @@ class RIFDatabase:
         
         return results
     
+    def validate_graph(self, 
+                      categories: Optional[List[str]] = None,
+                      include_stats: bool = True,
+                      include_recommendations: bool = True) -> ValidationReport:
+        """
+        Perform comprehensive graph validation.
+        
+        Args:
+            categories: List of validation categories to run (default: all)
+                      Options: 'referential_integrity', 'constraint_validation', 
+                              'data_consistency', 'performance_optimization', 'data_quality'
+            include_stats: Include database statistics in report
+            include_recommendations: Include optimization recommendations
+            
+        Returns:
+            ValidationReport with all findings and suggestions
+        """
+        return self.graph_validator.validate_graph(
+            categories=categories,
+            include_stats=include_stats,
+            include_recommendations=include_recommendations
+        )
+    
+    def validate_referential_integrity(self) -> ValidationReport:
+        """Quick validation focused on referential integrity only."""
+        return self.graph_validator.validate_graph(
+            categories=['referential_integrity'],
+            include_stats=False,
+            include_recommendations=True
+        )
+    
+    def get_validation_summary(self) -> Dict[str, Any]:
+        """Get a quick validation summary without full report."""
+        try:
+            report = self.graph_validator.validate_graph(
+                categories=['referential_integrity', 'constraint_validation'],
+                include_stats=True,
+                include_recommendations=False
+            )
+            
+            return {
+                'timestamp': report.timestamp.isoformat(),
+                'total_issues': report.total_issues,
+                'critical_issues': report.issues_by_severity.get('critical', 0),
+                'error_issues': report.issues_by_severity.get('error', 0),
+                'warning_issues': report.issues_by_severity.get('warning', 0),
+                'validation_duration': report.validation_duration,
+                'database_stats': report.database_stats,
+                'has_critical_issues': report.has_critical_issues,
+                'has_errors': report.has_errors
+            }
+        except Exception as e:
+            self.logger.error(f"Failed to get validation summary: {e}")
+            return {'error': str(e)}
+    
     def verify_setup(self) -> Dict[str, Any]:
         """Verify that the database is properly set up and configured."""
         verification = {
@@ -609,6 +666,7 @@ class RIFDatabase:
     def close(self):
         """Close the database and cleanup resources."""
         self.connection_manager.shutdown()
+        self.graph_validator.close()
         self.logger.info("RIF Database closed")
     
     def __enter__(self):

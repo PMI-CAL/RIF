@@ -1,0 +1,263 @@
+# RIF Consensus Architecture Configuration
+# Issue #58: Design consensus architecture foundation
+
+consensus_architecture:
+  # Voting Mechanisms Configuration
+  voting_mechanisms:
+    simple_majority:
+      threshold: 0.5
+      weights: {}
+      use_cases: 
+        - low_risk_decisions
+        - routine_approvals
+        - documentation_updates
+      timeout_minutes: 15
+      minimum_votes: 2
+      allow_abstentions: true
+      
+    weighted_voting:
+      threshold: 0.7
+      weights:
+        rif-validator: 1.5    # Quality expertise
+        rif-security: 2.0     # Security expertise  
+        rif-implementer: 1.0  # Implementation baseline
+        rif-architect: 1.3    # Design expertise
+        rif-analyst: 1.1      # Requirements expertise
+        rif-planner: 1.0      # Planning baseline
+      use_cases:
+        - medium_risk_decisions
+        - architecture_changes
+        - feature_implementations
+        - bug_fixes
+      timeout_minutes: 30
+      minimum_votes: 3
+      allow_abstentions: true
+      
+    unanimous:
+      threshold: 1.0
+      weights: {}
+      use_cases:
+        - security_critical
+        - breaking_changes
+        - data_migrations
+        - production_deployments
+      timeout_minutes: 45
+      minimum_votes: 2
+      allow_abstentions: false
+      
+    veto_power:
+      threshold: 0.6
+      weights:
+        rif-security: 10.0    # Full veto power
+        rif-validator: 5.0    # Strong veto influence
+        rif-architect: 3.0    # Design veto for architecture
+      use_cases:
+        - compliance_decisions
+        - security_approvals
+        - quality_gates
+        - release_approvals
+      timeout_minutes: 20
+      minimum_votes: 2
+      allow_abstentions: true
+      
+    supermajority:
+      threshold: 0.8
+      weights: {}
+      use_cases:
+        - high_impact_decisions
+        - policy_changes
+        - framework_updates
+        - major_refactoring
+      timeout_minutes: 60
+      minimum_votes: 4
+      allow_abstentions: true
+
+  # Arbitration Rules for Conflict Resolution
+  arbitration_rules:
+    default:
+      disagreement_threshold: 0.3
+      escalation_path:
+        - try_weighted_voting
+        - spawn_arbitrator
+        - escalate_to_human
+      timeout_action: escalate_to_human
+      require_unanimous_critical: true
+      max_escalation_levels: 3
+      
+    security:
+      disagreement_threshold: 0.1  # Very low tolerance for security disagreement
+      escalation_path:
+        - security_expert_review
+        - unanimous_required
+        - escalate_to_human
+      timeout_action: reject_by_default  # Security-first approach
+      require_unanimous_critical: true
+      max_escalation_levels: 2
+      
+    performance:
+      disagreement_threshold: 0.4
+      escalation_path:
+        - performance_benchmark
+        - expert_review
+        - escalate_to_human
+      timeout_action: accept_with_monitoring
+      require_unanimous_critical: false
+      max_escalation_levels: 3
+      
+    quality:
+      disagreement_threshold: 0.2
+      escalation_path:
+        - additional_testing
+        - validator_review
+        - escalate_to_human
+      timeout_action: return_to_implementation
+      require_unanimous_critical: true
+      max_escalation_levels: 3
+
+  # Agent Expertise Configuration
+  agent_expertise:
+    rif-security:
+      security: 0.95
+      compliance: 0.90
+      vulnerability: 0.95
+      encryption: 0.90
+      audit: 0.85
+      general: 0.70
+      
+    rif-validator:
+      testing: 0.90
+      quality: 0.95
+      validation: 0.95
+      coverage: 0.85
+      performance: 0.80
+      general: 0.75
+      
+    rif-implementer:
+      coding: 0.85
+      integration: 0.80
+      debugging: 0.85
+      refactoring: 0.75
+      optimization: 0.70
+      general: 0.70
+      
+    rif-architect:
+      design: 0.95
+      scalability: 0.90
+      patterns: 0.90
+      systems: 0.85
+      dependencies: 0.80
+      general: 0.80
+      
+    rif-analyst:
+      requirements: 0.90
+      analysis: 0.95
+      planning: 0.85
+      research: 0.80
+      documentation: 0.75
+      general: 0.75
+      
+    rif-planner:
+      strategy: 0.90
+      coordination: 0.85
+      scheduling: 0.80
+      resource_allocation: 0.75
+      risk_assessment: 0.70
+      general: 0.70
+
+  # Risk Assessment Configuration
+  risk_assessment:
+    file_patterns:
+      security:
+        patterns: ["**/security/**", "**/auth/**", "**/login/**", "**/oauth/**"]
+        base_score: 40
+      payment:
+        patterns: ["**/payment/**", "**/billing/**", "**/transaction/**"]
+        base_score: 50
+      data:
+        patterns: ["**/migration/**", "**/schema/**", "**/database/**"]
+        base_score: 35
+      config:
+        patterns: ["**/config/**", "**/.env", "**/settings/**"]
+        base_score: 30
+        
+    size_thresholds:
+      large_change:
+        lines: 500
+        score: 30
+      medium_change:
+        lines: 100
+        score: 15
+      small_change:
+        lines: 50
+        score: 5
+        
+    complexity_factors:
+      no_tests: 25
+      multiple_modules: 20
+      external_dependencies: 15
+      breaking_changes: 40
+      
+    risk_levels:
+      critical: 70
+      high: 50
+      medium: 25
+      low: 0
+
+  # Confidence Scoring
+  confidence_scoring:
+    factors:
+      agent_expertise: 0.3      # 30% weight
+      historical_accuracy: 0.25 # 25% weight  
+      evidence_quality: 0.25    # 25% weight
+      issue_complexity: 0.2     # 20% weight
+      
+    evidence_quality_weights:
+      test_coverage: 0.3
+      documentation: 0.2
+      peer_review: 0.2
+      benchmarks: 0.15
+      security_scan: 0.15
+      
+    historical_accuracy:
+      learning_window_days: 30
+      minimum_decisions: 5
+      decay_factor: 0.95  # Recent decisions weighted higher
+
+  # Performance Thresholds
+  performance:
+    consensus_calculation:
+      max_time_ms: 100
+      target_time_ms: 50
+      
+    vote_collection:
+      default_timeout_minutes: 30
+      max_timeout_minutes: 120
+      min_timeout_minutes: 5
+      
+    arbitration:
+      max_escalation_time_minutes: 180
+      escalation_retry_interval_minutes: 15
+      
+    metrics_retention:
+      detailed_metrics_days: 30
+      summary_metrics_days: 365
+      archive_after_days: 730
+
+  # Integration Settings
+  integration:
+    github:
+      vote_collection_method: "comments"  # comments | labels | reactions
+      decision_notification: "comment"    # comment | issue_update | both
+      archive_decisions: true
+      
+    knowledge_system:
+      store_all_votes: true
+      store_reasoning: true
+      pattern_detection: true
+      learning_integration: true
+      
+    monitoring:
+      real_time_alerts: true
+      consensus_dashboards: true
+      performance_tracking: true
+      quality_metrics: true

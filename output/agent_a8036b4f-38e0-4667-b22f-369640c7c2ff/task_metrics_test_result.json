@@ -1,0 +1,15 @@
+{
+  "task_id": "metrics_test",
+  "status": "failed",
+  "start_time": "2025-08-23T13:14:12.061908",
+  "end_time": "2025-08-23T13:14:12.061943",
+  "duration_seconds": 3.5e-05,
+  "confidence_score": 0.0,
+  "result_data": [],
+  "error_message": "'list' object has no attribute 'get'",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "a8036b4f-38e0-4667-b22f-369640c7c2ff"
+  }
+}

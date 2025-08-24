@@ -1,0 +1,246 @@
+{
+  "decision_id": "cascade-update-system-architecture-2025",
+  "title": "Cascade Update System Architecture Decisions",
+  "status": "accepted",
+  "context": "Need to implement sophisticated cascade update system for knowledge graph that can handle complex dependency relationships, maintain consistency, and perform well with large datasets.",
+  "date": "2025-08-23T07:52:00Z",
+  "source": "Issue #67 RIF-Planner Analysis",
+  
+  "decisions": [
+    {
+      "decision": "Use Breadth-First Search for Graph Traversal",
+      "rationale": "BFS provides optimal path discovery and easier cycle detection compared to DFS. Ensures all immediate dependencies are processed before deeper dependencies, which is ideal for cascade updates.",
+      "alternatives": [
+        "Depth-First Search: Rejected due to potential stack overflow with deep graphs and less optimal cycle detection",
+        "Bidirectional Search: Rejected due to complexity and unclear termination conditions for cascade updates"
+      ],
+      "consequences": {
+        "positive": [
+          "Predictable memory usage patterns",
+          "Easier cycle detection and handling", 
+          "Natural batch processing boundaries",
+          "Better performance characteristics for wide graphs"
+        ],
+        "negative": [
+          "Higher memory usage for very wide graphs",
+          "May process more entities than DFS in some cases"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Implement Strongly Connected Components Detection for Circular Dependencies",
+      "rationale": "Circular dependencies are inevitable in complex codebases. SCC detection using Tarjan's algorithm provides efficient identification and handling of circular dependency clusters.",
+      "alternatives": [
+        "Simple cycle detection: Rejected as insufficient for complex multi-node cycles",
+        "Ignore circular dependencies: Rejected as it would lead to inconsistent updates",
+        "Recursive dependency resolution: Rejected due to potential infinite loops"
+      ],
+      "consequences": {
+        "positive": [
+          "Robust handling of complex circular dependencies",
+          "Ability to update circular dependency clusters atomically",
+          "Prevention of infinite loops in cascade operations",
+          "Clear identification of dependency boundaries"
+        ],
+        "negative": [
+          "Additional computational complexity for SCC detection",
+          "More complex update logic for circular clusters"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Use Database Transactions for Atomic Cascade Operations",
+      "rationale": "Cascade updates must be atomic to maintain graph consistency. Database transactions provide ACID guarantees and rollback capability if any part of the cascade fails.",
+      "alternatives": [
+        "Application-level transaction management: Rejected due to complexity and error-proneness",
+        "No transaction management: Rejected due to consistency risks",
+        "File-based checkpointing: Rejected due to performance and complexity concerns"
+      ],
+      "consequences": {
+        "positive": [
+          "ACID compliance for all cascade operations",
+          "Automatic rollback on failure",
+          "Simplified error handling",
+          "Consistency guarantees"
+        ],
+        "negative": [
+          "Potential for long-running transactions",
+          "Database lock contention risks",
+          "Memory pressure from large transactions"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Implement Batch Processing for Performance Optimization",
+      "rationale": "Individual entity updates are inefficient for large cascades. Batch processing reduces database roundtrips and improves overall performance.",
+      "alternatives": [
+        "Individual entity updates: Rejected due to poor performance",
+        "Bulk insert/replace operations: Rejected due to complexity with existing data",
+        "Streaming updates: Considered but deferred due to complexity"
+      ],
+      "consequences": {
+        "positive": [
+          "Significantly improved performance for large cascades",
+          "Reduced database connection overhead",
+          "Better resource utilization",
+          "Predictable performance characteristics"
+        ],
+        "negative": [
+          "More complex error handling within batches",
+          "Higher memory usage during batch preparation",
+          "All-or-nothing failure modes for batches"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Integrate with Existing DuckDB Schema and Indexes",
+      "rationale": "Leverage existing performance optimizations and schema design rather than creating parallel structures. Use existing relationships table and indexes for optimal performance.",
+      "alternatives": [
+        "Create separate cascade-specific tables: Rejected due to data duplication and synchronization issues",
+        "Use in-memory graph structures: Rejected due to memory limitations and persistence concerns",
+        "Implement custom graph database: Rejected due to complexity and maintenance overhead"
+      ],
+      "consequences": {
+        "positive": [
+          "Leverage existing performance optimizations",
+          "No data duplication or synchronization issues",
+          "Consistent with overall system architecture",
+          "Utilizes existing indexes for optimal performance"
+        ],
+        "negative": [
+          "Constrained by existing schema design",
+          "Must maintain backward compatibility",
+          "Performance limited by existing index structure"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Implement Multi-Level Consistency Validation",
+      "rationale": "Complex cascade operations require validation at multiple levels (entity, relationship, graph) to ensure overall system integrity.",
+      "alternatives": [
+        "Single-level validation: Rejected as insufficient for complex operations",
+        "Post-cascade validation only: Rejected due to potential for large rollbacks",
+        "No validation: Rejected due to data integrity risks"
+      ],
+      "consequences": {
+        "positive": [
+          "Comprehensive data integrity assurance",
+          "Early detection of consistency violations",
+          "Granular error reporting and debugging",
+          "Confidence in system reliability"
+        ],
+        "negative": [
+          "Additional computational overhead",
+          "More complex implementation",
+          "Potential for false positives in validation"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Use Mock Interface Pattern for Issue #66 Dependency",
+      "rationale": "Enable parallel development without blocking on dependency completion. Mock interface provides realistic testing capability while allowing independent progress.",
+      "alternatives": [
+        "Wait for Issue #66 completion: Rejected due to timeline constraints",
+        "Implement basic relationship detection inline: Rejected due to code duplication",
+        "Skip dependency integration: Rejected due to functional requirements"
+      ],
+      "consequences": {
+        "positive": [
+          "Enables parallel development",
+          "Provides testing capability during development",
+          "Clear integration point when dependency is ready",
+          "Reduces project timeline risk"
+        ],
+        "negative": [
+          "Additional mock interface maintenance",
+          "Potential integration issues when switching to real implementation",
+          "Testing coverage gaps until real integration"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Implement Memory-Based Backpressure Management",
+      "rationale": "Large graphs can cause memory pressure. Adaptive backpressure management ensures system stability under resource constraints.",
+      "alternatives": [
+        "No memory management: Rejected due to potential system instability",
+        "Hard memory limits: Rejected due to inflexibility",
+        "Disk-based overflow: Rejected due to performance implications"
+      ],
+      "consequences": {
+        "positive": [
+          "System stability under memory pressure",
+          "Graceful degradation rather than failures",
+          "Predictable performance characteristics",
+          "Adaptive behavior based on available resources"
+        ],
+        "negative": [
+          "Additional complexity in memory management",
+          "Potential performance impact from memory monitoring",
+          "Complex tuning of backpressure parameters"
+        ]
+      }
+    },
+    
+    {
+      "decision": "Use Checkpoint-Based Recovery Strategy",
+      "rationale": "Complex cascade operations need recovery capability. Checkpoint-based recovery provides granular rollback points without full system restart.",
+      "alternatives": [
+        "Full system rollback: Rejected due to inefficiency",
+        "No recovery mechanism: Rejected due to reliability concerns",
+        "Application-level undo operations: Rejected due to complexity"
+      ],
+      "consequences": {
+        "positive": [
+          "Granular recovery without full rollback",
+          "Reduced data loss on failure",
+          "Faster recovery times",
+          "Clear progress tracking"
+        ],
+        "negative": [
+          "Additional storage overhead for checkpoints",
+          "Complexity in checkpoint management",
+          "Potential for checkpoint corruption"
+        ]
+      }
+    }
+  ],
+  
+  "implementation_guidelines": [
+    "Implement BFS with visited set for cycle detection",
+    "Use Tarjan's algorithm for SCC detection",
+    "Wrap all cascade operations in database transactions",
+    "Implement configurable batch sizes for performance tuning",
+    "Create comprehensive validation at entity, relationship, and graph levels",
+    "Design mock interface to match expected Issue #66 API",
+    "Implement adaptive memory monitoring and backpressure response",
+    "Create checkpoint system with configurable checkpoint frequency"
+  ],
+  
+  "success_criteria": [
+    "Handles graphs with >10,000 entities without memory issues",
+    "Detects and handles circular dependencies correctly",
+    "Maintains ACID properties for all cascade operations", 
+    "Achieves >90% performance efficiency compared to individual updates",
+    "Integrates seamlessly with existing DuckDB schema",
+    "Provides comprehensive consistency validation",
+    "Enables parallel development with Issue #66",
+    "Demonstrates graceful degradation under resource constraints"
+  ],
+  
+  "monitoring_requirements": [
+    "Memory usage tracking during cascade operations",
+    "Performance metrics for graph traversal and updates",
+    "Consistency validation results and timing",
+    "Transaction success/failure rates",
+    "Checkpoint creation and recovery statistics"
+  ],
+  
+  "tags": ["architecture", "cascade-updates", "graph-algorithms", "database-integration", "performance", "consistency", "recovery"]
+}

@@ -1,0 +1,57 @@
+{
+  "task_id": "ac2_compliance",
+  "status": "completed",
+  "start_time": "2025-08-23T13:18:26.114585",
+  "end_time": "2025-08-23T13:18:26.115243",
+  "duration_seconds": 0.000658,
+  "confidence_score": 0.9,
+  "result_data": {
+    "owasp_top_10": {
+      "overall_score": 0.7142857142857143,
+      "passed_checks": 5,
+      "failed_checks": 2,
+      "total_checks": 7,
+      "findings": [
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "compliance_test.py",
+          "line": 14,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "compliance_test.py",
+          "line": 15,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A05:2021 \u2013 Security Misconfiguration",
+          "severity": "MEDIUM",
+          "file": "compliance_test.py",
+          "line": 15,
+          "description": "Debug mode enabled. This may expose sensitive information in production."
+        },
+        {
+          "category": "A02:2021 \u2013 Cryptographic Failures",
+          "severity": "HIGH",
+          "file": "compliance_test.py",
+          "line": 7,
+          "description": "Weak cryptographic algorithm or implementation detected."
+        }
+      ],
+      "recommendations": [
+        "Address identified OWASP Top 10 vulnerabilities",
+        "Implement secure coding training for development team",
+        "Add security testing to CI/CD pipeline"
+      ]
+    }
+  },
+  "error_message": "",
+  "artifacts": [],
+  "metadata": {
+    "priority": "MEDIUM",
+    "agent_id": "399eb68c-b271-4c3f-bf1c-70175017491e"
+  }
+}

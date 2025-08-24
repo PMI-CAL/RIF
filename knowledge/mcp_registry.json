@@ -1,0 +1,223 @@
+{
+  "servers": [
+    {
+      "server_id": "github-mcp-v1.2.0",
+      "name": "GitHub MCP Server",
+      "version": "1.2.0",
+      "capabilities": [
+        "github_api",
+        "issue_management",
+        "pr_operations"
+      ],
+      "resource_requirements": {
+        "memory_mb": 128,
+        "cpu_percent": 8
+      },
+      "health_status": "unknown",
+      "last_updated": null,
+      "description": "GitHub integration MCP server for issue and PR management",
+      "tags": [
+        "github",
+        "issues",
+        "development"
+      ],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:18.976813",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "git-mcp-v1.0.0",
+      "name": "Git MCP Server",
+      "version": "1.0.0",
+      "capabilities": [
+        "git_operations",
+        "repository_analysis",
+        "branch_management"
+      ],
+      "resource_requirements": {
+        "memory_mb": 64,
+        "cpu_percent": 5
+      },
+      "health_status": "unknown",
+      "last_updated": null,
+      "description": "Git operations MCP server for repository management",
+      "tags": [
+        "git",
+        "repository",
+        "development"
+      ],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:18.977021",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "filesystem-mcp-v1.1.0",
+      "name": "Filesystem MCP Server",
+      "version": "1.1.0",
+      "capabilities": [
+        "file_operations",
+        "directory_scanning",
+        "file_watching"
+      ],
+      "resource_requirements": {
+        "memory_mb": 96,
+        "cpu_percent": 6
+      },
+      "health_status": "unknown",
+      "last_updated": null,
+      "description": "File system operations MCP server",
+      "tags": [
+        "filesystem",
+        "files",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:18.977024",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "sequential-thinking-mcp-v1.0.0",
+      "name": "Sequential Thinking MCP",
+      "version": "1.0.0",
+      "capabilities": [
+        "structured_reasoning",
+        "problem_decomposition",
+        "logic_chains"
+      ],
+      "resource_requirements": {
+        "memory_mb": 256,
+        "cpu_percent": 12
+      },
+      "health_status": "unknown",
+      "last_updated": null,
+      "description": "Structured reasoning and problem decomposition MCP server",
+      "tags": [
+        "reasoning",
+        "thinking",
+        "analysis"
+      ],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:18.977025",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "memory-mcp-v1.0.0",
+      "name": "Memory MCP Server",
+      "version": "1.0.0",
+      "capabilities": [
+        "context_storage",
+        "knowledge_retrieval",
+        "pattern_memory"
+      ],
+      "resource_requirements": {
+        "memory_mb": 192,
+        "cpu_percent": 10
+      },
+      "health_status": "unknown",
+      "last_updated": null,
+      "description": "Context storage and knowledge retrieval MCP server",
+      "tags": [
+        "memory",
+        "context",
+        "knowledge"
+      ],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:18.977027",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "demo-github-api",
+      "name": "Demo GitHub API Server",
+      "version": "1.0.0",
+      "capabilities": [
+        "github_api",
+        "repositories",
+        "issues"
+      ],
+      "resource_requirements": {},
+      "health_status": "unknown",
+      "last_updated": "2025-08-23T20:04:19.079734",
+      "description": null,
+      "tags": [],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:19.079734",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "demo-database-connector",
+      "name": "Demo Database Connector",
+      "version": "1.0.0",
+      "capabilities": [
+        "database",
+        "sql",
+        "migrations"
+      ],
+      "resource_requirements": {},
+      "health_status": "unknown",
+      "last_updated": "2025-08-23T20:04:19.182393",
+      "description": null,
+      "tags": [],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:19.182393",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    },
+    {
+      "server_id": "demo-file-processor",
+      "name": "Demo File Processor",
+      "version": "1.0.0",
+      "capabilities": [
+        "file_processing",
+        "validation",
+        "parsing"
+      ],
+      "resource_requirements": {},
+      "health_status": "unknown",
+      "last_updated": "2025-08-23T20:04:19.284009",
+      "description": null,
+      "tags": [],
+      "dependencies": [],
+      "configuration": {},
+      "metrics": {},
+      "registered_at": "2025-08-23T20:04:19.284009",
+      "last_health_check": null,
+      "total_health_checks": 0,
+      "failed_health_checks": 0
+    }
+  ],
+  "query_stats": {
+    "total_queries": 0,
+    "capability_queries": 0,
+    "version_queries": 0,
+    "tag_queries": 0,
+    "avg_query_time_ms": 0.0
+  },
+  "saved_at": "2025-08-23T20:04:19.284285"
+}

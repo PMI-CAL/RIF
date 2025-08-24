@@ -1,0 +1,15 @@
+{
+  "task_id": "integration_test",
+  "status": "failed",
+  "start_time": "2025-08-23T13:16:40.968880",
+  "end_time": "2025-08-23T13:16:40.968949",
+  "duration_seconds": 6.9e-05,
+  "confidence_score": 0.0,
+  "result_data": [],
+  "error_message": "'list' object has no attribute 'get'",
+  "artifacts": [],
+  "metadata": {
+    "priority": "HIGH",
+    "agent_id": "b84f1721-e979-48e6-b670-ec9a0d37f48c"
+  }
+}

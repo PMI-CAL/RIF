@@ -107,6 +107,27 @@ workflow:
       description: "Work failed, needs recovery"
       alert: true
       recovery: true
+      
+    # Arbitration system states (Issue #61)
+    arbitrating:
+      description: "Agent conflict resolution in progress"
+      agent: "rif-arbitrator"
+      timeout: "30m"
+      parallel: true
+      conflict_resolution: true
+      
+    escalating:
+      description: "Human intervention required for unresolved disputes"
+      agent: "human"
+      timeout: "2h"
+      alert: true
+      human_required: true
+      
+    expert_review:
+      description: "Expert panel reviewing conflicting positions"
+      agent: "rif-expert-panel"
+      timeout: "1h"
+      expertise_based: true
 
   # Automatic state transitions
   transitions:
@@ -252,6 +273,47 @@ workflow:
       to: "analyzing"
       trigger: "retry"
       condition: "checkpoint_available"
+      
+    # Arbitration system transitions (Issue #61)
+    - from: "validating"
+      to: "arbitrating"
+      trigger: "agent_conflict_detected"
+      condition: "disagreement_threshold_exceeded"
+      
+    - from: "implementing"
+      to: "arbitrating"
+      trigger: "design_conflict"
+      condition: "conflicting_agent_decisions"
+      
+    - from: "arbitrating"
+      to: "expert_review"
+      trigger: "escalation_required"
+      condition: "automated_resolution_failed"
+      
+    - from: "expert_review"
+      to: "validating"
+      trigger: "expert_consensus_reached"
+      condition: "conflict_resolved"
+      
+    - from: "expert_review"
+      to: "escalating"
+      trigger: "expert_disagreement"
+      condition: "expert_panel_deadlocked"
+      
+    - from: "arbitrating"
+      to: "escalating"
+      trigger: "arbitration_timeout"
+      condition: "timeout_exceeded OR critical_security_conflict"
+      
+    - from: "escalating"
+      to: "validating"
+      trigger: "human_decision_made"
+      condition: "conflict_resolved_by_human"
+      
+    - from: "escalating"
+      to: "blocked"
+      trigger: "escalation_timeout"
+      condition: "human_intervention_timeout"
 
   # Parallel execution rules
   parallel:
@@ -267,6 +329,8 @@ workflow:
       - "skeptical_review"
       - "evidence_gathering"
       - "quality_tracking"
+      - "arbitrating"
+      - "expert_review"
       
     constraints:
       - "Cannot parallelize across different issues"
@@ -342,6 +406,25 @@ workflow:
         - "no_tests"
       blocker: false
       advisory: true
+      
+    # Arbitration system quality gates (Issue #61)
+    conflict_resolution:
+      threshold: "resolved"
+      required: true
+      blocker: true
+      description: "Agent conflicts must be resolved before proceeding"
+      
+    arbitration_confidence:
+      threshold: 0.7
+      required: true
+      blocker: true
+      description: "Arbitration decisions must meet minimum confidence threshold"
+      
+    escalation_justification:
+      threshold: "documented"
+      required: true
+      blocker: false
+      description: "Human escalations must be properly justified"
 
   # Complexity assessment
   complexity:
@@ -544,3 +627,140 @@ workflow:
       enabled: true
       on_complete: true
       add_comment: true
+
+  # Arbitration system configuration (Issue #61)
+  arbitration:
+    enabled: true
+    
+    # Conflict detection thresholds
+    conflict_detection:
+      disagreement_threshold: 0.3
+      confidence_threshold: 0.5
+      split_decision_threshold: 0.4
+      outlier_detection_stddev: 2.0
+      low_confidence_threshold: 0.4
+      expertise_coverage_threshold: 0.7
+      
+    # Escalation configuration
+    escalation:
+      max_levels: 3
+      timeout_minutes:
+        automated_resolution: 5
+        weighted_consensus: 10
+        expert_panel: 30
+        arbitrator_agent: 45
+        evidence_review: 30
+        human_intervention: 1440  # 24 hours
+      
+      strategies:
+        conservative:
+          enabled: true
+          use_case: "security_critical OR risk_level >= high"
+          
+        balanced:
+          enabled: true
+          use_case: "default"
+          
+        aggressive:
+          enabled: true
+          use_case: "risk_level <= low AND complexity <= medium"
+          
+        security_focused:
+          enabled: true
+          use_case: "security_critical = true"
+          
+        efficiency_focused:
+          enabled: true
+          use_case: "time_critical = true"
+    
+    # Arbitrator agent configuration
+    arbitrator_agents:
+      default:
+        mode: "balanced"
+        skills:
+          - "evidence_analysis"
+          - "reasoning_evaluation"
+          - "bias_detection"
+          - "conflict_mediation"
+        confidence_threshold: 0.75
+        max_analysis_time_minutes: 30
+        
+      security_specialist:
+        mode: "analytical"
+        skills:
+          - "evidence_analysis"
+          - "reasoning_evaluation"
+          - "technical_expertise"
+          - "risk_assessment"
+        expertise_domains: ["security", "compliance"]
+        confidence_threshold: 0.85
+        max_analysis_time_minutes: 45
+        
+      consensus_builder:
+        mode: "consensus_building"
+        skills:
+          - "conflict_mediation"
+          - "pattern_recognition"
+          - "bias_detection"
+          - "reasoning_evaluation"
+        confidence_threshold: 0.7
+        max_analysis_time_minutes: 60
+    
+    # Decision recording and audit
+    decision_recording:
+      enabled: true
+      retention_days: 365
+      verification_enabled: true
+      compliance_threshold: 0.8
+      
+      audit_events:
+        - "decision_initiated"
+        - "conflict_detected"
+        - "escalation_triggered"
+        - "resolution_achieved"
+        - "human_escalated"
+        - "decision_overridden"
+        
+    # Human escalation configuration
+    human_escalation:
+      enabled: true
+      notification_channels:
+        - "github_issue_comment"
+        - "slack_alert"
+        - "email_notification"
+      timeout_hours: 24
+      auto_reminder_hours: 4
+      
+      escalation_triggers:
+        - "arbitration_timeout"
+        - "critical_security_conflict"
+        - "expert_panel_deadlock"
+        - "compliance_violation"
+        
+    # Integration with existing workflow
+    workflow_integration:
+      trigger_states:
+        - "validating"
+        - "implementing"
+        - "pr_validating"
+      
+      conflict_detection_points:
+        - "agent_vote_collection"
+        - "quality_gate_evaluation"
+        - "pr_review_conflicts"
+        
+      parallel_execution: true
+      checkpoint_integration: true
+      
+    # Performance monitoring
+    metrics:
+      track_resolution_time: true
+      track_escalation_patterns: true
+      track_confidence_accuracy: true
+      track_human_intervention_rate: true
+      
+      performance_targets:
+        average_resolution_time_minutes: 15
+        escalation_rate_threshold: 0.2
+        human_intervention_rate_threshold: 0.1
+        confidence_accuracy_threshold: 0.85

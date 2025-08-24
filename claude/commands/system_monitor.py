@@ -203,6 +203,187 @@ class MetricsCollector:
         self._add_metric("shadow_mode.response_accuracy", accuracy, {}, "%")
         self._add_metric("shadow_mode.performance_delta", performance_delta, {}, "%")
         
+    def track_consensus_metrics(self, voting_session: Dict[str, Any]):
+        """Track consensus and voting metrics from a voting session"""
+        try:
+            # Calculate agreement level (0.0-1.0 scale)
+            agreement_level = self._calculate_agreement_level(voting_session)
+            self._add_metric("consensus.agreement_level", agreement_level, 
+                           {"session_id": voting_session.get("id", "unknown")}, "ratio")
+            
+            # Track decision time
+            duration_ms = voting_session.get("duration", 0)
+            self._add_metric("consensus.decision_time", duration_ms,
+                           {"session_id": voting_session.get("id", "unknown")}, "ms")
+            
+            # Identify and track dissenting agents
+            dissenters = self._identify_dissenters(voting_session)
+            self._add_metric("consensus.dissenter_count", len(dissenters),
+                           {"session_id": voting_session.get("id", "unknown")}, "count")
+            
+            # Track confidence distribution
+            confidence_stats = self._analyze_confidence_distribution(voting_session)
+            self._add_metric("consensus.confidence_avg", confidence_stats.get("average", 0.0),
+                           {"session_id": voting_session.get("id", "unknown")}, "ratio")
+            self._add_metric("consensus.confidence_std", confidence_stats.get("std_dev", 0.0),
+                           {"session_id": voting_session.get("id", "unknown")}, "ratio")
+            
+            # Track consensus type and outcome
+            consensus_type = voting_session.get("consensus_type", "unknown")
+            outcome = voting_session.get("outcome", "unknown")
+            self._add_metric("consensus.session_outcome", 1.0 if outcome == "agreed" else 0.0,
+                           {"consensus_type": consensus_type, "outcome": outcome}, "boolean")
+            
+            # Store detailed session data for historical analysis
+            self._store_consensus_session(voting_session, agreement_level, dissenters, confidence_stats)
+            
+        except Exception as e:
+            self.logger.error(f"Error tracking consensus metrics: {e}")
+            
+    def _calculate_agreement_level(self, voting_session: Dict[str, Any]) -> float:
+        """Calculate agreement level (0.0 = complete disagreement, 1.0 = unanimous)"""
+        votes = voting_session.get("votes", [])
+        if not votes:
+            return 0.0
+            
+        # Count votes by decision
+        vote_counts = {}
+        total_weight = 0
+        
+        for vote in votes:
+            decision = vote.get("decision", "abstain")
+            weight = vote.get("weight", 1.0)
+            
+            vote_counts[decision] = vote_counts.get(decision, 0) + weight
+            total_weight += weight
+            
+        if total_weight == 0:
+            return 0.0
+            
+        # Find the majority decision and calculate agreement level
+        if vote_counts:
+            max_votes = max(vote_counts.values())
+            agreement_level = max_votes / total_weight
+            return min(agreement_level, 1.0)
+        
+        return 0.0
+        
+    def _identify_dissenters(self, voting_session: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Identify agents who voted against the majority decision"""
+        votes = voting_session.get("votes", [])
+        if not votes:
+            return []
+            
+        # Find majority decision
+        vote_counts = {}
+        for vote in votes:
+            decision = vote.get("decision", "abstain")
+            weight = vote.get("weight", 1.0)
+            vote_counts[decision] = vote_counts.get(decision, 0) + weight
+            
+        if not vote_counts:
+            return []
+            
+        majority_decision = max(vote_counts, key=vote_counts.get)
+        
+        # Find dissenters
+        dissenters = []
+        for vote in votes:
+            if vote.get("decision") != majority_decision:
+                dissenters.append({
+                    "agent": vote.get("agent", "unknown"),
+                    "decision": vote.get("decision", "unknown"),
+                    "confidence": vote.get("confidence", 0.0),
+                    "reasoning": vote.get("reasoning", "")
+                })
+                
+        return dissenters
+        
+    def _analyze_confidence_distribution(self, voting_session: Dict[str, Any]) -> Dict[str, float]:
+        """Analyze confidence score distribution across all votes"""
+        votes = voting_session.get("votes", [])
+        confidences = [vote.get("confidence", 0.0) for vote in votes if "confidence" in vote]
+        
+        if not confidences:
+            return {"average": 0.0, "std_dev": 0.0, "min": 0.0, "max": 0.0}
+            
+        return {
+            "average": statistics.mean(confidences),
+            "std_dev": statistics.stdev(confidences) if len(confidences) > 1 else 0.0,
+            "min": min(confidences),
+            "max": max(confidences)
+        }
+        
+    def _store_consensus_session(self, voting_session: Dict[str, Any], agreement_level: float, 
+                                dissenters: List[Dict[str, Any]], confidence_stats: Dict[str, float]):
+        """Store detailed consensus session data for historical analysis"""
+        try:
+            # Prepare consensus session record
+            session_record = {
+                "timestamp": datetime.now().isoformat(),
+                "session_id": voting_session.get("id", f"session_{int(time.time())}"),
+                "issue_number": voting_session.get("issue_number"),
+                "consensus_type": voting_session.get("consensus_type", "unknown"),
+                "outcome": voting_session.get("outcome", "unknown"),
+                "agreement_level": agreement_level,
+                "decision_time_ms": voting_session.get("duration", 0),
+                "total_votes": len(voting_session.get("votes", [])),
+                "dissenter_count": len(dissenters),
+                "dissenters": dissenters,
+                "confidence_stats": confidence_stats,
+                "votes_summary": self._summarize_votes(voting_session.get("votes", []))
+            }
+            
+            # Store in consensus history file
+            consensus_dir = Path(self.config.get("storage", {}).get("paths", {}).get("consensus", 
+                                                                   "/tmp/consensus"))
+            consensus_dir.mkdir(parents=True, exist_ok=True)
+            
+            today = datetime.now().strftime("%Y%m%d")
+            consensus_file = consensus_dir / f"consensus_sessions_{today}.jsonl"
+            
+            with open(consensus_file, 'a') as f:
+                f.write(json.dumps(session_record) + "\n")
+                
+        except Exception as e:
+            self.logger.error(f"Error storing consensus session data: {e}")
+            
+    def _summarize_votes(self, votes: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Create a summary of votes for storage"""
+        summary = {
+            "decisions": {},
+            "average_confidence": 0.0,
+            "agents": []
+        }
+        
+        total_confidence = 0
+        confidence_count = 0
+        
+        for vote in votes:
+            decision = vote.get("decision", "abstain")
+            confidence = vote.get("confidence", 0.0)
+            agent = vote.get("agent", "unknown")
+            
+            # Count decisions
+            summary["decisions"][decision] = summary["decisions"].get(decision, 0) + 1
+            
+            # Track confidence
+            if confidence > 0:
+                total_confidence += confidence
+                confidence_count += 1
+                
+            # Track agents
+            summary["agents"].append({
+                "agent": agent,
+                "decision": decision,
+                "confidence": confidence
+            })
+            
+        if confidence_count > 0:
+            summary["average_confidence"] = total_confidence / confidence_count
+            
+        return summary
+        
     def _add_metric(self, name: str, value: float, tags: Dict[str, str], unit: str = ""):
         """Add metric to collection buffer"""
         metric = MetricData(
@@ -613,6 +794,247 @@ def track_latency(operation_name: str):
                 return func(*args, **kwargs)
         return wrapper
     return decorator
+
+def track_consensus_session(voting_session: Dict[str, Any]):
+    """Track metrics from a consensus voting session"""
+    if _monitor_instance:
+        _monitor_instance.collector.track_consensus_metrics(voting_session)
+    else:
+        # Log warning if monitoring is not initialized
+        import logging
+        logging.getLogger("rif_consensus").warning("Monitoring not initialized - consensus metrics not tracked")
+
+class ConsensusMonitor:
+    """Standalone consensus monitoring class for direct integration"""
+    
+    def __init__(self, storage_path: str = "/Users/cal/DEV/RIF/knowledge/monitoring"):
+        self.storage_path = Path(storage_path)
+        self.logger = logging.getLogger("rif_consensus_monitor")
+        
+    def track_consensus(self, voting_session: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Main entry point for tracking consensus metrics
+        Returns a comprehensive report of the consensus session
+        """
+        try:
+            # Calculate core metrics
+            agreement_level = self._calculate_agreement_level(voting_session)
+            dissenters = self._identify_dissenters(voting_session)
+            confidence_distribution = self._analyze_confidence_distribution(voting_session)
+            decision_time = voting_session.get("duration", 0)
+            
+            # Generate comprehensive report
+            report = {
+                "session_id": voting_session.get("id", f"session_{int(time.time())}"),
+                "timestamp": datetime.now().isoformat(),
+                "metrics": {
+                    "agreement_level": agreement_level,
+                    "dissenting_agents": [d["agent"] for d in dissenters],
+                    "confidence_distribution": confidence_distribution,
+                    "decision_time": decision_time,
+                    "total_participants": len(voting_session.get("votes", [])),
+                    "dissenter_count": len(dissenters)
+                },
+                "analysis": {
+                    "consensus_strength": self._assess_consensus_strength(agreement_level, confidence_distribution),
+                    "dissent_patterns": self._analyze_dissent_patterns(dissenters),
+                    "efficiency_assessment": self._assess_decision_efficiency(decision_time, len(voting_session.get("votes", [])))
+                },
+                "recommendations": self._generate_recommendations(agreement_level, dissenters, confidence_distribution)
+            }
+            
+            # Store metrics if monitoring is available
+            if _monitor_instance:
+                _monitor_instance.collector.track_consensus_metrics(voting_session)
+            else:
+                # Store directly
+                self._store_metrics(report)
+                
+            return report
+            
+        except Exception as e:
+            self.logger.error(f"Error tracking consensus: {e}")
+            return {"error": str(e), "session_id": voting_session.get("id", "unknown")}
+            
+    def _calculate_agreement_level(self, voting_session: Dict[str, Any]) -> float:
+        """Calculate agreement level (0.0 = complete disagreement, 1.0 = unanimous)"""
+        votes = voting_session.get("votes", [])
+        if not votes:
+            return 0.0
+            
+        # Count votes by decision
+        vote_counts = {}
+        total_weight = 0
+        
+        for vote in votes:
+            decision = vote.get("decision", "abstain")
+            weight = vote.get("weight", 1.0)
+            
+            vote_counts[decision] = vote_counts.get(decision, 0) + weight
+            total_weight += weight
+            
+        if total_weight == 0:
+            return 0.0
+            
+        # Find the majority decision and calculate agreement level
+        if vote_counts:
+            max_votes = max(vote_counts.values())
+            agreement_level = max_votes / total_weight
+            return min(agreement_level, 1.0)
+        
+        return 0.0
+        
+    def _identify_dissenters(self, voting_session: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """Identify agents who voted against the majority decision"""
+        votes = voting_session.get("votes", [])
+        if not votes:
+            return []
+            
+        # Find majority decision
+        vote_counts = {}
+        for vote in votes:
+            decision = vote.get("decision", "abstain")
+            weight = vote.get("weight", 1.0)
+            vote_counts[decision] = vote_counts.get(decision, 0) + weight
+            
+        if not vote_counts:
+            return []
+            
+        majority_decision = max(vote_counts, key=vote_counts.get)
+        
+        # Find dissenters
+        dissenters = []
+        for vote in votes:
+            if vote.get("decision") != majority_decision:
+                dissenters.append({
+                    "agent": vote.get("agent", "unknown"),
+                    "decision": vote.get("decision", "unknown"),
+                    "confidence": vote.get("confidence", 0.0),
+                    "reasoning": vote.get("reasoning", "")
+                })
+                
+        return dissenters
+        
+    def _analyze_confidence_distribution(self, voting_session: Dict[str, Any]) -> Dict[str, float]:
+        """Analyze confidence score distribution across all votes"""
+        votes = voting_session.get("votes", [])
+        confidences = [vote.get("confidence", 0.0) for vote in votes if "confidence" in vote]
+        
+        if not confidences:
+            return {"average": 0.0, "std_dev": 0.0, "min": 0.0, "max": 0.0}
+            
+        return {
+            "average": statistics.mean(confidences),
+            "std_dev": statistics.stdev(confidences) if len(confidences) > 1 else 0.0,
+            "min": min(confidences),
+            "max": max(confidences)
+        }
+        
+    def _assess_consensus_strength(self, agreement_level: float, confidence_dist: Dict[str, float]) -> str:
+        """Assess the strength of the consensus"""
+        avg_confidence = confidence_dist.get("average", 0.0)
+        
+        if agreement_level >= 0.9 and avg_confidence >= 0.8:
+            return "strong"
+        elif agreement_level >= 0.7 and avg_confidence >= 0.6:
+            return "moderate"
+        elif agreement_level >= 0.5 and avg_confidence >= 0.5:
+            return "weak"
+        elif agreement_level >= 0.5:
+            return "weak"  # Low confidence but some agreement
+        else:
+            return "insufficient"
+            
+    def _analyze_dissent_patterns(self, dissenters: List[Dict[str, Any]]) -> List[str]:
+        """Analyze patterns in dissenting votes"""
+        patterns = []
+        
+        if not dissenters:
+            return ["no_dissent"]
+            
+        # Check for high-confidence dissenters
+        high_confidence_dissenters = [d for d in dissenters if d.get("confidence", 0) > 0.8]
+        if high_confidence_dissenters:
+            patterns.append("high_confidence_dissent")
+            
+        # Check for repeated dissenters (would need historical data)
+        agent_names = [d.get("agent") for d in dissenters]
+        if len(set(agent_names)) < len(agent_names):
+            patterns.append("repeated_agent_dissent")
+            
+        # Check for reasoning patterns
+        reasoning_types = [d.get("reasoning", "").split()[0].lower() for d in dissenters if d.get("reasoning")]
+        if "security" in reasoning_types:
+            patterns.append("security_concerns")
+        if "performance" in reasoning_types:
+            patterns.append("performance_concerns")
+            
+        return patterns or ["general_dissent"]
+        
+    def _assess_decision_efficiency(self, decision_time_ms: float, participant_count: int) -> str:
+        """Assess the efficiency of the decision process"""
+        if participant_count == 0:
+            return "no_participants"
+            
+        # Calculate time per participant
+        time_per_participant = decision_time_ms / participant_count
+        
+        if time_per_participant < 300000:  # < 5 minutes per participant
+            return "efficient"
+        elif time_per_participant < 900000:  # < 15 minutes per participant
+            return "moderate"
+        else:
+            return "slow"
+            
+    def _generate_recommendations(self, agreement_level: float, dissenters: List[Dict[str, Any]], 
+                                confidence_dist: Dict[str, float]) -> List[str]:
+        """Generate recommendations based on consensus analysis"""
+        recommendations = []
+        
+        # Agreement level recommendations
+        if agreement_level < 0.7:  # Lowered threshold to catch moderate disagreement
+            recommendations.append("Consider additional discussion or evidence gathering")
+        if agreement_level < 0.5:
+            recommendations.append("Strong disagreement detected - may need arbitration")
+            
+        # Confidence recommendations
+        avg_confidence = confidence_dist.get("average", 0.0)
+        if avg_confidence < 0.5:
+            recommendations.append("Low confidence detected - gather more evidence")
+            
+        # Dissenter recommendations
+        if len(dissenters) > 0:
+            high_conf_dissenters = [d for d in dissenters if d.get("confidence", 0) > 0.7]
+            if high_conf_dissenters:
+                recommendations.append("High-confidence dissenters present - review their concerns")
+            
+            # If there are many dissenters relative to total participants
+            if len(dissenters) >= 2:  # 2 or more dissenters suggests significant disagreement
+                recommendations.append("Multiple dissenters detected - consider arbitration")
+                
+        if not recommendations:
+            recommendations.append("Consensus appears healthy - proceed as planned")
+            
+        return recommendations
+        
+    def _store_metrics(self, report: Dict[str, Any]):
+        """Store consensus metrics to file"""
+        try:
+            consensus_dir = self.storage_path / "consensus"
+            consensus_dir.mkdir(parents=True, exist_ok=True)
+            
+            today = datetime.now().strftime("%Y%m%d")
+            consensus_file = consensus_dir / f"consensus_reports_{today}.jsonl"
+            
+            with open(consensus_file, 'a') as f:
+                f.write(json.dumps(report) + "\n")
+                
+        except Exception as e:
+            self.logger.error(f"Error storing consensus metrics: {e}")
+            
+    def generate_report(self, session_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate a comprehensive consensus report"""
+        return self.track_consensus(session_data)
 
 if __name__ == "__main__":
     # Basic usage example

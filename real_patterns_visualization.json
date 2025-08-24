@@ -1,0 +1,1467 @@
+{
+  "nodes": [
+    {
+      "id": "enterprise-monitoring-complete-2025",
+      "name": "Unknown pattern",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "low",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.1,
+        0.1
+      ],
+      "description": "Unknown pattern",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "adversarial-verification-comprehensive-implementation",
+      "name": "Comprehensive adversarial verification system impl",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "very-high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.4300954882125322,
+        0.2250321413608133
+      ],
+      "description": "Comprehensive adversarial verification system implementation across multiple RIF agents, introducing evidence-based validation, shadow quality tracking, and risk-based verification depth determination",
+      "domain": "quality_assurance_framework",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "patterns_20250823_042025_46b7cac0",
+      "name": "Unknown pattern",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.41857532237940476,
+        0.8738929708589648
+      ],
+      "description": "Unknown pattern",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "high-performance-processing-2025",
+      "name": "Comprehensive performance optimization patterns th",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.9
+      ],
+      "description": "Comprehensive performance optimization patterns that achieved exceptional throughput and low latency in knowledge processing systems through intelligent caching, batch processing, parallel execution, and resource management.",
+      "domain": "system_optimization",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "patterns_20250823_042025_4050f90e",
+      "name": "Unknown pattern",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.1
+      ],
+      "description": "Unknown pattern",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "complex-system-coordination-planning-strategy",
+      "name": "Strategic planning pattern for coordinating comple",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "very_high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.1,
+        0.6812069886384231
+      ],
+      "description": "Strategic planning pattern for coordinating complex multi-component systems with parallel execution, resource management, and comprehensive risk mitigation",
+      "domain": "multi_component_system_coordination",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "tree-sitter-validation-pattern-1755924587",
+      "name": "Comprehensive validation approach for multi-langua",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.1,
+        0.4351163616125901
+      ],
+      "description": "Comprehensive validation approach for multi-language parsing systems",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "dependency-abstraction-fallback-2025",
+      "name": "Pattern for managing uncertain dependencies by cre",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.5845169747934961,
+        0.551556406840582
+      ],
+      "description": "Pattern for managing uncertain dependencies by creating abstract interfaces with multiple implementation tiers, enabling parallel development while maintaining clean integration paths",
+      "domain": "dependency_management",
+      "source_issue": "",
+      "related_patterns": [
+        "Strategy Pattern",
+        "Factory Pattern",
+        "Adapter Pattern",
+        "Null Object Pattern",
+        "Circuit Breaker Pattern"
+      ]
+    },
+    {
+      "id": "github-actions-enterprise-automation",
+      "name": "Enterprise-grade GitHub Actions workflows for comp",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.1,
+        0.9
+      ],
+      "description": "Enterprise-grade GitHub Actions workflows for comprehensive PR automation with multi-language support, security scanning, and intelligent automation",
+      "domain": "enterprise_development",
+      "source_issue": 9,
+      "related_patterns": []
+    },
+    {
+      "id": "multi-dimensional-voting-aggregation-pattern",
+      "name": "Unknown pattern",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.1
+      ],
+      "description": "Unknown pattern",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": {
+        "complementary_patterns": [
+          "Consensus Architecture Pattern - provides mathematical consensus calculation",
+          "Multi-Agent Orchestration Pattern - coordinates multiple agents providing votes",
+          "Event-Driven Processing Pattern - enables real-time vote processing and monitoring",
+          "Configuration Management Pattern - supports flexible threshold and parameter management"
+        ],
+        "alternative_patterns": [
+          "Simple Majority Voting Pattern - for scenarios not requiring conflict detection",
+          "Blockchain Consensus Pattern - for high-trust scenarios requiring cryptographic integrity",
+          "Real-Time Polling Pattern - for scenarios requiring immediate feedback without quality assessment"
+        ],
+        "extension_patterns": [
+          "Machine Learning Enhanced Conflict Detection - for adaptive conflict detection",
+          "Visualization and Dashboard Pattern - for operational monitoring and transparency",
+          "Cross-System Consensus Pattern - for decisions spanning multiple organizational systems"
+        ]
+      }
+    },
+    {
+      "id": "evidence-requirements-framework-implementation",
+      "name": "Comprehensive evidence requirements framework that",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.1
+      ],
+      "description": "Comprehensive evidence requirements framework that mandates verifiable proof for all implementation claims, enabling objective validation decisions and eliminating validation theater",
+      "domain": "quality_assurance",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "patterns_20250823_035440_ce08821b",
+      "name": "Unknown pattern",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.1,
+        0.1
+      ],
+      "description": "Unknown pattern",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "patterns_20250823_043224_234a062e",
+      "name": "Unknown pattern",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "medium",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.4039804926647754
+      ],
+      "description": "Unknown pattern",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "pr-automation-architecture",
+      "name": "Event-driven microservice architecture for enterpr",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "very_high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.1,
+        0.1
+      ],
+      "description": "Event-driven microservice architecture for enterprise-grade pull request automation with multi-agent coordination",
+      "domain": "devops_automation",
+      "source_issue": "",
+      "related_patterns": []
+    },
+    {
+      "id": "enterprise-quality-gates-framework",
+      "name": "Comprehensive quality gate framework for enterpris",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.6407059224671052
+      ],
+      "description": "Comprehensive quality gate framework for enterprise development with parallel execution, technology adaptation, and intelligent blocking policies",
+      "domain": "enterprise_development",
+      "source_issue": 9,
+      "related_patterns": []
+    },
+    {
+      "id": "agent-orchestration-gap",
+      "name": "Claude Code hook system contains agent definitions",
+      "usage_count": 5,
+      "success_rate": 0.8,
+      "complexity": "high",
+      "last_used": null,
+      "size": 25,
+      "color": "#27AE60",
+      "position": [
+        0.9,
+        0.9
+      ],
+      "description": "Claude Code hook system contains agent definitions but lacks execution mechanism for automatic agent spawning",
+      "domain": "",
+      "source_issue": "",
+      "related_patterns": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "adversarial-verification-comprehensive-implementation",
+      "weight": 0.45,
+      "relationship_type": "similarity",
+      "confidence": 0.9,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "patterns_20250823_042025_46b7cac0",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "high-performance-processing-2025",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "patterns_20250823_042025_4050f90e",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "complex-system-coordination-planning-strategy",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "tree-sitter-validation-pattern-1755924587",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "pr-automation-architecture",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-monitoring-complete-2025",
+      "target": "agent-orchestration-gap",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "patterns_20250823_042025_46b7cac0",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "high-performance-processing-2025",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "patterns_20250823_042025_4050f90e",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "complex-system-coordination-planning-strategy",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "tree-sitter-validation-pattern-1755924587",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "pr-automation-architecture",
+      "weight": 0.5333333333333334,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "adversarial-verification-comprehensive-implementation",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "high-performance-processing-2025",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "patterns_20250823_042025_4050f90e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "complex-system-coordination-planning-strategy",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "tree-sitter-validation-pattern-1755924587",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_46b7cac0",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "patterns_20250823_042025_4050f90e",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "complex-system-coordination-planning-strategy",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "tree-sitter-validation-pattern-1755924587",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "pr-automation-architecture",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "high-performance-processing-2025",
+      "target": "agent-orchestration-gap",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "complex-system-coordination-planning-strategy",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "tree-sitter-validation-pattern-1755924587",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_042025_4050f90e",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "tree-sitter-validation-pattern-1755924587",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "complex-system-coordination-planning-strategy",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "dependency-abstraction-fallback-2025",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "tree-sitter-validation-pattern-1755924587",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "github-actions-enterprise-automation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "dependency-abstraction-fallback-2025",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "multi-dimensional-voting-aggregation-pattern",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "pr-automation-architecture",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 1.0,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "github-actions-enterprise-automation",
+      "target": "agent-orchestration-gap",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "multi-dimensional-voting-aggregation-pattern",
+      "target": "evidence-requirements-framework-implementation",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "multi-dimensional-voting-aggregation-pattern",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "multi-dimensional-voting-aggregation-pattern",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "multi-dimensional-voting-aggregation-pattern",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "multi-dimensional-voting-aggregation-pattern",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "multi-dimensional-voting-aggregation-pattern",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "evidence-requirements-framework-implementation",
+      "target": "patterns_20250823_035440_ce08821b",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "evidence-requirements-framework-implementation",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "evidence-requirements-framework-implementation",
+      "target": "pr-automation-architecture",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "evidence-requirements-framework-implementation",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "evidence-requirements-framework-implementation",
+      "target": "agent-orchestration-gap",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_035440_ce08821b",
+      "target": "patterns_20250823_043224_234a062e",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_035440_ce08821b",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_035440_ce08821b",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_035440_ce08821b",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_043224_234a062e",
+      "target": "pr-automation-architecture",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_043224_234a062e",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "patterns_20250823_043224_234a062e",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "pr-automation-architecture",
+      "target": "enterprise-quality-gates-framework",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "pr-automation-architecture",
+      "target": "agent-orchestration-gap",
+      "weight": 0.6166666666666667,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    },
+    {
+      "source": "enterprise-quality-gates-framework",
+      "target": "agent-orchestration-gap",
+      "weight": 0.7,
+      "relationship_type": "similarity",
+      "confidence": 1.0,
+      "evidence_count": 0,
+      "last_reinforced": null
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "pattern_ids": [
+        "enterprise-monitoring-complete-2025",
+        "patterns_20250823_042025_46b7cac0",
+        "patterns_20250823_042025_4050f90e",
+        "tree-sitter-validation-pattern-1755924587",
+        "multi-dimensional-voting-aggregation-pattern",
+        "patterns_20250823_035440_ce08821b",
+        "patterns_20250823_043224_234a062e",
+        "agent-orchestration-gap"
+      ],
+      "centroid": null,
+      "dominant_domain": "unknown",
+      "average_success_rate": 0.8,
+      "total_usage": 40,
+      "complexity_distribution": {
+        "low": 1,
+        "medium": 6,
+        "high": 1
+      },
+      "color": "#95a5a6",
+      "label": "Cluster 0 (unknown)"
+    },
+    {
+      "cluster_id": 1,
+      "pattern_ids": [
+        "github-actions-enterprise-automation",
+        "enterprise-quality-gates-framework"
+      ],
+      "centroid": null,
+      "dominant_domain": "enterprise_development",
+      "average_success_rate": 0.8,
+      "total_usage": 10,
+      "complexity_distribution": {
+        "high": 2
+      },
+      "color": "#95a5a6",
+      "label": "Cluster 1 (enterprise_development)"
+    }
+  ],
+  "metadata": {
+    "total_patterns": 16,
+    "total_relationships": 120,
+    "total_clusters": 2,
+    "layout_algorithm": "spring",
+    "generation_time": 0.004246950149536133,
+    "timestamp": "2025-08-23T13:51:33.346454",
+    "core_functionality": true
+  },
+  "metrics": {
+    "graph_overview": {
+      "total_patterns": 16,
+      "total_relationships": 120,
+      "total_clusters": 2,
+      "network_density": 1.0
+    },
+    "usage_analysis": {
+      "total_usage": 80,
+      "average_usage": 5,
+      "max_usage": 5,
+      "patterns_with_usage": 16
+    },
+    "success_analysis": {
+      "average_success_rate": 0.8,
+      "high_performing_patterns": 16,
+      "low_performing_patterns": 0
+    }
+  }
+}

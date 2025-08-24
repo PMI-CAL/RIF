@@ -1,0 +1,53 @@
+{
+  "timestamp": 1755989470.383719,
+  "results": [
+    {
+      "test_name": "single_request",
+      "total_requests": 50,
+      "successful_requests": 50,
+      "failed_requests": 0,
+      "average_response_time_ms": 0.05759716033935547,
+      "p50_response_time_ms": 0.05078315734863281,
+      "p95_response_time_ms": 0.05828142166137695,
+      "p99_response_time_ms": 0.5381274223327637,
+      "max_response_time_ms": 0.38123130798339844,
+      "requests_per_second": 16689.09756485755,
+      "memory_usage_mb": 0.046875,
+      "cpu_usage_percent": 0.0,
+      "cache_hit_rate": 0.0,
+      "errors": []
+    },
+    {
+      "test_name": "concurrent_request",
+      "total_requests": 50,
+      "successful_requests": 50,
+      "failed_requests": 0,
+      "average_response_time_ms": 0.049881935119628906,
+      "p50_response_time_ms": 0.04887580871582031,
+      "p95_response_time_ms": 0.05933046340942383,
+      "p99_response_time_ms": 0.08661270141601562,
+      "max_response_time_ms": 0.0782012939453125,
+      "requests_per_second": 19201.17194652994,
+      "memory_usage_mb": 0.046875,
+      "cpu_usage_percent": 0.0,
+      "cache_hit_rate": 0.0,
+      "errors": []
+    },
+    {
+      "test_name": "stress_test",
+      "total_requests": 6590,
+      "successful_requests": 6590,
+      "failed_requests": 0,
+      "average_response_time_ms": 0.2861445879900039,
+      "p50_response_time_ms": 0.31685829162597656,
+      "p95_response_time_ms": 0.426483154296875,
+      "p99_response_time_ms": 0.6159210205078125,
+      "max_response_time_ms": 1.4240741729736328,
+      "requests_per_second": 439.16170900759107,
+      "memory_usage_mb": 0.640625,
+      "cpu_usage_percent": 0.0,
+      "cache_hit_rate": 0.0,
+      "errors": []
+    }
+  ]
+}

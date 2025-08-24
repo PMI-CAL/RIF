@@ -1,0 +1,371 @@
+{
+  "decision_id": "issue-97-mcp-knowledge-integration-architecture",
+  "issue_number": 97,
+  "title": "Claude Code Knowledge MCP Server Integration Architecture",
+  "date": "2025-08-23",
+  "status": "proposed",
+  "architects": ["RIF-Architect"],
+  
+  "context": {
+    "problem": "Issue #97 requires building a Claude Code Knowledge MCP Server to provide accurate capability information. The question is whether to create separate storage or integrate with existing knowledge graph system.",
+    "existing_system": {
+      "knowledge_graph": {
+        "database": "DuckDB with ChromaDB vector embeddings",
+        "tables": ["entities", "relationships", "agent_memory"],
+        "capabilities": ["vector search", "hybrid search", "relationship traversal", "performance views"],
+        "storage_size": "Handles large codebases with 768-dim embeddings"
+      },
+      "mcp_registry": {
+        "servers_managed": 7,
+        "capabilities_tracked": true,
+        "health_monitoring": true,
+        "query_stats": true
+      },
+      "hybrid_system": {
+        "components": ["entity_extraction", "relationship_detection", "vector_embeddings", "query_planning"],
+        "coordination": "Master coordination controller",
+        "performance": "Sub-100ms query targets"
+      }
+    },
+    "requirements": {
+      "mcp_tools": [
+        "check_compatibility(issue_description)",
+        "get_patterns(technology, task_type)", 
+        "suggest_alternatives(incompatible_approach)",
+        "validate_architecture(system_design)",
+        "get_limitations(capability_area)"
+      ],
+      "knowledge_categories": [
+        "core_capabilities",
+        "mcp_integration", 
+        "anti_patterns",
+        "update_mechanisms"
+      ]
+    }
+  },
+
+  "decision": {
+    "approach": "INTEGRATE_WITH_EXISTING_KNOWLEDGE_GRAPH",
+    "rationale": "Leverage existing sophisticated knowledge infrastructure rather than duplicate storage and search capabilities"
+  },
+
+  "architecture": {
+    "overview": "MCP server acts as thin query interface over existing knowledge graph system, storing Claude Code capabilities as specialized entities with relationships",
+    
+    "components": {
+      "claude_code_knowledge_mcp_server": {
+        "role": "Lightweight query interface and validation layer",
+        "dependencies": ["RIFDatabase", "HybridKnowledgeSystem", "VectorSearchEngine"],
+        "storage": "None - delegates to knowledge graph"
+      },
+      
+      "knowledge_graph_extension": {
+        "new_entity_types": [
+          "claude_capability",
+          "claude_limitation", 
+          "implementation_pattern",
+          "anti_pattern",
+          "compatibility_rule"
+        ],
+        "new_relationship_types": [
+          "supports",
+          "conflicts_with",
+          "requires",
+          "alternative_to",
+          "validates"
+        ],
+        "metadata_extensions": {
+          "version": "Claude Code version compatibility",
+          "validation_date": "When capability was last verified",
+          "confidence": "Reliability score of capability info"
+        }
+      },
+      
+      "integration_layer": {
+        "query_translator": "Translates MCP requests to knowledge graph queries",
+        "result_formatter": "Formats graph results for MCP responses", 
+        "compatibility_engine": "Analyzes proposed solutions against capabilities",
+        "pattern_matcher": "Finds relevant patterns using vector similarity"
+      }
+    },
+
+    "data_model": {
+      "claude_capabilities": {
+        "entity_type": "claude_capability",
+        "examples": [
+          {
+            "name": "file_operations_read",
+            "type": "claude_capability",
+            "metadata": {
+              "category": "core_capabilities",
+              "description": "Read files from filesystem",
+              "parameters": ["file_path", "limit", "offset"],
+              "limitations": ["2000 lines default limit", "absolute paths required"],
+              "version_support": "all",
+              "confidence": 1.0
+            }
+          },
+          {
+            "name": "task_parallel_execution",
+            "type": "claude_limitation", 
+            "metadata": {
+              "category": "orchestration",
+              "description": "No built-in Task() tool for parallel agent execution",
+              "alternative": "Use subagent delegation within same session",
+              "version_support": "all",
+              "confidence": 1.0
+            }
+          }
+        ]
+      },
+
+      "implementation_patterns": {
+        "entity_type": "implementation_pattern",
+        "examples": [
+          {
+            "name": "mcp_server_integration",
+            "type": "implementation_pattern",
+            "metadata": {
+              "category": "mcp_integration",
+              "technology": "general",
+              "task_type": "external_integration",
+              "pattern": "Configure MCP server in .claude/settings.json, use tools through Claude",
+              "anti_pattern": "Direct API calls without MCP wrapper"
+            }
+          }
+        ]
+      },
+
+      "relationships": {
+        "capability_supports_pattern": {
+          "source": "claude_capability",
+          "target": "implementation_pattern", 
+          "relationship_type": "supports"
+        },
+        "limitation_conflicts_with_pattern": {
+          "source": "claude_limitation",
+          "target": "implementation_pattern",
+          "relationship_type": "conflicts_with"
+        }
+      }
+    },
+
+    "mcp_server_implementation": {
+      "server_structure": {
+        "main_server": "claude_code_knowledge_server.py",
+        "tools": {
+          "check_compatibility": {
+            "description": "Validates proposed solution against Claude Code capabilities",
+            "implementation": "Query knowledge graph for conflicts, return compatibility report",
+            "query_pattern": "Find limitations that conflict with proposed approach"
+          },
+          "get_patterns": {
+            "description": "Returns correct implementation patterns for technology/task",
+            "implementation": "Vector search for similar patterns, filter by technology/task",
+            "query_pattern": "Hybrid search combining text and embedding similarity"
+          },
+          "suggest_alternatives": {
+            "description": "Proposes compatible solutions for incompatible approaches", 
+            "implementation": "Find patterns with 'alternative_to' relationships",
+            "query_pattern": "Relationship traversal from incompatible to compatible patterns"
+          },
+          "validate_architecture": {
+            "description": "Reviews system design against Claude Code architecture",
+            "implementation": "Pattern matching against known architectural constraints",
+            "query_pattern": "Multi-entity validation across architectural patterns"
+          },
+          "get_limitations": {
+            "description": "Returns known limitations for capability area",
+            "implementation": "Query limitations entities by category",
+            "query_pattern": "Direct entity search with metadata filtering"
+          }
+        }
+      },
+
+      "integration_with_existing_system": {
+        "database_connection": "Use existing RIFDatabase interface",
+        "vector_search": "Use existing VectorSearchEngine for pattern matching",
+        "relationship_queries": "Use existing relationship traversal methods",
+        "caching": "Leverage existing query caching in HybridKnowledgeSystem"
+      }
+    }
+  },
+
+  "benefits": {
+    "unified_knowledge": "All RIF knowledge in single system - capabilities, patterns, code entities, agent memories",
+    "powerful_search": "Leverage existing vector search and hybrid query capabilities",
+    "relationship_analysis": "Use relationship graph to understand capability interactions",
+    "performance": "Built on optimized DuckDB with vector extensions and caching",
+    "maintenance": "Single knowledge base to update and validate",
+    "integration": "Existing integration with all RIF components"
+  },
+
+  "implementation_approach": {
+    "phase_1_data_seeding": {
+      "tasks": [
+        "Extract Claude Code capabilities from existing research documents",
+        "Create entities for capabilities, limitations, patterns, anti-patterns",
+        "Generate embeddings using existing pipeline",
+        "Create relationships between capabilities and patterns",
+        "Validate data integrity using existing graph validator"
+      ],
+      "data_sources": [
+        "/knowledge/claude-code-capabilities.md",
+        "Official Claude Code documentation", 
+        "Existing RIF learning and pattern files"
+      ]
+    },
+
+    "phase_2_mcp_server": {
+      "tasks": [
+        "Create lightweight MCP server using existing MCP framework",
+        "Implement query translation layer for MCP tools",
+        "Add compatibility checking logic using relationship queries",
+        "Implement pattern matching using vector similarity",
+        "Add result formatting and validation"
+      ],
+      "components": [
+        "claude_code_knowledge_server.py",
+        "query_translator.py",
+        "compatibility_checker.py", 
+        "pattern_matcher.py"
+      ]
+    },
+
+    "phase_3_integration": {
+      "tasks": [
+        "Register MCP server in existing registry",
+        "Add health monitoring and metrics",
+        "Implement update mechanisms for capability knowledge",
+        "Add automated validation and testing",
+        "Create documentation and usage examples"
+      ]
+    }
+  },
+
+  "query_patterns": {
+    "compatibility_check": {
+      "description": "Check if proposed solution conflicts with Claude Code limitations",
+      "sql_pattern": "SELECT l.* FROM entities l JOIN relationships r ON l.id = r.source_id JOIN entities p ON r.target_id = p.id WHERE l.type = 'claude_limitation' AND r.relationship_type = 'conflicts_with' AND p.name LIKE '%{proposed_pattern}%'",
+      "embedding_search": "Find similar limitation patterns using vector similarity"
+    },
+    
+    "pattern_recommendation": {
+      "description": "Find implementation patterns for specific technology and task",
+      "hybrid_search": "Combine text search for technology/task with vector similarity for pattern matching",
+      "relationship_filter": "Only patterns supported by available capabilities"
+    },
+
+    "alternative_suggestion": {
+      "description": "Find alternative patterns when incompatible approach detected",
+      "relationship_traversal": "Follow 'alternative_to' relationships from incompatible to compatible patterns",
+      "context_matching": "Use vector similarity to find contextually appropriate alternatives"
+    }
+  },
+
+  "validation_strategy": {
+    "data_validation": {
+      "capability_coverage": "Ensure all documented Claude Code capabilities are represented",
+      "pattern_completeness": "Verify patterns exist for common development scenarios", 
+      "relationship_integrity": "Validate all capability-pattern relationships are logical",
+      "embedding_quality": "Check embedding generation for all capability entities"
+    },
+    
+    "functionality_validation": {
+      "mcp_tool_testing": "Test each MCP tool with various input scenarios",
+      "compatibility_accuracy": "Verify compatibility checks against known good/bad patterns",
+      "performance_testing": "Ensure query response times meet MCP requirements",
+      "integration_testing": "Test MCP server with actual Claude Code sessions"
+    }
+  },
+
+  "deployment_configuration": {
+    "mcp_server_registration": {
+      "server_id": "claude-code-knowledge-server",
+      "name": "Claude Code Knowledge Server", 
+      "version": "1.0.0",
+      "capabilities": [
+        "compatibility_checking",
+        "pattern_recommendations",
+        "architecture_validation",
+        "limitation_queries"
+      ],
+      "resource_requirements": {
+        "memory_mb": 256,
+        "cpu_percent": 10
+      },
+      "dependencies": ["RIF Knowledge Graph"],
+      "tags": ["claude-code", "compatibility", "patterns", "validation"]
+    },
+    
+    "integration_points": {
+      "database": "Existing DuckDB knowledge graph",
+      "vector_search": "Existing ChromaDB embeddings",
+      "query_engine": "HybridKnowledgeSystem query planner",
+      "monitoring": "Existing MCP health monitoring system"
+    }
+  },
+
+  "success_criteria": {
+    "functional": [
+      "MCP server provides accurate capability information",
+      "Compatibility checking identifies real Claude Code limitations",
+      "Pattern recommendations are relevant and correct",
+      "Architecture validation catches incompatible designs",
+      "Query response times under 200ms for simple queries"
+    ],
+    "technical": [
+      "Integrates seamlessly with existing knowledge graph",
+      "Uses existing infrastructure efficiently",
+      "Maintains data consistency across all queries",
+      "Supports concurrent access without performance degradation",
+      "Provides comprehensive logging and metrics"
+    ],
+    "business": [
+      "Prevents future RIF compatibility issues",
+      "Reduces development time through accurate guidance", 
+      "Enables confident architectural decisions",
+      "Supports continuous capability knowledge updates",
+      "Facilitates RIF alignment with Claude Code reality"
+    ]
+  },
+
+  "risks_and_mitigations": {
+    "data_accuracy": {
+      "risk": "Capability information becomes outdated",
+      "mitigation": "Implement automated update pipeline from official docs"
+    },
+    "performance_impact": {
+      "risk": "MCP queries slow down existing knowledge graph",
+      "mitigation": "Use existing caching and optimize query patterns"  
+    },
+    "integration_complexity": {
+      "risk": "MCP server integration breaks existing functionality",
+      "mitigation": "Thorough testing and gradual rollout"
+    }
+  },
+
+  "alternatives_considered": {
+    "separate_storage": {
+      "approach": "Create dedicated database for Claude Code knowledge",
+      "rejected_because": "Duplicates existing sophisticated infrastructure, loses integration benefits, requires separate maintenance"
+    },
+    "file_based_storage": {
+      "approach": "Store capability knowledge in JSON/YAML files",
+      "rejected_because": "No search capabilities, no relationship modeling, poor performance for complex queries"
+    },
+    "external_service": {
+      "approach": "Use external API for capability knowledge",
+      "rejected_because": "Network dependency, latency issues, doesn't leverage existing infrastructure"
+    }
+  },
+
+  "next_steps": [
+    "Seed knowledge graph with Claude Code capability data",
+    "Implement MCP server with core tools",
+    "Create compatibility checking engine",
+    "Add pattern matching capabilities",
+    "Test integration with existing RIF workflows",
+    "Deploy and monitor in production"
+  ]
+}

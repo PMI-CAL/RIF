@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-08-23T20:04:29.128630",
+  "alert_rule": "server_unhealthy",
+  "severity": "critical",
+  "server_id": "demo-github-api",
+  "server_name": "Demo GitHub API Server",
+  "message": "Server Demo GitHub API Server is unhealthy after 1 consecutive failures",
+  "health_status": "unhealthy",
+  "consecutive_failures": 1,
+  "response_time_ms": 0.06890296936035156
+}

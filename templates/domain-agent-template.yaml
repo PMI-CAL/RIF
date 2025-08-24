@@ -1,0 +1,156 @@
+# Domain Agent Template Schema v1.0.0
+# Master template for creating specialized domain agents in the RIF system
+# This template defines the complete structure and capabilities framework
+
+domain_agent_template:
+  # Template metadata and identification
+  metadata:
+    name: "domain-specialist"                    # Agent name identifier
+    version: "1.0.0"                           # Semantic version
+    domain: "example"                          # Primary specialization domain
+    description: "Example domain agent template"
+    author: "RIF System"
+    created: "2025-08-23T00:00:00Z"
+    tags: ["template", "foundation", "example"]
+    
+  # Core capabilities - what the agent can do
+  capabilities:
+    primary:                                   # Primary skill set
+      - "analysis"                             # Core analysis capability
+      - "implementation"                       # Implementation skills
+      - "validation"                           # Quality validation
+    secondary:                                 # Supporting skills
+      - "optimization"                         # Performance optimization
+      - "documentation"                        # Technical documentation
+    cross_domain:                              # Universal capabilities
+      - "code_review"                          # Code review capability
+      - "knowledge_sharing"                    # Knowledge transfer
+      
+  # Expertise areas - what the agent knows
+  expertise:
+    technologies:
+      primary: ["technology1", "technology2"]  # Core technologies
+      secondary: ["tool1", "tool2"]            # Supporting technologies  
+      emerging: ["new_tech1"]                  # Emerging technologies
+    patterns:
+      architectural: ["pattern1", "pattern2"] # Architectural patterns
+      design: ["design_pattern1"]             # Design patterns
+      testing: ["test_pattern1"]              # Testing patterns
+    domains:
+      core: ["domain_area1"]                  # Core domain expertise
+      adjacent: ["related_domain1"]           # Adjacent domains
+      supporting: ["support_domain1"]         # Supporting domains
+      
+  # Tools and dependencies
+  tools:
+    required:
+      development: ["tool1", "tool2"]         # Required dev tools
+      testing: ["test_tool1"]                 # Required test tools
+      build: ["build_tool1"]                  # Required build tools
+    recommended:
+      quality: ["quality_tool1"]              # Recommended quality tools
+      performance: ["perf_tool1"]             # Performance tools
+      deployment: ["deploy_tool1"]            # Deployment tools
+    optional:
+      advanced: ["advanced_tool1"]            # Advanced/optional tools
+      
+  # Validation and quality rules
+  validation_rules:
+    code_quality:
+      - "code_standards_compliance"           # Code standards
+      - "documentation_completeness"          # Documentation requirements
+      - "test_coverage_80"                    # Test coverage minimum
+    testing:
+      - "unit_test_coverage"                  # Unit testing requirements
+      - "integration_test_coverage"           # Integration testing
+      - "e2e_test_critical_paths"             # End-to-end testing
+    security:
+      - "security_scan_clean"                 # Security scanning
+      - "dependency_vulnerability"            # Dependency checks
+    performance:
+      - "performance_baseline"                # Performance requirements
+      
+  # Agent configuration and behavior
+  configuration:
+    priority_weight: 1.0                      # Default priority in multi-agent scenarios
+    parallel_execution: true                  # Can work in parallel with other agents
+    timeout_overrides:
+      analysis: 300                           # 5 minutes for analysis tasks
+      implementation: 1800                    # 30 minutes for implementation
+      testing: 600                            # 10 minutes for testing
+      validation: 300                         # 5 minutes for validation
+    resource_limits:
+      memory_mb: 512                          # Memory allocation
+      cpu_cores: 2                            # CPU core allocation
+      disk_space_mb: 1024                     # Disk space allocation
+      
+  # Integration points with RIF system
+  integration:
+    rif_workflow: true                        # Integrates with RIF workflow
+    knowledge_base: true                      # Uses knowledge base
+    pattern_matching: true                    # Applies known patterns
+    learning_system: true                     # Contributes to learning
+    github_integration: true                  # GitHub issue integration
+    
+  # Quality gates and success metrics
+  quality_gates:
+    functional:
+      - "all_capabilities_testable"           # All capabilities can be tested
+      - "expertise_validation_complete"       # Expertise areas validated
+      - "tool_integration_verified"           # Tools properly integrated
+    performance:
+      - "template_processing_under_100ms"     # Template loading performance
+      - "validation_under_50ms"               # Validation performance
+      - "initialization_under_200ms"          # Agent initialization time
+    integration:
+      - "rif_workflow_compatible"             # RIF workflow compatibility
+      - "knowledge_base_integrated"           # Knowledge base integration
+      - "agent_orchestration_ready"           # Ready for orchestration
+      
+  # Template versioning and compatibility
+  compatibility:
+    min_rif_version: "1.0.0"                  # Minimum RIF system version
+    python_version: ">=3.8"                   # Python version requirement
+    dependencies:
+      - "pyyaml>=6.0"                        # YAML processing
+      - "jsonschema>=4.0"                    # Schema validation
+    breaking_changes: []                      # List of breaking changes
+    
+  # Documentation and examples
+  documentation:
+    usage_guide: "docs/domain-agent-templates.md"
+    api_reference: "docs/api/domain-agents.md"
+    examples:
+      - "examples/frontend-agent-template.yaml"
+      - "examples/backend-agent-template.yaml"
+      - "examples/security-agent-template.yaml"
+    best_practices: "docs/domain-agent-best-practices.md"
+
+# Template inheritance and customization
+template_inheritance:
+  base_template: "domain-agent-template.yaml"
+  customization_points:
+    - "capabilities"                          # Can customize capabilities
+    - "expertise"                             # Can customize expertise areas
+    - "tools"                                 # Can customize tool requirements
+    - "validation_rules"                      # Can customize validation rules
+    - "configuration"                         # Can customize behavior
+  protected_sections:
+    - "metadata.version"                      # Version cannot be changed
+    - "integration"                           # Integration points protected
+    - "quality_gates"                         # Quality gates protected
+
+# Schema validation metadata
+schema_validation:
+  version: "1.0.0"
+  schema_file: "schemas/domain-agent-template.json"
+  validation_tools:
+    - "jsonschema"                           # JSON Schema validation
+    - "pyyaml"                               # YAML parsing validation
+    - "template_validator.py"                # Custom validation
+  validation_rules:
+    - "required_sections_present"            # All required sections exist
+    - "capability_names_valid"               # Capability names are valid
+    - "expertise_areas_recognized"           # Expertise areas are recognized
+    - "tool_names_available"                 # Tools are available/installable
+    - "validation_rules_implementable"       # Validation rules can be implemented
