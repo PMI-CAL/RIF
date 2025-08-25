@@ -1,6 +1,0 @@
-{
-  "read_system": "hybrid",
-  "write_system": "hybrid",
-  "lightrag_disabled": true,
-  "cutover_timestamp": "2025-08-22T23:27:44.683891"
-}

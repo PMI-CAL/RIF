@@ -1,0 +1,39 @@
+{
+  "is_valid": false,
+  "violations": [
+    {
+      "violation_type": "sequential_phase_violation",
+      "issue_numbers": [
+        1
+      ],
+      "attempted_phase": "implementation",
+      "missing_prerequisite_phases": [
+        "planning",
+        "analysis",
+        "architecture"
+      ],
+      "severity": "critical",
+      "description": "Attempted implementation phase before completing prerequisite phases: ['planning', 'analysis', 'architecture']",
+      "remediation_actions": [
+        "Launch RIF-Analyst to complete requirements analysis",
+        "Launch RIF-Planner to create execution plan",
+        "Launch RIF-Architect to complete technical design",
+        "Wait for prerequisite phases to complete before launching implementation agents",
+        "Use sequential agent launching instead of parallel launching"
+      ]
+    }
+  ],
+  "warnings": [
+    "Issue #1: Jumping to implementation without architecture phase",
+    "Issue #1: Weak evidence of phase completion"
+  ],
+  "allowed_phases": [],
+  "blocked_phases": [
+    "planning",
+    "analysis",
+    "architecture"
+  ],
+  "confidence_score": 0.5,
+  "validation_timestamp": "2025-08-25T08:22:48.222624",
+  "issue_reference": 223
+}

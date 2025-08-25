@@ -1,8 +1,0 @@
-{
-    "project": "eml-sample",
-    "type": "cli-tool",
-    "created": "2025-08-22T06:39:28Z",
-    "features": "Python",
-    "tech_stack": "y",
-    "repository": "https://github.com/PMI-CAL/eml-sample"
-}

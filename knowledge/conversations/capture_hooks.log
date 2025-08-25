@@ -1,2 +1,0 @@
-2025-08-23 19:10:49,848 - storage_backend - ERROR - Failed to initialize conversation storage: IO Error: Cannot open file "/Users/cal/DEV/RIF/knowledge/conversations/knowledge/conversations.duckdb": No such file or directory
-2025-08-23 19:10:49,848 - __main__ - ERROR - Failed to capture user prompt: IO Error: Cannot open file "/Users/cal/DEV/RIF/knowledge/conversations/knowledge/conversations.duckdb": No such file or directory

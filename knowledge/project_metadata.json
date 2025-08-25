@@ -1,0 +1,39 @@
+{
+  "project": {
+    "name": "My App",
+    "type": "web-app",
+    "initialized": "2025-08-25T04:00:12.446238",
+    "rif_version": "2.0",
+    "knowledge_schema_version": "1.0"
+  },
+  "configuration": {
+    "quality_thresholds": {
+      "test_coverage": 80.0,
+      "code_quality_score": 7.5,
+      "documentation_coverage": 70.0,
+      "security_score": 8.0,
+      "performance_threshold": 1000
+    },
+    "agent_preferences": {
+      "preferred_complexity_threshold": "medium",
+      "enable_parallel_processing": true,
+      "auto_quality_gates": true,
+      "learning_mode": "active",
+      "pattern_application": "automatic",
+      "context_optimization": true
+    },
+    "workflow_settings": {
+      "state_machine_enabled": true,
+      "automatic_transitions": true,
+      "checkpoint_frequency": "high",
+      "validation_strictness": "standard",
+      "parallel_agent_limit": 4
+    }
+  },
+  "statistics": {
+    "patterns_loaded": 0,
+    "decisions_loaded": 0,
+    "learnings_loaded": 0,
+    "initialization_date": "2025-08-25T04:00:12.446243"
+  }
+}

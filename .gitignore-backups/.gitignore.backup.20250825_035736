@@ -1,0 +1,519 @@
+# ==================================================
+# RIF Framework Files (DO NOT COMMIT)
+# ==================================================
+# This template is for deploying RIF as a project template.
+# It excludes RIF framework files while preserving project development files.
+
+# Core RIF directories
+.rif/
+claude/agents/
+claude/commands/
+claude/rules/
+engines/
+generators/
+automation/
+systems/
+
+# RIF configuration (except project-specific)
+config/rif-*.yaml
+config/framework-*.yaml
+config/multi-agent.yaml
+!config/project-*.yaml
+
+# RIF scripts
+scripts/rif-*.sh
+scripts/newproject.sh
+scripts/setup.sh
+rif-init.sh
+
+# RIF knowledge base (selective)
+knowledge/audits/
+knowledge/checkpoints/
+knowledge/enforcement_logs/
+knowledge/evidence_collection/
+knowledge/false_positive_detection/
+knowledge/validation/
+knowledge/arbitration/
+knowledge/demo_*/
+knowledge/*.duckdb
+knowledge/*.duckdb.wal
+# Preserve project patterns
+!knowledge/patterns/project-*.json
+!knowledge/decisions/project-*.json
+!knowledge/learning/project-*.json
+
+# RIF architecture and planning docs
+architecture/rif-*.md
+planning/rif-*.md
+
+# Development artifacts
+validation/
+incidents/
+reports/
+test_issue_*.py
+*_validation_results_*.json
+*_audit_*.json
+audit_*.py
+demo_*.py
+fix_*.py
+test_*.py
+validate_*.py
+
+# RIF implementation files (root level)
+analyze_agent_patterns.py
+comprehensive_security_validation.py
+demo_*.py
+dynamic_mcp_validation_stress_test.py
+execute_migration.py
+fix_database_*.py
+migrate_learning_to_lightrag.py
+security_validation_test.py
+validate_*.py
+*_validation_report.json
+*_test_results.json
+*_results.json
+
+# ==================================================
+# Project Development Files (COMMIT THESE)
+# ==================================================
+# Your project source code
+src/
+lib/
+app/
+components/
+services/
+models/
+controllers/
+views/
+public/
+static/
+assets/
+
+# Project documentation
+docs/
+README.md
+CHANGELOG.md
+LICENSE
+LICENSE.txt
+*.md
+!architecture/rif-*.md
+!planning/rif-*.md
+!RIF_*.md
+!*_RIF_*.md
+!*IMPLEMENTATION*.md
+!*VALIDATION*.md
+!*SUMMARY*.md
+
+# Project configuration
+package.json
+package-lock.json
+requirements.txt
+requirements-dev.txt
+Pipfile
+Pipfile.lock
+go.mod
+go.sum
+Cargo.toml
+Cargo.lock
+pom.xml
+build.gradle
+composer.json
+composer.lock
+
+# Project-specific configs
+.env.example
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile
+Dockerfile.*
+.dockerignore
+kubernetes/
+k8s/
+helm/
+
+# CI/CD configuration (project-specific)
+.github/workflows/
+.gitlab-ci.yml
+.travis.yml
+circle.yml
+Jenkinsfile
+
+# Project tools
+Makefile
+gulpfile.js
+webpack.config.js
+rollup.config.js
+tsconfig.json
+babel.config.js
+.eslintrc.*
+.prettierrc.*
+jest.config.js
+cypress.json
+
+# ==================================================
+# Standard Development Ignores
+# ==================================================
+
+# Dependencies
+node_modules/
+bower_components/
+vendor/
+venv/
+env/
+.virtualenv/
+.conda/
+*.egg-info/
+dist/
+build/
+target/
+.gradle/
+.m2/
+
+# IDE and Editor Files
+.vscode/
+.idea/
+.eclipse/
+.netbeans/
+*.sublime-*
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Logs and debugging
+*.log
+logs/
+log/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.npm/
+.eslintcache
+
+# Testing
+coverage/
+.coverage
+htmlcov/
+.tox/
+.pytest_cache/
+.nox/
+__pycache__/
+*.py[cod]
+*$py.class
+*.cover
+.hypothesis/
+junit.xml
+test-results/
+*.spec.js.snap
+
+# Build outputs
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+obj/
+out/
+.next/
+.nuxt/
+.vuepress/dist/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+*.orig
+.sass-cache/
+.cache/
+.parcel-cache/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Package managers
+.pnpm-store/
+.yarn/
+.npm/
+.pnpm-debug.log*
+
+# Database files (local development)
+*.sqlite
+*.sqlite3
+*.db
+*.duckdb
+*.duckdb.wal
+
+# Security and secrets
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+secrets/
+.secrets/
+
+# ==================================================
+# Language-Specific Ignores
+# ==================================================
+
+# JavaScript/Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm/
+.eslintcache
+.nyc_output/
+lib-cov/
+coverage/
+.grunt/
+.lock-wscript
+build/Release/
+.node_repl_history
+*.tgz
+.yarn-integrity
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+.hypothesis/
+.mypy_cache/
+.pyre/
+.pytype/
+cython_debug/
+
+# Java
+*.class
+*.log
+*.ctxt
+.mtj.tmp/
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+.gradletasknamecache
+.project
+.classpath
+.settings/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+.metadata
+.recommenders
+target/
+.m2/
+
+# Go
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+# Test binary, built with `go test -c`
+*.test
+# Output of the go coverage tool
+*.out
+# Dependency directories
+vendor/
+# Go workspace file
+go.work
+
+# Rust
+/target/
+**/*.rs.bk
+Cargo.lock
+
+# C/C++
+*.o
+*.ko
+*.obj
+*.elf
+*.ilk
+*.map
+*.exp
+*.gch
+*.pch
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.so.*
+*.dylib
+*.exe
+*.out
+*.app
+
+# ==================================================
+# Framework-Specific Ignores
+# ==================================================
+
+# React
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vue.js
+.DS_Store
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/test/unit/coverage/
+/test/e2e/reports/
+selenium-debug.log
+.nyc_output
+
+# Angular
+/dist/
+/tmp/
+/out-tsc/
+/bazel-out/
+/node_modules/
+npm-debug.log
+yarn-error.log
+.sass-cache/
+/connect.lock
+/coverage/
+/libpeerconnection.log
+testem.log
+/typings
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+
+# Rails
+*.rbc
+capybara-*.html
+.rspec
+/db/*.sqlite3
+/db/*.sqlite3-journal
+/public/system
+/coverage/
+/spec/tmp
+*.orig
+rerun.txt
+pickle-email-*.html
+/vendor/bundle
+/config/initializers/secret_token.rb
+/config/master.key
+/config/credentials.yml.enc
+.byebug_history
+
+# Laravel
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+
+# ==================================================
+# Cloud and Deployment Ignores
+# ==================================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.auto.tfvars
+
+# AWS
+.aws/
+aws-exports.js
+
+# Kubernetes
+*.kubeconfig
+
+# ==================================================
+# Custom Project Additions
+# ==================================================
+# Add your project-specific ignore patterns below this line
