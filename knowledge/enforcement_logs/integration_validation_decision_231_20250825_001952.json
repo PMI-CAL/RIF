@@ -1,0 +1,38 @@
+{
+  "session_key": "mcp_integration_231_1756106392",
+  "issue_id": "231",
+  "validator_agent": "comprehensive_validation_test",
+  "validation_type": "mcp_integration",
+  "approved": false,
+  "completion_status": {
+    "required_tests": 3,
+    "completed_tests": 0,
+    "missing_tests": [
+      "end_to_end_functionality_test",
+      "claude_desktop_connection_test",
+      "production_simulation_test"
+    ],
+    "completion_percentage": 0.0
+  },
+  "blocking_reasons": [
+    "Missing required integration test: end_to_end_functionality_test",
+    "Missing required integration test: claude_desktop_connection_test",
+    "Missing required integration test: production_simulation_test",
+    "Test end_to_end_functionality_test failed: Missing required evidence: ['tool_results']",
+    "Test end_to_end_functionality_test failed: Tool success rate 0.00 below minimum 50%",
+    "Test end_to_end_functionality_test failed: No tools were tested",
+    "Test claude_desktop_connection_test failed: Claude Desktop connection not successful",
+    "Test claude_desktop_connection_test failed: MCP tools not accessible",
+    "Test production_simulation_test failed: Missing required evidence: ['error_handling_verified']",
+    "Test production_simulation_test failed: Production load test failed",
+    "Test production_simulation_test failed: Production performance not acceptable"
+  ],
+  "evidence_summary": {
+    "total_evidence_items": 0,
+    "evidence_by_test": {},
+    "quality_metrics": {},
+    "completeness_score": 0.0
+  },
+  "enforcement_action": "block_validation",
+  "timestamp": "2025-08-25T00:19:52.571512"
+}

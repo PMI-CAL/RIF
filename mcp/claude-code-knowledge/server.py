@@ -263,6 +263,18 @@ class ClaudeCodeKnowledgeServer:
         
         self.logger.info("Claude Code Knowledge MCP Server initialized")
     
+    async def _suppress_stderr_database_operation(self, operation_func, *args, **kwargs):
+        """Execute database operation with stderr suppression to maintain MCP protocol compliance."""
+        original_stderr = sys.stderr
+        try:
+            # Redirect stderr to devnull during database operations
+            sys.stderr = open(os.devnull, 'w')
+            return await operation_func(*args, **kwargs) if asyncio.iscoroutinefunction(operation_func) else operation_func(*args, **kwargs)
+        finally:
+            # Always restore stderr
+            sys.stderr.close()
+            sys.stderr = original_stderr
+    
     def _setup_logging(self) -> logging.Logger:
         """Setup logging configuration."""
         logger = logging.getLogger(__name__)
@@ -322,7 +334,9 @@ class ClaudeCodeKnowledgeServer:
     
     async def _verify_claude_knowledge(self):
         """Verify Claude Code knowledge entities are present."""
-        claude_entities = self.rif_db.search_entities(
+        # Suppress stderr during database search to prevent MCP protocol pollution
+        claude_entities = await self._suppress_stderr_database_operation(
+            self.rif_db.search_entities,
             entity_types=['claude_capability', 'claude_limitation', 'implementation_pattern'],
             limit=5
         )
@@ -493,8 +507,9 @@ class ClaudeCodeKnowledgeServer:
             else:
                 search_query = 'tool'  # Default search
             
-            # Use hybrid search for patterns
-            results = self.rif_db.hybrid_search(
+            # Use hybrid search for patterns with stderr suppression
+            results = await self._suppress_stderr_database_operation(
+                self.rif_db.hybrid_search,
                 text_query=search_query,
                 entity_types=['implementation_pattern'],
                 limit=limit * 2  # Get extra for filtering
@@ -503,7 +518,9 @@ class ClaudeCodeKnowledgeServer:
             # Transform and rank results
             patterns = []
             for result in results[:limit]:
-                entity = self.rif_db.get_entity(str(result.id))
+                entity = await self._suppress_stderr_database_operation(
+                    self.rif_db.get_entity, str(result.id)
+                )
                 if entity:
                     # Get supporting tools
                     supporting_tools = await self._get_supporting_tools(entity['id'])
@@ -654,7 +671,8 @@ class ClaudeCodeKnowledgeServer:
             search_term = area_mapping.get(capability_area.lower(), capability_area)
             
             # Search for limitations
-            limitations = self.rif_db.search_entities(
+            limitations = await self._suppress_stderr_database_operation(
+                self.rif_db.search_entities,
                 query=search_term,
                 entity_types=['claude_limitation'],
                 limit=20
@@ -1128,9 +1146,11 @@ async def main():
                     arguments = params.get('arguments', {})
                     
                     if tool_name in server.tools:
-                        # Call the tool directly
+                        # Call the tool with stderr suppression for MCP protocol compliance
                         try:
-                            tool_result = await server.tools[tool_name](arguments)
+                            tool_result = await server._suppress_stderr_database_operation(
+                                server.tools[tool_name], arguments
+                            )
                             response = {
                                 'jsonrpc': '2.0',
                                 'id': request.get('id'),
