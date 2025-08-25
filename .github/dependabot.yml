@@ -1,0 +1,101 @@
+version: 2
+updates:
+  # Python dependencies - pip ecosystem
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "maintainer"
+    assignees:
+      - "rif-security-team"
+    labels:
+      - "dependencies"
+      - "security"
+      - "python"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    # Group minor and patch updates
+    groups:
+      python-production:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "*dev*"
+          - "*test*"
+      python-development:
+        patterns:
+          - "*dev*"
+          - "*test*"
+          - "pytest*"
+          - "black*"
+          - "flake8*"
+          - "mypy*"
+    # Ignore specific dependencies if needed
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # Vulnerability alerts (always enabled)
+    vendor: true
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "maintainer"
+    labels:
+      - "dependencies" 
+      - "github-actions"
+      - "security"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+  # Docker dependencies (if Docker files exist)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "06:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "maintainer"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "security"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+
+# Enable automatic security updates
+enableVersionUpdates: true
+
+# Security update configuration
+security-updates:
+  # Enable for all ecosystems
+  enabled: true
+  # Auto-merge security patches for non-major versions
+  auto-merge:
+    - severity: "critical"
+      update-type: "security"
+    - severity: "high" 
+      update-type: "security"
+  # Notification settings
+  notifications:
+    - recipients: ["security@rif-framework.org"]
+      events: ["security-advisory-published", "dependency-alert-created"]

@@ -1,0 +1,16 @@
+{
+  "incident_id": "INC-20250824-185847",
+  "description": "Critical database connection pool exhaustion",
+  "severity": "critical",
+  "created_at": "2025-08-25T01:58:47.825062+00:00",
+  "created_by": "unknown-user",
+  "issue_url": null,
+  "status": "initiated",
+  "timeline": [
+    {
+      "timestamp": "2025-08-25T01:58:47.832083+00:00",
+      "event": "Incident created",
+      "details": "Emergency hotfix initiated: Critical database connection pool exhaustion"
+    }
+  ]
+}
