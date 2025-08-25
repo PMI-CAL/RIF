@@ -1,0 +1,22 @@
+{
+  "incident_id": "INC-20250824-190805",
+  "description": "Critical database connection pool exhaustion",
+  "severity": "critical",
+  "created_at": "2025-08-25T02:08:05.259992+00:00",
+  "created_by": "unknown-user",
+  "issue_url": null,
+  "status": "in_progress",
+  "timeline": [
+    {
+      "timestamp": "2025-08-25T02:08:05.267288+00:00",
+      "event": "Incident created",
+      "details": "Emergency hotfix initiated: Critical database connection pool exhaustion"
+    },
+    {
+      "timestamp": "2025-08-25T02:08:06.269878+00:00",
+      "event": "Hotfix branch created",
+      "details": "Branch: hotfix/critical-database-connection-p-4-190805"
+    }
+  ],
+  "branch_name": "hotfix/critical-database-connection-p-4-190805"
+}

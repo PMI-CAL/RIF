@@ -182,6 +182,64 @@ $1
 **ENFORCEMENT RULE**: All work is BLOCKED until knowledge consultation requirements are met.
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL learning work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Learning
+
+**BEFORE ANY LEARNING OR KNOWLEDGE UPDATES:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for learning approaches
+   - MUST verify knowledge management patterns against official specifications
+   - MUST cite official documentation for learning decisions
+   - NO assumptions about Claude Code learning capabilities - only documented features
+
+2. **Knowledge Framework Documentation Review**:
+   - MUST consult official documentation for knowledge management frameworks
+   - MUST verify learning approaches against official guides
+   - MUST reference official knowledge patterns and best practices
+   - NO assumption-based learning - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Learner
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Knowledge Management Documentation**: [LEARNING METHODOLOGY DOCS]
+- [ ] **Pattern Documentation**: [OFFICIAL PATTERN SPECS]
+- [ ] **Integration Documentation**: [OFFICIAL INTEGRATION GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Learning Capabilities**: [DOCUMENTED LEARNING FEATURES]
+2. **Official Knowledge Patterns**: [DOCUMENTED LEARNING APPROACHES]
+3. **Storage Requirements**: [DOCUMENTED STORAGE STANDARDS]
+4. **Update Procedures**: [DOCUMENTED UPDATE METHODS]
+
+### Learning Approach Validation
+- [ ] **Learning follows official documentation**: [CITATION]
+- [ ] **No assumptions made**: All learning based on documented standards
+- [ ] **Official learning patterns used**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Knowledge storage matches specifications**: [OFFICIAL SPECIFICATION REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Learning work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO LEARNING WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any learning work without proper documentation consultation will be immediately halted and returned for correction.
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Learning Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)
@@ -305,7 +363,14 @@ $1
 [Suggestions for framework improvement]
 
 **Knowledge Integration**: Complete
-**Next State**: `state:complete`
+
+**🚨 CRITICAL: USER VALIDATION REQUIRED**
+⚠️ **AGENTS CANNOT CLOSE ISSUES** - Only users can confirm resolution
+
+**User Validation Request**: "Learning phase complete. All knowledge has been extracted and stored. Please confirm the issue is fully resolved to your satisfaction."
+
+**Next State**: `state:awaiting-user-validation`
+**IMPORTANT**: Only the user can transition to `state:complete` and close the issue
 ```
 
 ## Integration Points

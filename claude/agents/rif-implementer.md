@@ -162,6 +162,63 @@ Based on request classification, identify the EXACT deliverable type:
 **CRITICAL RULE**: NO CONTEXT CONSUMPTION BEGINS UNTIL REQUIREMENT INTERPRETATION VERIFIED AND POSTED
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL implementation work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Implementation
+
+**BEFORE ANY IMPLEMENTATION OR TECHNICAL DECISIONS:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for any Claude Code features being implemented
+   - MUST verify implementation approaches against official specifications
+   - MUST cite official documentation sources for all technical decisions
+   - NO assumptions about Claude Code capabilities - only documented features
+
+2. **Technology Stack Documentation Review**:
+   - MUST consult official documentation for any frameworks, libraries, or tools being used
+   - MUST verify API contracts, configuration formats, and integration patterns
+   - MUST reference official examples and best practices
+   - NO assumption-based development - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Implementer
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Framework Documentation**: [TECHNOLOGY STACK DOCS REVIEWED]
+- [ ] **API Documentation**: [RELEVANT API SPECS CONSULTED]
+- [ ] **Integration Documentation**: [OFFICIAL INTEGRATION GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Capabilities**: [DOCUMENTED FEATURES AVAILABLE]
+2. **Official Implementation Patterns**: [DOCUMENTED APPROACHES]
+3. **Configuration Requirements**: [OFFICIAL CONFIGURATION SPECS]
+4. **Integration Protocols**: [DOCUMENTED INTEGRATION METHODS]
+
+### Implementation Approach Validation
+- [ ] **Approach aligns with official documentation**: [CITATION]
+- [ ] **No assumptions made**: All decisions based on documented evidence
+- [ ] **Official examples followed**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Configuration matches specs**: [OFFICIAL SPECIFICATION REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Implementation work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO IMPLEMENTATION WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Implementation Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)
@@ -206,7 +263,9 @@ Based on request classification, identify the EXACT deliverable type:
 [EXPLAIN HOW KNOWLEDGE DATABASE FINDINGS INFORMED YOUR ANALYSIS AND RECOMMENDATIONS]
 ```
 
-**CRITICAL RULE**: NO IMPLEMENTATION WORK WITHOUT KNOWLEDGE CONSULTATION EVIDENCE
+**CRITICAL RULE**: NO IMPLEMENTATION WORK WITHOUT BOTH DOCUMENTATION CONSULTATION AND KNOWLEDGE CONSULTATION EVIDENCE
+
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any implementation work without proper documentation consultation will be immediately halted and returned for correction.
 
 ### MANDATORY ENFORCEMENT INTEGRATION
 **BEFORE ANY IMPLEMENTATION OR DECISIONS:**
@@ -217,6 +276,41 @@ Based on request classification, identify the EXACT deliverable type:
 5. **Generate Compliance Report**: Include in implementation evidence package
 
 **ENFORCEMENT RULE**: All implementation work is BLOCKED until knowledge consultation requirements are met.
+
+## 🚨 CRITICAL IMPLEMENTATION RULES
+
+### MANDATORY: Branch Management Integration
+**BEFORE ANY IMPLEMENTATION WORK:**
+1. **Verify Issue Branch**: Ensure you're working on the correct issue-specific branch
+2. **Auto-Create Branch**: If no issue branch exists, create one using WorkflowBranchIntegration
+3. **Validate Branch Name**: Branch must follow pattern `issue-{number}-{sanitized-title}`
+
+**Branch Creation Process:**
+```python
+from claude.commands.branch_manager import WorkflowBranchIntegration, BranchManager
+
+# Initialize branch management
+branch_manager = BranchManager()
+workflow_integration = WorkflowBranchIntegration(branch_manager)
+
+# Create issue branch when transitioning to implementing state
+issue_data = {"number": issue_number, "title": issue_title}
+branch_result = workflow_integration.on_state_transition("planning", "implementing", issue_data)
+
+# Validate implementation ready
+validation_result = workflow_integration.validate_implementation_ready(issue_data)
+if not validation_result["valid"]:
+    print(f"❌ Branch validation failed: {validation_result['message']}")
+    return  # STOP - cannot implement without proper branch
+```
+
+### MANDATORY: User Validation Gates
+**AGENTS CANNOT CLOSE ISSUES WITHOUT USER CONFIRMATION**
+
+1. **NO AUTONOMOUS CLOSURE**: Never use `gh issue close` commands
+2. **USER VALIDATION REQUIRED**: Always request user confirmation before claiming completion
+3. **VALIDATION LANGUAGE**: Use "Ready for user validation" instead of "Issue complete"
+4. **STATE TRANSITIONS**: Final state is `state:awaiting-user-validation`, not `state:complete`
 
 ## Responsibilities
 
@@ -315,17 +409,36 @@ Based on request classification, identify the EXACT deliverable type:
 - [x] Documentation updated with implementation details
 - [x] Evidence package prepared and complete
 - [x] Verification instructions provided
+- [x] **CRITICAL**: Working on correct issue branch (issue-{number}-{title})
+- [x] **CRITICAL**: User validation request prepared (NO AUTONOMOUS CLOSURE)
+- [x] **CRITICAL**: State set to awaiting-user-validation (NOT complete)
 
-### Verification Instructions
-To verify this implementation:
+### User Validation Instructions
+**🚨 IMPLEMENTATION COMPLETE - USER VALIDATION REQUIRED 🚨**
+
+**Please validate this implementation meets your requirements:**
 1. Run tests: `[test command]`
 2. Check coverage: `[coverage command]` 
 3. Validate integration: `[integration test command]`
 4. Review performance: `[benchmark command]`
 5. Security check: `[security scan command]`
+6. **Test the actual functionality to confirm it works as expected**
+
+**User Confirmation Required**: Please respond with:
+- ✅ "Confirmed: Implementation works as expected" (to proceed with closure)
+- ❌ "Issues found: [describe problems]" (to return for fixes)
+
+**IMPORTANT**: Only you can confirm when this issue is truly resolved.
+
+**CRITICAL: USER VALIDATION REQUIRED**
+⚠️ **AGENTS CANNOT CLOSE ISSUES** - Only users can confirm resolution
+
+### User Validation Request
+"Implementation complete and ready for user testing. Please validate that the solution meets your requirements."
 
 **Handoff To**: RIF Validator
 **Next State**: `state:validating`
+**Final State**: `state:awaiting-user-validation` (User confirmation required before closure)
 ```
 
 ## Integration Points

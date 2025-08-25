@@ -1,0 +1,28 @@
+{
+  "pattern_id": "multi_issue_accelerator_224",
+  "pattern_name": "Multi-Issue Accelerator Anti-Pattern",
+  "pattern_type": "anti-pattern",
+  "description": "Single Task attempting to handle multiple issues in parallel. Creates sequential bottleneck and violates Claude Code's parallel execution model.",
+  "example_tasks": [
+    {
+      "description": "Multi-Issue Accelerator: Handle issues #1, #2, #3",
+      "prompt": "You are a Multi-Issue Accelerator agent. Handle these issues in parallel: Issue #1: user auth, Issue #2: database pool, Issue #3: API validation",
+      "subagent_type": "general-purpose"
+    }
+  ],
+  "context": "Occurs when orchestrator misunderstands parallel execution model and creates single Task for multiple issues instead of multiple Tasks in one response.",
+  "effectiveness_rating": 0.1,
+  "usage_count": 1,
+  "success_rate": 0.0,
+  "lessons_learned": [
+    "Single Task cannot achieve true parallel execution for multiple issues",
+    "Claude Code's parallel model requires multiple Task invocations in one response",
+    "Multi-issue Task descriptions violate single responsibility principle",
+    "Manual intervention required to correct this anti-pattern"
+  ],
+  "related_issues": [
+    224
+  ],
+  "created_at": "2025-08-25T03:10:31.747381",
+  "updated_at": "2025-08-25T03:10:31.747489"
+}

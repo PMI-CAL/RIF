@@ -349,6 +349,11 @@ class VectorSearchEngine:
                 
                 # Build the hybrid search query
                 if embedding_query is not None:
+                    # Build WHERE clause properly
+                    where_clause = f"({' OR '.join(text_conditions)})"
+                    if conditions:
+                        where_clause += f" AND {' AND '.join(conditions)}"
+                    
                     # Hybrid search with both text and vector
                     hybrid_query = f"""
                     SELECT 
@@ -376,21 +381,24 @@ class VectorSearchEngine:
                         END * ? + 0.8 * ?) as combined_score,
                         metadata::VARCHAR as metadata
                     FROM entities
-                    WHERE (
-                        {' OR '.join(text_conditions)}
-                        {'AND ' + ' AND '.join(conditions) if conditions else ''}
-                    )
+                    WHERE {where_clause}
                     ORDER BY combined_score DESC
                     LIMIT ?
                     """
                     
                     search_params = [
+                        text_pattern, text_pattern, text_pattern,  # WHERE clause text matching
                         text_pattern, text_pattern, text_pattern,  # text score calculation
                         text_pattern, text_pattern, text_pattern,  # combined score calculation  
                         text_weight, vector_weight                 # weights
                     ] + params + [limit]
                     
                 else:
+                    # Build WHERE clause properly
+                    where_clause = f"({' OR '.join(text_conditions)})"
+                    if conditions:
+                        where_clause += f" AND {' AND '.join(conditions)}"
+                    
                     # Text-only search
                     hybrid_query = f"""
                     SELECT 
@@ -415,17 +423,15 @@ class VectorSearchEngine:
                         END as combined_score,
                         metadata::VARCHAR as metadata
                     FROM entities
-                    WHERE (
-                        {' OR '.join(text_conditions)}
-                        {'AND ' + ' AND '.join(conditions) if conditions else ''}
-                    )
+                    WHERE {where_clause}
                     ORDER BY combined_score DESC
                     LIMIT ?
                     """
                     
                     search_params = [
-                        text_pattern, text_pattern, text_pattern,  # text score
-                        text_pattern, text_pattern, text_pattern   # combined score
+                        text_pattern, text_pattern, text_pattern,  # WHERE clause text matching
+                        text_pattern, text_pattern, text_pattern,  # text score calculation
+                        text_pattern, text_pattern, text_pattern   # combined score calculation
                     ] + params + [limit]
                 
                 rows = conn.execute(hybrid_query, search_params).fetchall()

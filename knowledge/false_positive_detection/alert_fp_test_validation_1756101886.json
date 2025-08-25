@@ -1,0 +1,84 @@
+{
+  "alert_id": "fp_test_validation_1756101886",
+  "timestamp": "2025-08-24T23:04:46.665122",
+  "validation_id": "test_validation",
+  "issue_id": "231",
+  "validator_agent": "test_validator",
+  "confidence_score": 0.8975,
+  "severity": "critical",
+  "indicators": [
+    "FalsePositiveIndicator.SUSPICIOUSLY_PERFECT_RESULTS",
+    "FalsePositiveIndicator.IMPOSSIBLY_FAST_EXECUTION",
+    "FalsePositiveIndicator.MISSING_ERROR_CONDITIONS",
+    "FalsePositiveIndicator.FABRICATED_METRICS"
+  ],
+  "evidence": {
+    "statistical_analysis": {
+      "perfect_success_rate": {
+        "observed_rate": 1.0,
+        "threshold": 0.98,
+        "suspicion_level": "high"
+      },
+      "fast_execution": {
+        "observed_time": 0.001,
+        "minimum_expected": 0.1,
+        "suspicion_level": "critical"
+      },
+      "missing_errors": {
+        "missing_errors": true,
+        "error_diversity_low": true,
+        "observed_error_rate": 0.0,
+        "expected_minimum_error_rate": 0.1,
+        "error_types_found": [],
+        "confidence": 1.0
+      }
+    },
+    "pattern_analysis": {
+      "pattern_availability": "No historical pattern available for validation type"
+    },
+    "evidence_analysis": {},
+    "temporal_analysis": {},
+    "performance_analysis": {
+      "resource_usage": {
+        "implausible": true,
+        "confidence": 0.6,
+        "cpu_metrics_analyzed": 1,
+        "memory_metrics_analyzed": 1,
+        "analysis_details": {
+          "cpu_range": [
+            0.001,
+            0.001
+          ],
+          "cpu_variance": null
+        }
+      }
+    }
+  },
+  "recommended_actions": [
+    "Re-run validation with more rigorous testing conditions",
+    "Verify test actually executed - check for test skipping or mocking",
+    "Run adversarial testing to challenge validation assumptions",
+    "Consider requiring peer validation review for this result",
+    "Include error injection testing to verify error handling",
+    "Cross-validate metrics with independent measurement tools",
+    "Add timing verification to ensure actual operations occurred",
+    "Add comprehensive error condition testing",
+    "Verify evidence collection authenticity",
+    "Verify system actually handles edge cases and failures"
+  ],
+  "validation_data": {
+    "validation_results": {
+      "success_rate": 1.0,
+      "execution_time": 0.001,
+      "total_tests": 100,
+      "failed_tests": 0
+    },
+    "validation_evidence": {
+      "performance": {
+        "cpu_percent": 0.001,
+        "memory_percent": 0.002
+      }
+    },
+    "validation_metadata": {}
+  }
+}
