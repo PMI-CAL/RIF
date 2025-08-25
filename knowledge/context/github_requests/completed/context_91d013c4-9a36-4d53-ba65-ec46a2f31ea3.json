@@ -1,0 +1,72 @@
+{
+  "context_id": "91d013c4-9a36-4d53-ba65-ec46a2f31ea3",
+  "endpoint": "search",
+  "operation_type": "get_branch_protection",
+  "command_args": [
+    "api",
+    "/repos/{owner}/{repo}/branches/main/protection"
+  ],
+  "environment": {
+    "TMPDIR": "/var/folders/b3/716nggt53jn0z1kljmpk56zw0000gn/T/",
+    "__CFBundleIdentifier": "com.apple.Terminal",
+    "XPC_FLAGS": "0x0",
+    "TERM": "xterm-256color",
+    "SSH_AUTH_SOCK": "/private/tmp/com.apple.launchd.4zFIKcJpOh/Listeners",
+    "XPC_SERVICE_NAME": "0",
+    "TERM_PROGRAM": "Apple_Terminal",
+    "TERM_PROGRAM_VERSION": "455.1",
+    "TERM_SESSION_ID": "AFA313BF-962D-423F-9EC4-E883BA1F60FD",
+    "SHELL": "/bin/zsh",
+    "HOME": "/Users/cal",
+    "LOGNAME": "cal",
+    "USER": "cal",
+    "PATH": "/Users/cal/Library/pnpm:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/Users/cal/.cargo/bin",
+    "SHLVL": "2",
+    "PWD": "/Users/cal/dev/rif",
+    "OLDPWD": "/Users/cal/dev/rif",
+    "HOMEBREW_PREFIX": "/opt/homebrew",
+    "HOMEBREW_CELLAR": "/opt/homebrew/Cellar",
+    "HOMEBREW_REPOSITORY": "/opt/homebrew",
+    "INFOPATH": "/opt/homebrew/share/info:/opt/homebrew/share/info:",
+    "PNPM_HOME": "/Users/cal/Library/pnpm",
+    "LANG": "en_US.UTF-8",
+    "__CF_USER_TEXT_ENCODING": "0x1F5:0:0",
+    "COREPACK_ENABLE_AUTO_PIN": "0",
+    "CLAUDE_CODE_ENTRYPOINT": "cli",
+    "OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE": "delta",
+    "GIT_EDITOR": "true",
+    "CLAUDECODE": "1",
+    "_": "/usr/bin/python3",
+    "SDKROOT": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+    "CPATH": "/usr/local/include",
+    "LIBRARY_PATH": "/usr/local/lib",
+    "MANPATH": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/share/man:/Library/Developer/CommandLineTools/usr/share/man:/Library/Developer/CommandLineTools/Toolchains/XcodeDefault.xctoolchain/usr/share/man:"
+  },
+  "working_directory": "/Users/cal/DEV/RIF",
+  "state": "failed",
+  "created_at": "2025-08-24T15:18:07.339591",
+  "last_attempt": "2025-08-24T15:18:07.572403",
+  "attempt_count": 2,
+  "max_attempts": 3,
+  "partial_results": null,
+  "intermediate_state": null,
+  "continuation_data": null,
+  "timeout_used": null,
+  "error_history": [
+    {
+      "timestamp": "2025-08-24T15:18:07.571662",
+      "attempt": 1,
+      "error": "gh: Upgrade to GitHub Pro or make this repository public to enable this feature. (HTTP 403)",
+      "duration": 0.23092007637023926,
+      "timeout_used": 60.0
+    }
+  ],
+  "recovery_strategy": null,
+  "priority": 3,
+  "scope": "session_persistent",
+  "expires_at": "2025-08-25T15:18:07.339591",
+  "tags": [
+    "endpoint:search",
+    "operation:get_branch_protection"
+  ]
+}

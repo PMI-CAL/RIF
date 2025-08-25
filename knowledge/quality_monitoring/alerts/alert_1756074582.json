@@ -1,0 +1,16 @@
+{
+  "alert_type": "quality_threshold_violation",
+  "metric": {
+    "id": "metric-d0087864",
+    "metric_type": "context_relevance",
+    "timestamp": "2025-08-24T15:29:42.611789",
+    "value": 75.0,
+    "target_value": 90.0,
+    "source": "failing_agent",
+    "context": {},
+    "evidence": {},
+    "metadata": {}
+  },
+  "timestamp": "2025-08-24T15:29:42.613490",
+  "message": "Quality Alert: context_relevance = 75.00 (target: 90.00) from failing_agent"
+}

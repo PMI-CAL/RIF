@@ -372,6 +372,182 @@ class GitHubAPIClient:
             **kwargs
         )
     
+    def get_branch_protection(
+        self,
+        branch: str = "main",
+        **kwargs
+    ) -> APICallResult:
+        """
+        Get current branch protection rules for a branch.
+        
+        Args:
+            branch: Branch name to check protection for
+            **kwargs: Additional GitHub CLI flags
+            
+        Returns:
+            APICallResult with branch protection data
+        """
+        command_args = ["api", f"/repos/{{owner}}/{{repo}}/branches/{branch}/protection"]
+        
+        return self._execute_api_call(
+            endpoint=GitHubEndpoint.SEARCH,  # Reusing existing endpoint type
+            command_args=command_args,
+            operation_type="get_branch_protection",
+            **kwargs
+        )
+    
+    def update_branch_protection(
+        self,
+        branch: str = "main",
+        protection_config: Optional[Dict[str, Any]] = None,
+        dry_run: bool = False,
+        **kwargs
+    ) -> APICallResult:
+        """
+        Update branch protection rules.
+        
+        Args:
+            branch: Branch name to protect
+            protection_config: Protection configuration dict
+            dry_run: If True, validate config but don't apply changes
+            **kwargs: Additional GitHub CLI flags
+            
+        Returns:
+            APICallResult with update results
+        """
+        if dry_run:
+            logger.info(f"DRY RUN: Would update branch protection for '{branch}' with config: {protection_config}")
+            return APICallResult(
+                success=True,
+                data={"message": "DRY RUN: Branch protection would be updated", "config": protection_config},
+                error_message=None,
+                duration=0.0,
+                timeout_used=0.0,
+                rate_limit_remaining=None,
+                rate_limit_reset=None,
+                attempt_count=1,
+                context_id="dry_run"
+            )
+        
+        if not protection_config:
+            return APICallResult(
+                success=False,
+                data=None,
+                error_message="Protection config is required",
+                duration=0.0,
+                timeout_used=0.0,
+                rate_limit_remaining=None,
+                rate_limit_reset=None,
+                attempt_count=1,
+                context_id=None
+            )
+        
+        # Convert protection config to GitHub API format
+        api_data = json.dumps(protection_config)
+        
+        command_args = [
+            "api", 
+            f"/repos/{{owner}}/{{repo}}/branches/{branch}/protection",
+            "--method", "PUT",
+            "--input", "-"
+        ]
+        
+        # Store the data for stdin
+        kwargs["stdin_data"] = api_data
+        
+        return self._execute_api_call(
+            endpoint=GitHubEndpoint.SEARCH,  # Reusing existing endpoint type
+            command_args=command_args,
+            operation_type="update_branch_protection",
+            priority=2,  # High priority for protection changes
+            **kwargs
+        )
+    
+    def remove_branch_protection(
+        self,
+        branch: str = "main",
+        audit_reason: Optional[str] = None,
+        **kwargs
+    ) -> APICallResult:
+        """
+        Remove all branch protection rules (emergency use only).
+        
+        Args:
+            branch: Branch name to remove protection from
+            audit_reason: Reason for removing protection (required for audit)
+            **kwargs: Additional GitHub CLI flags
+            
+        Returns:
+            APICallResult with removal results
+        """
+        if not audit_reason:
+            return APICallResult(
+                success=False,
+                data=None,
+                error_message="Audit reason is required for removing branch protection",
+                duration=0.0,
+                timeout_used=0.0,
+                rate_limit_remaining=None,
+                rate_limit_reset=None,
+                attempt_count=1,
+                context_id=None
+            )
+        
+        logger.warning(f"REMOVING BRANCH PROTECTION for '{branch}'. Reason: {audit_reason}")
+        
+        command_args = [
+            "api", 
+            f"/repos/{{owner}}/{{repo}}/branches/{branch}/protection",
+            "--method", "DELETE"
+        ]
+        
+        return self._execute_api_call(
+            endpoint=GitHubEndpoint.SEARCH,  # Reusing existing endpoint type  
+            command_args=command_args,
+            operation_type="remove_branch_protection",
+            priority=1,  # Critical priority for emergency operations
+            **kwargs
+        )
+    
+    def validate_branch_protection_config(
+        self,
+        protection_config: Dict[str, Any]
+    ) -> Tuple[bool, Optional[str]]:
+        """
+        Validate branch protection configuration against GitHub API schema.
+        
+        Args:
+            protection_config: Protection configuration to validate
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        try:
+            # Required fields validation
+            if "required_status_checks" in protection_config:
+                status_checks = protection_config["required_status_checks"]
+                if not isinstance(status_checks.get("contexts", []), list):
+                    return False, "required_status_checks.contexts must be a list"
+                if not isinstance(status_checks.get("strict", True), bool):
+                    return False, "required_status_checks.strict must be a boolean"
+            
+            if "required_pull_request_reviews" in protection_config:
+                pr_reviews = protection_config["required_pull_request_reviews"]
+                if not isinstance(pr_reviews.get("required_approving_review_count", 1), int):
+                    return False, "required_pull_request_reviews.required_approving_review_count must be an integer"
+                if pr_reviews.get("required_approving_review_count", 1) < 0:
+                    return False, "required_approving_review_count cannot be negative"
+            
+            # Validate enforce_admins
+            if "enforce_admins" in protection_config:
+                if not isinstance(protection_config["enforce_admins"], bool):
+                    return False, "enforce_admins must be a boolean"
+            
+            return True, None
+            
+        except Exception as e:
+            return False, f"Configuration validation error: {str(e)}"
+    
     def bulk_issue_update(
         self,
         updates: List[Dict[str, Any]],
@@ -515,7 +691,7 @@ class GitHubAPIClient:
             # Execute the command
             start_time = time.time()
             success, data, error_message = self._execute_gh_command(
-                command_args, timeout, context.context_id
+                command_args, timeout, context.context_id, kwargs.get("stdin_data")
             )
             duration = time.time() - start_time
             
@@ -595,7 +771,8 @@ class GitHubAPIClient:
         self,
         command_args: List[str],
         timeout: float,
-        context_id: str
+        context_id: str,
+        stdin_data: Optional[str] = None
     ) -> Tuple[bool, Optional[Dict[str, Any]], Optional[str]]:
         """Execute GitHub CLI command with timeout handling"""
         try:
@@ -603,10 +780,13 @@ class GitHubAPIClient:
             full_command = self.base_command + command_args
             
             logger.debug(f"Executing: {' '.join(full_command)} (timeout: {timeout:.1f}s)")
+            if stdin_data:
+                logger.debug(f"With stdin data: {stdin_data[:100]}...")
             
             # Execute with timeout
             result = subprocess.run(
                 full_command,
+                input=stdin_data,
                 capture_output=True,
                 text=True,
                 timeout=timeout
