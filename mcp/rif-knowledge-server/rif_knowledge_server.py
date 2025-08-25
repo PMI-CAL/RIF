@@ -49,7 +49,7 @@ class RIFKnowledgeServer:
         self.knowledge_path = self.base_path / "knowledge"
         
         # Initialize database connections
-        self.duckdb_path = self.knowledge_path / "hybrid_knowledge.duckdb"
+        self.duckdb_path = self.knowledge_path / "chromadb" / "entities.duckdb"
         self.chromadb_path = self.knowledge_path / "chromadb"
         
         self.duckdb_conn = None

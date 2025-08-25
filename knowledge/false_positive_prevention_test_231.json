@@ -1,0 +1,68 @@
+{
+  "test_id": "false_positive_prevention_231_1756106647",
+  "timestamp": "2025-08-25T00:24:07.315338",
+  "scenarios": {
+    "validation_blocking": {
+      "success": true,
+      "validation_blocked": true,
+      "blocking_reasons_count": 3,
+      "blocking_reasons": [
+        "Missing required integration test: end_to_end_functionality_test",
+        "Missing required integration test: production_simulation_test",
+        "Missing required integration test: claude_desktop_connection_test"
+      ],
+      "integration_tests_required": true
+    },
+    "integration_testing": {
+      "success": true,
+      "tests_executed": 3,
+      "tests_passed": 3,
+      "overall_success": true,
+      "evidence_items_collected": 3,
+      "quality_score": 80.00036798333333,
+      "evidence_categories": [
+        "execution",
+        "performance",
+        "environment"
+      ]
+    },
+    "validation_approval": {
+      "success": false,
+      "validation_approved": false,
+      "completion_percentage": 0.0,
+      "missing_tests": [
+        "end_to_end_functionality_test",
+        "production_simulation_test",
+        "claude_desktop_connection_test"
+      ],
+      "enforcement_action": "block_validation"
+    },
+    "validation_reporting": {
+      "success": true,
+      "report_generated": true,
+      "false_positive_prevention_active": true,
+      "validation_decision": {
+        "validation_approved": false,
+        "blocking_reasons": [
+          "Missing required integration test: end_to_end_functionality_test",
+          "Missing required integration test: production_simulation_test",
+          "Missing required integration test: claude_desktop_connection_test",
+          "Test end_to_end_functionality_test failed: Missing required evidence: ['tool_results']",
+          "Test end_to_end_functionality_test failed: Tool success rate 0.00 below minimum 50%",
+          "Test end_to_end_functionality_test failed: No tools were tested",
+          "Test production_simulation_test failed: Missing required evidence: ['error_handling_verified']",
+          "Test production_simulation_test failed: Production load test failed",
+          "Test production_simulation_test failed: Production performance not acceptable",
+          "Test claude_desktop_connection_test failed: Claude Desktop connection not successful",
+          "Test claude_desktop_connection_test failed: MCP tools not accessible"
+        ],
+        "completion_requirements_met": false
+      },
+      "session_duration": "0:00:00"
+    }
+  },
+  "overall_success": false,
+  "scenarios_passed": 3,
+  "total_scenarios": 4,
+  "success_rate": 75.0
+}

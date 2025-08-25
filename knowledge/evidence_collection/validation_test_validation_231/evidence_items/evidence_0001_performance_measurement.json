@@ -1,0 +1,25 @@
+{
+  "evidence_type": "performance_measurement",
+  "evidence_category": "performance",
+  "timestamp": "2025-08-25T00:16:18.055378",
+  "source": "performance_collector",
+  "data": {
+    "operation_name": "mcp_connection_test",
+    "start_time": "2025-08-25T00:16:17.444776",
+    "end_time": "2025-08-25T00:16:17.949780",
+    "duration_seconds": 0.5050041675567627,
+    "system_metrics": {
+      "cpu_percent": 6.0,
+      "memory_percent": 71.7
+    },
+    "additional_metrics": {
+      "connection_attempts": 3,
+      "success_rate": 1.0
+    }
+  },
+  "metadata": {
+    "operation_hash": "ba86cba3"
+  },
+  "authenticity_hash": "a0d2ce8ac6491649499e4974b0fadcd1ce9196e0a364580676f8f67ac93fdce9",
+  "collection_context": "validation_session"
+}

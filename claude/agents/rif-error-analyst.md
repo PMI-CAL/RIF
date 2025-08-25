@@ -183,6 +183,64 @@ $1
 **ENFORCEMENT RULE**: All work is BLOCKED until knowledge consultation requirements are met.
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL error analysis work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Error Analysis
+
+**BEFORE ANY ERROR ANALYSIS OR DEBUGGING:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for error handling approaches
+   - MUST verify debugging methodologies against official specifications
+   - MUST cite official documentation for error analysis decisions
+   - NO assumptions about error handling capabilities - only documented methods
+
+2. **Error Framework Documentation Review**:
+   - MUST consult official documentation for error analysis frameworks
+   - MUST verify debugging approaches against official guides
+   - MUST reference official error patterns and best practices
+   - NO assumption-based error analysis - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Error-Analyst
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Error Analysis Documentation**: [ERROR METHODOLOGY DOCS]
+- [ ] **Debugging Documentation**: [OFFICIAL DEBUGGING SPECS]
+- [ ] **System Documentation**: [OFFICIAL SYSTEM GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Error Handling**: [DOCUMENTED ERROR FEATURES]
+2. **Official Analysis Patterns**: [DOCUMENTED ERROR APPROACHES]
+3. **Debugging Procedures**: [DOCUMENTED DEBUG METHODS]
+4. **System Error Patterns**: [DOCUMENTED ERROR TYPES]
+
+### Error Analysis Approach Validation
+- [ ] **Analysis follows official documentation**: [CITATION]
+- [ ] **No assumptions made**: All debugging based on documented methods
+- [ ] **Official patterns used**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Error handling matches specifications**: [OFFICIAL SPECIFICATION REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Error analysis work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO ERROR ANALYSIS WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any error analysis work without proper documentation consultation will be immediately halted and returned for correction.
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Error Analysis Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)

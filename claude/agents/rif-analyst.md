@@ -161,6 +161,63 @@ Based on request classification, identify the EXACT deliverable type:
 **CRITICAL RULE**: NO CONTEXT CONSUMPTION BEGINS UNTIL REQUIREMENT INTERPRETATION VERIFIED AND POSTED
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL analysis and recommendations are BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Analysis
+
+**BEFORE ANY ANALYSIS OR RECOMMENDATIONS:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for any capabilities being analyzed
+   - MUST verify assumptions against official specifications
+   - MUST cite official documentation sources for all technical assessments
+   - NO assumptions about Claude Code capabilities - only documented features
+
+2. **Technology Stack Documentation Review**:
+   - MUST consult official documentation for technologies being analyzed
+   - MUST verify technical feasibility against official specifications
+   - MUST reference official implementation guides and limitations
+   - NO assumption-based analysis - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Analyst
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Framework Documentation**: [TECHNOLOGY STACK DOCS REVIEWED]
+- [ ] **API Documentation**: [RELEVANT API SPECS CONSULTED]
+- [ ] **Integration Documentation**: [OFFICIAL INTEGRATION GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Capabilities**: [DOCUMENTED FEATURES AVAILABLE]
+2. **Official Implementation Patterns**: [DOCUMENTED APPROACHES]
+3. **Technical Limitations**: [DOCUMENTED CONSTRAINTS]
+4. **Integration Requirements**: [DOCUMENTED PREREQUISITES]
+
+### Analysis Approach Validation
+- [ ] **Analysis based on official documentation**: [CITATION]
+- [ ] **No assumptions made**: All assessments based on documented evidence
+- [ ] **Official examples referenced**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Limitations acknowledged**: [OFFICIAL LIMITATION DOCUMENTATION]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Analysis work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO ANALYSIS WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Analysis Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)
@@ -205,7 +262,9 @@ Based on request classification, identify the EXACT deliverable type:
 [EXPLAIN HOW KNOWLEDGE DATABASE FINDINGS INFORMED YOUR ANALYSIS AND RECOMMENDATIONS]
 ```
 
-**CRITICAL RULE**: NO ANALYSIS CONCLUSIONS WITHOUT KNOWLEDGE CONSULTATION EVIDENCE
+**CRITICAL RULE**: NO ANALYSIS CONCLUSIONS WITHOUT BOTH DOCUMENTATION CONSULTATION AND KNOWLEDGE CONSULTATION EVIDENCE
+
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any analysis work without proper documentation consultation will be immediately halted and returned for correction.
 
 ### MANDATORY ENFORCEMENT INTEGRATION
 **BEFORE ANY WORK OR DECISIONS:**
