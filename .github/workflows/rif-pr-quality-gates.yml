@@ -1,15 +1,26 @@
-name: RIF PR Quality Gates
+name: Enhanced RIF Quality Gates
 
 on:
   pull_request:
     branches: [ main, develop ]
     types: [ opened, synchronize, reopened ]
+  issues:
+    types: [ closed, edited ]
   workflow_dispatch:
     inputs:
       pr_number:
         description: 'PR number to validate'
-        required: true
+        required: false
         type: string
+      issue_number:
+        description: 'Issue number to validate'
+        required: false
+        type: string
+      force_validation:
+        description: 'Force validation (ignore cache)'
+        required: false
+        type: boolean
+        default: false
 
 env:
   NODE_VERSION: '18'
@@ -32,7 +43,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' && 'npm' || '' }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -123,7 +134,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' && 'npm' || '' }}
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -169,7 +180,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: ${{ hashFiles('package-lock.json', 'npm-shrinkwrap.json', 'yarn.lock') != '' && 'npm' || '' }}
 
       - name: Install dependencies
         run: |
@@ -276,6 +287,108 @@ jobs:
               repo: context.repo.repo,
               body: body
             });
+
+  # Enhanced Quality Gate Validation for Issues
+  issue-quality-validation:
+    name: Issue Quality Gate Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues' && github.event.action == 'closed'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install PyYAML requests
+
+      - name: Validate Issue Closure
+        id: validate-closure
+        run: |
+          # Extract issue number from GitHub context
+          ISSUE_NUMBER=${{ github.event.issue.number }}
+          echo "Validating closure for issue #$ISSUE_NUMBER"
+          
+          # Run enhanced quality gate validation
+          if python claude/commands/issue_closure_validator.py can-close $ISSUE_NUMBER; then
+            echo "validation_passed=true" >> $GITHUB_OUTPUT
+            echo "✅ Issue #$ISSUE_NUMBER passes all quality gates"
+          else
+            echo "validation_passed=false" >> $GITHUB_OUTPUT
+            echo "❌ Issue #$ISSUE_NUMBER failed quality gate validation"
+            
+            # Reopen the issue if it was prematurely closed
+            gh issue reopen $ISSUE_NUMBER --comment "🚫 Issue automatically reopened - quality gate validation failed"
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Enhanced Quality Gate Validation (Manual/Dispatch)
+  enhanced-quality-validation:
+    name: Enhanced Quality Gate Validation
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install PyYAML requests
+
+      - name: Run Enhanced Quality Gates
+        id: enhanced-validation
+        run: |
+          if [ -n "${{ github.event.inputs.issue_number }}" ]; then
+            ISSUE_NUM=${{ github.event.inputs.issue_number }}
+            FORCE_FLAG=""
+            if [ "${{ github.event.inputs.force_validation }}" == "true" ]; then
+              FORCE_FLAG="force-validate"
+            else
+              FORCE_FLAG="validate"
+            fi
+            
+            echo "Running enhanced quality gate validation for issue #$ISSUE_NUM"
+            
+            if python claude/commands/enhanced_quality_gate_enforcement.py $FORCE_FLAG $ISSUE_NUM; then
+              echo "✅ Enhanced validation passed for issue #$ISSUE_NUM"
+              echo "validation_result=passed" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Enhanced validation failed for issue #$ISSUE_NUM"
+              echo "validation_result=failed" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+          elif [ -n "${{ github.event.inputs.pr_number }}" ]; then
+            echo "PR validation not yet implemented in enhanced system"
+            echo "validation_result=skipped" >> $GITHUB_OUTPUT
+          else
+            echo "No issue or PR number specified"
+            echo "validation_result=skipped" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate Quality Dashboard
+        if: always()
+        run: |
+          echo "Generating quality dashboard..."
+          python claude/commands/enhanced_quality_gate_enforcement.py dashboard
+          
+          if [ -f "knowledge/quality_metrics/dashboard.html" ]; then
+            echo "📊 Quality dashboard generated"
+            # In a real setup, this could be deployed to GitHub Pages or artifacts
+            echo "Dashboard file: knowledge/quality_metrics/dashboard.html"
+          fi
 
   # Block merge if quality gates fail
   block-merge:
