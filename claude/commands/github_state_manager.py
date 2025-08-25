@@ -485,6 +485,286 @@ class GitHubStateManager:
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Failed to post comment to issue #{issue_number}: {e}")
             return False
+    
+    def generate_branch_name(self, issue_number: int, issue_title: str) -> str:
+        """
+        Generate a standardized branch name for an issue.
+        
+        Args:
+            issue_number: GitHub issue number
+            issue_title: Issue title text
+            
+        Returns:
+            Sanitized branch name following pattern: issue-{number}-{sanitized-title}
+        """
+        import re
+        
+        # Sanitize title: lowercase, replace spaces/special chars with hyphens
+        sanitized_title = re.sub(r'[^a-zA-Z0-9\s-]', '', issue_title.lower())
+        sanitized_title = re.sub(r'\s+', '-', sanitized_title.strip())
+        sanitized_title = re.sub(r'-+', '-', sanitized_title)  # Remove multiple hyphens
+        
+        # Limit title length to avoid overly long branch names
+        if len(sanitized_title) > 50:
+            sanitized_title = sanitized_title[:47] + "..."
+        
+        return f"issue-{issue_number}-{sanitized_title}"
+    
+    def get_file_modifications(self, branch_name: str) -> Dict[str, List[str]]:
+        """
+        Get list of modified files between branch and main.
+        
+        Args:
+            branch_name: Git branch name
+            
+        Returns:
+            Dictionary with 'added', 'modified', 'deleted' file lists
+        """
+        try:
+            # Get diff summary between main and branch
+            result = subprocess.run([
+                'git', 'diff', '--name-status', 'main...HEAD'
+            ], capture_output=True, text=True, check=True, cwd='.')
+            
+            modifications = {
+                'added': [],
+                'modified': [],
+                'deleted': []
+            }
+            
+            for line in result.stdout.strip().split('\n'):
+                if not line:
+                    continue
+                    
+                parts = line.split('\t')
+                if len(parts) < 2:
+                    continue
+                    
+                status, filename = parts[0], parts[1]
+                
+                if status == 'A':
+                    modifications['added'].append(filename)
+                elif status == 'M':
+                    modifications['modified'].append(filename)
+                elif status == 'D':
+                    modifications['deleted'].append(filename)
+                elif status.startswith('R'):  # Renamed files
+                    # For renames, treat as modified
+                    modifications['modified'].append(filename)
+            
+            return modifications
+            
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Failed to get file modifications: {e}")
+            return {'added': [], 'modified': [], 'deleted': []}
+    
+    def get_issue_metadata(self, issue_number: int) -> Dict[str, Any]:
+        """
+        Get comprehensive issue metadata for PR creation.
+        
+        Args:
+            issue_number: GitHub issue number
+            
+        Returns:
+            Dictionary with issue title, body, labels, assignees, etc.
+        """
+        try:
+            result = subprocess.run([
+                'gh', 'issue', 'view', str(issue_number),
+                '--json', 'title,body,labels,assignees,state,author'
+            ], capture_output=True, text=True, check=True)
+            
+            data = json.loads(result.stdout)
+            
+            return {
+                'number': issue_number,
+                'title': data.get('title', ''),
+                'body': data.get('body', ''),
+                'labels': [label['name'] for label in data.get('labels', [])],
+                'assignees': [assignee['login'] for assignee in data.get('assignees', [])],
+                'state': data.get('state', 'open'),
+                'author': data.get('author', {}).get('login', '')
+            }
+            
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"Failed to get issue metadata for #{issue_number}: {e}")
+            return {}
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse issue metadata: {e}")
+            return {}
+    
+    def create_pull_request(self, issue_number: int, pr_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Create a pull request for an issue with populated template.
+        
+        Args:
+            issue_number: GitHub issue number
+            pr_data: Dictionary containing PR creation parameters
+                - title: PR title
+                - body: PR body content (markdown)
+                - draft: Whether to create as draft PR
+                - base_branch: Base branch (default: main)
+                - head_branch: Head branch (auto-generated if not provided)
+                - labels: List of labels to apply
+                - reviewers: List of reviewer usernames
+                - assignees: List of assignee usernames
+                
+        Returns:
+            Dictionary with PR creation results (success, pr_number, url, etc.)
+        """
+        try:
+            issue_metadata = self.get_issue_metadata(issue_number)
+            if not issue_metadata:
+                return {'success': False, 'error': f'Could not retrieve metadata for issue #{issue_number}'}
+            
+            # Generate branch name if not provided
+            head_branch = pr_data.get('head_branch')
+            if not head_branch:
+                head_branch = self.generate_branch_name(issue_number, issue_metadata['title'])
+            
+            # Create/checkout branch if it doesn't exist
+            try:
+                subprocess.run(['git', 'checkout', head_branch], 
+                             capture_output=True, check=True, cwd='.')
+            except subprocess.CalledProcessError:
+                # Branch doesn't exist, create it
+                subprocess.run(['git', 'checkout', '-b', head_branch], 
+                             capture_output=True, check=True, cwd='.')
+                self.logger.info(f"Created new branch: {head_branch}")
+            
+            # Build GitHub CLI command
+            base_branch = pr_data.get('base_branch', 'main')
+            pr_title = pr_data.get('title', f"Fix: {issue_metadata['title']}")
+            draft_flag = ['--draft'] if pr_data.get('draft', False) else []
+            
+            # Generate PR body using template aggregator if not provided
+            pr_body = pr_data.get('body')
+            if not pr_body:
+                self.logger.info(f"No PR body provided, populating template for issue #{issue_number}")
+                pr_body = self.populate_pr_template(issue_number, pr_data.get('quality_results'))
+            
+            # Write PR body to temporary file for GitHub CLI
+            import tempfile
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False) as temp_file:
+                temp_file.write(pr_body)
+                temp_file_path = temp_file.name
+            
+            try:
+                # Build GitHub CLI command
+                cmd = [
+                    'gh', 'pr', 'create',
+                    '--base', base_branch,
+                    '--head', head_branch,
+                    '--title', pr_title,
+                    '--body-file', temp_file_path
+                ] + draft_flag
+                
+                # Add labels if specified
+                labels = pr_data.get('labels', [])
+                if labels:
+                    # Add RIF-managed labels
+                    labels.extend(['rif-managed', 'automated-pr'])
+                    for label in labels:
+                        cmd.extend(['--label', label])
+                
+                # Add reviewers if specified
+                reviewers = pr_data.get('reviewers', [])
+                for reviewer in reviewers:
+                    cmd.extend(['--reviewer', reviewer])
+                
+                # Add assignees if specified  
+                assignees = pr_data.get('assignees', [])
+                for assignee in assignees:
+                    cmd.extend(['--assignee', assignee])
+                
+                # Execute PR creation
+                result = subprocess.run(cmd, capture_output=True, text=True, check=True, cwd='.')
+                
+                # Extract PR URL from output
+                pr_url = result.stdout.strip()
+                pr_number = None
+                if '/pull/' in pr_url:
+                    pr_number = int(pr_url.split('/pull/')[-1])
+                
+                self.logger.info(f"Created PR #{pr_number} for issue #{issue_number}: {pr_url}")
+                
+                return {
+                    'success': True,
+                    'pr_number': pr_number,
+                    'pr_url': pr_url,
+                    'branch': head_branch,
+                    'title': pr_title,
+                    'draft': pr_data.get('draft', False)
+                }
+                
+            finally:
+                # Clean up temporary file
+                import os
+                os.unlink(temp_file_path)
+                
+        except subprocess.CalledProcessError as e:
+            error_msg = f"Failed to create PR for issue #{issue_number}: {e}"
+            if e.stderr:
+                error_msg += f"\nStderr: {e.stderr.decode() if isinstance(e.stderr, bytes) else e.stderr}"
+            self.logger.error(error_msg)
+            return {'success': False, 'error': error_msg}
+        except Exception as e:
+            error_msg = f"Unexpected error creating PR for issue #{issue_number}: {e}"
+            self.logger.error(error_msg)
+            return {'success': False, 'error': error_msg}
+    
+    def populate_pr_template(self, issue_number: int, 
+                           quality_results: Optional[Dict[str, Any]] = None) -> str:
+        """
+        Populate PR template with issue context and checkpoint data.
+        
+        Args:
+            issue_number: GitHub issue number
+            quality_results: Quality gate results (optional)
+            
+        Returns:
+            Populated PR template content
+        """
+        try:
+            # Import template aggregator
+            from .pr_template_aggregator import PRTemplateAggregator
+            
+            # Get issue metadata and file modifications
+            issue_metadata = self.get_issue_metadata(issue_number)
+            file_modifications = self.get_file_modifications("HEAD")
+            
+            # Initialize aggregator and generate context
+            aggregator = PRTemplateAggregator()
+            pr_context = aggregator.aggregate_pr_context(
+                issue_number, issue_metadata, file_modifications, quality_results
+            )
+            
+            # Populate and return template
+            populated_template = aggregator.populate_template(pr_context)
+            self.logger.info(f"Populated PR template for issue #{issue_number}")
+            
+            return populated_template
+            
+        except Exception as e:
+            self.logger.error(f"Failed to populate PR template for issue #{issue_number}: {e}")
+            
+            # Fallback to minimal template
+            issue_metadata = self.get_issue_metadata(issue_number)
+            return f"""# Pull Request for Issue #{issue_number}
+
+## Summary
+{issue_metadata.get('title', 'Automated implementation')}
+
+## Related Issues
+Closes #{issue_number}
+
+## Changes Made
+Implementation completed via RIF automation system.
+
+## RIF Automation
+This PR was automatically created by RIF-Implementer.
+Manual review and validation recommended.
+"""
 
 
 def demo_github_state_manager():

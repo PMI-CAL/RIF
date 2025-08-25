@@ -1,0 +1,247 @@
+{
+  "template_id": "pr-creation-quality-gate-template",
+  "title": "Quality Gate Template for Automated PR Creation",
+  "description": "Reusable template for implementing quality-based PR creation strategies",
+  "source_pattern": "issue-205-automated-pr-creation",
+  "version": "1.0",
+  
+  "quality_gates": {
+    "code_quality": {
+      "description": "Validates code syntax, linting, and type checking",
+      "criteria": {
+        "linting_errors": {"threshold": 0, "operator": "=="},
+        "type_checking": {"threshold": true, "operator": "=="},
+        "syntax_errors": {"threshold": 0, "operator": "=="}
+      },
+      "implementation_template": {
+        "method_name": "_check_code_quality_gate",
+        "parameters": ["quality_data: Dict[str, Any]"],
+        "return_type": "bool",
+        "logic": [
+          "Extract linting results from quality_data",
+          "Check type checking status",
+          "Verify no syntax errors",
+          "Return True only if all criteria met"
+        ]
+      },
+      "data_source": "evidence.quality.linting, evidence.quality.type_check"
+    },
+    
+    "testing": {
+      "description": "Validates test coverage and passing status",
+      "criteria": {
+        "tests_passing": {"threshold": 0, "operator": ">"},
+        "coverage_percentage": {"threshold": 80, "operator": ">="}
+      },
+      "implementation_template": {
+        "method_name": "_check_testing_gate", 
+        "parameters": ["test_data: Dict[str, Any]"],
+        "return_type": "bool",
+        "logic": [
+          "Extract unit test results from test_data",
+          "Check test pass count > 0",
+          "Verify coverage >= threshold",
+          "Return combined result"
+        ]
+      },
+      "data_source": "evidence.tests.unit, evidence.tests.coverage"
+    },
+    
+    "security": {
+      "description": "Validates security scan results",
+      "criteria": {
+        "critical_vulnerabilities": {"threshold": 0, "operator": "=="},
+        "high_vulnerabilities": {"threshold": 2, "operator": "<="}
+      },
+      "implementation_template": {
+        "method_name": "_check_security_gate",
+        "parameters": ["quality_data: Dict[str, Any]"],
+        "return_type": "bool", 
+        "logic": [
+          "Extract security scan results",
+          "Count critical vulnerabilities",
+          "Verify within acceptable thresholds",
+          "Return security assessment"
+        ]
+      },
+      "data_source": "evidence.quality.security",
+      "optional": true,
+      "default_pass": true
+    },
+    
+    "performance": {
+      "description": "Validates performance benchmarks (optional)",
+      "criteria": {
+        "performance_regression": {"threshold": 5, "operator": "<="},
+        "memory_usage": {"threshold": 10, "operator": "<="}
+      },
+      "implementation_template": {
+        "method_name": "_check_performance_gate",
+        "parameters": ["performance_data: Dict[str, Any]"],
+        "return_type": "bool",
+        "logic": [
+          "Compare performance vs baseline",
+          "Check memory usage changes",
+          "Verify no significant regressions",
+          "Return performance assessment"
+        ]
+      },
+      "data_source": "evidence.performance",
+      "optional": true,
+      "default_pass": true
+    }
+  },
+  
+  "pr_strategies": {
+    "ready": {
+      "description": "All critical quality gates pass",
+      "trigger_condition": "code_quality == True AND testing == True AND security == True",
+      "pr_characteristics": {
+        "draft": false,
+        "title_prefix": "Ready:",
+        "labels": ["rif-managed", "automated-pr", "ready-for-review"],
+        "reviewers": ["@me"],
+        "assignees": [],
+        "merge_strategy": "auto_merge_on_approval"
+      },
+      "post_creation_actions": [
+        "Enable auto-merge if configured",
+        "Post quality summary comment",
+        "Trigger GitHub Actions workflows"
+      ]
+    },
+    
+    "partial": {
+      "description": "Core functionality works but quality issues exist",
+      "trigger_condition": "testing == True AND (code_quality == False OR security == False)",
+      "pr_characteristics": {
+        "draft": true,
+        "title_prefix": "WIP:",
+        "labels": ["rif-managed", "automated-pr", "needs-quality-fixes"],
+        "reviewers": ["@me"],
+        "assignees": [],
+        "merge_strategy": "manual"
+      },
+      "post_creation_actions": [
+        "Post quality issues comment",
+        "Create follow-up tasks for quality fixes",
+        "Schedule quality re-assessment"
+      ]
+    },
+    
+    "failing": {
+      "description": "Critical quality gates fail",
+      "trigger_condition": "testing == False",
+      "pr_characteristics": {
+        "create_pr": false,
+        "reason": "Critical quality gates failing, delaying PR creation"
+      },
+      "alternative_actions": [
+        "Return to implementation phase",
+        "Post failing quality summary to issue", 
+        "Create quality improvement tasks"
+      ]
+    },
+    
+    "unknown": {
+      "description": "Quality status cannot be determined",
+      "trigger_condition": "quality_data == None OR quality_assessment_failed == True",
+      "pr_characteristics": {
+        "draft": true,
+        "title_prefix": "Draft:",
+        "labels": ["rif-managed", "automated-pr", "quality-unknown"],
+        "reviewers": ["@me"],
+        "assignees": [],
+        "merge_strategy": "manual"
+      },
+      "post_creation_actions": [
+        "Post quality assessment failure notice",
+        "Schedule manual quality review",
+        "Enable draft mode for safety"
+      ]
+    }
+  },
+  
+  "implementation_code_templates": {
+    "quality_assessment_main": {
+      "language": "python",
+      "template": "def check_quality_gates(self, issue_number: int) -> Dict[str, Any]:\n    \"\"\"\n    Check quality gates status for PR creation readiness.\n    \n    Args:\n        issue_number: GitHub issue number\n        \n    Returns:\n        Quality gates status and results\n    \"\"\"\n    try:\n        # Load quality evidence\n        evidence_path = Path(f\"knowledge/evidence/issue-{issue_number}-implementation-evidence.json\")\n        \n        quality_results = {\n            'overall_status': 'pending',\n            'gates': {},\n            'ready_for_pr': False,\n            'draft_pr': True\n        }\n        \n        if evidence_path.exists():\n            with open(evidence_path, 'r') as f:\n                evidence_data = json.load(f)\n                \n            # Extract and assess quality gates\n            quality_results['gates'] = evidence_data.get('evidence', {})\n            gates_status = quality_results['gates']\n            \n            # Check individual gates\n            code_quality_ok = self._check_code_quality_gate(gates_status.get('quality', {}))\n            tests_ok = self._check_testing_gate(gates_status.get('tests', {}))\n            security_ok = self._check_security_gate(gates_status.get('quality', {}))\n            \n            quality_results['gates_status'] = {\n                'code_quality': code_quality_ok,\n                'testing': tests_ok,\n                'security': security_ok\n            }\n            \n            # Determine overall status\n            if code_quality_ok and tests_ok and security_ok:\n                quality_results['overall_status'] = 'ready'\n                quality_results['ready_for_pr'] = True\n                quality_results['draft_pr'] = False\n            elif tests_ok:\n                quality_results['overall_status'] = 'partial'\n                quality_results['ready_for_pr'] = True\n                quality_results['draft_pr'] = True\n            else:\n                quality_results['overall_status'] = 'failing'\n                quality_results['ready_for_pr'] = False\n                quality_results['draft_pr'] = True\n                \n        return quality_results\n        \n    except Exception as e:\n        # Return safe defaults on error\n        return {\n            'overall_status': 'unknown',\n            'gates': {},\n            'ready_for_pr': True,\n            'draft_pr': True,\n            'error': str(e)\n        }"
+    },
+    
+    "strategy_determination": {
+      "language": "python", 
+      "template": "def determine_pr_strategy(self, issue_number: int, quality_results: Dict[str, Any]) -> Dict[str, Any]:\n    \"\"\"\n    Determine PR creation strategy based on quality gates.\n    \n    Args:\n        issue_number: GitHub issue number\n        quality_results: Quality gates assessment\n        \n    Returns:\n        PR creation strategy configuration\n    \"\"\"\n    strategy = {\n        'create_pr': True,\n        'draft': True,\n        'title_prefix': 'Draft:',\n        'labels': ['rif-managed', 'automated-pr', 'work-in-progress'],\n        'reviewers': [],\n        'assignees': [],\n        'merge_strategy': 'manual'\n    }\n    \n    overall_status = quality_results.get('overall_status', 'unknown')\n    \n    if overall_status == 'ready':\n        strategy.update({\n            'draft': False,\n            'title_prefix': 'Ready:',\n            'labels': ['rif-managed', 'automated-pr', 'ready-for-review'],\n            'reviewers': ['@me'],\n            'merge_strategy': 'auto_merge_on_approval'\n        })\n    elif overall_status == 'partial':\n        strategy.update({\n            'draft': True,\n            'title_prefix': 'WIP:',\n            'labels': ['rif-managed', 'automated-pr', 'needs-quality-fixes'],\n            'reviewers': ['@me']\n        })\n    elif overall_status == 'failing':\n        strategy.update({\n            'create_pr': False,\n            'reason': 'Quality gates failing, delaying PR creation'\n        })\n        \n    return strategy"
+    }
+  },
+  
+  "customization_guide": {
+    "adding_custom_gates": {
+      "steps": [
+        "1. Define gate criteria in quality_gates section",
+        "2. Implement _check_[gate_name]_gate method", 
+        "3. Add gate to quality assessment logic",
+        "4. Update PR strategies to include new gate",
+        "5. Test gate with various quality scenarios"
+      ],
+      "example": {
+        "gate_name": "accessibility",
+        "criteria": {"a11y_violations": {"threshold": 0, "operator": "=="}},
+        "method": "_check_accessibility_gate"
+      }
+    },
+    
+    "modifying_strategies": {
+      "steps": [
+        "1. Update trigger_condition logic",
+        "2. Modify pr_characteristics as needed",
+        "3. Adjust post_creation_actions",
+        "4. Test new strategy with quality scenarios"
+      ],
+      "considerations": [
+        "Maintain safety-first defaults",
+        "Ensure clear quality feedback",
+        "Consider reviewer assignment logic",
+        "Validate merge strategy appropriateness"
+      ]
+    },
+    
+    "threshold_tuning": {
+      "guidelines": [
+        "Start with conservative thresholds",
+        "Monitor false positive/negative rates",
+        "Adjust based on team quality standards",
+        "Document threshold change rationale"
+      ],
+      "common_adjustments": [
+        "Test coverage: 70-90% depending on project maturity",
+        "Security vulnerabilities: 0 critical, 0-5 high",
+        "Performance regression: 1-10% depending on criticality"
+      ]
+    }
+  },
+  
+  "testing_scenarios": {
+    "quality_gate_tests": [
+      {
+        "scenario": "all_gates_pass",
+        "quality_data": {"linting": {"errors": 0}, "type_check": {"passing": true}, "tests": {"passing": 10, "coverage": 85}, "security": {"vulnerabilities": 0}},
+        "expected_strategy": "ready"
+      },
+      {
+        "scenario": "tests_fail",
+        "quality_data": {"tests": {"passing": 0, "coverage": 0}},
+        "expected_strategy": "failing"
+      },
+      {
+        "scenario": "quality_issues_but_tests_pass",
+        "quality_data": {"linting": {"errors": 3}, "tests": {"passing": 8, "coverage": 82}},
+        "expected_strategy": "partial"
+      },
+      {
+        "scenario": "missing_quality_data",
+        "quality_data": null,
+        "expected_strategy": "unknown"
+      }
+    ]
+  }
+}

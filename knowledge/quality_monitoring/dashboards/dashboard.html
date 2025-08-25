@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shadow Quality Tracking Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .metric { margin: 10px 0; padding: 10px; border-left: 4px solid #ccc; }
+        .metric.good { border-color: #4CAF50; }
+        .metric.warning { border-color: #FF9800; }
+        .metric.critical { border-color: #F44336; }
+        .session { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .refresh { margin: 10px 0; }
+    </style>
+    <script>
+        function refreshDashboard() {
+            location.reload();
+        }
+        setInterval(refreshDashboard, 30000); // Refresh every 30 seconds
+    </script>
+</head>
+<body>
+    <h1>Shadow Quality Tracking Dashboard</h1>
+    <div class="refresh">
+        <button onclick="refreshDashboard()">Refresh Now</button>
+        <span>Auto-refresh every 30 seconds</span>
+    </div>
+    
+    <h2>Active Sessions</h2>
+
+    <div class="session">
+        <h3>Session: quality-142-1756074577 (Issue #142)</h3>
+        <p>Duration: 0.0 hours</p>
+        <p>Metrics: 2 | Findings: 0 | Decisions: 0</p>
+        
+        <h4>Latest Quality Metrics</h4>
+
+        <div class="metric good">
+            <strong>context_relevance</strong>: 93.20 / 90.00
+            (100.0% quality score)
+        </div>
+
+        <div class="metric good">
+            <strong>system_performance</strong>: 100.00 / 99.90
+            (100.0% quality score)
+        </div>
+</div>
+    <script>
+        // Auto-refresh status
+        document.title = "Quality Dashboard - Last Updated: " + new Date().toLocaleTimeString();
+    </script>
+</body>
+</html>
