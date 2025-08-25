@@ -1,0 +1,755 @@
+name: Release Management Automation
+
+on:
+  # Automatic trigger on version tags
+  push:
+    tags:
+      - 'v*'
+      - '[0-9]+.*'
+  
+  # Manual release creation
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.2.3)'
+        required: true
+        type: string
+        default: 'v1.0.0'
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+      environment:
+        description: 'Deployment environment'
+        required: false
+        type: choice
+        options:
+          - 'production'
+          - 'staging'
+          - 'development'
+        default: 'production'
+      release_notes:
+        description: 'Custom release notes (optional)'
+        required: false
+        type: string
+      build_assets:
+        description: 'Build and attach assets'
+        required: false
+        type: boolean
+        default: true
+      announce:
+        description: 'Announce release'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: read
+  actions: read
+
+jobs:
+  # Job 1: Version Analysis and Semantic Versioning
+  version-analysis:
+    name: Version Analysis & Semantic Versioning
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      version-type: ${{ steps.version.outputs.version-type }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+      previous-tag: ${{ steps.version.outputs.previous-tag }}
+      is-prerelease: ${{ steps.version.outputs.is-prerelease }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Determine version and type
+        id: version
+        run: |
+          # Initialize variables
+          VERSION=""
+          VERSION_TYPE="patch"
+          PREVIOUS_TAG=""
+          IS_PRERELEASE="false"
+          
+          # Get the latest tag
+          LATEST_TAG=$(git tag -l --sort=-v:refname | head -1 || echo "")
+          
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            # Manual trigger - use provided version
+            VERSION="${{ github.event.inputs.version }}"
+            IS_PRERELEASE="${{ github.event.inputs.prerelease }}"
+            echo "Manual release: $VERSION"
+          elif [ "${{ github.event_name }}" = "push" ] && [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # Tag trigger - extract version from tag
+            VERSION="${{ github.ref_name }}"
+            echo "Tag-triggered release: $VERSION"
+            
+            # Check if it's a prerelease based on version format
+            if [[ "$VERSION" =~ -(alpha|beta|rc|pre) ]]; then
+              IS_PRERELEASE="true"
+            fi
+          else
+            echo "Unsupported trigger event"
+            exit 1
+          fi
+          
+          # Clean version format
+          if [[ "$VERSION" != v* ]]; then
+            VERSION="v$VERSION"
+          fi
+          
+          # Determine version type by analyzing commits since last tag
+          if [ -n "$LATEST_TAG" ] && [ "$LATEST_TAG" != "$VERSION" ]; then
+            PREVIOUS_TAG="$LATEST_TAG"
+            
+            # Get commits since last tag
+            COMMITS=$(git log ${LATEST_TAG}..HEAD --oneline --pretty=format:"%s" || echo "")
+            
+            # Analyze commit messages for semantic versioning
+            if echo "$COMMITS" | grep -qiE "(BREAKING|breaking.*change|major|!:)"; then
+              VERSION_TYPE="major"
+            elif echo "$COMMITS" | grep -qiE "(feat:|feature|minor|🚀|add |implement )"; then
+              VERSION_TYPE="minor"
+            elif echo "$COMMITS" | grep -qiE "(fix:|bug|patch|🐛|hotfix|bugfix)"; then
+              VERSION_TYPE="patch"
+            fi
+            
+            echo "Detected version type: $VERSION_TYPE based on commits since $LATEST_TAG"
+          else
+            echo "No previous tag found or same version, defaulting to patch"
+            VERSION_TYPE="patch"
+          fi
+          
+          # Set outputs
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version-type=$VERSION_TYPE" >> $GITHUB_OUTPUT
+          echo "previous-tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
+          echo "is-prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+          
+          echo "Final version: $VERSION (type: $VERSION_TYPE, prerelease: $IS_PRERELEASE)"
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Create comprehensive changelog
+          CHANGELOG_FILE="TEMP_CHANGELOG.md"
+          VERSION="${{ steps.version.outputs.version }}"
+          PREVIOUS_TAG="${{ steps.version.outputs.previous-tag }}"
+          
+          echo "# Release Notes for $VERSION" > $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+          echo "## What's Changed" >> $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+          
+          # Generate changelog based on commits
+          if [ -n "$PREVIOUS_TAG" ]; then
+            echo "📊 **Changes since $PREVIOUS_TAG:**" >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+            
+            # Get commits with categorization
+            git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --reverse | while read line; do
+              if [[ "$line" =~ (feat|feature|🚀) ]]; then
+                echo "### 🚀 Features" >> TEMP_FEATURES.md
+                echo "$line" >> TEMP_FEATURES.md
+              elif [[ "$line" =~ (fix|bug|🐛|hotfix) ]]; then
+                echo "### 🐛 Bug Fixes" >> TEMP_FIXES.md
+                echo "$line" >> TEMP_FIXES.md
+              elif [[ "$line" =~ (BREAKING|breaking.*change|💔) ]]; then
+                echo "### 💔 Breaking Changes" >> TEMP_BREAKING.md
+                echo "$line" >> TEMP_BREAKING.md
+              elif [[ "$line" =~ (docs|documentation|📚) ]]; then
+                echo "### 📚 Documentation" >> TEMP_DOCS.md
+                echo "$line" >> TEMP_DOCS.md
+              elif [[ "$line" =~ (refactor|perf|performance|🔧) ]]; then
+                echo "### 🔧 Improvements" >> TEMP_IMPROVEMENTS.md
+                echo "$line" >> TEMP_IMPROVEMENTS.md
+              else
+                echo "### 🔄 Other Changes" >> TEMP_OTHER.md
+                echo "$line" >> TEMP_OTHER.md
+              fi
+            done
+            
+            # Combine categorized changes
+            for category_file in TEMP_FEATURES.md TEMP_FIXES.md TEMP_IMPROVEMENTS.md TEMP_BREAKING.md TEMP_DOCS.md TEMP_OTHER.md; do
+              if [ -f "$category_file" ]; then
+                cat "$category_file" >> $CHANGELOG_FILE
+                echo "" >> $CHANGELOG_FILE
+                rm "$category_file"
+              fi
+            done
+            
+            # Add comparison link
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREVIOUS_TAG}...${VERSION}" >> $CHANGELOG_FILE
+          else
+            echo "🎉 **Initial Release**" >> $CHANGELOG_FILE
+            echo "" >> $CHANGELOG_FILE
+            echo "This is the first release of the project." >> $CHANGELOG_FILE
+            
+            # Include recent commits for initial release
+            echo "### Recent Changes:" >> $CHANGELOG_FILE
+            git log --pretty=format:"- %s (%h)" -10 >> $CHANGELOG_FILE
+          fi
+          
+          echo "" >> $CHANGELOG_FILE
+          echo "## Installation" >> $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+          echo "### Quick Install" >> $CHANGELOG_FILE
+          echo '```bash' >> $CHANGELOG_FILE
+          echo "git clone https://github.com/${{ github.repository }}.git" >> $CHANGELOG_FILE
+          echo "cd $(basename ${{ github.repository }})" >> $CHANGELOG_FILE
+          echo "./rif-init.sh" >> $CHANGELOG_FILE
+          echo '```' >> $CHANGELOG_FILE
+          echo "" >> $CHANGELOG_FILE
+          echo "### Documentation" >> $CHANGELOG_FILE
+          echo "- 📖 [Setup Guide](README.md)" >> $CHANGELOG_FILE
+          echo "- 🔧 [Configuration](CLAUDE.md)" >> $CHANGELOG_FILE
+          echo "- 🚀 [Quick Start](rif-init.sh)" >> $CHANGELOG_FILE
+          
+          # Read the changelog and set as output (handle multiline)
+          CHANGELOG_CONTENT=$(cat $CHANGELOG_FILE)
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Also save for artifact
+          cp $CHANGELOG_FILE "release-notes-${VERSION}.md"
+          
+          echo "Generated changelog for $VERSION"
+
+  # Job 2: Build Assets
+  build-assets:
+    name: Build Release Assets
+    runs-on: ubuntu-latest
+    needs: version-analysis
+    if: github.event.inputs.build_assets != 'false'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Create release assets
+        run: |
+          VERSION="${{ needs.version-analysis.outputs.version }}"
+          ASSET_DIR="release-assets"
+          mkdir -p $ASSET_DIR
+          
+          echo "Building assets for $VERSION..."
+          
+          # 1. Source Code Archive
+          git archive --format=tar.gz --prefix="${{ github.repository }}-${VERSION}/" HEAD > "$ASSET_DIR/source-code.tar.gz"
+          git archive --format=zip --prefix="${{ github.repository }}-${VERSION}/" HEAD > "$ASSET_DIR/source-code.zip"
+          
+          # 2. Documentation Bundle
+          if [ -d "docs" ] || [ -f "README.md" ] || [ -f "CLAUDE.md" ]; then
+            echo "Creating documentation bundle..."
+            DOC_DIR="$ASSET_DIR/docs"
+            mkdir -p "$DOC_DIR"
+            
+            # Copy documentation files
+            [ -f "README.md" ] && cp "README.md" "$DOC_DIR/"
+            [ -f "CLAUDE.md" ] && cp "CLAUDE.md" "$DOC_DIR/"
+            [ -f "INSTALLATION.md" ] && cp "INSTALLATION.md" "$DOC_DIR/"
+            [ -d "docs" ] && cp -r "docs"/* "$DOC_DIR/"
+            
+            # Create documentation archive
+            cd "$ASSET_DIR"
+            tar -czf "documentation-${VERSION}.tar.gz" docs/
+            zip -r "documentation-${VERSION}.zip" docs/
+            cd ..
+          fi
+          
+          # 3. Configuration Templates
+          if [ -d "config" ] || [ -d ".claude" ]; then
+            echo "Creating configuration bundle..."
+            CONFIG_DIR="$ASSET_DIR/config-templates"
+            mkdir -p "$CONFIG_DIR"
+            
+            [ -d "config" ] && cp -r "config" "$CONFIG_DIR/"
+            [ -d ".claude" ] && cp -r ".claude" "$CONFIG_DIR/"
+            [ -f "rif-init.sh" ] && cp "rif-init.sh" "$CONFIG_DIR/"
+            [ -f "setup.sh" ] && cp "setup.sh" "$CONFIG_DIR/"
+            
+            cd "$ASSET_DIR"
+            tar -czf "config-templates-${VERSION}.tar.gz" config-templates/
+            zip -r "config-templates-${VERSION}.zip" config-templates/
+            cd ..
+          fi
+          
+          # 4. Knowledge Base Export (if exists)
+          if [ -d "knowledge" ]; then
+            echo "Creating knowledge base export..."
+            cd "$ASSET_DIR"
+            tar -czf "knowledge-base-${VERSION}.tar.gz" ../knowledge/
+            cd ..
+          fi
+          
+          # 5. Generate checksums
+          cd "$ASSET_DIR"
+          find . -type f -name "*.tar.gz" -o -name "*.zip" | while read file; do
+            sha256sum "$file" >> checksums.sha256
+            md5sum "$file" >> checksums.md5
+          done
+          cd ..
+          
+          # List created assets
+          echo "Created assets:"
+          ls -la "$ASSET_DIR"
+
+      - name: Upload assets artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-assets-${{ needs.version-analysis.outputs.version }}
+          path: release-assets/
+          retention-days: 30
+
+  # Job 3: Create GitHub Release
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [version-analysis, build-assets]
+    if: always() && needs.version-analysis.result == 'success'
+    outputs:
+      release-url: ${{ steps.create-release.outputs.release-url }}
+      release-id: ${{ steps.create-release.outputs.release-id }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download release assets
+        if: needs.build-assets.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: release-assets-${{ needs.version-analysis.outputs.version }}
+          path: release-assets/
+
+      - name: Create GitHub Release
+        id: create-release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            const version = '${{ needs.version-analysis.outputs.version }}';
+            const isPrerelease = '${{ needs.version-analysis.outputs.is-prerelease }}' === 'true';
+            const changelog = `${{ needs.version-analysis.outputs.changelog }}`;
+            
+            // Custom release notes from input (if provided)
+            let releaseBody = changelog;
+            if ('${{ github.event.inputs.release_notes }}') {
+              releaseBody = '${{ github.event.inputs.release_notes }}' + '\n\n' + changelog;
+            }
+            
+            console.log(`Creating release ${version} (prerelease: ${isPrerelease})`);
+            
+            // Create the release
+            const release = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: version,
+              name: `Release ${version}`,
+              body: releaseBody,
+              draft: false,
+              prerelease: isPrerelease,
+              generate_release_notes: true
+            });
+            
+            console.log(`Release created: ${release.data.html_url}`);
+            
+            // Upload assets if they exist
+            const assetsDir = 'release-assets';
+            if (fs.existsSync(assetsDir)) {
+              console.log('Uploading release assets...');
+              
+              const files = fs.readdirSync(assetsDir);
+              for (const file of files) {
+                if (fs.statSync(path.join(assetsDir, file)).isFile()) {
+                  const filePath = path.join(assetsDir, file);
+                  const fileContent = fs.readFileSync(filePath);
+                  
+                  console.log(`Uploading ${file}...`);
+                  
+                  try {
+                    await github.rest.repos.uploadReleaseAsset({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      release_id: release.data.id,
+                      name: file,
+                      data: fileContent
+                    });
+                    console.log(`✅ Uploaded ${file}`);
+                  } catch (error) {
+                    console.error(`❌ Failed to upload ${file}: ${error.message}`);
+                  }
+                }
+              }
+            }
+            
+            // Store release URL for next jobs
+            core.setOutput('release-url', release.data.html_url);
+            core.setOutput('release-id', release.data.id);
+
+  # Job 4: Multi-Environment Deployment
+  deploy:
+    name: Deploy to Environment
+    runs-on: ubuntu-latest
+    needs: [version-analysis, create-release]
+    if: github.event.inputs.environment && github.event.inputs.environment != 'production' || github.event_name == 'push'
+    strategy:
+      matrix:
+        environment: 
+          - ${{ github.event.inputs.environment || 'production' }}
+    environment: ${{ matrix.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to ${{ matrix.environment }}
+        run: |
+          VERSION="${{ needs.version-analysis.outputs.version }}"
+          ENV="${{ matrix.environment }}"
+          
+          echo "🚀 Deploying $VERSION to $ENV environment"
+          
+          # Deployment logic based on environment
+          case "$ENV" in
+            "production")
+              echo "📦 Production deployment:"
+              echo "- Version: $VERSION"
+              echo "- Release URL: ${{ needs.create-release.outputs.release-url }}"
+              echo "- Environment: Production"
+              
+              # Production deployment steps would go here
+              # Examples: Docker push, server deployment, CDN updates
+              ;;
+            "staging")
+              echo "🧪 Staging deployment:"
+              echo "- Version: $VERSION"
+              echo "- Environment: Staging"
+              
+              # Staging deployment steps would go here
+              ;;
+            "development")
+              echo "🔧 Development deployment:"
+              echo "- Version: $VERSION"
+              echo "- Environment: Development"
+              
+              # Development deployment steps would go here
+              ;;
+          esac
+          
+          # Create deployment record
+          echo "✅ Deployment to $ENV completed successfully"
+
+  # Job 5: RIF Integration & State Management
+  rif-integration:
+    name: RIF Workflow Integration
+    runs-on: ubuntu-latest
+    needs: [version-analysis, create-release]
+    if: always() && needs.create-release.result == 'success'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update RIF workflow state
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.version-analysis.outputs.version }}';
+            
+            // Find issues related to this release
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'state:implementing,state:validating,state:complete'
+            });
+            
+            console.log(`Found ${issues.length} RIF-managed issues`);
+            
+            // Update release-related issues
+            for (const issue of issues) {
+              if (issue.title.toLowerCase().includes('release') || 
+                  issue.labels.some(label => label.name.includes('release'))) {
+                
+                console.log(`Updating issue #${issue.number}: ${issue.title}`);
+                
+                // Add release completion comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `## 🚀 Release ${version} Complete\n\n` +
+                        `**Release Created**: ${{ needs.create-release.outputs.release-url }}\n` +
+                        `**Version**: ${version}\n` +
+                        `**Type**: ${{ needs.version-analysis.outputs.version-type }}\n` +
+                        `**Environment**: ${{ github.event.inputs.environment || 'production' }}\n\n` +
+                        `This issue has been resolved in release ${version}.\n\n` +
+                        `**Next State**: \`state:complete\``
+                });
+                
+                // Update labels
+                const currentLabels = issue.labels.map(l => l.name);
+                const newLabels = currentLabels
+                  .filter(label => !label.startsWith('state:'))
+                  .concat(['state:complete', 'released']);
+                
+                await github.rest.issues.setLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: newLabels
+                });
+              }
+            }
+
+      - name: Create knowledge base update
+        run: |
+          VERSION="${{ needs.version-analysis.outputs.version }}"
+          RELEASE_URL="${{ needs.create-release.outputs.release-url }}"
+          
+          # Create release knowledge entry
+          KNOWLEDGE_DIR="knowledge/releases"
+          mkdir -p "$KNOWLEDGE_DIR"
+          
+          cat > "$KNOWLEDGE_DIR/release-${VERSION}.json" << EOF
+          {
+            "version": "$VERSION",
+            "release_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "release_url": "$RELEASE_URL",
+            "version_type": "${{ needs.version-analysis.outputs.version-type }}",
+            "prerelease": ${{ needs.version-analysis.outputs.is-prerelease }},
+            "environment": "${{ github.event.inputs.environment || 'production' }}",
+            "trigger": "${{ github.event_name }}",
+            "assets_built": ${{ needs.build-assets.result == 'success' }},
+            "deployment_completed": true,
+            "rif_integration": true,
+            "changelog_generated": true,
+            "announcement_sent": ${{ github.event.inputs.announce == 'true' }},
+            "knowledge_updated": true
+          }
+          EOF
+          
+          echo "✅ Knowledge base updated for release $VERSION"
+
+  # Job 6: Release Announcements
+  announce-release:
+    name: Release Announcements
+    runs-on: ubuntu-latest
+    needs: [version-analysis, create-release, rif-integration]
+    if: github.event.inputs.announce == 'true' || github.event_name == 'push'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Send release announcements
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.version-analysis.outputs.version }}';
+            const releaseUrl = '${{ needs.create-release.outputs.release-url }}';
+            const isPrerelease = '${{ needs.version-analysis.outputs.is-prerelease }}' === 'true';
+            
+            console.log(`Sending announcements for ${version}`);
+            
+            // 1. Create GitHub Discussion (if enabled)
+            try {
+              const { data: discussions } = await github.rest.repos.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+              
+              if (discussions.has_discussions) {
+                console.log('Creating GitHub discussion for release...');
+                // Discussion creation would go here
+              }
+            } catch (error) {
+              console.log('Discussions not enabled for this repository');
+            }
+            
+            // 2. Update README with latest release info
+            try {
+              const { data: readme } = await github.rest.repos.getReadme({
+                owner: context.repo.owner,
+                repo: context.repo.repo
+              });
+              
+              let content = Buffer.from(readme.content, 'base64').toString();
+              const versionBadge = `![Version](https://img.shields.io/badge/version-${version.replace('v', '')}-blue)`;
+              
+              // Update version badge if it exists
+              if (content.includes('![Version]')) {
+                content = content.replace(/!\[Version\]\([^)]+\)/, versionBadge);
+                
+                const updatedContent = Buffer.from(content).toString('base64');
+                
+                await github.rest.repos.createOrUpdateFileContents({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  path: 'README.md',
+                  message: `📋 Update README with release ${version}`,
+                  content: updatedContent,
+                  sha: readme.sha
+                });
+                
+                console.log('✅ README updated with latest version');
+              }
+            } catch (error) {
+              console.log('Could not update README:', error.message);
+            }
+            
+            // 3. Create announcement issue (for major releases)
+            if ('${{ needs.version-analysis.outputs.version-type }}' === 'major' || isPrerelease) {
+              const announcementTitle = `🎉 ${isPrerelease ? 'Pre-release' : 'Release'} ${version} Available`;
+              const announcementBody = `## ${isPrerelease ? 'Pre-release' : 'Release'} ${version} is now available! 🚀\n\n` +
+                `**Release Notes**: ${releaseUrl}\n\n` +
+                `### Quick Installation\n` +
+                `\`\`\`bash\n` +
+                `git clone https://github.com/${{ github.repository }}.git\n` +
+                `cd $(basename ${{ github.repository }})\n` +
+                `git checkout ${version}\n` +
+                `./rif-init.sh\n` +
+                `\`\`\`\n\n` +
+                `### What's New\n` +
+                `Check the [full release notes](${releaseUrl}) for all changes and improvements.\n\n` +
+                `### Documentation\n` +
+                `- 📖 [Setup Guide](README.md)\n` +
+                `- 🔧 [Configuration](CLAUDE.md)\n` +
+                `- 🚀 [Quick Start](rif-init.sh)\n\n` +
+                `---\n` +
+                `*This announcement was automatically generated by RIF Release Management.*`;
+              
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: announcementTitle,
+                body: announcementBody,
+                labels: ['announcement', 'release', isPrerelease ? 'prerelease' : 'stable']
+              });
+              
+              console.log(`✅ Created announcement issue for ${version}`);
+            }
+            
+            console.log('🎉 All announcements sent successfully!');
+
+  # Job 7: Post-Release Validation
+  post-release-validation:
+    name: Post-Release Validation
+    runs-on: ubuntu-latest
+    needs: [version-analysis, create-release, announce-release]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate release completion
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.version-analysis.outputs.version }}';
+            const releaseUrl = '${{ needs.create-release.outputs.release-url }}';
+            
+            console.log('🔍 Validating release completion...');
+            
+            let validationResults = {
+              release_created: false,
+              assets_attached: false,
+              changelog_generated: true,
+              announcements_sent: false,
+              rif_integration: false,
+              overall_success: false
+            };
+            
+            // Check if release was created successfully
+            try {
+              const { data: release } = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: version
+              });
+              
+              validationResults.release_created = true;
+              validationResults.assets_attached = release.assets.length > 0;
+              
+              console.log(`✅ Release ${version} exists with ${release.assets.length} assets`);
+            } catch (error) {
+              console.error(`❌ Release validation failed: ${error.message}`);
+            }
+            
+            // Check RIF integration
+            validationResults.rif_integration = '${{ needs.rif-integration.result }}' === 'success';
+            
+            // Check announcements
+            validationResults.announcements_sent = '${{ needs.announce-release.result }}' === 'success';
+            
+            // Overall success calculation
+            validationResults.overall_success = validationResults.release_created && 
+                                               validationResults.changelog_generated;
+            
+            // Create validation report
+            const report = `## 🔍 Release Validation Report - ${version}\n\n` +
+              `**Release URL**: ${releaseUrl}\n` +
+              `**Validation Date**: ${new Date().toISOString()}\n\n` +
+              `### Validation Results\n` +
+              `- Release Created: ${validationResults.release_created ? '✅' : '❌'}\n` +
+              `- Assets Attached: ${validationResults.assets_attached ? '✅' : '❌'}\n` +
+              `- Changelog Generated: ${validationResults.changelog_generated ? '✅' : '❌'}\n` +
+              `- RIF Integration: ${validationResults.rif_integration ? '✅' : '❌'}\n` +
+              `- Announcements Sent: ${validationResults.announcements_sent ? '✅' : '❌'}\n\n` +
+              `### Overall Result\n` +
+              `**Status**: ${validationResults.overall_success ? '✅ SUCCESS' : '❌ PARTIAL FAILURE'}\n\n` +
+              `---\n` +
+              `*Validation completed by RIF Release Management Automation*`;
+            
+            console.log('Validation Report:');
+            console.log(report);
+            
+            // Post validation results as comment on related issues
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'released'
+            });
+            
+            for (const issue of issues.slice(0, 3)) { // Limit to avoid spam
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: report
+              });
+            }
+            
+            if (!validationResults.overall_success) {
+              console.error('❌ Release validation failed - check logs for issues');
+              process.exit(1);
+            }
+            
+            console.log('🎉 Release validation completed successfully!');

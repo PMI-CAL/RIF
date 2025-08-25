@@ -1,0 +1,293 @@
+# RIF Release Management Configuration
+# Customizes the behavior of the release automation workflow
+
+release:
+  # Version calculation settings
+  versioning:
+    # Semantic versioning rules based on commit patterns
+    version_rules:
+      major:
+        patterns:
+          - "BREAKING:"
+          - "breaking change"
+          - "💔"
+          - "!:"
+        labels:
+          - "breaking-change"
+          - "major"
+      minor:
+        patterns:
+          - "feat:"
+          - "feature:"
+          - "🚀"
+          - "add "
+          - "implement "
+        labels:
+          - "feature"
+          - "enhancement"
+          - "minor"
+      patch:
+        patterns:
+          - "fix:"
+          - "bug:"
+          - "🐛"
+          - "hotfix"
+          - "patch"
+        labels:
+          - "bugfix"
+          - "hotfix"
+          - "patch"
+    
+    # Prerelease detection patterns
+    prerelease_patterns:
+      - "alpha"
+      - "beta"
+      - "rc"
+      - "pre"
+      - "preview"
+      - "dev"
+
+  # Changelog generation settings
+  changelog:
+    # Categories for organizing changes
+    categories:
+      breaking:
+        title: "💔 Breaking Changes"
+        labels: ["breaking-change", "major"]
+        priority: 1
+      features:
+        title: "🚀 Features"
+        labels: ["feature", "enhancement"]
+        priority: 2
+      fixes:
+        title: "🐛 Bug Fixes"
+        labels: ["bugfix", "hotfix"]
+        priority: 3
+      improvements:
+        title: "🔧 Improvements"
+        labels: ["improvement", "refactor", "performance"]
+        priority: 4
+      documentation:
+        title: "📚 Documentation"
+        labels: ["documentation", "docs"]
+        priority: 5
+      dependencies:
+        title: "⬆️ Dependencies"
+        labels: ["dependencies", "deps"]
+        priority: 6
+      other:
+        title: "🔄 Other Changes"
+        labels: []
+        priority: 10
+    
+    # Include settings
+    include_pr_links: true
+    include_commit_hashes: true
+    include_author_credits: true
+    max_commits_per_category: 50
+
+  # Asset building configuration
+  assets:
+    # Enable/disable asset types
+    source_code: true
+    documentation: true
+    configuration_templates: true
+    knowledge_base_export: true
+    
+    # Asset formats
+    formats:
+      - "tar.gz"
+      - "zip"
+    
+    # Directories to include in documentation bundle
+    documentation_dirs:
+      - "docs"
+      - "README.md"
+      - "CLAUDE.md"
+      - "INSTALLATION.md"
+      - "LICENSE"
+      - "CHANGELOG.md"
+    
+    # Configuration files to include
+    config_files:
+      - "config/"
+      - ".claude/"
+      - "rif-init.sh"
+      - "setup.sh"
+      - ".github/workflows/"
+    
+    # Generate checksums
+    checksums:
+      enabled: true
+      algorithms:
+        - "sha256"
+        - "md5"
+
+  # Deployment environments
+  environments:
+    production:
+      name: "Production"
+      auto_deploy: false
+      approval_required: true
+      deployment_checks:
+        - "all_tests_pass"
+        - "security_scan_clean"
+        - "quality_gates_pass"
+    
+    staging:
+      name: "Staging"
+      auto_deploy: true
+      approval_required: false
+      deployment_checks:
+        - "basic_tests_pass"
+    
+    development:
+      name: "Development"
+      auto_deploy: true
+      approval_required: false
+      deployment_checks: []
+
+  # RIF integration settings
+  rif_integration:
+    # Automatically update related issues
+    update_issues: true
+    
+    # Labels to look for when finding release-related issues
+    issue_labels:
+      - "release"
+      - "milestone"
+      - "state:implementing"
+      - "state:validating"
+    
+    # State transitions to apply
+    completion_state: "state:complete"
+    
+    # Additional labels to add on release completion
+    completion_labels:
+      - "released"
+    
+    # Knowledge base update settings
+    knowledge_update:
+      enabled: true
+      directory: "knowledge/releases"
+      format: "json"
+
+  # Announcement settings
+  announcements:
+    # GitHub-specific announcements
+    github:
+      # Create discussion for releases (if discussions enabled)
+      create_discussion: true
+      
+      # Update README with latest version badge
+      update_readme: true
+      version_badge_pattern: "![Version](https://img.shields.io/badge/version-{version}-blue)"
+      
+      # Create announcement issues for major releases
+      create_announcement_issue: true
+      major_releases_only: false
+      
+      # Issue templates for announcements
+      announcement_labels:
+        - "announcement"
+        - "release"
+      
+    # External announcements (placeholder for future integration)
+    external:
+      slack:
+        enabled: false
+        webhook_url: ""
+      
+      discord:
+        enabled: false
+        webhook_url: ""
+      
+      email:
+        enabled: false
+        mailing_list: ""
+
+  # Validation settings
+  validation:
+    # Post-release validation checks
+    required_checks:
+      - "release_exists"
+      - "changelog_generated"
+      - "assets_attached"
+    
+    optional_checks:
+      - "announcements_sent"
+      - "rif_integration_complete"
+      - "documentation_updated"
+    
+    # Failure handling
+    on_validation_failure:
+      create_issue: true
+      notify_maintainers: true
+      rollback_enabled: false
+
+  # Security settings
+  security:
+    # Asset signing (if certificates available)
+    sign_assets: false
+    signing_key_var: "SIGNING_KEY"
+    
+    # Security scanning
+    scan_releases: true
+    block_on_vulnerabilities: true
+    
+    # Approval requirements for sensitive releases
+    require_approval_for:
+      - "major_versions"
+      - "security_releases"
+      - "breaking_changes"
+
+# Template configurations
+templates:
+  # Release notes template
+  release_notes: |
+    # Release {version}
+    
+    {changelog}
+    
+    ## Installation
+    
+    ### Quick Install
+    ```bash
+    git clone https://github.com/{owner}/{repo}.git
+    cd {repo}
+    git checkout {version}
+    ./rif-init.sh
+    ```
+    
+    ### Documentation
+    - 📖 [Setup Guide](README.md)
+    - 🔧 [Configuration](CLAUDE.md)
+    - 🚀 [Quick Start](rif-init.sh)
+    
+    ---
+    *This release was automatically created by RIF Release Management.*
+  
+  # Announcement issue template
+  announcement_issue: |
+    ## 🎉 Release {version} Available!
+    
+    **Release Notes**: {release_url}
+    
+    ### What's New
+    {summary}
+    
+    ### Quick Installation
+    ```bash
+    git clone https://github.com/{owner}/{repo}.git
+    cd {repo}
+    git checkout {version}
+    ./rif-init.sh
+    ```
+    
+    ### Documentation
+    - 📖 [Setup Guide](README.md)
+    - 🔧 [Configuration](CLAUDE.md)
+    - 🚀 [Quick Start](rif-init.sh)
+    
+    ---
+    *This announcement was automatically generated by RIF Release Management.*
