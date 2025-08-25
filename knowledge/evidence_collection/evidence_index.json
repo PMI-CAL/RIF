@@ -35,6 +35,15 @@
       "quality_score": 80.00036798333333,
       "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_scenario_2_mcp_integration_231_1756106647",
       "created": "2025-08-25T00:24:08.256973"
+    },
+    {
+      "validation_id": "test_231",
+      "issue_id": "231",
+      "evidence_count": 1,
+      "collection_timespan": "2025-08-25T00:25:09.067178 to 2025-08-25T00:25:09.179918",
+      "quality_score": 53.33333333333333,
+      "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_test_231",
+      "created": "2025-08-25T00:25:09.180887"
     }
   ]
 }
