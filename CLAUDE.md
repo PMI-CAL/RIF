@@ -101,6 +101,70 @@ Documentation references to `Task.parallel()` are **pseudocode** meaning:
 
 It is NOT a real function - it represents the pattern of parallel Task execution.
 
+## 🚨 CRITICAL: PR Priority Rule
+
+**ABSOLUTE PRIORITY**: Open Pull Requests BLOCK ALL OTHER ORCHESTRATION
+
+### Why PRs Are Highest Priority
+- **Work-in-Progress**: PRs represent work already started that needs completion
+- **Production Pipeline**: PRs are closest to delivering value to users
+- **Resource Efficiency**: Completing existing work before starting new work maximizes throughput
+- **Quality Gates**: PRs require validation before new development should begin
+
+### PR Detection and Handling
+Before ANY orchestration, check for open PRs:
+```bash
+# Always check for open PRs first
+gh pr list --state open
+```
+
+### Orchestration Decision Matrix
+
+| Open PRs | Other Issues | Orchestration Decision |
+|----------|-------------|------------------------|
+| ✅ Yes | Any | Handle PRs ONLY - BLOCK all other work |
+| ❌ No | Multiple | Proceed with normal orchestration |
+| ❌ No | None | No work needed |
+
+### PR Orchestration Examples
+
+#### ❌ WRONG: Starting New Work with Open PRs
+```python
+# This is INCORRECT when PRs exist:
+gh pr list --state open  # Shows: PR #45 "Fix authentication bug"
+
+# But then orchestrator starts new work anyway:
+Task(
+    description="RIF-Analyst: Analyze new issue #50",
+    prompt="..."
+)  # Should NOT happen - PR #45 needs attention first
+```
+
+#### ✅ CORRECT: PR-First Orchestration
+```python
+# Check for PRs first
+open_prs = check_open_prs()
+
+if open_prs:
+    # Handle PRs ONLY - block all other work
+    for pr in open_prs:
+        Task(
+            description=f"RIF-Validator: Review and validate PR #{pr.number}",
+            subagent_type="general-purpose",
+            prompt=f"You are RIF-Validator. Review PR #{pr.number} '{pr.title}'. Run tests, check quality gates, validate implementation. If ready, approve and merge. If issues found, provide specific feedback. Follow all instructions in claude/agents/rif-validator.md."
+        )
+else:
+    # No PRs - proceed with normal orchestration
+    proceed_with_issue_orchestration()
+```
+
+### Key PR Priority Rules
+1. **ALWAYS check for PRs before any other orchestration**
+2. **NEVER start new development work while PRs are open**
+3. **Launch PR validation agents FIRST**
+4. **Complete PR workflows before issue orchestration**
+5. **PRs override ALL other priority considerations**
+
 ## 🧠 ORCHESTRATION INTELLIGENCE FRAMEWORK
 
 **CRITICAL**: Before launching any agents, the orchestrator MUST perform intelligent dependency analysis.
@@ -172,16 +236,18 @@ else:
 
 ### Key Rules for Intelligent Orchestration
 
-1. **ANALYZE DEPENDENCIES FIRST** - Never launch agents without dependency analysis
-2. **RESPECT SEQUENTIAL PHASES** - Research → Architecture → Implementation → Validation
-3. **PRIORITIZE BLOCKING ISSUES** - Critical infrastructure before all other work
-4. **ONE PHASE AT A TIME** - Don't start implementation until research/architecture complete
-5. **NEVER do implementation work directly** - Always delegate to agents
-6. **Launch multiple Tasks in ONE response** for parallel execution (when appropriate)
-7. **Include full agent instructions** in the Task prompt
-8. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
-9. **Let agents handle GitHub interactions** (posting comments, changing labels)
-10. **Trust the agent specialization** - Don't micromanage their work
+1. **PR PRIORITY ABSOLUTE** - Always handle open PRs before any other work
+2. **ANALYZE DEPENDENCIES FIRST** - Never launch agents without dependency analysis
+3. **RESPECT SEQUENTIAL PHASES** - Research → Architecture → Implementation → Validation
+4. **PRIORITIZE BLOCKING ISSUES** - Critical infrastructure before all other work
+5. **ONE PHASE AT A TIME** - Don't start implementation until research/architecture complete
+6. **DEEP RESEARCH REQUIRED** - Research must analyze HOW things work, not just WHAT they do
+7. **NEVER do implementation work directly** - Always delegate to agents
+8. **Launch multiple Tasks in ONE response** for parallel execution (when appropriate) - NEVER launch agents in separate responses
+9. **Include full agent instructions** in the Task prompt
+10. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
+11. **Let agents handle GitHub interactions** (posting comments, changing labels)
+12. **Trust the agent specialization** - Don't micromanage their work
 
 ## 🚨 CRITICAL: Enhanced Orchestration Intelligence (Issue #228)
 
@@ -422,6 +488,63 @@ else:
 **Problem**: Agents are not running in parallel  
 **Solution**: Launch all Tasks in a single Claude response, not separate responses
 
+### 🔄 CRITICAL: Parallel Execution Requirements
+
+**MANDATORY**: ALL Task() invocations for parallel work MUST be in the SAME message/response.
+
+#### ❌ WRONG: Sequential Agent Launching
+```python
+# This is INCORRECT - agents launch sequentially:
+Task(
+    description="RIF-Analyst: Analyze issue #5",
+    prompt="You are RIF-Analyst..."
+)
+# ANY TEXT OR ANALYSIS HERE BREAKS PARALLEL EXECUTION
+# This creates a separate response:
+Task(
+    description="RIF-Implementer: Implement issue #3", 
+    prompt="You are RIF-Implementer..."
+)
+```
+
+#### ✅ CORRECT: True Parallel Agent Launching
+```python
+# This is CORRECT - all agents launch in parallel:
+Task(
+    description="RIF-Analyst: Analyze issue #5",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Analyst. Analyze GitHub issue #5. Follow all instructions in claude/agents/rif-analyst.md."
+)
+Task(
+    description="RIF-Implementer: Implement issue #3",
+    subagent_type="general-purpose", 
+    prompt="You are RIF-Implementer. Implement fix for GitHub issue #3. Follow all instructions in claude/agents/rif-implementer.md."
+)
+Task(
+    description="RIF-Validator: Validate issue #1",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Validator. Validate implementation for GitHub issue #1. Follow all instructions in claude/agents/rif-validator.md."
+)
+# All three agents start working simultaneously
+```
+
+#### Parallel vs Sequential Decision Matrix
+
+| Scenario | Dependencies | Launch Pattern | Justification |
+|----------|-------------|---------------|--------------|
+| Multiple ready issues | None | ✅ Parallel (same response) | Maximum efficiency |
+| Research + Implementation | Research must complete first | ❌ Sequential (research only) | Dependency constraint |
+| Validation of complete work | Implementation done | ✅ Parallel validation | Independent validation tasks |
+| Foundation + Dependent work | Foundation must complete | ❌ Sequential (foundation only) | Architectural dependency |
+| Mixed states, no dependencies | None | ✅ Parallel (same response) | Optimal resource utilization |
+
+#### Key Parallel Execution Rules
+1. **Same Response Rule**: All parallel Tasks MUST be in the same Claude response
+2. **No Interruption Rule**: No text, analysis, or explanations between parallel Task() calls
+3. **Dependency Check Rule**: Only launch in parallel if no sequential dependencies exist
+4. **Resource Rule**: Maximum 4 parallel agents to avoid resource exhaustion
+5. **State Verification Rule**: Ensure all parallel work can proceed independently
+
 **Problem**: Implementation agents launched for issues with incomplete prerequisites
 **Solution**: Perform mandatory dependency analysis - check research/architecture completion first
 
@@ -439,6 +562,98 @@ else:
 
 **Problem**: Orchestration decisions appear arbitrary or inefficient
 **Solution**: Document dependency analysis reasoning before launching agents
+
+## 🔬 CRITICAL: Deep Research Requirements
+
+**MANDATORY**: When research tasks involve analyzing other systems, methodologies, or implementations, the research MUST focus on **HOW** they work, not just **WHAT** they do.
+
+### Research Quality Requirements
+
+#### ❌ INSUFFICIENT: Surface-Level Research
+```markdown
+# This type of research is NOT sufficient:
+"BMAD-METHOD is a development methodology that uses branches and automated deployment.
+It has the following features:
+- Branch-based development
+- Automated testing
+- Deployment automation
+- Issue tracking integration"
+```
+
+#### ✅ REQUIRED: Deep Implementation Analysis
+```markdown
+# This type of research IS required:
+"BMAD-METHOD Implementation Analysis:
+
+**HOW Branch Management Works:**
+- Uses specific git hooks to enforce branch naming: `feature/ISSUE-123-description`
+- Automated scripts scan commit messages for issue references
+- Branch protection rules prevent direct pushes to main
+- Specific merge strategy: squash merges with automated commit message formatting
+
+**HOW Automated Testing Integration Functions:**
+- GitHub Actions workflow triggers on PR creation with specific job matrix
+- Test execution follows this sequence: lint → unit → integration → e2e
+- Failure at any stage blocks subsequent stages using job dependencies
+- Test results are parsed and posted as PR comments using specific API calls
+
+**HOW Deployment Automation Mechanism Works:**
+- Uses deployment branches (staging, production) that trigger different workflows
+- Environment promotion happens through specific git tag patterns: v1.2.3-staging
+- Rollback mechanism uses git revert with automated environment sync
+- Configuration management through environment-specific config files
+
+**HOW Issue Integration Functions:**
+- Webhook integration between GitHub Issues and deployment system
+- Issue state automatically updates based on deployment success/failure
+- Specific label management rules: state:deploying → state:deployed
+- Automated issue closure on successful production deployment
+
+**Specific Implementation Details:**
+- Configuration files: .bmad/config.yaml, .github/workflows/bmad.yml
+- Required repository structure: /deploy, /config, /tests
+- Dependency on specific tools: gh CLI, jq, deployment scripts
+- Integration points: GitHub API, deployment targets, monitoring systems"
+```
+
+### Research Agent Enhancement
+
+When launching research agents, prompts MUST include deep analysis requirements:
+
+```python
+# Enhanced research agent prompt:
+Task(
+    description="RIF-Researcher: Deep analysis of BMAD-METHOD implementation",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Researcher. Conduct DEEP analysis of BMAD-METHOD focusing on HOW it works, not what it does. Your research must include: 1) Specific implementation mechanisms and code examples, 2) Actual workflows and automation scripts, 3) Integration patterns and API usage, 4) Configuration details and file structures, 5) Decision logic and algorithms used. Provide implementation-ready insights that show exactly HOW to build similar functionality. Follow all instructions in claude/agents/rif-researcher.md."
+)
+```
+
+### Deep Research Quality Gates
+
+**Research is INSUFFICIENT if it only provides:**
+- High-level feature descriptions
+- Marketing or documentation summaries
+- Conceptual overviews without implementation details
+- General benefits without specific mechanisms
+
+**Research is SUFFICIENT when it includes:**
+- Specific code patterns and implementation examples
+- Detailed workflow sequences with actual steps
+- Configuration files, scripts, and automation details
+- Integration patterns with exact API calls or tool usage
+- Decision trees and algorithmic logic
+- File structures and architectural components
+- Command sequences and tool invocations
+
+### Research Application Requirements
+
+Deep research must enable the implementer to:
+1. **Replicate the approach** with specific implementation guidance
+2. **Understand the mechanisms** behind the functionality
+3. **Adapt the patterns** to the current system architecture
+4. **Avoid implementation pitfalls** through detailed analysis
+5. **Make informed decisions** based on how systems actually work
 
 ## Architecture Overview
 
