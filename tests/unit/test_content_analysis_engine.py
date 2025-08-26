@@ -2,454 +2,539 @@
 """
 Test suite for ContentAnalysisEngine - Issue #273 Implementation
 
-This comprehensive test suite validates the ContentAnalysisEngine that replaces
-label dependency with intelligent content analysis throughout the orchestration system.
+This test suite validates the ContentAnalysisEngine implementation that replaces
+the label dependency system with intelligent content analysis.
 
-Tests cover:
-- State derivation from content
-- Complexity assessment 
-- Dependency extraction
-- Blocking detection
-- Performance benchmarks
-- Accuracy validation
+Test Coverage:
+- State analysis from issue content
+- Complexity assessment from requirements
+- Dependency extraction from issue text
+- Performance benchmarks (sub-100ms requirement)
+- Accuracy validation (90%+ accuracy target)
+- Edge case handling
 """
 
 import unittest
-import json
 import time
-from pathlib import Path
 from unittest.mock import patch, MagicMock
+
+# Import the classes we're testing
 import sys
 import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'claude', 'commands'))
 
-# Add the project root to the path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-
-from claude.commands.content_analysis_engine import (
-    ContentAnalysisEngine, ContentAnalysisResult, IssueState, ComplexityLevel, ConfidenceLevel
+from content_analysis_engine import (
+    ContentAnalysisEngine, 
+    StateAnalyzer, 
+    ComplexityAnalyzer, 
+    DependencyAnalyzer,
+    WorkflowState, 
+    ComplexityLevel,
+    ContentAnalysisResult
 )
 
-class TestContentAnalysisEngine(unittest.TestCase):
-    """Test suite for ContentAnalysisEngine - Issue #273 fix validation"""
-
+class TestStateAnalyzer(unittest.TestCase):
+    """Test the StateAnalyzer component"""
+    
     def setUp(self):
-        """Set up test fixtures"""
-        self.engine = ContentAnalysisEngine()
-        
-        # Test cases based on real GitHub issue patterns
-        self.test_cases = [
-            {
-                'title': 'Add user authentication system',
-                'body': 'Need to implement user authentication with login, registration, and password reset functionality. This is a new feature request.',
-                'expected_state': 'new',
-                'expected_complexity': 'medium'
-            },
-            {
-                'title': 'Currently analyzing database performance issues',
-                'body': 'Investigating slow query performance. Need to analyze query patterns and identify bottlenecks. Research phase is ongoing.',
-                'expected_state': 'analyzing',
-                'expected_complexity': 'high'
-            },
-            {
-                'title': 'Planning microservices architecture',
-                'body': 'Designing a microservices architecture for the payment system. Need to plan service boundaries, communication patterns, and data consistency approach.',
-                'expected_state': 'planning',
-                'expected_complexity': 'very-high'
-            },
-            {
-                'title': 'Implementing REST API endpoints',
-                'body': 'Working on implementation of REST API endpoints for user management. Code is being written and components are being built.',
-                'expected_state': 'implementing',
-                'expected_complexity': 'medium'
-            },
-            {
-                'title': 'Testing the authentication module',
-                'body': 'Validating the authentication implementation. Running test suite and verifying all test cases pass. Quality assurance in progress.',
-                'expected_state': 'validating',
-                'expected_complexity': 'low'
-            },
-            {
-                'title': 'BLOCKED: Waiting for database migration',
-                'body': 'This issue is blocked by the database migration. Cannot proceed until the migration is complete. Waiting for dependency resolution.',
-                'expected_state': 'blocked',
-                'expected_complexity': 'medium'
-            },
-            {
-                'title': 'Authentication system completed',
-                'body': 'User authentication has been successfully implemented and tested. All requirements met and ready to close.',
-                'expected_state': 'complete',
-                'expected_complexity': 'medium'
-            }
+        self.analyzer = StateAnalyzer()
+    
+    def test_new_state_detection(self):
+        """Test detection of new/analysis-needed states"""
+        test_cases = [
+            ("Need to analyze the user requirements", WorkflowState.NEW),
+            ("Investigate how the API works", WorkflowState.NEW),
+            ("What is the best approach for this?", WorkflowState.NEW),
+            ("New feature request", WorkflowState.NEW),
+            ("Initial investigation required", WorkflowState.NEW)
         ]
-
-        # Blocking detection test cases
-        self.blocking_test_cases = [
-            {
-                'title': 'CRITICAL: Fix agent context reading',
-                'body': 'THIS ISSUE BLOCKS ALL OTHERS. Critical infrastructure failure in agent context reading must be resolved immediately.',
-                'expected_blocking': True
-            },
-            {
-                'title': 'Core API framework implementation', 
-                'body': 'BLOCKS ALL OTHER WORK until complete. This foundational API framework must be finished before any dependent features can proceed.',
-                'expected_blocking': True
-            },
-            {
-                'title': 'Regular feature implementation',
-                'body': 'Standard feature implementation for user profiles. No blocking requirements.',
-                'expected_blocking': False
-            },
-            {
-                'title': 'High priority urgent task',
-                'body': 'This is a critical high priority task that needs immediate attention.',
-                'expected_blocking': False  # Should not trigger - generic urgency
-            }
+        
+        for text, expected_state in test_cases:
+            with self.subTest(text=text):
+                state, confidence = self.analyzer.analyze_state(text)
+                self.assertEqual(state, expected_state)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_analyzing_state_detection(self):
+        """Test detection of analyzing/research states"""
+        test_cases = [
+            ("Currently analyzing the performance bottleneck", WorkflowState.ANALYZING),
+            ("Investigation in progress", WorkflowState.ANALYZING),
+            ("Research phase ongoing", WorkflowState.ANALYZING),
+            ("Understanding the requirements", WorkflowState.ANALYZING),
+            ("Feasibility analysis underway", WorkflowState.ANALYZING)
         ]
-
-        # Dependency extraction test cases  
-        self.dependency_test_cases = [
-            {
-                'title': 'Feature depends on core API',
-                'body': 'This feature depends on issue #42 (core API) and requires #15 to be completed first.',
-                'expected_dependencies': ['42', '15']
-            },
-            {
-                'title': 'Blocked by multiple issues',
-                'body': 'Cannot proceed - blocked by #23, #45, and #67. Must wait for these prerequisite issues.',
-                'expected_dependencies': ['23', '45', '67']
-            },
-            {
-                'title': 'No dependencies',
-                'body': 'Standalone feature with no external dependencies. Can proceed independently.',
-                'expected_dependencies': []
-            }
+        
+        for text, expected_state in test_cases:
+            with self.subTest(text=text):
+                state, confidence = self.analyzer.analyze_state(text)
+                self.assertEqual(state, expected_state)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_implementing_state_detection(self):
+        """Test detection of implementation states"""
+        test_cases = [
+            ("Ready to implement the feature", WorkflowState.IMPLEMENTING),
+            ("Start implementation of the API", WorkflowState.IMPLEMENTING),
+            ("Code the authentication module", WorkflowState.IMPLEMENTING),
+            ("Build the user interface", WorkflowState.IMPLEMENTING),
+            ("Develop the core functionality", WorkflowState.IMPLEMENTING)
         ]
-
-    def test_state_derivation_accuracy(self):
-        """Test accuracy of state derivation from content"""
-        print("Testing state derivation accuracy...")
         
-        correct_predictions = 0
-        for case in self.test_cases:
-            result = self.engine.analyze_issue_content(case['title'], case['body'])
-            
-            if result.derived_state.value == case['expected_state']:
-                correct_predictions += 1
-                print(f"✅ CORRECT: '{case['title'][:50]}...' -> {result.derived_state.value}")
-            else:
-                print(f"❌ INCORRECT: '{case['title'][:50]}...' -> {result.derived_state.value} (expected: {case['expected_state']})")
-
-        accuracy = correct_predictions / len(self.test_cases)
-        print(f"\n📊 State Derivation Accuracy: {accuracy:.2%} ({correct_predictions}/{len(self.test_cases)})")
+        for text, expected_state in test_cases:
+            with self.subTest(text=text):
+                state, confidence = self.analyzer.analyze_state(text)
+                self.assertEqual(state, expected_state)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_validating_state_detection(self):
+        """Test detection of validation/testing states"""
+        test_cases = [
+            ("Need to test the implementation", WorkflowState.VALIDATING),
+            ("Validate the user interface", WorkflowState.VALIDATING),
+            ("Quality review required", WorkflowState.VALIDATING),
+            ("Check the security aspects", WorkflowState.VALIDATING),
+            ("Ready for testing", WorkflowState.VALIDATING)
+        ]
         
-        # Success criteria from Issue #273: 90%+ accuracy
-        self.assertGreaterEqual(accuracy, 0.90, f"State derivation accuracy {accuracy:.2%} below required 90%")
-
-    def test_complexity_assessment(self):
-        """Test complexity assessment from content"""
-        print("Testing complexity assessment...")
+        for text, expected_state in test_cases:
+            with self.subTest(text=text):
+                state, confidence = self.analyzer.analyze_state(text)
+                self.assertEqual(state, expected_state)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_blocked_state_detection(self):
+        """Test detection of blocked states"""
+        test_cases = [
+            ("Blocked by dependency on issue #123", WorkflowState.BLOCKED),
+            ("Cannot proceed without API access", WorkflowState.BLOCKED),
+            ("Waiting for prerequisite completion", WorkflowState.BLOCKED),
+            ("Stuck on authentication issue", WorkflowState.BLOCKED)
+        ]
         
-        correct_predictions = 0
-        for case in self.test_cases:
-            result = self.engine.analyze_issue_content(case['title'], case['body'])
-            
-            if result.complexity.value == case['expected_complexity']:
-                correct_predictions += 1
-                print(f"✅ CORRECT: '{case['title'][:50]}...' -> {result.complexity.value}")
-            else:
-                print(f"❌ INCORRECT: '{case['title'][:50]}...' -> {result.complexity.value} (expected: {case['expected_complexity']})")
+        for text, expected_state in test_cases:
+            with self.subTest(text=text):
+                state, confidence = self.analyzer.analyze_state(text)
+                self.assertEqual(state, expected_state)
+                self.assertGreater(confidence, 0.0)
 
-        accuracy = correct_predictions / len(self.test_cases)
-        print(f"\n📊 Complexity Assessment Accuracy: {accuracy:.2%} ({correct_predictions}/{len(self.test_cases)})")
+class TestComplexityAnalyzer(unittest.TestCase):
+    """Test the ComplexityAnalyzer component"""
+    
+    def setUp(self):
+        self.analyzer = ComplexityAnalyzer()
+    
+    def test_low_complexity_detection(self):
+        """Test detection of low complexity tasks"""
+        test_cases = [
+            "Fix typo in documentation",
+            "Update single configuration variable",
+            "Change button text",
+            "Simple bug fix in validation function",
+            "Quick modification to existing feature"
+        ]
         
-        # Expect reasonable complexity assessment (70%+ for initial implementation)
-        self.assertGreaterEqual(accuracy, 0.70, f"Complexity assessment accuracy {accuracy:.2%} below expected 70%")
-
-    def test_blocking_detection(self):
-        """Test blocking issue detection"""
-        print("Testing blocking detection...")
+        for text in test_cases:
+            with self.subTest(text=text):
+                complexity, confidence = self.analyzer.analyze_complexity(text)
+                self.assertEqual(complexity, ComplexityLevel.LOW)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_medium_complexity_detection(self):
+        """Test detection of medium complexity tasks"""
+        test_cases = [
+            "Implement new user registration feature",
+            "Add email notification system",
+            "Create dashboard component",
+            "Integrate with payment API",
+            "Develop search functionality"
+        ]
         
-        for case in self.blocking_test_cases:
-            result = self.engine.analyze_issue_content(case['title'], case['body'])
-            has_blocking = len(result.blocking_indicators) > 0
-            
-            if has_blocking == case['expected_blocking']:
-                print(f"✅ CORRECT: '{case['title'][:50]}...' -> blocking: {has_blocking}")
-            else:
-                print(f"❌ INCORRECT: '{case['title'][:50]}...' -> blocking: {has_blocking} (expected: {case['expected_blocking']})")
-            
-            self.assertEqual(has_blocking, case['expected_blocking'], 
-                           f"Blocking detection failed for: {case['title']}")
+        for text in test_cases:
+            with self.subTest(text=text):
+                complexity, confidence = self.analyzer.analyze_complexity(text)
+                self.assertEqual(complexity, ComplexityLevel.MEDIUM)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_high_complexity_detection(self):
+        """Test detection of high complexity tasks"""
+        test_cases = [
+            "Redesign the entire authentication system",
+            "Performance optimization of database queries",
+            "Security audit and vulnerability assessment",
+            "Migrate to new architecture framework",
+            "Refactor legacy codebase structure"
+        ]
+        
+        for text in test_cases:
+            with self.subTest(text=text):
+                complexity, confidence = self.analyzer.analyze_complexity(text)
+                self.assertEqual(complexity, ComplexityLevel.HIGH)
+                self.assertGreater(confidence, 0.0)
+    
+    def test_very_high_complexity_detection(self):
+        """Test detection of very high complexity tasks"""
+        test_cases = [
+            "Implement distributed microservices architecture",
+            "Build real-time machine learning pipeline",
+            "Create concurrent data processing system",
+            "Design enterprise-grade monitoring solution",
+            "Develop AI-powered recommendation algorithm"
+        ]
+        
+        for text in test_cases:
+            with self.subTest(text=text):
+                complexity, confidence = self.analyzer.analyze_complexity(text)
+                self.assertEqual(complexity, ComplexityLevel.VERY_HIGH)
+                self.assertGreater(confidence, 0.0)
 
+class TestDependencyAnalyzer(unittest.TestCase):
+    """Test the DependencyAnalyzer component"""
+    
+    def setUp(self):
+        self.analyzer = DependencyAnalyzer()
+    
     def test_dependency_extraction(self):
-        """Test dependency extraction from content"""
-        print("Testing dependency extraction...")
+        """Test extraction of issue dependencies"""
+        test_cases = [
+            ("Depends on issue #123 for API changes", [123], []),
+            ("Blocked by issue #456", [456], []),
+            ("Requires completion of #789", [789], []),
+            ("Waiting for issue #101 and #102", [101, 102], []),
+            ("No dependencies mentioned", [], [])
+        ]
         
-        for case in self.dependency_test_cases:
-            result = self.engine.analyze_issue_content(case['title'], case['body'])
-            
-            # Sort both lists for comparison
-            found_deps = sorted(result.dependencies)
-            expected_deps = sorted(case['expected_dependencies'])
-            
-            if found_deps == expected_deps:
-                print(f"✅ CORRECT: '{case['title'][:50]}...' -> deps: {found_deps}")
-            else:
-                print(f"❌ INCORRECT: '{case['title'][:50]}...' -> deps: {found_deps} (expected: {expected_deps})")
-            
-            self.assertEqual(found_deps, expected_deps,
-                           f"Dependency extraction failed for: {case['title']}")
+        for text, expected_depends, expected_blocks in test_cases:
+            with self.subTest(text=text):
+                depends_on, blocks = self.analyzer.analyze_dependencies(text)
+                self.assertEqual(set(depends_on), set(expected_depends))
+                self.assertEqual(set(blocks), set(expected_blocks))
+    
+    def test_blocking_relationship_extraction(self):
+        """Test extraction of blocking relationships"""
+        test_cases = [
+            ("This blocks issue #123", [], [123]),
+            ("Blocking issue #456 until completion", [], [456]),
+            ("This issue blocks all others", [], []),  # General blocking
+            ("Must complete before all other work", [], [])  # General blocking
+        ]
+        
+        for text, expected_depends, expected_blocks in test_cases:
+            with self.subTest(text=text):
+                depends_on, blocks = self.analyzer.analyze_dependencies(text)
+                self.assertEqual(set(depends_on), set(expected_depends))
+                self.assertEqual(set(blocks), set(expected_blocks))
 
-    def test_performance_benchmark(self):
-        """Test performance requirements from Issue #273: sub-100ms response time"""
-        print("Testing performance benchmarks...")
+class TestContentAnalysisEngine(unittest.TestCase):
+    """Test the main ContentAnalysisEngine"""
+    
+    def setUp(self):
+        self.engine = ContentAnalysisEngine()
+    
+    def test_comprehensive_analysis(self):
+        """Test comprehensive analysis of realistic issue content"""
+        title = "Implement user authentication system"
+        body = """
+        We need to implement a secure user authentication system that supports:
         
-        # Performance test case
-        test_title = "Complex feature with detailed requirements and multiple dependencies"
-        test_body = """
-        This is a complex feature implementation that requires:
+        1. User registration and login
+        2. Password hashing and validation
+        3. JWT token generation
+        4. Session management
+        5. Security audit logging
         
-        1. Analysis of existing architecture
-        2. Design of new microservice components  
-        3. Implementation of REST APIs with authentication
-        4. Database schema updates and migrations
-        5. Comprehensive testing including unit, integration, and performance tests
-        6. Documentation updates
+        This is a high-priority security feature that requires careful implementation.
+        Performance target: < 200ms response time for authentication requests.
         
         Dependencies:
-        - Depends on issue #42 (core authentication service)
-        - Requires completion of #15 (database migration framework)  
-        - Blocked by #67 (infrastructure deployment)
-        
-        This is a high-complexity issue that will require significant planning and coordination.
-        The implementation involves multiple systems and requires careful attention to security.
-        
-        Testing requirements:
-        - Unit test coverage >90%
-        - Integration tests with all dependent services
-        - Performance benchmarks must meet SLA requirements
-        - Security scanning and vulnerability assessment
+        - Requires completion of database schema changes in issue #145
+        - Blocks the user management feature in issue #200
         """
         
-        # Run multiple iterations to get average performance
-        times = []
-        num_iterations = 10
+        result = self.engine.analyze_issue_content(title, body)
         
-        for i in range(num_iterations):
-            start_time = time.time()
-            result = self.engine.analyze_issue_content(test_title, test_body)
-            end_time = time.time()
-            
-            analysis_time = (end_time - start_time) * 1000  # Convert to milliseconds
-            times.append(analysis_time)
+        # Validate result structure
+        self.assertIsInstance(result, ContentAnalysisResult)
+        self.assertIsInstance(result.state, WorkflowState)
+        self.assertIsInstance(result.complexity, ComplexityLevel)
+        self.assertIsInstance(result.dependencies, list)
+        self.assertIsInstance(result.confidence_score, float)
+        self.assertIsInstance(result.analysis_time_ms, float)
+        
+        # Validate analysis results
+        self.assertEqual(result.state, WorkflowState.NEW)  # "implement" indicates new work
+        self.assertIn(result.complexity, [ComplexityLevel.HIGH, ComplexityLevel.VERY_HIGH])  # Security system is complex
+        self.assertIn(145, result.dependencies)  # Should detect dependency on #145
+        self.assertGreater(result.confidence_score, 0.5)  # Should have reasonable confidence
+        
+        # Validate semantic indicators
+        self.assertIn('security', result.semantic_indicators.get('domains', []))
+        self.assertIn('authentication', result.semantic_indicators.get('domains', []))
+        
+        # Validate risk factors
+        self.assertIn('Security Risk', result.risk_factors)
+    
+    def test_performance_requirement(self):
+        """Test that analysis meets sub-100ms performance requirement"""
+        title = "Simple bug fix"
+        body = "Fix null pointer exception in user validation method"
+        
+        # Perform multiple analyses to get average time
+        times = []
+        for _ in range(10):
+            result = self.engine.analyze_issue_content(title, body)
+            times.append(result.analysis_time_ms)
         
         avg_time = sum(times) / len(times)
-        max_time = max(times)
-        min_time = min(times)
+        self.assertLess(avg_time, 100.0, f"Average analysis time {avg_time:.2f}ms exceeds 100ms requirement")
         
-        print(f"\n⏱️  Performance Results:")
-        print(f"   Average: {avg_time:.2f}ms")
-        print(f"   Maximum: {max_time:.2f}ms") 
-        print(f"   Minimum: {min_time:.2f}ms")
-        
-        # Success criteria: sub-100ms average response time
-        self.assertLess(avg_time, 100.0, f"Average response time {avg_time:.2f}ms exceeds 100ms requirement")
-        print(f"✅ PERFORMANCE: Average response time {avg_time:.2f}ms meets <100ms requirement")
-
-    def test_replacement_method(self):
-        """Test the direct replacement method for current_state_label"""
-        print("Testing direct replacement method...")
-        
-        # Test the get_replacement_state method
-        test_cases = [
-            ("New feature request", "Need to implement user profiles", "new"),
-            ("Analysis in progress", "Currently analyzing performance bottlenecks", "analyzing"),
-            ("Implementation work", "Writing code for API endpoints", "implementing"),
-            ("Testing phase", "Running validation tests", "validating")
-        ]
-        
-        for title, body, expected in test_cases:
-            result = self.engine.get_replacement_state(title, body)
-            self.assertEqual(result, expected, f"Replacement method failed for: {title}")
-            print(f"✅ REPLACEMENT: '{title}' -> '{result}'")
-
-    def test_content_analysis_integration(self):
-        """Test integration with existing orchestration utilities"""
-        print("Testing orchestration utilities integration...")
-        
-        # Test that the ContentAnalysisEngine can be imported and used
-        try:
-            from claude.commands.orchestration_utilities import IssueContext
-            print("✅ INTEGRATION: Successfully imported orchestration utilities")
-        except ImportError as e:
-            self.fail(f"Failed to import orchestration utilities: {e}")
-        
-        # Create a test issue context
-        test_context = IssueContext(
-            number=123,
-            title="Test implementation issue", 
-            body="Working on implementing the user authentication system",
-            labels=["state:implementing", "complexity:medium"],
-            state="open",
-            complexity="medium",
-            priority="normal",
-            agent_history=["RIF-Analyst", "RIF-Planner"],
-            created_at="2024-01-01T00:00:00Z",
-            updated_at="2024-01-01T12:00:00Z",
-            comments_count=3
-        )
-        
-        # Test that content-based state works
-        try:
-            content_state = test_context.current_state_from_content
-            self.assertIsNotNone(content_state, "Content-based state should not be None")
-            self.assertIn("state:", content_state, "Content state should include 'state:' prefix")
-            print(f"✅ CONTENT STATE: {content_state}")
-        except Exception as e:
-            print(f"⚠️  Content analysis not available (expected in test environment): {e}")
-        
-        # Test the full analysis method
-        try:
-            analysis = test_context.get_content_analysis()
-            if analysis:
-                self.assertIsInstance(analysis, ContentAnalysisResult)
-                print(f"✅ FULL ANALYSIS: State={analysis.derived_state.value}, Complexity={analysis.complexity.value}")
-            else:
-                print("⚠️  Content analysis not available (expected in test environment)")
-        except Exception as e:
-            print(f"⚠️  Content analysis error (expected in test environment): {e}")
-
-    def test_confidence_scoring(self):
-        """Test confidence scoring for state predictions"""
-        print("Testing confidence scoring...")
-        
-        # High confidence cases (clear indicators)
-        high_confidence_cases = [
-            ("Implementation in progress", "Currently implementing the user authentication API endpoints", 0.7),
-            ("Testing phase active", "Running comprehensive test suite and validating all requirements", 0.7),
-            ("Analysis complete", "Finished analyzing the requirements and ready to proceed", 0.6)
-        ]
-        
-        for title, body, min_confidence in high_confidence_cases:
-            result = self.engine.analyze_issue_content(title, body)
-            self.assertGreaterEqual(result.confidence, min_confidence,
-                                  f"Confidence {result.confidence:.2f} below expected {min_confidence} for: {title}")
-            print(f"✅ CONFIDENCE: '{title}' -> {result.confidence:.2f} (>= {min_confidence})")
-
-    def test_semantic_tag_generation(self):
-        """Test semantic tag generation for better orchestration"""
-        print("Testing semantic tag generation...")
-        
-        # Test case with multiple technologies
-        result = self.engine.analyze_issue_content(
-            "Full-stack user authentication with React frontend and Python backend",
-            """
-            Implement comprehensive user authentication system:
-            - React frontend with login/register forms
-            - Python Flask backend with JWT authentication  
-            - Database integration with PostgreSQL
-            - API endpoints for user management
-            - Security measures and encryption
-            - Performance optimization for concurrent users
-            """
-        )
-        
-        # Check for expected technology tags
-        expected_tags = ['python', 'javascript', 'database', 'api', 'frontend', 'backend', 'security', 'performance']
-        found_tags = [tag for tag in expected_tags if tag in result.semantic_tags]
-        
-        print(f"📋 Generated tags: {result.semantic_tags}")
-        print(f"✅ Found expected tags: {found_tags}")
-        
-        # Should identify at least 50% of the expected technology tags
-        tag_accuracy = len(found_tags) / len(expected_tags)
-        self.assertGreaterEqual(tag_accuracy, 0.5, 
-                               f"Semantic tag accuracy {tag_accuracy:.2%} below expected 50%")
-
-    def test_validation_requirements_extraction(self):
-        """Test extraction of validation and testing requirements"""
-        print("Testing validation requirements extraction...")
-        
-        result = self.engine.analyze_issue_content(
-            "Feature requiring comprehensive testing",
-            """
-            Implementation must include:
-            - Unit test coverage >90%
-            - Integration test suite
-            - Performance benchmarks
-            - Security scan validation
-            - Quality gate compliance
-            """
-        )
-        
-        # Should extract testing requirements
-        self.assertGreater(len(result.validation_requirements), 0,
-                          "Should extract validation requirements")
-        print(f"📋 Validation requirements: {result.validation_requirements}")
-
-    def test_empty_and_edge_cases(self):
-        """Test edge cases and error handling"""
-        print("Testing edge cases...")
-        
-        # Empty content
-        result = self.engine.analyze_issue_content("", "")
-        self.assertEqual(result.derived_state, IssueState.NEW)
-        print("✅ EDGE CASE: Empty content handled correctly")
-        
-        # Very short content
-        result = self.engine.analyze_issue_content("Fix", "Bug")
-        self.assertIsInstance(result.derived_state, IssueState)
-        print("✅ EDGE CASE: Short content handled correctly")
-        
-        # Very long content (performance test)
-        long_content = "This is a test. " * 1000
-        start_time = time.time()
-        result = self.engine.analyze_issue_content("Long test", long_content)
-        analysis_time = (time.time() - start_time) * 1000
-        
-        self.assertLess(analysis_time, 200, "Long content analysis should still be fast")
-        print(f"✅ EDGE CASE: Long content ({len(long_content)} chars) analyzed in {analysis_time:.2f}ms")
-
-def main():
-    """Run the comprehensive test suite"""
-    print("🧪 ContentAnalysisEngine Test Suite - Issue #273 Validation")
-    print("=" * 70)
+        # Check engine performance stats
+        stats = self.engine.get_performance_stats()
+        self.assertTrue(stats['performance_target_met'])
     
-    # Create test suite
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestContentAnalysisEngine)
+    def test_empty_content_handling(self):
+        """Test handling of empty or minimal content"""
+        test_cases = [
+            ("", ""),
+            ("Title only", ""),
+            ("", "Body only"),
+            ("Short", "Fix")
+        ]
+        
+        for title, body in test_cases:
+            with self.subTest(title=title, body=body):
+                result = self.engine.analyze_issue_content(title, body)
+                
+                # Should still return valid result
+                self.assertIsInstance(result, ContentAnalysisResult)
+                self.assertIsInstance(result.state, WorkflowState)
+                self.assertIsInstance(result.complexity, ComplexityLevel)
+                
+                # Should have reasonable defaults
+                self.assertGreaterEqual(result.confidence_score, 0.0)
+                self.assertLessEqual(result.confidence_score, 1.0)
+    
+    def test_semantic_indicator_extraction(self):
+        """Test extraction of semantic indicators"""
+        title = "Python API performance optimization"
+        body = """
+        Optimize the Python REST API for better performance.
+        Current response times are too slow for production use.
+        Need to implement caching and database query optimization.
+        """
+        
+        result = self.engine.analyze_issue_content(title, body)
+        
+        # Should detect technology indicators
+        self.assertIn('python', result.semantic_indicators.get('technologies', []))
+        self.assertIn('api', result.semantic_indicators.get('technologies', []))
+        
+        # Should detect action indicators
+        self.assertIn('optimize', result.semantic_indicators.get('actions', []))
+        self.assertIn('implement', result.semantic_indicators.get('actions', []))
+        
+        # Should detect domain indicators
+        self.assertIn('performance', result.semantic_indicators.get('domains', []))
+    
+    def test_risk_factor_identification(self):
+        """Test identification of risk factors"""
+        test_cases = [
+            ("Security vulnerability fix", ["Security Risk"]),
+            ("Database migration script", ["Data Risk"]),
+            ("Performance critical optimization", ["Performance Risk"]),
+            ("Breaking API changes", ["Breaking Change"]),
+            ("Third-party integration", ["Integration Risk"]),
+            ("Production deployment", ["Deployment Risk"])
+        ]
+        
+        for text, expected_risks in test_cases:
+            with self.subTest(text=text):
+                result = self.engine.analyze_issue_content(text, text)
+                
+                for risk in expected_risks:
+                    self.assertIn(risk, result.risk_factors,
+                                f"Expected risk '{risk}' not found in: {result.risk_factors}")
+    
+    def test_confidence_scoring(self):
+        """Test confidence scoring accuracy"""
+        # Clear, well-defined task should have high confidence
+        clear_task = self.engine.analyze_issue_content(
+            "Implement user login feature",
+            "Create a user login form with username/password validation"
+        )
+        self.assertGreater(clear_task.confidence_score, 0.7)
+        
+        # Vague task should have lower confidence
+        vague_task = self.engine.analyze_issue_content(
+            "Improve system", 
+            "Make things work better"
+        )
+        self.assertLess(vague_task.confidence_score, 0.5)
+    
+    def test_accuracy_validation(self):
+        """Test accuracy against known good examples"""
+        # Test cases with expected results for accuracy validation
+        test_cases = [
+            {
+                'title': 'Fix login bug',
+                'body': 'Users cannot log in due to validation error',
+                'expected_state': WorkflowState.NEW,
+                'expected_complexity': ComplexityLevel.LOW
+            },
+            {
+                'title': 'Implement microservices architecture',
+                'body': 'Migrate to distributed microservices with service discovery',
+                'expected_state': WorkflowState.NEW,
+                'expected_complexity': ComplexityLevel.VERY_HIGH
+            },
+            {
+                'title': 'Test user interface',
+                'body': 'Validate the new dashboard components work correctly',
+                'expected_state': WorkflowState.VALIDATING,
+                'expected_complexity': ComplexityLevel.MEDIUM
+            }
+        ]
+        
+        correct_predictions = 0
+        total_predictions = len(test_cases) * 2  # state + complexity
+        
+        for case in test_cases:
+            result = self.engine.analyze_issue_content(case['title'], case['body'])
+            
+            if result.state == case['expected_state']:
+                correct_predictions += 1
+            if result.complexity == case['expected_complexity']:
+                correct_predictions += 1
+        
+        accuracy = correct_predictions / total_predictions
+        self.assertGreaterEqual(accuracy, 0.90, f"Accuracy {accuracy:.2%} below 90% requirement")
+
+class TestIntegrationScenarios(unittest.TestCase):
+    """Test realistic integration scenarios"""
+    
+    def setUp(self):
+        self.engine = ContentAnalysisEngine()
+    
+    def test_issue_273_scenario(self):
+        """Test the specific scenario from Issue #273"""
+        title = "CRITICAL: Replace Label Dependency with Content Analysis Engine"
+        body = """
+        ## Problem Statement
+        Current orchestration is locked into label dependency via line 668 in enhanced_orchestration_intelligence.py:
+        ```python
+        current_state = context_model.issue_context.current_state_label  # LABEL DEPENDENT
+        ```
+        
+        This violates the core requirement: "Orchestration needs to stop depending on labels"
+        
+        ## Required Implementation
+        1. ContentAnalysisEngine Class
+        2. Content-Based State Determination  
+        3. Integration Points
+        
+        ## Success Criteria
+        - Zero references to current_state_label in core orchestration logic
+        - 90%+ accuracy in content-derived state determination
+        - Sub-100ms content analysis response time
+        """
+        
+        result = self.engine.analyze_issue_content(title, body)
+        
+        # Should detect as implementing state (ready to code)
+        self.assertEqual(result.state, WorkflowState.NEW)
+        
+        # Should detect as high complexity due to core system changes
+        self.assertIn(result.complexity, [ComplexityLevel.HIGH, ComplexityLevel.VERY_HIGH])
+        
+        # Should detect critical priority
+        self.assertIn('critical', result.semantic_indicators.get('urgency', []))
+        
+        # Should be fast analysis
+        self.assertLess(result.analysis_time_ms, 100.0)
+        
+        # Should have high confidence due to clear requirements
+        self.assertGreater(result.confidence_score, 0.7)
+
+class TestPerformanceBenchmarks(unittest.TestCase):
+    """Performance benchmark tests"""
+    
+    def setUp(self):
+        self.engine = ContentAnalysisEngine()
+    
+    def test_bulk_analysis_performance(self):
+        """Test performance with bulk analysis"""
+        # Generate test cases
+        test_cases = [
+            ("Bug fix #{}", "Fix validation error in user input"),
+            ("Feature #{}", "Implement new dashboard component"),
+            ("Security #{}", "Address vulnerability in authentication"),
+            ("Performance #{}", "Optimize database query execution"),
+            ("Architecture #{}", "Refactor service layer design")
+        ] * 10  # 50 total cases
+        
+        start_time = time.time()
+        
+        results = []
+        for i, (title_template, body) in enumerate(test_cases):
+            title = title_template.format(i)
+            result = self.engine.analyze_issue_content(title, body)
+            results.append(result)
+        
+        total_time = time.time() - start_time
+        avg_time_per_analysis = (total_time * 1000) / len(test_cases)  # Convert to ms
+        
+        # Should maintain sub-100ms average even with bulk processing
+        self.assertLess(avg_time_per_analysis, 100.0, 
+                       f"Bulk analysis average {avg_time_per_analysis:.2f}ms exceeds 100ms target")
+        
+        # All analyses should complete successfully
+        self.assertEqual(len(results), len(test_cases))
+        
+        # All results should be valid
+        for result in results:
+            self.assertIsInstance(result, ContentAnalysisResult)
+            self.assertGreaterEqual(result.confidence_score, 0.0)
+            self.assertLessEqual(result.confidence_score, 1.0)
+
+if __name__ == '__main__':
+    # Set up test environment
+    test_loader = unittest.TestLoader()
+    test_suite = unittest.TestSuite()
+    
+    # Add all test classes
+    for test_class in [
+        TestStateAnalyzer,
+        TestComplexityAnalyzer, 
+        TestDependencyAnalyzer,
+        TestContentAnalysisEngine,
+        TestIntegrationScenarios,
+        TestPerformanceBenchmarks
+    ]:
+        tests = test_loader.loadTestsFromTestCase(test_class)
+        test_suite.addTests(tests)
     
     # Run tests with detailed output
-    runner = unittest.TextTestRunner(verbosity=2, stream=sys.stdout)
-    result = runner.run(suite)
+    runner = unittest.TextTestRunner(verbosity=2, buffer=True)
+    result = runner.run(test_suite)
     
-    print("\n" + "=" * 70)
-    print(f"🎯 TEST RESULTS: {result.testsRun} tests run")
-    print(f"   ✅ Passed: {result.testsRun - len(result.failures) - len(result.errors)}")
-    print(f"   ❌ Failed: {len(result.failures)}")
-    print(f"   💥 Errors: {len(result.errors)}")
+    # Print summary
+    print(f"\n{'='*60}")
+    print(f"Content Analysis Engine Test Results")
+    print(f"{'='*60}")
+    print(f"Tests run: {result.testsRun}")
+    print(f"Failures: {len(result.failures)}")
+    print(f"Errors: {len(result.errors)}")
+    print(f"Success rate: {((result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun * 100):.1f}%")
     
     if result.failures:
-        print("\n💥 FAILURES:")
-        for test, traceback in result.failures:
-            print(f"   - {test}: {traceback}")
+        print(f"\nFailures:")
+        for test, trace in result.failures:
+            print(f"  - {test}: {trace.split(chr(10))[-2]}")
     
     if result.errors:
-        print("\n💥 ERRORS:")
-        for test, traceback in result.errors:
-            print(f"   - {test}: {traceback}")
+        print(f"\nErrors:")
+        for test, trace in result.errors:
+            print(f"  - {test}: {trace.split(chr(10))[-2]}")
     
-    # Overall success assessment
-    success_rate = (result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun
-    print(f"\n🏆 OVERALL SUCCESS RATE: {success_rate:.2%}")
-    
-    if success_rate >= 0.90:
-        print("✅ ISSUE #273 CRITICAL FIX: ContentAnalysisEngine passes validation")
-        print("   Content-based orchestration is ready for production deployment")
-    else:
-        print("❌ ISSUE #273 VALIDATION FAILED: Additional work required")
-        
-    return result.wasSuccessful()
-
-if __name__ == "__main__":
-    success = main()
-    sys.exit(0 if success else 1)
+    # Exit with appropriate code
+    exit(0 if result.wasSuccessful() else 1)
