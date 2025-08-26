@@ -2704,10 +2704,10 @@ class ParallelCoordinator:
                 current_state = cm.issue_context.current_state_from_content
                 if current_state and 'implementing' in current_state:
                     # Limit concurrent implementations
+                    # ISSUE #273 FIX: Replace label dependency with content analysis
                     impl_count = sum(1 for bcm in batch 
-                                   # ISSUE #273 FIX: Replace label dependency with content analysis
-                    if bcm.issue_context.current_state_from_content and 
-                                      \'implementing\' in (bcm.issue_context.current_state_from_content or \'\'))
+                                   if bcm.issue_context.current_state_from_content and 
+                                      'implementing' in (bcm.issue_context.current_state_from_content or ''))
                     if impl_count >= 1:  # Max 1 implementation per batch
                         continue
                 
@@ -2780,7 +2780,7 @@ class ParallelCoordinator:
                         'batch_index': batch_idx,
                         'complexity_score': cm.overall_complexity_score,
                         'estimated_time': assignment.get('estimated_time', 3.0),
-                        'prompt': f"Process GitHub issue #{cm.issue_context.number} titled '{cm.issue_context.title}'. Current state: {cm.issue_context.current_state_from_content or "unknown"}. Context tags: {', '.join(cm.semantic_tags)}.",
+                        'prompt': f"Process GitHub issue #{cm.issue_context.number} titled '{cm.issue_context.title}'. Current state: {cm.issue_context.current_state_from_content or 'unknown'}. Context tags: {', '.join(cm.semantic_tags)}.",
                         'parallel_safe': batch_idx == 0 or len(coordination_plan['batches'][batch_idx]) > 1
                     })
         

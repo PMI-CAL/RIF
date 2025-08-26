@@ -17,7 +17,7 @@ declarations are found in issue bodies or comments.
 import json
 import logging
 from typing import Dict, List, Optional, Any, Tuple
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
@@ -32,6 +32,18 @@ except ImportError as e:
     logging.warning(f"Enhanced orchestration intelligence not available: {e}")
     ENHANCED_INTELLIGENCE_AVAILABLE = False
 
+# Import user comment prioritizer for Issue #275
+try:
+    from .user_comment_prioritizer import (
+        UserCommentPrioritizer,
+        integrate_user_comment_prioritization,
+        DirectivePriority
+    )
+    USER_COMMENT_PRIORITIZATION_AVAILABLE = True
+except ImportError as e:
+    logging.warning(f"User comment prioritization not available: {e}")
+    USER_COMMENT_PRIORITIZATION_AVAILABLE = False
+
 # Set up logging
 logger = logging.getLogger(__name__)
 
@@ -40,6 +52,7 @@ class OrchestrationDecision:
     """
     Decision result from intelligent orchestration analysis.
     ISSUE #228: Enhanced with blocking detection results.
+    ISSUE #275: Enhanced with user comment prioritization.
     """
     decision_type: str  # "allow_execution", "block_execution", "halt_all_orchestration"
     enforcement_action: str  # "ALLOW", "BLOCK", "HALT_ALL_ORCHESTRATION"
@@ -51,6 +64,12 @@ class OrchestrationDecision:
     task_launch_codes: List[str]
     execution_ready: bool
     parallel_execution: bool
+    
+    # Issue #275: User comment prioritization fields
+    user_directive_analysis: Optional[Dict[str, Any]] = None
+    think_hard_required: bool = False
+    user_priority_overrides: List[Dict[str, Any]] = field(default_factory=list)
+    decision_hierarchy: str = "SYSTEM_DEFAULT"  # "USER_FIRST" when user directives present
     
     def to_dict(self) -> Dict[str, Any]:
         """Convert decision to dictionary for JSON serialization"""
@@ -65,6 +84,11 @@ class OrchestrationDecision:
             'task_launch_codes': self.task_launch_codes,
             'execution_ready': self.execution_ready,
             'parallel_execution': self.parallel_execution,
+            # Issue #275: User comment prioritization
+            'user_directive_analysis': self.user_directive_analysis,
+            'think_hard_required': self.think_hard_required,
+            'user_priority_overrides': self.user_priority_overrides,
+            'decision_hierarchy': self.decision_hierarchy,
             'timestamp': datetime.now().isoformat()
         }
 
@@ -220,6 +244,97 @@ def make_intelligent_orchestration_decision(github_issues: List[int],
             parallel_execution=len(github_issues) > 1
         )
 
+def make_user_priority_orchestration_decision(github_issues: List[int], 
+                                            proposed_tasks: Optional[List[Dict[str, Any]]] = None,
+                                            context: Optional[Dict[str, Any]] = None) -> OrchestrationDecision:
+    """
+    ISSUE #275: User-first orchestration decision-making with "Think Hard" logic.
+    
+    This function integrates user comment prioritization with existing orchestration
+    intelligence to ensure user directives ALWAYS take precedence over agent suggestions.
+    
+    Args:
+        github_issues: List of GitHub issue numbers to analyze
+        proposed_tasks: Optional list of proposed task definitions  
+        context: Additional context (e.g., user request type)
+        
+    Returns:
+        OrchestrationDecision with user directives taking VERY HIGH priority
+    """
+    logger.info(f"Making user-priority orchestration decision for issues: {github_issues}")
+    
+    if not USER_COMMENT_PRIORITIZATION_AVAILABLE:
+        # Fallback to regular orchestration if user prioritization unavailable
+        logger.warning("User comment prioritization unavailable - falling back to standard orchestration")
+        return make_intelligent_orchestration_decision(github_issues, proposed_tasks, context)
+    
+    try:
+        # Step 1: Get standard orchestration decision first
+        base_decision = make_intelligent_orchestration_decision(github_issues, proposed_tasks, context)
+        
+        # Step 2: Initialize user comment prioritizer
+        user_prioritizer = UserCommentPrioritizer()
+        
+        # Step 3: Extract user directives from GitHub comments and issue bodies
+        user_directives = user_prioritizer.extract_user_directives(github_issues)
+        
+        if not user_directives:
+            # No user directives found - return standard decision
+            logger.info("No user directives found - proceeding with standard orchestration")
+            base_decision.decision_hierarchy = "SYSTEM_DEFAULT"
+            return base_decision
+        
+        # Step 4: Create user-priority orchestration plan
+        user_priority_plan = user_prioritizer.create_user_priority_orchestration_plan(
+            github_issues, 
+            base_decision.task_launch_codes
+        )
+        
+        # Step 5: Check for conflicts between user directives and system recommendations
+        conflict_analysis = user_priority_plan['conflict_analysis']
+        has_conflicts = conflict_analysis['total_conflicts'] > 0
+        
+        # Step 6: Create enhanced decision with user prioritization
+        user_enhanced_decision = OrchestrationDecision(
+            decision_type="user_priority_execution" if not has_conflicts else "user_override_execution",
+            enforcement_action=base_decision.enforcement_action,  # Preserve blocking detection
+            blocking_issues=base_decision.blocking_issues,
+            allowed_issues=base_decision.allowed_issues,
+            blocked_issues=base_decision.blocked_issues,
+            dependency_rationale=f"User directives ({len(user_directives)} found) take VERY HIGH priority. " + 
+                               (f"{conflict_analysis['total_conflicts']} conflicts resolved in favor of user. " if has_conflicts else "") +
+                               base_decision.dependency_rationale,
+            blocking_analysis=base_decision.blocking_analysis,
+            task_launch_codes=user_priority_plan.get('task_launch_codes', base_decision.task_launch_codes),
+            execution_ready=base_decision.execution_ready,
+            parallel_execution=user_priority_plan.get('parallel_execution', base_decision.parallel_execution),
+            
+            # Issue #275: User comment prioritization specific fields
+            user_directive_analysis=user_priority_plan,
+            think_hard_required=user_priority_plan.get('think_hard_required', False),
+            user_priority_overrides=conflict_analysis['user_overrides'],
+            decision_hierarchy="USER_FIRST"
+        )
+        
+        # Step 7: Log user directive influence
+        logger.info(f"✅ User-priority orchestration complete:")
+        logger.info(f"   - User directives: {len(user_directives)} (VERY HIGH priority)")
+        logger.info(f"   - User overrides: {len(conflict_analysis['user_overrides'])}")
+        logger.info(f"   - Think Hard required: {user_priority_plan.get('think_hard_required', False)}")
+        logger.info(f"   - Decision hierarchy: USER_FIRST")
+        logger.info(f"   - User influence: {conflict_analysis['user_directive_influence_percentage']:.1f}%")
+        
+        return user_enhanced_decision
+        
+    except Exception as e:
+        logger.error(f"Error in user-priority orchestration decision: {e}")
+        # Error fallback - return base decision with error info
+        base_decision = make_intelligent_orchestration_decision(github_issues, proposed_tasks, context)
+        base_decision.decision_type = "user_priority_error_fallback"
+        base_decision.dependency_rationale = f"User prioritization error - using base orchestration: {e}"
+        base_decision.user_directive_analysis = {'error': str(e), 'fallback_used': True}
+        return base_decision
+
 def validate_orchestration_patterns(proposed_tasks: List[Dict[str, Any]]) -> ValidationStatus:
     """
     Validate proposed orchestration patterns to prevent anti-patterns.
@@ -296,6 +411,7 @@ def validate_before_execution(proposed_tasks: List[Dict[str, Any]]) -> None:
 def get_enhanced_blocking_detection_status() -> Dict[str, Any]:
     """
     Get status of enhanced blocking detection system.
+    ISSUE #275: Enhanced with user comment prioritization status.
     
     Returns:
         Dict with system status information
@@ -314,7 +430,23 @@ def get_enhanced_blocking_detection_status() -> Dict[str, Any]:
             "must complete before all",
             "must complete before all other work",
             "must complete before all others"
-        ] if ENHANCED_INTELLIGENCE_AVAILABLE else []
+        ] if ENHANCED_INTELLIGENCE_AVAILABLE else [],
+        
+        # Issue #275: User comment prioritization status
+        'user_comment_prioritization_available': USER_COMMENT_PRIORITIZATION_AVAILABLE,
+        'user_first_orchestration_active': USER_COMMENT_PRIORITIZATION_AVAILABLE,
+        'issue_275_integration': True,
+        'think_hard_logic_enabled': USER_COMMENT_PRIORITIZATION_AVAILABLE,
+        'supported_user_directive_patterns': [
+            'implement issue #N',
+            'work on issue #N', 
+            'block issue #N',
+            'prioritize issue #N',
+            'use [AGENT] for issue #N',
+            'issue #N before issue #M',
+            'think hard about...'
+        ] if USER_COMMENT_PRIORITIZATION_AVAILABLE else [],
+        'decision_hierarchy_enforced': 'USER_FIRST' if USER_COMMENT_PRIORITIZATION_AVAILABLE else 'SYSTEM_DEFAULT'
     }
 
 # Example usage and testing functions
