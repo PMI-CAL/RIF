@@ -404,6 +404,100 @@ gh pr merge $PR_NUMBER \
 - **Quality Tools**: ESLint, Prettier, SonarQube
 - **Deployment**: Kubernetes, AWS, Azure
 
+## 🚨 CRITICAL RULE: QUALITY GATE FAILURE = MERGE BLOCKING (Issue #268 Fix)
+
+### Absolute Merge Decision Logic (NO EXCEPTIONS)
+
+**MANDATORY RULE**: ANY quality gate failure = NO merge recommendation
+
+```python
+def evaluate_merge_eligibility(quality_gates):
+    """
+    Binary merge decision based on quality gate status
+    ANY failure = NO merge recommendation
+    NO agent discretion allowed
+    """
+    any_gate_failed = any(
+        gate.status != "PASS" 
+        for gate in quality_gates.values()
+    )
+    
+    if any_gate_failed:
+        return {
+            "merge_allowed": False,
+            "no_override": True,
+            "reason": "Quality gates failing - merge blocked"
+        }
+    
+    return {"merge_allowed": True}
+
+def make_merge_decision(pr_data):
+    """Make binary merge decision based on quality gate status"""
+    eligibility = evaluate_merge_eligibility(pr_data.quality_gates)
+    
+    if not eligibility["merge_allowed"]:
+        return "DO NOT MERGE - Quality gates failing"
+    else:
+        return "APPROVE FOR MERGE - All quality gates passing"
+```
+
+### Non-Negotiable Merge Blocking Rules (Issue #268 Fix)
+1. **ANY failing quality gate = NO merge recommendation**
+2. **NO agent discretion for gate failures**
+3. **NO override capability for failures** 
+4. **NO interpretation of "working as intended"**
+5. **Binary decision only: MERGE or DO NOT MERGE**
+
+### Merge Decision Conditions
+```yaml 
+merge_blocking_conditions:
+  any_test_failing: BLOCK
+  security_scan_failed: BLOCK  
+  coverage_below_threshold: BLOCK
+  performance_regression: BLOCK
+  documentation_missing: BLOCK
+  gate_execution_error: BLOCK
+  gate_timeout: BLOCK
+  gate_pending: BLOCK
+  gate_skipped: BLOCK
+  
+merge_allowed_condition:
+  all_gates_status: "PASS"
+```
+
+### PR Management Decision Integration
+```python
+def manage_pr_lifecycle(pr_data):
+    """Manage PR with mandatory quality gate blocking"""
+    # First check quality gates (absolute blocking)
+    merge_decision = make_merge_decision(pr_data)
+    
+    if merge_decision.startswith("DO NOT MERGE"):
+        return {
+            "action": "BLOCK_MERGE",
+            "recommendation": merge_decision,
+            "required_fixes": "All quality gates must pass",
+            "merge_blocked": True
+        }
+    
+    # Only proceed with merge if gates pass
+    return {
+        "action": "PROCEED_WITH_MERGE", 
+        "recommendation": merge_decision,
+        "merge_blocked": False
+    }
+```
+
+### Prohibited Reasoning Patterns (Issue #268 Prevention)
+❌ **NEVER SAY**: "Gate failures validate the system is working"
+❌ **NEVER SAY**: "Quality enforcement is functioning correctly"  
+❌ **NEVER SAY**: "These failures demonstrate proper automation"
+❌ **NEVER SAY**: "Gate execution proves the process works"
+
+✅ **ALWAYS SAY**: "Quality gate failure prevents merge"
+✅ **ALWAYS SAY**: "All gates must pass for merge approval"
+✅ **ALWAYS SAY**: "Gate failure requires fixes before merge"
+
 ## Error Handling
 
 ### Failed Quality Gates
