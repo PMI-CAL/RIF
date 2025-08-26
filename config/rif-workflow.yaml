@@ -50,6 +50,13 @@ workflow:
       agent: "rif-learner"
       timeout: "30m"
       
+    awaiting-user-validation:
+      description: "Implementation complete, awaiting user confirmation"
+      timeout: "72h"
+      user_required: true
+      alert: true
+      manual_confirmation_required: true
+      
     reviewing:
       description: "RIF-Reviewer analyzing code quality"
       agent: "rif-reviewer"
@@ -209,11 +216,23 @@ workflow:
       to: "implementing"
       trigger: "plan_complete"
       condition: "complexity < high"
+      pre_actions:
+        - type: "branch_creation"
+          handler: "claude.commands.branch_manager.BranchManager"
+          method: "create_issue_branch"
+          required: true
+          validation: "branch_created_successfully"
       
     - from: "architecting"
       to: "implementing"
       trigger: "design_complete"
       condition: "dependencies_mapped"
+      pre_actions:
+        - type: "branch_creation"
+          handler: "claude.commands.branch_manager.BranchManager"
+          method: "create_issue_branch"
+          required: true
+          validation: "branch_created_successfully"
       
     - from: "implementing"
       to: "validating"
@@ -291,7 +310,7 @@ workflow:
       condition: "major_changes"
       
     - from: "learning"
-      to: "recommendation_auditing"
+      to: "awaiting-user-validation"
       trigger: "knowledge_updated"
       condition: "always"
       
@@ -321,6 +340,16 @@ workflow:
       to: "recommendation_auditing"
       trigger: "main_issue_complete"
       condition: "shadow_issue_closed"
+      
+    - from: "awaiting-user-validation"
+      to: "recommendation_auditing"
+      trigger: "user_confirmed_resolution"
+      condition: "user_validation_comment_posted"
+      
+    - from: "awaiting-user-validation"
+      to: "implementing"
+      trigger: "user_requested_changes"
+      condition: "user_feedback_indicates_issues"
       
     - from: "recommendation_auditing"
       to: "complete"
@@ -580,6 +609,35 @@ workflow:
       auto_block_unsatisfied: true
       auto_unblock_satisfied: true
       
+    # Branch management quality gates
+    branch_compliance:
+      threshold: "enforced"
+      required: true
+      blocker: true
+      description: "All implementation work must occur on feature branches"
+      validation_points:
+        - "pre_implementation_check"
+        - "pre_pr_creation_check" 
+        - "post_merge_cleanup_check"
+      protected_branches: ["main", "master", "develop"]
+      naming_conventions: ["issue-{number}-{description}", "emergency-{id}-{description}"]
+      
+    branch_protection:
+      threshold: "active"
+      required: true
+      blocker: true
+      description: "Git hooks must prevent direct main branch commits"
+      hooks_required: ["pre-commit", "pre-push"]
+      emergency_override_logging: true
+      
+    pr_workflow_compliance:
+      threshold: "mandatory"
+      required: true
+      blocker: true
+      description: "All main branch changes must go through PR process"
+      bypass_allowed: false
+      emergency_procedures: "documented_and_logged"
+    
     # CRITICAL INTEGRATION: Consensus quality gates for issue #148
     consensus_decision:
       threshold: "resolved"

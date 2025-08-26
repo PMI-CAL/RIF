@@ -1,0 +1,31 @@
+{
+  "evidence_type": "command_execution",
+  "evidence_category": "execution",
+  "timestamp": "2025-08-25T00:20:46.182527",
+  "source": "execution_tracer",
+  "data": {
+    "command": "python3 -m pytest tests/mcp/integration/test_mcp_claude_desktop_integration.py",
+    "execution_context": "mcp_integration_test_execution",
+    "start_time": "2025-08-25T00:20:45.877974",
+    "process_info": {
+      "pid": "completed",
+      "return_code": 1,
+      "success": false
+    },
+    "output": {
+      "stdout": "============================= test session starts ==============================\nplatform darwin -- Python 3.9.6, pytest-8.4.1, pluggy-1.6.0\nrootdir: /Users/cal/DEV/RIF\nplugins: anyio-4.9.0, asyncio-1.1.0, cov-4.1.0, mock-3.11.1\nasyncio: mode=strict, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 4 items\n\ntests/mcp/integration/test_mcp_claude_desktop_integration.py FFFF        [100%]\n\n=================================== FAILURES ===================================\n______________________ test_mcp_claude_desktop_connection ______________________\n\n    @pytest.mark.asyncio\n    async def test_mcp_claude_desktop_connection():\n        \"\"\"Test MCP server connection to Claude Desktop\"\"\"\n>       integration_test = MCPClaudeDesktopIntegrationTests()\nE       TypeError: Can't instantiate abstract class MCPClaudeDesktopIntegrationTests with abstract method run_test_scenario\n\ntests/mcp/integration/test_mcp_claude_desktop_integration.py:607: TypeError\n_____",
+      "stderr": "",
+      "return_code": 1
+    },
+    "timing": {
+      "duration_seconds": 0.30443382263183594,
+      "end_time": "2025-08-25T00:20:46.182408"
+    },
+    "errors": []
+  },
+  "metadata": {
+    "command_hash": "9b3eb60b"
+  },
+  "authenticity_hash": "e8f8be29077b8686eb13a9f5cf921e5d82d997cf51690d1bc53c1ed3c0b36f73",
+  "collection_context": "validation_session"
+}

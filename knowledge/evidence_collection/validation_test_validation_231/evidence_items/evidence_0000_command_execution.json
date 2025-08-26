@@ -1,0 +1,43 @@
+{
+  "evidence_type": "command_execution",
+  "evidence_category": "execution",
+  "timestamp": "2025-08-25T00:16:17.444751",
+  "source": "execution_tracer",
+  "data": {
+    "command": "python3 -m pytest tests/mcp/integration/test_mcp_claude_desktop_integration.py::test_comprehensive_integration_validation",
+    "execution_context": "test_execution_test_comprehensive_integration_validation",
+    "start_time": "2025-08-25T00:16:17.128750",
+    "process_info": {
+      "pid": "completed",
+      "return_code": 1,
+      "success": false
+    },
+    "output": {
+      "stdout": "============================= test session starts ==============================\nplatform darwin -- Python 3.9.6, pytest-8.4.1, pluggy-1.6.0\nrootdir: /Users/cal/DEV/RIF\nplugins: anyio-4.9.0, asyncio-1.1.0, cov-4.1.0, mock-3.11.1\nasyncio: mode=strict, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function\ncollected 1 item\n\ntests/mcp/integration/test_mcp_claude_desktop_integration.py F           [100%]\n\n=================================== FAILURES ===================================\n__________________ test_comprehensive_integration_validation ___________________\n\n    @pytest.mark.asyncio\n    async def test_comprehensive_integration_validation():\n        \"\"\"Comprehensive integration validation - the main test to prevent Issue #225\"\"\"\n>       integration_test = MCPClaudeDesktopIntegrationTests()\nE       TypeError: Can't instantiate abstract class MCPClaudeDesktopIntegrationTests with abstract method run_test_scenario\n\ntests/mcp/integration/test_mcp_claude_desktop",
+      "stderr": "",
+      "return_code": 1
+    },
+    "timing": {
+      "duration_seconds": 0.31587886810302734,
+      "end_time": "2025-08-25T00:16:17.444629"
+    },
+    "errors": [],
+    "test_metadata": {
+      "test_file": "tests/mcp/integration/test_mcp_claude_desktop_integration.py",
+      "test_function": "test_comprehensive_integration_validation",
+      "test_framework": "pytest",
+      "test_args": []
+    },
+    "test_results": {
+      "tests_run": 0,
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "test_details": []
+    }
+  },
+  "metadata": {
+    "command_hash": "2018ec2d"
+  },
+  "authenticity_hash": "b725ebcf835c0f95e0ce377e6303a47758b8a657232cada48c2240131640b178",
+  "collection_context": "validation_session"
+}

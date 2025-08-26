@@ -1,0 +1,24 @@
+{
+  "lesson_id": "issue_224_primary_lesson",
+  "title": "Avoid Multi-Issue Accelerator Anti-Pattern",
+  "category": "anti-pattern",
+  "description": "The Multi-Issue Accelerator anti-pattern occurs when attempting to create a single Task agent to handle multiple issues in parallel, which violates Claude Code's execution model and creates performance bottlenecks.",
+  "problem_context": "User requested orchestration to handle multiple open issues. Orchestrator incorrectly attempted to create single 'Multi-Issue Accelerator' agent instead of multiple Task invocations.",
+  "solution_approach": "Replace single multi-issue Task with multiple specialized Tasks launched in one response. Each Task handles exactly one issue with appropriate specialized agent.",
+  "prevention_measures": [
+    "Always validate: One Task = One Issue = One Specialized Agent",
+    "Use proper parallel launching: Multiple Task() in single response",
+    "Validate task descriptions don't contain multiple issue numbers",
+    "Ensure agent names match standard RIF agents (RIF-Implementer, RIF-Validator, etc.)",
+    "Include proper agent instructions in all Task prompts"
+  ],
+  "related_patterns": [
+    "multi_issue_accelerator_224",
+    "correct_parallel_tasks_224"
+  ],
+  "confidence_level": 1.0,
+  "source_issues": [
+    224
+  ],
+  "created_at": "2025-08-25T03:10:31.748050"
+}

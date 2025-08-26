@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-08-24T15:30:07.710352",
+  "active_sessions": 1,
+  "session_summary": {
+    "quality-142-1756074607": {
+      "issue_number": 142,
+      "duration_hours": 1.8763888888888887e-06,
+      "total_metrics": 3,
+      "adversarial_findings": 0,
+      "quality_decisions": 0,
+      "latest_metrics": {
+        "context_relevance": {
+          "value": 91.5,
+          "target": 90.0,
+          "target_met": true,
+          "quality_score": 1.0,
+          "timestamp": "2025-08-24T15:30:07.705100"
+        },
+        "benchmarking_accuracy": {
+          "value": 86.2,
+          "target": 85.0,
+          "target_met": true,
+          "quality_score": 1.0,
+          "timestamp": "2025-08-24T15:30:07.706193"
+        },
+        "system_performance": {
+          "value": 100.0,
+          "target": 99.9,
+          "target_met": true,
+          "quality_score": 1.0,
+          "timestamp": "2025-08-24T15:30:07.705408"
+        }
+      }
+    }
+  }
+}

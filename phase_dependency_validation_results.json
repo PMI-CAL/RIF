@@ -1,0 +1,40 @@
+{
+  "timestamp": 1756092124.872305,
+  "issue_reference": 223,
+  "tests": {
+    "Core Phase Dependency Validator": {
+      "passed": true,
+      "error": null
+    },
+    "Warning & Prevention System": {
+      "passed": false,
+      "error": null
+    },
+    "Phase Completion Criteria": {
+      "passed": false,
+      "error": null
+    },
+    "Sequential Phase Enforcement": {
+      "passed": true,
+      "error": null
+    },
+    "Foundation Dependency Validation": {
+      "passed": true,
+      "error": null
+    },
+    "GitHub Issue #223 Scenario": {
+      "passed": true,
+      "error": null
+    },
+    "Performance Requirements": {
+      "passed": true,
+      "error": null
+    },
+    "CLAUDE.md Integration": {
+      "passed": true,
+      "error": null
+    }
+  },
+  "overall_success": false,
+  "confidence_score": 0.75
+}

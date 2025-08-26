@@ -1,0 +1,2 @@
+2025-08-24 23:04:46,665 - FalsePositiveDetector - INFO - False positive analysis completed for test_validation: Confidence=0.897, Severity=critical, Indicators=4
+2025-08-24 23:04:46,666 - IntegrationEvidenceValidator - INFO - Evidence validation completed: test_evidence - Valid: False, Quality: invalid, Confidence: 10.0%

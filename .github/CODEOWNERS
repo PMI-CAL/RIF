@@ -1,0 +1,27 @@
+# RIF Framework Code Owners
+# These owners will be requested for review when PRs are opened
+
+# Global owners for all files
+* @rif-maintainers
+
+# Core framework files require maintainer review
+/claude/ @rif-maintainers
+/config/ @rif-maintainers  
+/systems/ @rif-maintainers
+CLAUDE.md @rif-maintainers
+rif-init.sh @rif-maintainers
+setup.sh @rif-maintainers
+
+# GitHub workflows require admin review
+/.github/workflows/ @rif-admins
+/.github/scripts/ @rif-admins
+
+# Documentation can be reviewed by any maintainer
+/docs/ @rif-maintainers
+README.md @rif-maintainers
+
+# Deployment configuration requires admin review
+/scripts/clean-for-deploy.sh @rif-admins
+/scripts/configure-branch-protection.sh @rif-admins
+/.github/workflows/deploy-sync.yml @rif-admins
+/config/deploy-branch.yaml @rif-admins

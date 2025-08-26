@@ -1,0 +1,267 @@
+<?xml version="1.0" ?>
+<project_documentation version="1.0" timestamp="2025-08-25T04:03:35.250000" source_dir="/var/folders/b3/716nggt53jn0z1kljmpk56zw0000gn/T/tmpr01ra14b">
+  <metadata>
+    <project_name>tmpr01ra14b</project_name>
+    <generated_at>2025-08-25T04:03:35.250009</generated_at>
+    <source_directory>/var/folders/b3/716nggt53jn0z1kljmpk56zw0000gn/T/tmpr01ra14b</source_directory>
+    <total_documents>4</total_documents>
+    <document_types>
+      <type name="prd">1</type>
+      <type name="architecture">1</type>
+      <type name="design">1</type>
+      <type name="requirements">1</type>
+    </document_types>
+    <total_content_size>3020</total_content_size>
+    <total_lines>137</total_lines>
+    <total_sections>33</total_sections>
+  </metadata>
+  <documents>
+    <document type="prd" path="ecommerce.prd.md" name="ecommerce" size="1109" lines="40">
+      <section level="1" title="E-Commerce Platform PRD">
+        <content/>
+        <requirements/>
+      </section>
+      <section level="2" title="Overview">
+        <content>This document outlines the requirements for building a modern e-commerce platform.</content>
+        <requirements/>
+      </section>
+      <section level="2" title="User Stories">
+        <content/>
+        <requirements/>
+      </section>
+      <section level="3" title="Customer Stories">
+        <content>US-001: As a customer, I want to browse products so that I can find items to purchase.
+
+Acceptance Criteria:
+- Product catalog displays correctly
+- Search functionality is responsive
+- Filtering options work properly
+- Product details are comprehensive
+
+US-002: As a customer, I want to add items to my cart so that I can purchase multiple products.
+
+Acceptance Criteria:
+- Items can be added to cart
+- Cart persists across sessions
+- Quantities can be modified
+- Items can be removed from cart</content>
+        <requirements>
+          <user_story id="US-001">
+            <description>As a customer, I want browse products so that I can find items to purchase</description>
+            <acceptance_criteria>
+              <criterion>Product catalog displays correctly</criterion>
+              <criterion>Search functionality is responsive</criterion>
+              <criterion>Filtering options work properly</criterion>
+              <criterion>Product details are comprehensive</criterion>
+            </acceptance_criteria>
+          </user_story>
+          <user_story id="US-002">
+            <description>As a customer, I want add items to my cart so that I can purchase multiple products</description>
+            <acceptance_criteria>
+              <criterion>Product catalog displays correctly</criterion>
+              <criterion>Search functionality is responsive</criterion>
+              <criterion>Filtering options work properly</criterion>
+              <criterion>Product details are comprehensive</criterion>
+            </acceptance_criteria>
+          </user_story>
+        </requirements>
+      </section>
+      <section level="3" title="Admin Stories">
+        <content>US-003: As an admin, I want to manage inventory so that product availability is accurate.</content>
+        <requirements>
+          <user_story id="US-003">
+            <description>As a admin, I want manage inventory so that product availability is accurate</description>
+          </user_story>
+        </requirements>
+      </section>
+      <section level="2" title="Functional Requirements">
+        <content>FR-001: The system must handle concurrent user sessions
+FR-002: Critical payment processing must be PCI compliant  
+FR-003: Nice to have recommendation engine for related products</content>
+        <requirements>
+          <functional_requirement id="FR-001" priority="medium">The system must handle concurrent user sessions</functional_requirement>
+          <functional_requirement id="FR-002" priority="high">Critical payment processing must be PCI compliant</functional_requirement>
+          <functional_requirement id="FR-003" priority="low">Nice to have recommendation engine for related products</functional_requirement>
+        </requirements>
+      </section>
+      <section level="2" title="Non-Functional Requirements">
+        <content>NFR-001: System must support 1000 concurrent users
+NFR-002: Page load time must be under 2 seconds</content>
+        <requirements>
+          <functional_requirement id="FR-001" priority="medium">System must support 1000 concurrent users</functional_requirement>
+          <functional_requirement id="FR-002" priority="medium">Page load time must be under 2 seconds</functional_requirement>
+        </requirements>
+      </section>
+    </document>
+    <document type="architecture" path="system-architecture.md" name="system-architecture" size="756" lines="39">
+      <section level="1" title="System Architecture">
+        <content/>
+        <components/>
+      </section>
+      <section level="2" title="Overview">
+        <content>Microservices architecture for scalable e-commerce platform.</content>
+        <components/>
+      </section>
+      <section level="2" title="Core Services">
+        <content/>
+        <components/>
+      </section>
+      <section level="3" title="UserService">
+        <content>Manages user accounts, authentication, and profiles.
+
+Dependencies:
+- DatabaseService for persistence
+- EmailService for notifications</content>
+        <components/>
+      </section>
+      <section level="3" title="ProductService">
+        <content>Handles product catalog, inventory, and search functionality.</content>
+        <components/>
+      </section>
+      <section level="3" title="OrderService">
+        <content>Processes orders, payments, and fulfillment workflows.</content>
+        <components/>
+      </section>
+      <section level="2" title="Data Architecture">
+        <content/>
+        <components/>
+      </section>
+      <section level="3" title="DatabaseService">
+        <content>PostgreSQL-based data persistence layer with read replicas.</content>
+        <components/>
+      </section>
+      <section level="3" title="CacheService">
+        <content>Redis-based caching for improved performance.</content>
+        <components/>
+      </section>
+      <section level="2" title="Integration Points">
+        <content>- PaymentAPI: External payment processing
+- ShippingAPI: Third-party logistics integration  
+- AnalyticsHandler: User behavior tracking</content>
+        <components>
+          <component name="PaymentAPI" type="api">
+            <description>External payment processing</description>
+          </component>
+          <component name="ShippingAPI" type="api">
+            <description>Third-party logistics integration</description>
+          </component>
+          <component name="AnalyticsHandler" type="handler">
+            <description>User behavior tracking</description>
+          </component>
+        </components>
+      </section>
+    </document>
+    <document type="design" path="ui-design.md" name="ui-design" size="579" lines="39">
+      <section level="1" title="UI/UX Design">
+        <content/>
+        <ui_elements/>
+      </section>
+      <section level="2" title="Overview">
+        <content>Modern, responsive design for e-commerce platform.</content>
+        <ui_elements/>
+      </section>
+      <section level="2" title="Core Components">
+        <content/>
+        <ui_elements/>
+      </section>
+      <section level="3" title="LoginButton">
+        <content>Primary authentication button with hover effects.</content>
+        <ui_elements/>
+      </section>
+      <section level="3" title="ProductCard">
+        <content>Displays product information in grid layout.</content>
+        <ui_elements/>
+      </section>
+      <section level="3" title="ShoppingCart">
+        <content>Persistent cart widget with item management.</content>
+        <ui_elements/>
+      </section>
+      <section level="2" title="Navigation">
+        <content/>
+        <ui_elements/>
+      </section>
+      <section level="3" title="HeaderNavigation">
+        <content>Main site navigation with search functionality.</content>
+        <ui_elements/>
+      </section>
+      <section level="3" title="FooterNavigation">
+        <content>Secondary links and contact information.</content>
+        <ui_elements/>
+      </section>
+      <section level="2" title="Forms">
+        <content/>
+        <ui_elements/>
+      </section>
+      <section level="3" title="CheckoutForm">
+        <content>Multi-step checkout process with validation.</content>
+        <ui_elements/>
+      </section>
+      <section level="3" title="UserProfileForm">
+        <content>Account management and preferences.</content>
+        <ui_elements/>
+      </section>
+    </document>
+    <document type="design" path="technical-requirements.md" name="technical-requirements" size="576" lines="19">
+      <section level="1" title="Technical Requirements">
+        <content/>
+        <ui_elements/>
+      </section>
+      <section level="2" title="System Requirements">
+        <content>REQ-001: High priority database performance optimization
+REQ-002: Critical security implementation for payment processing
+REQ-003: Nice to have automated testing framework</content>
+        <ui_elements/>
+      </section>
+      <section level="2" title="Infrastructure Requirements">
+        <content>REQ-004: Kubernetes deployment with auto-scaling
+REQ-005: CI/CD pipeline with automated quality gates
+REQ-006: Monitoring and alerting system</content>
+        <ui_elements/>
+      </section>
+      <section level="2" title="Performance Requirements">
+        <content>REQ-007: API response time under 200ms
+REQ-008: Database queries optimized for sub-100ms response
+REQ-009: CDN integration for static asset delivery</content>
+        <ui_elements/>
+      </section>
+    </document>
+    <document type="requirements" path="technical-requirements.md" name="technical-requirements" size="576" lines="19">
+      <section level="1" title="Technical Requirements">
+        <content/>
+        <functional_requirements/>
+      </section>
+      <section level="2" title="System Requirements">
+        <content>REQ-001: High priority database performance optimization
+REQ-002: Critical security implementation for payment processing
+REQ-003: Nice to have automated testing framework</content>
+        <functional_requirements>
+          <requirement id="FR-001" priority="high">High priority database performance optimization</requirement>
+          <requirement id="FR-002" priority="high">Critical security implementation for payment processing</requirement>
+          <requirement id="FR-003" priority="low">Nice to have automated testing framework</requirement>
+        </functional_requirements>
+      </section>
+      <section level="2" title="Infrastructure Requirements">
+        <content>REQ-004: Kubernetes deployment with auto-scaling
+REQ-005: CI/CD pipeline with automated quality gates
+REQ-006: Monitoring and alerting system</content>
+        <functional_requirements>
+          <requirement id="FR-004" priority="medium">Kubernetes deployment with auto-scaling</requirement>
+          <requirement id="FR-005" priority="medium">CI/CD pipeline with automated quality gates</requirement>
+          <requirement id="FR-006" priority="medium">Monitoring and alerting system</requirement>
+        </functional_requirements>
+      </section>
+      <section level="2" title="Performance Requirements">
+        <content>REQ-007: API response time under 200ms
+REQ-008: Database queries optimized for sub-100ms response
+REQ-009: CDN integration for static asset delivery</content>
+        <functional_requirements>
+          <requirement id="FR-007" priority="medium">API response time under 200ms</requirement>
+          <requirement id="FR-008" priority="medium">Database queries optimized for sub-100ms response</requirement>
+          <requirement id="FR-009" priority="medium">CDN integration for static asset delivery</requirement>
+        </functional_requirements>
+      </section>
+    </document>
+  </documents>
+  <dependencies/>
+  <cross_references/>
+</project_documentation>

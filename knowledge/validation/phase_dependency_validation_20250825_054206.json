@@ -1,0 +1,62 @@
+{
+  "is_valid": false,
+  "violations": [
+    {
+      "violation_type": "sequential_phase_violation",
+      "issue_numbers": [
+        500
+      ],
+      "attempted_phase": "implementation",
+      "missing_prerequisite_phases": [
+        "analysis",
+        "planning",
+        "architecture"
+      ],
+      "severity": "critical",
+      "description": "Attempted implementation phase before completing prerequisite phases: ['analysis', 'planning', 'architecture']",
+      "remediation_actions": [
+        "Launch RIF-Analyst to complete requirements analysis",
+        "Launch RIF-Planner to create execution plan",
+        "Launch RIF-Architect to complete technical design",
+        "Wait for prerequisite phases to complete before launching implementation agents",
+        "Use sequential agent launching instead of parallel launching"
+      ]
+    },
+    {
+      "violation_type": "sequential_phase_violation",
+      "issue_numbers": [
+        501
+      ],
+      "attempted_phase": "implementation",
+      "missing_prerequisite_phases": [
+        "analysis",
+        "planning",
+        "architecture"
+      ],
+      "severity": "critical",
+      "description": "Attempted implementation phase before completing prerequisite phases: ['analysis', 'planning', 'architecture']",
+      "remediation_actions": [
+        "Launch RIF-Analyst to complete requirements analysis",
+        "Launch RIF-Planner to create execution plan",
+        "Launch RIF-Architect to complete technical design",
+        "Wait for prerequisite phases to complete before launching implementation agents",
+        "Use sequential agent launching instead of parallel launching"
+      ]
+    }
+  ],
+  "warnings": [
+    "Issue #500: Jumping to implementation without architecture phase",
+    "Issue #500: Weak evidence of phase completion",
+    "Issue #501: Jumping to implementation without architecture phase",
+    "Issue #501: Weak evidence of phase completion"
+  ],
+  "allowed_phases": [],
+  "blocked_phases": [
+    "analysis",
+    "planning",
+    "architecture"
+  ],
+  "confidence_score": 0.0,
+  "validation_timestamp": "2025-08-25T05:42:06.545669",
+  "issue_reference": 223
+}
