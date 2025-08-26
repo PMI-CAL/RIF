@@ -102,19 +102,20 @@ class ContentAnalysisEngine:
         """Initialize patterns for state detection from content"""
         self.state_patterns = {
             IssueState.NEW: [
-                r'\bnew\b.*\bissue\b',
+                r'\bnew\b.*\b(?:issue|feature|task)\b',
                 r'\bfresh\b.*\btask\b', 
                 r'\binitial\b.*\brequirement\b',
                 r'\bstarting\b.*\bwork\b',
-                r'\bneed\s+to\s+(implement|create|add|build)',
-                r'^(?!.*\b(done|complete|finished|implemented|tested)\b)',  # Not completed
+                r'\bneed\s+to\s+(?:implement|create|add|build)',
+                r'(?=.*\b(?:need|want|should)\b)(?!.*\b(?:done|complete|finished|implemented|tested|ready)\b)',  # Needs work but not done
             ],
             IssueState.ANALYZING: [
-                r'\banalyzing\b|\banalysis\b|\bresearch\b',
-                r'\binvestigating\b|\bexploring\b',
-                r'\brequirements?\b.*\bgathering\b',
-                r'\bunderstanding\b.*\bproblem\b',
-                r'\bneed\s+to\s+(understand|analyze|research)',
+                r'\b(?:analyzing|analysis|research)\b',
+                r'\b(?:investigating|exploring)\b',
+                r'\brequirements?\b.*\b(?:gathering|unclear|needed)\b',
+                r'\b(?:understanding|need\s+to\s+understand)\b.*\bproblem\b',
+                r'\bneed\s+(?:more\s+)?(?:research|analysis|investigation)',
+                r'\brequirements?\s+(?:are\s+)?(?:unclear|missing|needed)',
             ],
             IssueState.PLANNING: [
                 r'\bplanning\b|\bdesigning\b|\barchitecture\b',
@@ -124,18 +125,21 @@ class ContentAnalysisEngine:
                 r'\bneed\s+to\s+(plan|design|architect)',
             ],
             IssueState.IMPLEMENTING: [
-                r'\bimplementing?\b|\bcodification\b|\bdeveloping\b',
-                r'\bwriting\b.*\bcode\b|\bcoding\b',
-                r'\bbuilding\b.*\b(feature|component|system)\b',
-                r'\bin\s+progress\b|\bworking\s+on\b',
-                r'\bcode\b.*\b(changes|updates|implementation)\b',
+                r'\b(?:implementing?|codification|developing)\b',
+                r'\b(?:writing|coding)\b.*\bcode\b',
+                r'\bbuilding\b.*\b(?:feature|component|system)\b',
+                r'\b(?:in\s+progress|working\s+on)\b',
+                r'\bcode\b.*\b(?:changes|updates|implementation)\b',
+                r'\b(?:ready\s+for\s+)?(?:implementation|coding|development)\b',
+                r'\b(?:design|architecture)\s+(?:is\s+)?(?:complete|finalized|ready)\b',
             ],
             IssueState.VALIDATING: [
-                r'\btesting\b|\bvalidating\b|\bverifying\b',
-                r'\bquality\s+assurance\b|\bqa\b',
-                r'\btest\s+(suite|cases|scenarios)\b',
-                r'\bready\s+for\s+(test|validation|review)\b',
+                r'\b(?:testing|validating|verifying)\b',
+                r'\bquality\s+(?:assurance|gates?)\b|\bqa\b',
+                r'\btest\s+(?:suite|cases?|scenarios?)\b',
+                r'\bready\s+for\s+(?:test|validation|review)\b',
                 r'\bvalidation\b.*\brequired\b',
+                r'\bimplementation\s+(?:is\s+)?(?:complete|finished|done)\b',
             ],
             IssueState.BLOCKED: [
                 r'\bblocked?\b|\bblocking\b',
@@ -145,11 +149,20 @@ class ContentAnalysisEngine:
                 r'\bthis\s+issue\s+blocks\s+(all\s+)?others?\b',
                 r'\bmust\s+complete\s+before\b',
             ],
+            IssueState.LEARNING: [
+                r'\blessons?\s+learned\b',
+                r'\bknowledge\s+(?:base\s+)?update\b',
+                r'\b(?:post|after).*(?:implementation|completion)\b',
+                r'\bpatterns?\s+(?:to\s+)?(?:document|capture|learn)\b',
+                r'\bfeedback\s+(?:and\s+)?(?:learning|improvement)\b',
+                r'\bdocument.*(?:patterns?|decisions?|learnings?)\b',
+            ],
             IssueState.COMPLETE: [
                 r'\bcompleted?\b|\bfinished\b|\bdone\b',
                 r'\bimplemented\b|\bresolved\b|\bfixed\b',
                 r'\bready\s+to\s+close\b|\bclosing\b',
-                r'\bsuccessfully\b.*\b(completed|implemented|tested)\b',
+                r'\bsuccessfully\b.*\b(?:completed|implemented|tested)\b',
+                r'\ball\s+(?:work\s+)?(?:completed?|finished?|done)\b',
             ],
         }
         
