@@ -19,6 +19,13 @@ from datetime import datetime, timedelta
 import logging
 from pathlib import Path
 
+# Import ContentAnalysisEngine for Issue #273 fix
+try:
+    from .content_analysis_engine import ContentAnalysisEngine, ContentAnalysisResult
+    CONTENT_ANALYSIS_AVAILABLE = True
+except ImportError:
+    CONTENT_ANALYSIS_AVAILABLE = False
+
 # Import dependency management system
 try:
     from .dependency_manager import create_dependency_manager, DependencyManager
@@ -60,6 +67,43 @@ class IssueContext:
         """Extract current state label from issue labels"""
         state_labels = [label for label in self.labels if label.startswith('state:')]
         return state_labels[0] if state_labels else None
+    
+    @property
+    def current_state_from_content(self) -> Optional[str]:
+        """
+        ISSUE #273 FIX: Extract current state from content analysis instead of labels.
+        
+        This method replaces label dependency with intelligent content analysis.
+        Use this instead of current_state_label for content-driven orchestration.
+        """
+        if not CONTENT_ANALYSIS_AVAILABLE:
+            # Fallback to label-based approach
+            return self.current_state_label
+            
+        try:
+            engine = ContentAnalysisEngine()
+            analysis_result = engine.analyze_issue_content(self.title, self.body)
+            return f"state:{analysis_result.derived_state.value}"
+        except Exception as e:
+            logger.warning(f"Content analysis failed, falling back to labels: {e}")
+            return self.current_state_label
+    
+    def get_content_analysis(self) -> Optional['ContentAnalysisResult']:
+        """
+        Get full content analysis result for advanced orchestration decisions.
+        
+        Returns comprehensive analysis including state, complexity, dependencies,
+        and semantic information derived from issue content.
+        """
+        if not CONTENT_ANALYSIS_AVAILABLE:
+            return None
+            
+        try:
+            engine = ContentAnalysisEngine()
+            return engine.analyze_issue_content(self.title, self.body)
+        except Exception as e:
+            logger.error(f"Content analysis failed: {e}")
+            return None
     
     @property  
     def complexity_score(self) -> int:
@@ -311,7 +355,9 @@ class StateValidator:
         blocking_issues = []
         
         # Check if transition is valid
-        current_state = context.current_state_label
+        # ISSUE #273 FIX: Replace label dependency with content analysis
+
+        current_state = context.current_state_from_content
         if current_state:
             current_state = current_state.replace('state:', '')
             is_valid, reason = self.validate_state_transition(current_state, target_state)
@@ -331,7 +377,9 @@ class StateValidator:
     
     def get_next_recommended_state(self, context: IssueContext) -> Optional[str]:
         """Get the next recommended state based on issue context and history"""
-        current_state = context.current_state_label
+        # ISSUE #273 FIX: Replace label dependency with content analysis
+
+        current_state = context.current_state_from_content
         if not current_state:
             return 'new'
         
@@ -443,7 +491,9 @@ class OrchestrationHelper:
             # Convert recommended issues to task format for backward compatibility
             for issue_num in decision.recommended_issues:
                 context = self.context_analyzer.analyze_issue(issue_num)
-                current_state = context.current_state_label
+                # ISSUE #273 FIX: Replace label dependency with content analysis
+
+                current_state = context.current_state_from_content
                 if current_state:
                     state_name = current_state.replace('state:', '')
                     required_agent = self.state_validator.get_required_agent(state_name)
@@ -528,7 +578,9 @@ class OrchestrationHelper:
                     continue  # Skip this issue for now
             
             # Issue can proceed - determine what agent is needed
-            current_state = context.current_state_label
+            # ISSUE #273 FIX: Replace label dependency with content analysis
+
+            current_state = context.current_state_from_content
             if current_state:
                 state_name = current_state.replace('state:', '')
                 required_agent = self.state_validator.get_required_agent(state_name)
@@ -638,7 +690,9 @@ class OrchestrationHelper:
                 }
         
         # Determine current state and next action
-        current_state = context.current_state_label
+        # ISSUE #273 FIX: Replace label dependency with content analysis
+
+        current_state = context.current_state_from_content
         if not current_state:
             # New issue, needs initial analysis
             recommended_agent = 'RIF-Analyst'
