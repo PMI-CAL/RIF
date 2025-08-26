@@ -1,0 +1,25 @@
+{
+  "name": "rif-framework",
+  "version": "1.0.0",
+  "description": "Reactive Intelligence Framework - Automatic intelligent development system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No JavaScript tests configured\" && exit 0",
+    "lint": "echo \"No JavaScript linting configured\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PMI-CAL/RIF.git"
+  },
+  "keywords": [
+    "automation",
+    "AI",
+    "development",
+    "github",
+    "orchestration"
+  ],
+  "author": "PMI-CAL",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {}
+}
