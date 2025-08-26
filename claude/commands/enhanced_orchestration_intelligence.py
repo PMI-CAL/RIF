@@ -33,6 +33,9 @@ from orchestration_utilities import (
     IssueContext, ContextAnalyzer, StateValidator, 
     OrchestrationHelper, GitHubStateManager
 )
+from content_analysis_engine import (
+    ContentAnalysisEngine, ContentAnalysisResult, WorkflowState, ComplexityLevel
+)
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -103,6 +106,8 @@ class ContextModel:
     historical_patterns: List[str] = field(default_factory=list)
     semantic_tags: Set[str] = field(default_factory=set)
     validation_results: Optional[ValidationResult] = None
+    # ISSUE #273: Add content analysis result for label-free orchestration
+    content_analysis_result: Optional['ContentAnalysisResult'] = None
     
     @property
     def overall_complexity_score(self) -> float:
@@ -172,10 +177,31 @@ class ContextModelingEngine:
         self.patterns_path = self.knowledge_base_path / "patterns" 
         self.decisions_path = self.knowledge_base_path / "decisions"
         self.logger = logging.getLogger(self.__class__.__name__)
+        
+        # ISSUE #273: Initialize ContentAnalysisEngine to replace label dependency
+        self.content_analysis_engine = ContentAnalysisEngine()
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
     
     def enrich_context(self, issue_context: IssueContext) -> ContextModel:
         """
         Create rich context model with multi-dimensional analysis.
+        
+        ISSUE #273: Now uses ContentAnalysisEngine for intelligent content analysis
+        instead of relying on GitHub labels.
         
         Args:
             issue_context: Basic issue context from ContextAnalyzer
@@ -185,8 +211,17 @@ class ContextModelingEngine:
         """
         context_model = ContextModel(issue_context=issue_context)
         
-        # Analyze complexity dimensions
-        context_model.complexity_dimensions = self._analyze_complexity_dimensions(issue_context)
+        # ISSUE #273: Use ContentAnalysisEngine for intelligent content analysis
+        content_analysis = self.content_analysis_engine.analyze_issue_content(
+            issue_context.title, 
+            issue_context.body
+        )
+        
+        # Store content analysis result for later use
+        context_model.content_analysis_result = content_analysis
+        
+        # Analyze complexity dimensions (enhanced with content analysis)
+        context_model.complexity_dimensions = self._analyze_complexity_dimensions(issue_context, content_analysis)
         
         # Analyze security context
         context_model.security_context = self._analyze_security_context(issue_context)
@@ -194,18 +229,18 @@ class ContextModelingEngine:
         # Analyze performance context
         context_model.performance_context = self._analyze_performance_context(issue_context)
         
-        # Identify risk factors
-        context_model.risk_factors = self._identify_risk_factors(issue_context)
+        # Identify risk factors (enhanced with content analysis)
+        context_model.risk_factors = self._identify_risk_factors(issue_context, content_analysis)
         
         # Find historical patterns
         context_model.historical_patterns = self._find_historical_patterns(issue_context)
         
-        # Generate semantic tags
-        context_model.semantic_tags = self._generate_semantic_tags(issue_context)
+        # Generate semantic tags (enhanced with content analysis)
+        context_model.semantic_tags = self._generate_semantic_tags(issue_context, content_analysis)
         
         return context_model
     
-    def _analyze_complexity_dimensions(self, issue_context: IssueContext) -> Dict[str, float]:
+    def _analyze_complexity_dimensions(self, issue_context: IssueContext, content_analysis: Optional['ContentAnalysisResult'] = None) -> Dict[str, float]:
         """Analyze complexity across multiple dimensions"""
         dimensions = {
             'technical': self._assess_technical_complexity(issue_context),
@@ -214,6 +249,23 @@ class ContextModelingEngine:
             'performance': self._assess_performance_complexity(issue_context),
             'security': self._assess_security_complexity(issue_context)
         }
+        
+        # ISSUE #273: Enhance with content analysis derived complexity
+        if content_analysis:
+            # Use content analysis complexity as a baseline adjustment
+            content_complexity_map = {
+                ComplexityLevel.LOW: 0.25,
+                ComplexityLevel.MEDIUM: 0.5, 
+                ComplexityLevel.HIGH: 0.75,
+                ComplexityLevel.VERY_HIGH: 1.0
+            }
+            
+            base_complexity = content_complexity_map.get(content_analysis.complexity, 0.5)
+            
+            # Adjust all dimensions based on content analysis
+            for dimension in dimensions:
+                # Weight content analysis vs traditional analysis (70/30 split)
+                dimensions[dimension] = (dimensions[dimension] * 0.3) + (base_complexity * 0.7)
         
         return dimensions
     
@@ -342,7 +394,7 @@ class ContextModelingEngine:
         
         return performance_context
     
-    def _identify_risk_factors(self, issue_context: IssueContext) -> List[Dict[str, Any]]:
+    def _identify_risk_factors(self, issue_context: IssueContext, content_analysis: Optional['ContentAnalysisResult'] = None) -> List[Dict[str, Any]]:
         """Identify potential risk factors for the issue"""
         risk_factors = []
         
@@ -414,7 +466,7 @@ class ContextModelingEngine:
         
         return patterns[:5]  # Limit to top 5 patterns
     
-    def _generate_semantic_tags(self, issue_context: IssueContext) -> Set[str]:
+    def _generate_semantic_tags(self, issue_context: IssueContext, content_analysis: Optional['ContentAnalysisResult'] = None) -> Set[str]:
         """Generate semantic tags for the issue"""
         tags = set()
         
@@ -448,6 +500,21 @@ class ContextModelingEngine:
             tags.add('quality')
         elif any(word in content for word in ['monitor', 'metrics', 'dashboard']):
             tags.add('monitoring')
+        
+        # ISSUE #273: Add content analysis derived tags
+        if content_analysis:
+            # Add semantic indicators from content analysis
+            for category, indicators in content_analysis.semantic_indicators.items():
+                for indicator in indicators:
+                    tags.add(f"{category}:{indicator.lower()}")
+            
+            # Add state and complexity tags
+            tags.add(f"state:{content_analysis.state.value}")
+            tags.add(f"complexity:{content_analysis.complexity.value}")
+            
+            # Add risk factor tags
+            for risk in content_analysis.risk_factors:
+                tags.add(f"risk:{risk.lower().replace(' ', '_')}")
         
         return tags
 
@@ -635,6 +702,21 @@ class DynamicStateAnalyzer:
         
         # Decision confidence tracking
         self.decision_history = deque(maxlen=100)
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
     
     def analyze_current_state(self, issue_context: IssueContext, 
                             validation_results: Optional[Dict[str, Any]] = None) -> Tuple[str, float]:
@@ -665,49 +747,56 @@ class DynamicStateAnalyzer:
     
     def _determine_optimal_state(self, context_model: ContextModel) -> Tuple[str, float]:
         """Determine optimal next state with confidence scoring"""
-        current_state = context_model.issue_context.current_state_label
-        if not current_state:
-            return 'analyzing', ConfidenceLevel.HIGH.value
-        
-        current_state = current_state.replace('state:', '')
+        # ISSUE #273: Replace label dependency with content analysis
+        if context_model.content_analysis_result:
+            # Use content-derived state instead of labels
+            current_state = context_model.content_analysis_result.state.value
+            confidence_adjustment = context_model.content_analysis_result.confidence_score
+        else:
+            # Fallback to label-based approach for backward compatibility
+            current_state = context_model.issue_context.current_state_label
+            if not current_state:
+                return 'analyzing', ConfidenceLevel.HIGH.value
+            current_state = current_state.replace('state:', '')
+            confidence_adjustment = 1.0
         
         # Validation-based intelligent decisions
         if context_model.validation_results:
             return self._analyze_validation_based_transition(context_model)
         
-        # Pattern-based decisions for new states
+        # Pattern-based decisions for new states (adjusted for content analysis confidence)
         if current_state == 'new':
-            return 'analyzing', ConfidenceLevel.VERY_HIGH.value
+            return 'analyzing', ConfidenceLevel.VERY_HIGH.value * confidence_adjustment
         
         elif current_state == 'analyzing':
             # Complexity-based decision
             if context_model.overall_complexity_score >= 0.7:
-                return 'architecting', ConfidenceLevel.HIGH.value
+                return 'architecting', ConfidenceLevel.HIGH.value * confidence_adjustment
             elif context_model.overall_complexity_score >= 0.5:
-                return 'planning', ConfidenceLevel.MEDIUM.value
+                return 'planning', ConfidenceLevel.MEDIUM.value * confidence_adjustment
             else:
-                return 'implementing', ConfidenceLevel.MEDIUM.value
+                return 'implementing', ConfidenceLevel.MEDIUM.value * confidence_adjustment
         
         elif current_state == 'planning':
             # Check if architecture needed based on context
             if (context_model.overall_complexity_score >= 0.6 or 
                 any(rf['type'] == 'complexity' for rf in context_model.risk_factors)):
-                return 'architecting', ConfidenceLevel.HIGH.value
+                return 'architecting', ConfidenceLevel.HIGH.value * confidence_adjustment
             else:
-                return 'implementing', ConfidenceLevel.MEDIUM.value
+                return 'implementing', ConfidenceLevel.MEDIUM.value * confidence_adjustment
         
         elif current_state == 'architecting':
-            return 'implementing', ConfidenceLevel.HIGH.value
+            return 'implementing', ConfidenceLevel.HIGH.value * confidence_adjustment
         
         elif current_state == 'implementing':
-            return 'validating', ConfidenceLevel.HIGH.value
+            return 'validating', ConfidenceLevel.HIGH.value * confidence_adjustment
         
         elif current_state == 'validating':
             # Default to learning if no specific validation results
-            return 'learning', ConfidenceLevel.MEDIUM.value
+            return 'learning', ConfidenceLevel.MEDIUM.value * confidence_adjustment
         
         elif current_state == 'learning':
-            return 'complete', ConfidenceLevel.HIGH.value
+            return 'complete', ConfidenceLevel.HIGH.value * confidence_adjustment
         
         # Fallback
         valid_next = self.state_validator.VALID_TRANSITIONS.get(current_state, [])
@@ -719,7 +808,8 @@ class DynamicStateAnalyzer:
     def _analyze_validation_based_transition(self, context_model: ContextModel) -> Tuple[str, float]:
         """Analyze transition based on validation results"""
         validation = context_model.validation_results
-        current_state = context_model.issue_context.current_state_label.replace('state:', '')
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
         
         if not validation:
             return current_state, ConfidenceLevel.LOW.value
@@ -1072,9 +1162,10 @@ class TeamOptimizationEngine:
         assignments = []
         
         for context_model in context_models:
-            current_state = context_model.issue_context.current_state_label
+            # ISSUE #273: Use content analysis for state extraction
+            current_state = self._get_current_state_from_context(context_model)
             if current_state:
-                state_name = current_state.replace('state:', '')
+                state_name = current_state
                 
                 # Get candidate agents for this state
                 candidate_agents = self._get_candidate_agents(state_name, context_model)
@@ -1107,9 +1198,10 @@ class TeamOptimizationEngine:
         assignments = []
         
         for context_model in context_models:
-            current_state = context_model.issue_context.current_state_label
+            # ISSUE #273: Use content analysis for state extraction
+            current_state = self._get_current_state_from_context(context_model)
             if current_state:
-                state_name = current_state.replace('state:', '')
+                state_name = current_state
                 candidate_agents = self._get_candidate_agents(state_name, context_model)
                 
                 # Score agents by capability match
@@ -1138,9 +1230,10 @@ class TeamOptimizationEngine:
         agent_workload = defaultdict(int)
         
         for context_model in context_models:
-            current_state = context_model.issue_context.current_state_label
+            # ISSUE #273: Use content analysis for state extraction
+            current_state = self._get_current_state_from_context(context_model)
             if current_state:
-                state_name = current_state.replace('state:', '')
+                state_name = current_state
                 candidate_agents = self._get_candidate_agents(state_name, context_model)
                 
                 # Select agent with lowest current workload
@@ -1339,6 +1432,21 @@ class LearningAgentSelector:
         
         # Selection history for learning
         self.selection_history = deque(maxlen=200)
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
     
     def select_optimal_agents(self, context_models: List[ContextModel], 
                             optimization_strategy: str = 'performance') -> List[Dict[str, Any]]:
@@ -1397,7 +1505,8 @@ class LearningAgentSelector:
     
     def get_agent_recommendations(self, context_model: ContextModel) -> List[Dict[str, Any]]:
         """Get ranked agent recommendations with reasoning"""
-        current_state = context_model.issue_context.current_state_label
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
         if not current_state:
             return []
         
@@ -1992,6 +2101,21 @@ class LoopBackDecisionEngine:
             'context_complexity': 0.15,
             'time_efficiency': 0.1
         }
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
     
     def make_loop_back_decision(self, validation_result: ValidationResult, 
                               context_model: ContextModel,
@@ -2042,9 +2166,9 @@ class LoopBackDecisionEngine:
             Dict with readiness assessment
         """
         # Check basic state transition validity
-        current_state = context_model.issue_context.current_state_label
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
         if current_state:
-            current_state = current_state.replace('state:', '')
             is_valid, reason = self.state_validator.validate_state_transition(current_state, target_state)
         else:
             is_valid, reason = True, "No current state"
@@ -2366,6 +2490,21 @@ class TransitionEngine:
         
         # Transition history for learning
         self.transition_history = deque(maxlen=100)
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
     
     def execute_intelligent_transition(self, context_model: ContextModel, 
                                      validation_result: Optional[ValidationResult] = None) -> Dict[str, Any]:
@@ -2379,10 +2518,9 @@ class TransitionEngine:
         Returns:
             Dict with transition results and recommendations
         """
-        current_state = context_model.issue_context.current_state_label
-        if current_state:
-            current_state = current_state.replace('state:', '')
-        else:
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
+        if not current_state:
             current_state = 'new'
         
         if validation_result and not validation_result.passed:
@@ -2522,6 +2660,21 @@ class ParallelCoordinator:
         # Coordination constraints
         self.max_parallel_agents = 4
         self.max_complex_issues_parallel = 2
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
     
     def coordinate_parallel_orchestration(self, issue_numbers: List[int]) -> Dict[str, Any]:
         """
@@ -2637,8 +2790,9 @@ class ParallelCoordinator:
             if cm.security_context.get('requires_security_review', False):
                 constraints['security_sensitive'].append(issue_num)
             
-            # Resource intensive (implementation or architecture work)
-            current_state = cm.issue_context.current_state_label
+            # Resource intensive (implementation or architecture work) 
+            # ISSUE #273: Use content analysis for state extraction
+            current_state = self._get_current_state_from_context(cm)
             if current_state and any(state in current_state for state in ['implementing', 'architecting']):
                 constraints['resource_intensive'].append(issue_num)
             
@@ -2682,12 +2836,13 @@ class ParallelCoordinator:
                     high_complexity_in_batch += 1
                 
                 # Check for resource conflicts
-                current_state = cm.issue_context.current_state_label
+                # ISSUE #273: Use content analysis for state extraction  
+                current_state = self._get_current_state_from_context(cm)
                 if current_state and 'implementing' in current_state:
                     # Limit concurrent implementations
                     impl_count = sum(1 for bcm in batch 
-                                   if bcm.issue_context.current_state_label and 
-                                      'implementing' in bcm.issue_context.current_state_label)
+                                   if self._get_current_state_from_context(bcm) and 
+                                      'implementing' in self._get_current_state_from_context(bcm))
                     if impl_count >= 1:  # Max 1 implementation per batch
                         continue
                 
@@ -2714,7 +2869,8 @@ class ParallelCoordinator:
                 # Estimate time based on complexity and state
                 base_time = cm.overall_complexity_score * 4.0  # 0-4 hours based on complexity
                 
-                current_state = cm.issue_context.current_state_label
+                # ISSUE #273: Use content analysis for state extraction
+                current_state = self._get_current_state_from_context(cm)
                 if current_state:
                     if 'architecting' in current_state:
                         base_time += 2.0
@@ -2982,6 +3138,21 @@ class EnhancedOrchestrationIntelligence:
             self.consensus_enabled = False
         
         self.logger = logging.getLogger(self.__class__.__name__)
+        
+    def _get_current_state_from_context(self, context_model: ContextModel) -> str:
+        """
+        Get current state from content analysis or fall back to labels
+        ISSUE #273: Centralized state extraction with content analysis priority
+        """
+        if context_model.content_analysis_result:
+            return context_model.content_analysis_result.state.value
+        
+        # Fallback to label-based state
+        label_state = context_model.issue_context.current_state_label
+        if label_state:
+            return label_state.replace('state:', '')
+        
+        return 'analyzing'  # Default state
         
     def analyze_issue_with_intelligence(self, issue_number: int) -> Dict[str, Any]:
         """
@@ -3330,22 +3501,24 @@ class EnhancedOrchestrationIntelligence:
             try:
                 # Get issue context for appropriate agent selection
                 issue_context = self.context_analyzer.analyze_issue(issue_num)
-                current_state = issue_context.current_state_label
+                # ISSUE #273: Use content analysis for state extraction
+                context_model = self.context_engine.enrich_context(issue_context) 
+                current_state = self._get_current_state_from_context(context_model)
                 
                 # Select appropriate agent based on current state
-                if current_state == 'state:new' or current_state is None:
+                if current_state == 'new' or current_state is None:
                     agent_type = "RIF-Analyst"
                     task_description = f"Analyze BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
                     prompt_instruction = f"You are RIF-Analyst. Perform critical analysis of BLOCKING issue #{issue_num}. This issue blocks all other work - complete analysis urgently. Follow all instructions in claude/agents/rif-analyst.md."
-                elif current_state == 'state:planning':
+                elif current_state == 'planning':
                     agent_type = "RIF-Planner" 
                     task_description = f"Plan BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
                     prompt_instruction = f"You are RIF-Planner. Create urgent plan for BLOCKING issue #{issue_num}. This issue blocks all other work - prioritize completion. Follow all instructions in claude/agents/rif-planner.md."
-                elif current_state == 'state:implementing':
+                elif current_state == 'implementing':
                     agent_type = "RIF-Implementer"
                     task_description = f"Implement BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)" 
                     prompt_instruction = f"You are RIF-Implementer. Implement BLOCKING issue #{issue_num} immediately. This issue blocks all other work - complete implementation urgently. Follow all instructions in claude/agents/rif-implementer.md."
-                elif current_state == 'state:validating':
+                elif current_state == 'validating':
                     agent_type = "RIF-Validator"
                     task_description = f"Validate BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
                     prompt_instruction = f"You are RIF-Validator. Validate BLOCKING issue #{issue_num} urgently. This issue blocks all other work - ensure quality and complete validation. Follow all instructions in claude/agents/rif-validator.md."
