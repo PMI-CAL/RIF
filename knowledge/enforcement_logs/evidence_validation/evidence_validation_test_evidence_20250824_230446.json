@@ -1,0 +1,26 @@
+{
+  "evidence_type": "test_evidence",
+  "evidence_fingerprint": "dcdf1e5824e24d26b3fe7c570684d8fbda988046cf20e52e66edf31e42260217",
+  "validation_result": {
+    "is_valid": false,
+    "confidence_score": 10.0,
+    "authenticity_verified": false,
+    "completeness_score": 0.0,
+    "evidence_quality": "invalid",
+    "validation_errors": [
+      "Unknown evidence type: test_evidence",
+      "Missing timestamp for authenticity verification",
+      "Missing test metadata: host_info",
+      "Unknown evidence type"
+    ]
+  },
+  "validation_metadata": {
+    "validation_duration": 0.0004901885986328125,
+    "timestamp": "2025-08-24T23:04:46.665954",
+    "validator_version": "1.0.0"
+  },
+  "evidence_summary": {
+    "field_count": 4,
+    "data_size": 85
+  }
+}

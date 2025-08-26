@@ -1,0 +1,212 @@
+{
+  "research_metadata": {
+    "date": "2025-01-23",
+    "phase": "Phase 1: Deep Research & Understanding",
+    "issue": "#96",
+    "researcher": "RIF-Implementer",
+    "sources_count": 8,
+    "documentation_depth": "comprehensive"
+  },
+  "claude_code_reality": {
+    "core_identity": {
+      "what_it_is": "AI-powered developer tool for terminal-based coding assistance",
+      "what_it_is_not": "Orchestration platform or multi-agent system",
+      "primary_function": "Single AI assistant with specialized tools and subagent delegation",
+      "deployment": "Terminal-based, integrates with existing dev workflows"
+    },
+    "actual_architecture": {
+      "core_component": "Single AI assistant (Claude)",
+      "tools": {
+        "file_operations": ["Read", "Write", "Edit", "MultiEdit"],
+        "command_execution": ["Bash", "Git integration"],
+        "code_analysis": ["Search", "Pattern recognition", "Dependency analysis"],
+        "external_integration": ["MCP servers", "Web search", "API connections"]
+      },
+      "subagents": {
+        "type": "Contextual specialists within same session",
+        "capability": "Separate context windows with custom prompts",
+        "limitation": "Not independent processes",
+        "scopes": ["project-level", "user-level"]
+      },
+      "hooks": {
+        "purpose": "Event-triggered automation scripts",
+        "events": ["PreToolUse", "PostToolUse", "UserPromptSubmit", "SessionStart", "SessionEnd"],
+        "limitation": "Not continuous background processes"
+      }
+    },
+    "mcp_integration": {
+      "what_is_mcp": "Model Context Protocol - open standard for AI-tool integrations",
+      "installation_methods": ["Local stdio", "Remote SSE", "Remote HTTP"],
+      "configuration_scopes": ["Local", "Project", "User"],
+      "capabilities": ["Real-time API access", "Database queries", "OAuth 2.0", "Hundreds of integrations"],
+      "security": "User responsible for verifying server trust"
+    }
+  },
+  "rif_misunderstandings": {
+    "critical_errors": [
+      {
+        "assumption": "Claude Code is an orchestration platform",
+        "reality": "Single AI assistant with tools",
+        "impact": "Entire architecture based on false premise"
+      },
+      {
+        "assumption": "Task() tool exists for parallel agent execution",
+        "reality": "No Task tool found in official documentation",
+        "impact": "All orchestration code non-functional"
+      },
+      {
+        "assumption": "Independent agent processes",
+        "reality": "Subagents are contextual specialists in same session",
+        "impact": "State machine and agent coordination impossible"
+      },
+      {
+        "assumption": "Continuous background automation",
+        "reality": "Event-triggered hooks only",
+        "impact": "Automatic scheduling and monitoring impossible"
+      },
+      {
+        "assumption": "Agents can independently post to GitHub",
+        "reality": "All GitHub interaction through Claude Code tools/MCP",
+        "impact": "Agent autonomy model broken"
+      }
+    ],
+    "architectural_problems": [
+      {
+        "component": "Task-based orchestration",
+        "status": "incompatible",
+        "reason": "Task tool does not exist"
+      },
+      {
+        "component": "Independent agent state machines",
+        "status": "incompatible", 
+        "reason": "Subagents are not independent processes"
+      },
+      {
+        "component": "Automated issue detection intervals",
+        "status": "incompatible",
+        "reason": "No continuous background processing"
+      },
+      {
+        "component": "Complex automation configurations",
+        "status": "needs_simplification",
+        "reason": "Hooks are simpler event-triggered scripts"
+      }
+    ]
+  },
+  "compatibility_analysis": {
+    "fully_compatible": [
+      {
+        "feature": "GitHub Issue Processing",
+        "method": "MCP server integration or direct tools",
+        "confidence": "high"
+      },
+      {
+        "feature": "Code Analysis",
+        "method": "Built-in Claude Code capabilities",
+        "confidence": "high"
+      },
+      {
+        "feature": "File Operations",
+        "method": "Native tools (Read/Write/Edit)",
+        "confidence": "high"
+      },
+      {
+        "feature": "Subagent Specialization",
+        "method": "Real Claude Code subagent feature",
+        "confidence": "high"
+      }
+    ],
+    "needs_modification": [
+      {
+        "feature": "Workflow Automation",
+        "current": "Complex interval-based automation",
+        "corrected": "Event-triggered hooks",
+        "effort": "medium"
+      },
+      {
+        "feature": "Agent Coordination",
+        "current": "Independent agent processes",
+        "corrected": "Subagent delegation within session",
+        "effort": "high"
+      }
+    ],
+    "incompatible": [
+      {
+        "feature": "Task-based Orchestration",
+        "reason": "Task tool does not exist",
+        "replacement": "Subagent delegation"
+      },
+      {
+        "feature": "Independent Agent Processes", 
+        "reason": "Subagents are contextual, not independent",
+        "replacement": "Single session with specialized subagents"
+      },
+      {
+        "feature": "Automatic Scheduling",
+        "reason": "No continuous background processing",
+        "replacement": "Event-triggered automation"
+      }
+    ]
+  },
+  "corrected_implementation_patterns": {
+    "github_integration": {
+      "wrong": "Independent agents posting to issues",
+      "correct": "Claude Code with GitHub MCP server or direct GitHub tools"
+    },
+    "workflow_orchestration": {
+      "wrong": "Task(description=..., subagent_type=...)",
+      "correct": "Subagent delegation within Claude Code session"
+    },
+    "automation": {
+      "wrong": "Interval-based background processes",
+      "correct": "Hook-triggered scripts on tool events"
+    },
+    "specialization": {
+      "wrong": "Independent specialized processes",
+      "correct": "Subagents with custom prompts and tool restrictions"
+    }
+  },
+  "evidence_sources": [
+    {
+      "url": "https://docs.anthropic.com/en/docs/claude-code",
+      "content": "Core Claude Code overview and capabilities",
+      "key_findings": "Terminal-based AI assistant, not orchestration platform"
+    },
+    {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/mcp",
+      "content": "MCP server integration documentation",
+      "key_findings": "Real external integration method, not independent agents"
+    },
+    {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/subagents",
+      "content": "Subagent system documentation", 
+      "key_findings": "Contextual specialists, not independent processes"
+    },
+    {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "content": "Hooks system documentation",
+      "key_findings": "Event-triggered scripts, not continuous automation"
+    },
+    {
+      "url": "https://docs.anthropic.com/en/docs/claude-code/getting-started",
+      "content": "Installation and basic usage",
+      "key_findings": "Single AI tool with file/command capabilities"
+    }
+  ],
+  "next_phase_recommendations": {
+    "phase_2_focus": "Architecture Redesign",
+    "priority_actions": [
+      "Update CLAUDE.md with correct assumptions",
+      "Redesign agent system around subagents",
+      "Simplify automation to use hooks",
+      "Implement GitHub integration via MCP",
+      "Remove Task-based orchestration code"
+    ],
+    "validation_needs": [
+      "Test subagent creation and delegation",
+      "Verify MCP server integration patterns",
+      "Validate hook-based automation",
+      "Confirm GitHub MCP server availability"
+    ]
+  }
+}

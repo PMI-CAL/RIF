@@ -1,0 +1,6 @@
+2025-08-25 00:16:19,242 - ProductionEnvironmentSimulator - INFO - Starting production simulation demo_simulation_1756106178 with conditions: ['network_latency', 'concurrent_user_load', 'high_cpu_load', 'disk_io_bottleneck']
+2025-08-25 00:16:19,248 - ProductionEnvironmentSimulator - INFO - Applied condition high_cpu_load to simulation demo_simulation_1756106178: {'cpu_load_percent': 72.79005679172732}
+2025-08-25 00:16:24,397 - ProductionEnvironmentSimulator - ERROR - Error in simulation demo_simulation_1756106178: 'float' object cannot be interpreted as an integer
+2025-08-25 00:16:26,245 - ProductionEnvironmentSimulator - INFO - Removed condition high_cpu_load from simulation demo_simulation_1756106178
+2025-08-25 00:16:26,245 - ProductionEnvironmentSimulator - INFO - Removed condition concurrent_user_load from simulation demo_simulation_1756106178
+2025-08-25 00:16:27,254 - ProductionEnvironmentSimulator - INFO - Production simulation demo_simulation_1756106178 completed successfully

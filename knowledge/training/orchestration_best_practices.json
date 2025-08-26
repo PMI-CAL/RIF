@@ -1,0 +1,106 @@
+{
+  "training_module": "Orchestration Best Practices",
+  "version": "1.0.0",
+  "issue_reference": 224,
+  "created_at": "2025-08-25T03:10:31.748210",
+  "sections": {
+    "fundamentals": {
+      "title": "Orchestration Fundamentals",
+      "content": [
+        "Claude Code IS the orchestrator - no separate orchestrator Task needed",
+        "Parallel execution achieved through multiple Task invocations in single response",
+        "One Task = One Issue = One Specialized Agent principle",
+        "Agent specialization improves effectiveness and maintainability"
+      ]
+    },
+    "anti_patterns_to_avoid": {
+      "title": "Critical Anti-Patterns to Avoid",
+      "patterns": [
+        {
+          "name": "Multi-Issue Accelerator",
+          "description": "Single Task attempting to handle multiple issues",
+          "why_it_fails": "Creates sequential bottleneck, violates parallel model",
+          "detection": "Task description contains multiple issue numbers",
+          "correction": "Split into separate Tasks, one per issue"
+        },
+        {
+          "name": "Generic Accelerator Naming",
+          "description": "Using generic names like 'Accelerator', 'Batch', 'Combined'",
+          "why_it_fails": "Loses agent specialization benefits",
+          "detection": "Task description contains generic accelerator terms",
+          "correction": "Use specific RIF agent names (RIF-Implementer, RIF-Validator, etc.)"
+        }
+      ]
+    },
+    "correct_patterns": {
+      "title": "Correct Orchestration Patterns",
+      "patterns": [
+        {
+          "name": "Parallel Task Launching",
+          "description": "Multiple Task invocations in single response",
+          "benefits": "True parallel execution, specialized agents, scalable",
+          "template": "Task(...) Task(...) Task(...) # All in one response"
+        },
+        {
+          "name": "Dependency-Aware Orchestration",
+          "description": "Consider dependencies before launching parallel work",
+          "benefits": "Prevents conflicts, optimizes execution order",
+          "template": "Analyze dependencies \u2192 Validate patterns \u2192 Launch appropriate Tasks"
+        }
+      ]
+    },
+    "validation_checklist": {
+      "title": "Pre-Launch Validation Checklist",
+      "checklist": [
+        "One Task = One Issue: Each Task handles exactly one specific concern",
+        "Proper Agent Names: Using standard RIF agent names",
+        "Single Response Launch: All parallel Tasks launched in one response",
+        "Specialized Instructions: Each Task prompt includes proper agent file reference",
+        "No Multi-Issue Descriptions: Task descriptions don't mention multiple issues",
+        "Clear Responsibility: Task purpose is single, clear, and well-defined"
+      ]
+    },
+    "troubleshooting": {
+      "title": "Common Orchestration Problems and Solutions",
+      "problems": [
+        {
+          "problem": "Sequential processing instead of parallel",
+          "cause": "Tasks launched in separate responses",
+          "solution": "Launch all parallel Tasks in single response"
+        },
+        {
+          "problem": "Agent specialization not utilized",
+          "cause": "Using generic agent names or prompts",
+          "solution": "Use specific RIF agents with proper instructions"
+        },
+        {
+          "problem": "Manual intervention required",
+          "cause": "Anti-patterns not caught before execution",
+          "solution": "Implement pattern validation before launching Tasks"
+        }
+      ]
+    },
+    "examples": {
+      "title": "Orchestration Examples",
+      "wrong_example": {
+        "description": "Multi-Issue Accelerator Anti-Pattern",
+        "code": "Task(\n    description=\"Multi-Issue Accelerator: Handle issues #1, #2, #3\",\n    prompt=\"Handle multiple issues efficiently\",\n    subagent_type=\"general-purpose\"\n)",
+        "problems": [
+          "Single Task for multiple issues",
+          "Generic agent name",
+          "Sequential execution"
+        ]
+      },
+      "correct_example": {
+        "description": "Proper Parallel Task Launching",
+        "code": "Task(\n    description=\"RIF-Implementer: Issue #1 implementation\",\n    prompt=\"You are RIF-Implementer. Implement feature for issue #1. Follow all instructions in claude/agents/rif-implementer.md.\",\n    subagent_type=\"general-purpose\"\n)\nTask(\n    description=\"RIF-Implementer: Issue #2 implementation\",\n    prompt=\"You are RIF-Implementer. Implement feature for issue #2. Follow all instructions in claude/agents/rif-implementer.md.\",\n    subagent_type=\"general-purpose\"\n)\nTask(\n    description=\"RIF-Validator: Issue #3 validation\",\n    prompt=\"You are RIF-Validator. Validate implementation for issue #3. Follow all instructions in claude/agents/rif-validator.md.\",\n    subagent_type=\"general-purpose\"\n)",
+        "benefits": [
+          "One Task per issue",
+          "Specialized agents",
+          "Parallel execution",
+          "Proper instructions"
+        ]
+      }
+    }
+  }
+}

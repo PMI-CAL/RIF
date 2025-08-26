@@ -2,3 +2,61 @@
 [0;32m[2025-08-23 15:43:56] SUCCESS:[0m Health check passed
 [0;34m[2025-08-23 16:08:23][0m Health check attempt 1/5
 [0;32m[2025-08-23 16:08:23] SUCCESS:[0m Health check passed
+2025-08-24 21:02:19,778 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:18:10,195 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:18:15,897 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:18:55,140 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:19:00,124 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:19:30,946 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:19:53,716 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:20:01,723 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 21:23:30,522 - __main__ - ERROR - Pattern recommendation failed: Invalid Input Error: Values were not provided for the following prepared statement parameters: 10, 11, 9
+2025-08-24 21:24:02,076 - __main__ - ERROR - Alternative finding failed: Invalid Input Error: Values were not provided for the following prepared statement parameters: 10, 11, 9
+2025-08-24 21:43:05,360 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:43:05,360 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:43:05,508 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:43:05,508 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 21:43:05,508 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:43:05,508 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:43:05,522 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:43:05,522 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 21:43:05,530 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:43:05,530 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:43:05,543 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:43:05,543 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 21:45:23,831 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:45:23,831 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:45:23,910 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:45:23,910 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 21:46:09,034 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:46:09,034 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:46:09,109 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:46:09,109 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 21:46:38,459 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:46:38,460 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:46:38,534 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:46:38,535 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 21:46:38,547 - server - ERROR - Pattern recommendation failed: 'VectorSearchResult' object has no attribute 'entity_id'
+2025-08-24 21:46:56,124 - server - INFO - Claude Code Knowledge MCP Server initialized
+2025-08-24 21:46:56,124 - server - INFO - Initializing connection to RIF knowledge graph...
+2025-08-24 21:46:56,201 - server - INFO - Found 5 Claude Code knowledge entities
+2025-08-24 21:46:56,201 - server - INFO - Successfully connected to RIF knowledge graph
+2025-08-24 22:10:01,319 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 22:10:09,671 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 22:10:18,455 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 22:12:15,305 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 22:12:15,732 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 22:12:22,574 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:49:45,051 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:51:47,430 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:53:09,275 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:54:03,696 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:54:39,485 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:55:45,252 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:56:49,177 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:57:24,182 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-24 23:58:24,191 - __main__ - ERROR - Alternative finding failed: IO Error: Could not set lock on file "/Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb": Conflicting lock is held in /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python (PID 47174) by user cal. However, you would be able to open this database in read-only mode, e.g. by using the -readonly parameter in the CLI. See also https://duckdb.org/docs/stable/connect/concurrency
+2025-08-24 23:59:10,924 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-25 00:00:10,950 - __main__ - ERROR - Alternative finding failed: IO Error: Could not set lock on file "/Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb": Conflicting lock is held in /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python (PID 47174) by user cal. However, you would be able to open this database in read-only mode, e.g. by using the -readonly parameter in the CLI. See also https://duckdb.org/docs/stable/connect/concurrency
+2025-08-25 00:00:47,228 - __main__ - ERROR - Failed to initialize knowledge graph connection: Claude Code knowledge not found in database
+2025-08-25 00:01:17,237 - __main__ - ERROR - Pattern recommendation failed: IO Error: Could not set lock on file "/Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb": Conflicting lock is held in /Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python (PID 47174) by user cal. However, you would be able to open this database in read-only mode, e.g. by using the -readonly parameter in the CLI. See also https://duckdb.org/docs/stable/connect/concurrency

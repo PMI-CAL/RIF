@@ -1,0 +1,29 @@
+{
+  "patterns": [
+    {
+      "pattern_id": "multi_issue_accelerator_224",
+      "pattern_name": "Multi-Issue Accelerator Anti-Pattern",
+      "pattern_type": "anti-pattern",
+      "effectiveness_rating": 0.1,
+      "success_rate": 0.0,
+      "usage_count": 1,
+      "related_issues": [
+        224
+      ],
+      "updated_at": "2025-08-25T03:10:31.747489"
+    },
+    {
+      "pattern_id": "correct_parallel_tasks_224",
+      "pattern_name": "Correct Parallel Task Launching",
+      "pattern_type": "correct",
+      "effectiveness_rating": 0.95,
+      "success_rate": 1.0,
+      "usage_count": 1,
+      "related_issues": [
+        224
+      ],
+      "updated_at": "2025-08-25T03:10:31.747796"
+    }
+  ],
+  "last_updated": "2025-08-25T03:10:31.747970"
+}

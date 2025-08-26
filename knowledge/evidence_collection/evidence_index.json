@@ -1,0 +1,49 @@
+{
+  "packages": [
+    {
+      "validation_id": "test_validation_231",
+      "issue_id": "231",
+      "evidence_count": 4,
+      "collection_timespan": "2025-08-25T00:16:16.124820 to 2025-08-25T00:16:18.158192",
+      "quality_score": 80.00237776333333,
+      "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_test_validation_231",
+      "created": "2025-08-25T00:16:18.162427"
+    },
+    {
+      "validation_id": "comprehensive_test_231",
+      "issue_id": "231",
+      "evidence_count": 1,
+      "collection_timespan": "2025-08-25T00:19:52.571010 to 2025-08-25T00:19:52.571758",
+      "quality_score": 53.33333333333333,
+      "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_comprehensive_test_231",
+      "created": "2025-08-25T00:19:52.572266"
+    },
+    {
+      "validation_id": "scenario_2_mcp_integration_231_1756106445",
+      "issue_id": "231",
+      "evidence_count": 3,
+      "collection_timespan": "2025-08-25T00:20:45.374335 to 2025-08-25T00:20:46.285222",
+      "quality_score": 80.00034222666666,
+      "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_scenario_2_mcp_integration_231_1756106445",
+      "created": "2025-08-25T00:20:46.286457"
+    },
+    {
+      "validation_id": "scenario_2_mcp_integration_231_1756106647",
+      "issue_id": "231",
+      "evidence_count": 3,
+      "collection_timespan": "2025-08-25T00:24:07.315791 to 2025-08-25T00:24:08.255221",
+      "quality_score": 80.00036798333333,
+      "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_scenario_2_mcp_integration_231_1756106647",
+      "created": "2025-08-25T00:24:08.256973"
+    },
+    {
+      "validation_id": "test_231",
+      "issue_id": "231",
+      "evidence_count": 1,
+      "collection_timespan": "2025-08-25T00:25:09.067178 to 2025-08-25T00:25:09.179918",
+      "quality_score": 53.33333333333333,
+      "storage_path": "/Users/cal/DEV/RIF/knowledge/evidence_collection/validation_test_231",
+      "created": "2025-08-25T00:25:09.180887"
+    }
+  ]
+}

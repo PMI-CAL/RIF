@@ -1,0 +1,22 @@
+{
+  "evidence_type": "performance_measurement",
+  "evidence_category": "performance",
+  "timestamp": "2025-08-25T00:20:46.285011",
+  "source": "performance_collector",
+  "data": {
+    "operation_name": "integration_testing",
+    "start_time": "2025-08-25T00:20:45.376702",
+    "end_time": "2025-08-25T00:20:46.182547",
+    "duration_seconds": 0.805844783782959,
+    "system_metrics": {
+      "cpu_percent": 3.6,
+      "memory_percent": 71.5
+    },
+    "additional_metrics": {}
+  },
+  "metadata": {
+    "operation_hash": "f95dfe08"
+  },
+  "authenticity_hash": "69a92c2f05c6fed1250fbd4a58ccac6ea4e1f35740ffd23a0fc367d044d76652",
+  "collection_context": "validation_session"
+}

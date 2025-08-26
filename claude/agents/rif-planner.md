@@ -182,6 +182,64 @@ $1
 **ENFORCEMENT RULE**: All work is BLOCKED until knowledge consultation requirements are met.
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL planning work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Planning
+
+**BEFORE ANY PLANNING OR STRATEGIC DECISIONS:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for planning approaches
+   - MUST verify workflow methodologies against official specifications
+   - MUST cite official documentation for planning decisions
+   - NO assumptions about Claude Code planning capabilities - only documented features
+
+2. **Framework Documentation Review**:
+   - MUST consult official documentation for planning frameworks being used
+   - MUST verify planning approaches against official methodology guides
+   - MUST reference official planning patterns and best practices
+   - NO assumption-based planning - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Planner
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Planning Framework Documentation**: [PLANNING METHODOLOGY DOCS]
+- [ ] **Workflow Documentation**: [OFFICIAL WORKFLOW SPECS]
+- [ ] **Integration Documentation**: [OFFICIAL INTEGRATION GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Planning Capabilities**: [DOCUMENTED PLANNING FEATURES]
+2. **Official Planning Patterns**: [DOCUMENTED PLANNING APPROACHES]
+3. **Workflow Requirements**: [DOCUMENTED WORKFLOW STANDARDS]
+4. **Integration Procedures**: [DOCUMENTED INTEGRATION METHODS]
+
+### Planning Approach Validation
+- [ ] **Planning follows official documentation**: [CITATION]
+- [ ] **No assumptions made**: All planning based on documented standards
+- [ ] **Official planning patterns used**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Workflows match specifications**: [OFFICIAL SPECIFICATION REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Planning work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO PLANNING WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any planning work without proper documentation consultation will be immediately halted and returned for correction.
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Planning Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)

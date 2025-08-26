@@ -1,0 +1,49 @@
+{
+  "timestamp": "2025-08-25T03:11:06.992049",
+  "task_count": 1,
+  "validation_result": {
+    "is_valid": false,
+    "pattern_type": "multi-issue-single-task",
+    "violations": [
+      "Multi-Issue Anti-Pattern: Task 'Multi-Issue Accelerator: Handle issues #1, #2, #3' attempts to handle 3 issues ([1, 2, 3]) in single Task",
+      "Generic Accelerator Anti-Pattern: Task 'Multi-Issue Accelerator: Handle issues #1, #2, #3' uses generic accelerator naming pattern",
+      "Invalid Agent: 'Multi-Issue Accelerator' is not a standard RIF agent. Use: RIF-Analyst, RIF-Planner, RIF-Architect, RIF-Implementer, RIF-Validator, RIF-Learner, RIF-PR-Manager",
+      "Missing Instructions: Task 'Multi-Issue Accelerator: Handle issues #1, #2, #3' prompt does not include 'Follow all instructions in claude/agents/[agent-file].md'"
+    ],
+    "suggestions": [
+      "Split multi-issue Tasks: Create separate Task() for each issue number. Launch all Tasks in one response for parallel execution.",
+      "Use specialized agents: Replace generic 'Accelerator' with specific RIF agents: RIF-Analyst, RIF-Planner, RIF-Architect, RIF-Implementer, RIF-Validator, RIF-Learner, RIF-PR-Manager",
+      "Add agent instructions: Include 'Follow all instructions in claude/agents/[agent-file].md' in all Task prompts"
+    ],
+    "confidence_score": 0.09999999999999998
+  },
+  "context": {},
+  "enforcement_action": "block_execution",
+  "corrective_guidance": {
+    "status": "violations_detected",
+    "message": "Orchestration pattern violations detected. Review and correct before execution.",
+    "violations": [
+      "Multi-Issue Anti-Pattern: Task 'Multi-Issue Accelerator: Handle issues #1, #2, #3' attempts to handle 3 issues ([1, 2, 3]) in single Task",
+      "Generic Accelerator Anti-Pattern: Task 'Multi-Issue Accelerator: Handle issues #1, #2, #3' uses generic accelerator naming pattern",
+      "Invalid Agent: 'Multi-Issue Accelerator' is not a standard RIF agent. Use: RIF-Analyst, RIF-Planner, RIF-Architect, RIF-Implementer, RIF-Validator, RIF-Learner, RIF-PR-Manager",
+      "Missing Instructions: Task 'Multi-Issue Accelerator: Handle issues #1, #2, #3' prompt does not include 'Follow all instructions in claude/agents/[agent-file].md'"
+    ],
+    "suggestions": [
+      "Split multi-issue Tasks: Create separate Task() for each issue number. Launch all Tasks in one response for parallel execution.",
+      "Use specialized agents: Replace generic 'Accelerator' with specific RIF agents: RIF-Analyst, RIF-Planner, RIF-Architect, RIF-Implementer, RIF-Validator, RIF-Learner, RIF-PR-Manager",
+      "Add agent instructions: Include 'Follow all instructions in claude/agents/[agent-file].md' in all Task prompts"
+    ],
+    "corrective_examples": [
+      {
+        "violation_type": "Multi-Issue Anti-Pattern",
+        "wrong_approach": "Task(\n    description=\"Multi-Issue Accelerator: Handle issues #1, #2, #3\",\n    prompt=\"Handle multiple issues in parallel...\"\n)",
+        "correct_approach": "# Multiple Tasks in ONE response:\nTask(\n    description=\"RIF-Implementer: Issue #1 implementation\",\n    prompt=\"You are RIF-Implementer. Handle issue #1. Follow all instructions in claude/agents/rif-implementer.md.\"\n)\nTask(\n    description=\"RIF-Implementer: Issue #2 implementation\", \n    prompt=\"You are RIF-Implementer. Handle issue #2. Follow all instructions in claude/agents/rif-implementer.md.\"\n)\nTask(\n    description=\"RIF-Implementer: Issue #3 implementation\",\n    prompt=\"You are RIF-Implementer. Handle issue #3. Follow all instructions in claude/agents/rif-implementer.md.\"\n)"
+      },
+      {
+        "violation_type": "Generic Accelerator Anti-Pattern",
+        "wrong_approach": "Task(\n    description=\"Batch Processing Accelerator\",\n    prompt=\"Process multiple tasks efficiently...\"\n)",
+        "correct_approach": "Task(\n    description=\"RIF-Implementer: Specific implementation task\",\n    prompt=\"You are RIF-Implementer. Implement specific feature. Follow all instructions in claude/agents/rif-implementer.md.\"\n)"
+      }
+    ]
+  }
+}

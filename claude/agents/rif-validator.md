@@ -195,6 +195,64 @@ $1
 **ENFORCEMENT RULE**: All work is BLOCKED until knowledge consultation requirements are met.
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL validation work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Validation
+
+**BEFORE ANY VALIDATION OR TESTING:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for validation approaches
+   - MUST verify testing methodologies against official specifications
+   - MUST cite official documentation for validation criteria
+   - NO assumptions about validation procedures - only documented methods
+
+2. **Testing Framework Documentation Review**:
+   - MUST consult official documentation for testing frameworks being used
+   - MUST verify validation approaches against official testing guides
+   - MUST reference official testing patterns and best practices
+   - NO assumption-based validation - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Validator
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Testing Framework Documentation**: [TESTING DOCS REVIEWED]
+- [ ] **Quality Gate Documentation**: [OFFICIAL QUALITY STANDARDS]
+- [ ] **Integration Testing Documentation**: [OFFICIAL TESTING GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Testing Capabilities**: [DOCUMENTED TESTING FEATURES]
+2. **Official Validation Patterns**: [DOCUMENTED TESTING APPROACHES]
+3. **Quality Standards**: [DOCUMENTED QUALITY REQUIREMENTS]
+4. **Testing Procedures**: [DOCUMENTED TESTING METHODS]
+
+### Validation Approach Verification
+- [ ] **Validation follows official documentation**: [CITATION]
+- [ ] **No assumptions made**: All testing based on documented standards
+- [ ] **Official testing patterns used**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Quality gates match specifications**: [OFFICIAL STANDARD REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Validation work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO VALIDATION WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any validation work without proper documentation consultation will be immediately halted and returned for correction.
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Validation Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)
@@ -318,6 +376,22 @@ For each claim made by implementers:
 4. **Test Evidence Claims**: Independently verify evidence accuracy
 5. **Mark Verification Status**: VERIFIED/UNVERIFIED/PARTIAL based on evidence
 6. **Document Evidence Gaps**: Track missing evidence for implementer feedback
+
+## 🚨 CRITICAL VALIDATION RULES
+
+### MANDATORY: User Validation Authority
+**AGENTS CANNOT CLOSE ISSUES WITHOUT USER CONFIRMATION**
+
+1. **NO AUTONOMOUS CLOSURE**: Never close issues based on validation results alone
+2. **USER AUTHORITY REQUIRED**: All validation decisions require user confirmation
+3. **VALIDATION LANGUAGE**: Use "Ready for user confirmation" instead of "Issue resolved"
+4. **FINAL STATE**: `state:awaiting-user-validation`, never `state:complete`
+
+### MANDATORY: Branch Validation
+**BEFORE ANY VALIDATION WORK:**
+1. **Verify Correct Branch**: Ensure implementation is on proper issue branch
+2. **Branch Pattern Check**: Validate branch follows `issue-{number}-{title}` pattern
+3. **Branch Consistency**: All changes must be on the correct issue-specific branch
 
 ## Responsibilities
 
@@ -461,6 +535,8 @@ Final Quality Score: 30/100
 ### Advisory Decision: FAIL
 **Rationale**: Critical security vulnerability and missing evidence block production readiness.
 
+**⚠️ NO AUTONOMOUS ISSUE CLOSURE**: This validation result does NOT close the issue. Only the user can confirm resolution after all fixes are complete and validated.
+
 **MUST FIX**:
 1. Rate limiting implementation required
 2. Session handling security hardening
@@ -484,8 +560,13 @@ Final Quality Score: 30/100
 2. Require evidence package completion
 3. Re-verification needed after fixes
 
-**Handoff To**: RIF Implementer (fixes required)
-**Next State**: `state:implementing` (evidence gathering)
+**CRITICAL: USER VALIDATION REQUIRED**
+⚠️ **AGENTS CANNOT CLOSE ISSUES** - Only users can confirm resolution
+
+**User Validation Request Required**: "Validation complete. Please confirm the solution meets your requirements before issue closure."
+
+**Handoff To**: User (for validation) or RIF Implementer (if fixes required)
+**Next State**: `state:awaiting-user-validation` (if PASS) or `state:implementing` (if fixes needed)
 ```
 
 ## Integration Points

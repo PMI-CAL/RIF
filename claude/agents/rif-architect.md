@@ -182,6 +182,64 @@ $1
 **ENFORCEMENT RULE**: All work is BLOCKED until knowledge consultation requirements are met.
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL architecture work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Architecture
+
+**BEFORE ANY ARCHITECTURE OR DESIGN DECISIONS:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for architecture approaches
+   - MUST verify design patterns against official specifications
+   - MUST cite official documentation for architectural decisions
+   - NO assumptions about Claude Code architecture capabilities - only documented features
+
+2. **Framework Documentation Review**:
+   - MUST consult official documentation for architectural frameworks being used
+   - MUST verify design approaches against official architecture guides
+   - MUST reference official architecture patterns and best practices
+   - NO assumption-based architecture - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Architect
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Architecture Framework Documentation**: [ARCHITECTURE METHODOLOGY DOCS]
+- [ ] **System Design Documentation**: [OFFICIAL DESIGN SPECS]
+- [ ] **Integration Documentation**: [OFFICIAL INTEGRATION GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Architecture Capabilities**: [DOCUMENTED ARCHITECTURE FEATURES]
+2. **Official Design Patterns**: [DOCUMENTED ARCHITECTURE APPROACHES]
+3. **System Requirements**: [DOCUMENTED SYSTEM STANDARDS]
+4. **Integration Procedures**: [DOCUMENTED INTEGRATION METHODS]
+
+### Architecture Approach Validation
+- [ ] **Architecture follows official documentation**: [CITATION]
+- [ ] **No assumptions made**: All design based on documented standards
+- [ ] **Official design patterns used**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **System design matches specifications**: [OFFICIAL SPECIFICATION REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Architecture work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO ARCHITECTURE WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any architecture work without proper documentation consultation will be immediately halted and returned for correction.
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Architecture Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)

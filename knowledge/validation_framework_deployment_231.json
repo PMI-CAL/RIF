@@ -1,0 +1,62 @@
+{
+  "deployment_id": "validation_framework_231_1756106387",
+  "timestamp": "2025-08-25T00:19:47.453978",
+  "components": {
+    "integration_enforcer": {
+      "status": "deployed",
+      "verification": "passed",
+      "session_key": "mcp_integration_231_1756106387",
+      "blocking_verification": "confirmed",
+      "details": "Enforcer properly blocks validation without integration tests"
+    },
+    "evidence_collector": {
+      "status": "deployed",
+      "verification": "passed",
+      "session_key": "deployment_test_231_1756106387",
+      "evidence_items_collected": 1,
+      "quality_score": 53.33333333333333,
+      "details": "Evidence collector properly gathering validation evidence"
+    },
+    "production_simulator": {
+      "status": "failed",
+      "error": "Simulation failed to start properly: {'simulation_id': 'deployment_verification_1756106388', 'status': 'error', 'elapsed_time': 4.008647203445435, 'active_conditions': ['network_latency', 'concurrent_user_load'], 'completed_conditions': [], 'tests_run': 0, 'errors_encountered': 0}"
+    },
+    "adversarial_tester": {
+      "status": "deployed",
+      "verification": "passed",
+      "test_categories": [
+        "edge_cases",
+        "failure_conditions",
+        "resource_exhaustion",
+        "timing_attacks",
+        "input_validation"
+      ],
+      "template_count": 13,
+      "details": "Adversarial test generator ready to challenge assumptions"
+    },
+    "integration_tests": {
+      "status": "verified",
+      "test_file_exists": true,
+      "functions_found": 0,
+      "required_functions": 3,
+      "file_path": "/Users/cal/DEV/RIF/tests/mcp/integration/test_mcp_claude_desktop_integration.py",
+      "details": "Integration test suite ready for validation execution"
+    }
+  },
+  "integration_tests": {
+    "comprehensive_validation": {
+      "success": false,
+      "error": "Comprehensive validation test failed"
+    }
+  },
+  "verification_results": {
+    "deployment_success": false,
+    "components_deployed": 4,
+    "total_components": 5,
+    "deployment_percentage": 80.0,
+    "comprehensive_validation_passed": false,
+    "false_positive_prevention_active": true,
+    "validation_framework_operational": false
+  },
+  "deployment_success": false
+}
