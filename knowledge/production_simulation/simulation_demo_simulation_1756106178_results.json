@@ -1,0 +1,76 @@
+{
+  "simulation_id": "demo_simulation_1756106178",
+  "start_time": "2025-08-25T00:16:18.236170",
+  "end_time": "2025-08-25T00:16:27.253342",
+  "conditions_applied": [
+    "high_cpu_load",
+    "concurrent_user_load"
+  ],
+  "test_results": {
+    "total_tests": 1,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "success_rate": 100.0,
+    "test_details": {
+      "demo_validation_test": {
+        "test_name": "demo_validation_test",
+        "simulation_id": "demo_simulation_1756106178",
+        "start_time": "2025-08-25T00:16:24.244105",
+        "active_conditions": [
+          "high_cpu_load"
+        ],
+        "applied_effects": {},
+        "status": "completed",
+        "success": true,
+        "test_output": {
+          "test_passed": true,
+          "response_time": 0.7635713569378704,
+          "connections_tested": 1
+        },
+        "execution_time": 2.001253128051758,
+        "end_time": "2025-08-25T00:16:26.245365"
+      }
+    }
+  },
+  "performance_metrics": {
+    "baseline": {
+      "cpu_percent": 5.1,
+      "memory_percent": 71.9,
+      "disk_usage_percent": 14.6,
+      "network_io": {
+        "bytes_sent": 195241314215,
+        "bytes_recv": 394027972300,
+        "packets_sent": 250613370,
+        "packets_recv": 322859103,
+        "errin": 0,
+        "errout": 0,
+        "dropin": 0,
+        "dropout": 0
+      },
+      "process_count": 688
+    },
+    "final": {
+      "cpu_percent": 6.1,
+      "memory_percent": 72.4,
+      "disk_usage_percent": 14.6,
+      "network_io": {
+        "bytes_sent": 195241333559,
+        "bytes_recv": 394027980998,
+        "packets_sent": 250613419,
+        "packets_recv": 322859143,
+        "errin": 0,
+        "errout": 0,
+        "dropin": 0,
+        "dropout": 0
+      },
+      "process_count": 693
+    },
+    "performance_impact": {
+      "cpu_change": 1.0,
+      "memory_change": 0.5
+    }
+  },
+  "error_conditions": [],
+  "success": true,
+  "realism_score": 30.0
+}

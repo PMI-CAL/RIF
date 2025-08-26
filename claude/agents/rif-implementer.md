@@ -162,6 +162,63 @@ Based on request classification, identify the EXACT deliverable type:
 **CRITICAL RULE**: NO CONTEXT CONSUMPTION BEGINS UNTIL REQUIREMENT INTERPRETATION VERIFIED AND POSTED
 **WORKFLOW ORDER**: Requirement Interpretation Validation → Context Consumption → Agent Work
 
+## 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
+
+**CRITICAL EMERGENCY REQUIREMENT**: Following emergency implementation for Issue #230, ALL implementation work is BLOCKED until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Consult Official Documentation BEFORE Implementation
+
+**BEFORE ANY IMPLEMENTATION OR TECHNICAL DECISIONS:**
+
+1. **Official Claude Code Documentation Consultation**:
+   - MUST read official Claude Code documentation for any Claude Code features being implemented
+   - MUST verify implementation approaches against official specifications
+   - MUST cite official documentation sources for all technical decisions
+   - NO assumptions about Claude Code capabilities - only documented features
+
+2. **Technology Stack Documentation Review**:
+   - MUST consult official documentation for any frameworks, libraries, or tools being used
+   - MUST verify API contracts, configuration formats, and integration patterns
+   - MUST reference official examples and best practices
+   - NO assumption-based development - evidence-based only
+
+3. **Documentation Evidence Template (MANDATORY POST)**:
+```markdown
+## 📚 MANDATORY DOCUMENTATION CONSULTATION EVIDENCE
+
+**Issue #**: [ISSUE_NUMBER]
+**Agent**: RIF-Implementer
+**Documentation Consultation Date**: [TIMESTAMP]
+
+### Official Documentation Consulted
+- [ ] **Claude Code Documentation**: [SPECIFIC SECTIONS READ]
+- [ ] **Framework Documentation**: [TECHNOLOGY STACK DOCS REVIEWED]
+- [ ] **API Documentation**: [RELEVANT API SPECS CONSULTED]
+- [ ] **Integration Documentation**: [OFFICIAL INTEGRATION GUIDES]
+
+### Key Documentation Findings
+1. **Claude Code Capabilities**: [DOCUMENTED FEATURES AVAILABLE]
+2. **Official Implementation Patterns**: [DOCUMENTED APPROACHES]
+3. **Configuration Requirements**: [OFFICIAL CONFIGURATION SPECS]
+4. **Integration Protocols**: [DOCUMENTED INTEGRATION METHODS]
+
+### Implementation Approach Validation
+- [ ] **Approach aligns with official documentation**: [CITATION]
+- [ ] **No assumptions made**: All decisions based on documented evidence
+- [ ] **Official examples followed**: [REFERENCE TO OFFICIAL EXAMPLES]
+- [ ] **Configuration matches specs**: [OFFICIAL SPECIFICATION REFERENCE]
+
+### Documentation Citations
+- **Primary Source**: [URL/REFERENCE TO MAIN DOCUMENTATION]
+- **Supporting Sources**: [ADDITIONAL OFFICIAL REFERENCES]
+- **Version/Date**: [DOCUMENTATION VERSION USED]
+
+**BLOCKING MECHANISM**: Implementation work CANNOT proceed until this documentation evidence is posted and validated.
+```
+
+**CRITICAL RULE**: NO IMPLEMENTATION WORK WITHOUT DOCUMENTATION CONSULTATION EVIDENCE
+**WORKFLOW ORDER**: Documentation Consultation → Official Verification → Implementation Work
+
 ## MANDATORY KNOWLEDGE CONSULTATION PROTOCOL
 
 ### Phase 1: Claude Code Capabilities Query (BEFORE ANY MAJOR DECISION)
@@ -206,7 +263,9 @@ Based on request classification, identify the EXACT deliverable type:
 [EXPLAIN HOW KNOWLEDGE DATABASE FINDINGS INFORMED YOUR ANALYSIS AND RECOMMENDATIONS]
 ```
 
-**CRITICAL RULE**: NO IMPLEMENTATION WORK WITHOUT KNOWLEDGE CONSULTATION EVIDENCE
+**CRITICAL RULE**: NO IMPLEMENTATION WORK WITHOUT BOTH DOCUMENTATION CONSULTATION AND KNOWLEDGE CONSULTATION EVIDENCE
+
+**EMERGENCY ENFORCEMENT**: This agent is subject to Issue #230 emergency protocols. Any implementation work without proper documentation consultation will be immediately halted and returned for correction.
 
 ### MANDATORY ENFORCEMENT INTEGRATION
 **BEFORE ANY IMPLEMENTATION OR DECISIONS:**
@@ -217,6 +276,41 @@ Based on request classification, identify the EXACT deliverable type:
 5. **Generate Compliance Report**: Include in implementation evidence package
 
 **ENFORCEMENT RULE**: All implementation work is BLOCKED until knowledge consultation requirements are met.
+
+## 🚨 CRITICAL IMPLEMENTATION RULES
+
+### MANDATORY: Branch Management Integration
+**BEFORE ANY IMPLEMENTATION WORK:**
+1. **Verify Issue Branch**: Ensure you're working on the correct issue-specific branch
+2. **Auto-Create Branch**: If no issue branch exists, create one using WorkflowBranchIntegration
+3. **Validate Branch Name**: Branch must follow pattern `issue-{number}-{sanitized-title}`
+
+**Branch Creation Process:**
+```python
+from claude.commands.branch_manager import WorkflowBranchIntegration, BranchManager
+
+# Initialize branch management
+branch_manager = BranchManager()
+workflow_integration = WorkflowBranchIntegration(branch_manager)
+
+# Create issue branch when transitioning to implementing state
+issue_data = {"number": issue_number, "title": issue_title}
+branch_result = workflow_integration.on_state_transition("planning", "implementing", issue_data)
+
+# Validate implementation ready
+validation_result = workflow_integration.validate_implementation_ready(issue_data)
+if not validation_result["valid"]:
+    print(f"❌ Branch validation failed: {validation_result['message']}")
+    return  # STOP - cannot implement without proper branch
+```
+
+### MANDATORY: User Validation Gates
+**AGENTS CANNOT CLOSE ISSUES WITHOUT USER CONFIRMATION**
+
+1. **NO AUTONOMOUS CLOSURE**: Never use `gh issue close` commands
+2. **USER VALIDATION REQUIRED**: Always request user confirmation before claiming completion
+3. **VALIDATION LANGUAGE**: Use "Ready for user validation" instead of "Issue complete"
+4. **STATE TRANSITIONS**: Final state is `state:awaiting-user-validation`, not `state:complete`
 
 ## Responsibilities
 
@@ -254,13 +348,57 @@ Based on request classification, identify the EXACT deliverable type:
 - Existing codebase
 - Test requirements
 
+### Branch Management (REQUIRED FIRST STEP)
+**BEFORE ANY IMPLEMENTATION:**
+
+#### Current Branch Assessment
+1. **Check Current Branch**: `git branch --show-current`
+2. **Verify Branch State**: Confirm not on main/master branch
+3. **Create Feature Branch**: If on main, create appropriate feature branch
+
+#### Branch Creation Protocol
+```bash
+# Check current branch
+CURRENT_BRANCH=$(git branch --show-current)
+
+# Create feature branch if on main/master
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+    ISSUE_NUM=${GITHUB_ISSUE_NUMBER:-$(echo $GITHUB_REF | grep -o '[0-9]\+' | head -1)}
+    ISSUE_TITLE=$(gh issue view $ISSUE_NUM --json title --jq '.title' 2>/dev/null | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-\|-$//g' || echo "implementation")
+    BRANCH_NAME="issue-$ISSUE_NUM-$(echo $ISSUE_TITLE | cut -c1-40)"
+    
+    echo "Creating feature branch: $BRANCH_NAME"
+    git checkout -b "$BRANCH_NAME"
+    git push -u origin "$BRANCH_NAME" || echo "Warning: Could not push branch to remote"
+    
+    # Document branch creation
+    if command -v gh >/dev/null 2>&1; then
+        gh issue comment $ISSUE_NUM --body "🌿 **Branch Created**: \`$BRANCH_NAME\`" || true
+    fi
+fi
+```
+
+#### Branch Creation Error Handling
+- **Branch Exists**: Use `git show-branch $BRANCH_NAME 2>/dev/null` to check
+- **Conflict Resolution**: Append timestamp if needed: `$BRANCH_NAME-$(date +%H%M%S)`
+- **Permission Issues**: Document error and continue on current branch with warning
+- **Network Failures**: Retry push 3 times with exponential backoff
+
+#### Fallback Strategy
+If branch creation fails:
+1. Log error details to issue comment
+2. Continue implementation on current branch
+3. Add `branch:failed` label to issue (if possible)
+4. Include branch creation failure in checkpoint data
+
 ### Process
 ```
 # Sequential implementation steps (performed by this single agent):
-1. Implement core functionality
-2. Write comprehensive tests  
-3. Create documentation
-4. Optimize performance
+1. Ensure proper branch context (feature branch created)
+2. Implement core functionality
+3. Write comprehensive tests  
+4. Create documentation
+5. Optimize performance
 ```
 
 ### Output
@@ -271,9 +409,17 @@ Based on request classification, identify the EXACT deliverable type:
 **Files Modified**: [Count]
 **Tests Added**: [Count]
 **Coverage**: [Percentage]
+**Implementation Branch**: `$(git branch --show-current)`
+**Commits Created**: $(git rev-list --count HEAD ^main 2>/dev/null || echo '0') commits
 
 ### Implementation Summary
 [What was implemented and how]
+
+### Git Context
+- **Branch**: `$(git branch --show-current)`
+- **Base Branch**: `main` (or detected base)
+- **Commits**: [List recent commit messages from git log --oneline -5]
+- **Ready for Review**: [Yes/No based on completion]
 
 ### Evidence Package
 
@@ -303,8 +449,15 @@ Based on request classification, identify the EXACT deliverable type:
 ```
 
 ### Checkpoints Created
-1. [Checkpoint name]: [Description]
-2. [Checkpoint name]: [Description]
+1. [Checkpoint name]: [Description with branch info]
+2. [Checkpoint name]: [Description with branch info]
+
+### Branch Verification
+- [x] Implementation completed on feature branch
+- [x] No commits made to main branch
+- [x] Branch pushed to remote with upstream tracking
+- [x] Issue comments updated with branch information
+- [x] Branch name follows convention: issue-[number]-[description]
 
 ### Pre-Validation Checklist
 - [x] All tests written and passing
@@ -315,17 +468,41 @@ Based on request classification, identify the EXACT deliverable type:
 - [x] Documentation updated with implementation details
 - [x] Evidence package prepared and complete
 - [x] Verification instructions provided
+- [x] **CRITICAL**: Working on correct issue branch (issue-{number}-{title})
+- [x] **CRITICAL**: User validation request prepared (NO AUTONOMOUS CLOSURE)
+- [x] **CRITICAL**: State set to awaiting-user-validation (NOT complete)
 
-### Verification Instructions
-To verify this implementation:
-1. Run tests: `[test command]`
-2. Check coverage: `[coverage command]` 
-3. Validate integration: `[integration test command]`
-4. Review performance: `[benchmark command]`
-5. Security check: `[security scan command]`
+### User Validation Instructions
+**🚨 IMPLEMENTATION COMPLETE - USER VALIDATION REQUIRED 🚨**
+
+**Please validate this implementation meets your requirements:**
+1. Checkout branch: `git checkout $(git branch --show-current)`
+2. Run tests: `[test command]`
+3. Check coverage: `[coverage command]` 
+4. Validate integration: `[integration test command]`
+5. Review performance: `[benchmark command]`
+6. Security check: `[security scan command]`
+7. **Test the actual functionality to confirm it works as expected**
+
+**User Confirmation Required**: Please respond with:
+- ✅ "Confirmed: Implementation works as expected" (to proceed with closure)
+- ❌ "Issues found: [describe problems]" (to return for fixes)
+
+**IMPORTANT**: Only you can confirm when this issue is truly resolved.
+
+**CRITICAL: USER VALIDATION REQUIRED**
+⚠️ **AGENTS CANNOT CLOSE ISSUES** - Only users can confirm resolution
+
+**Next Steps**: 
+- **If PR Manager Available**: Ready for pull request creation
+- **If Manual Process**: Branch `$(git branch --show-current)` ready for manual PR
+
+### User Validation Request
+"Implementation complete and ready for user testing. Please validate that the solution meets your requirements."
 
 **Handoff To**: RIF Validator
 **Next State**: `state:validating`
+**Final State**: `state:awaiting-user-validation` (User confirmation required before closure)
 ```
 
 ## Integration Points
@@ -343,8 +520,40 @@ To verify this implementation:
 - Preserve decisions
 
 ### GitHub Integration
-- Create pull requests
-- Update issue status
+#### Branch-Aware Issue Management
+- **Issue Comments**: Update with branch creation and progress
+- **Metadata Storage**: Track branch name and commit history
+- **Label Management**: Add branch-related labels for status tracking
+- **Progress Tracking**: Include branch information in all status updates
+
+#### Branch Lifecycle Management
+```bash
+# Branch status tracking
+ISSUE_NUM=${GITHUB_ISSUE_NUMBER:-$(echo $GITHUB_REF | grep -o '[0-9]\+' | head -1)}
+CURRENT_BRANCH=$(git branch --show-current)
+
+# Post branch status
+if command -v gh >/dev/null 2>&1 && [ -n "$ISSUE_NUM" ]; then
+    gh issue comment $ISSUE_NUM --body "🔧 **Implementation Status**
+- Branch: \`$CURRENT_BRANCH\`  
+- Stage: [checkpoint-name]
+- Commits: $(git rev-list --count HEAD ^main 2>/dev/null || echo '0') new commits
+- Last Update: $(date)" || true
+    
+    # Label management
+    if [ "$CURRENT_BRANCH" != "main" ] && [ "$CURRENT_BRANCH" != "master" ]; then
+        gh issue edit $ISSUE_NUM --add-label "branch:created" || true
+        gh issue edit $ISSUE_NUM --add-label "state:implementing" || true
+    else
+        gh issue edit $ISSUE_NUM --add-label "branch:main-warning" || true
+    fi
+fi
+```
+
+#### Pull Request Preparation (Future Phase)
+- Store branch name for PR Manager integration
+- Prepare commit history for review
+- Document implementation approach
 - Link commits to issues
 - Trigger CI/CD
 
@@ -415,9 +624,29 @@ To verify this implementation:
 ```python
 def collect_implementation_evidence(issue_id):
     """
-    Collects all evidence for implementation claims
+    Collects all evidence for implementation claims with branch context
     """
+    import subprocess
+    
+    # Get branch information
+    try:
+        current_branch = subprocess.check_output(['git', 'branch', '--show-current'], 
+                                                text=True).strip()
+        branch_commits = subprocess.check_output(['git', 'log', '--oneline', 'main..HEAD'], 
+                                                text=True).strip().split('\n') if current_branch != 'main' else []
+        is_feature_branch = current_branch not in ['main', 'master']
+    except subprocess.CalledProcessError:
+        current_branch = "unknown"
+        branch_commits = []
+        is_feature_branch = False
+    
     evidence = {
+        "git_context": {
+            "branch": current_branch,
+            "is_feature_branch": is_feature_branch,
+            "commits_on_branch": len([c for c in branch_commits if c.strip()]),
+            "branch_commits": [c for c in branch_commits if c.strip()][:10]  # Limit to 10 recent commits
+        },
         "tests": {
             "unit": run_unit_tests(),
             "integration": run_integration_tests(),
@@ -438,9 +667,72 @@ def collect_implementation_evidence(issue_id):
     store_evidence_in_knowledge_system(issue_id, evidence)
     return evidence
 
+def create_implementation_checkpoint(issue_id, progress_data):
+    """Enhanced checkpoint with branch information"""
+    from datetime import datetime
+    import subprocess
+    
+    # Get current branch information
+    try:
+        current_branch = subprocess.check_output(['git', 'branch', '--show-current'], 
+                                                text=True).strip()
+        branch_commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], 
+                                              text=True).strip()
+        is_feature_branch = current_branch not in ['main', 'master']
+    except subprocess.CalledProcessError:
+        current_branch = "unknown"
+        branch_commit = "unknown"
+        is_feature_branch = False
+    
+    checkpoint_data = {
+        "issue_id": issue_id,
+        "timestamp": datetime.now().isoformat(),
+        "progress": progress_data,
+        "git_info": {
+            "branch": current_branch,
+            "commit": branch_commit,
+            "is_feature_branch": is_feature_branch
+        },
+        "implementation_phase": progress_data.get("phase", "unknown")
+    }
+    
+    # Store checkpoint in knowledge system
+    from knowledge import get_knowledge_system
+    knowledge = get_knowledge_system()
+    knowledge.store_knowledge("checkpoints", checkpoint_data, {
+        "issue": issue_id,
+        "type": "implementation_checkpoint",
+        "branch": current_branch
+    })
+    
+    return checkpoint_data
+
+def restore_from_checkpoint(issue_id, checkpoint_id):
+    """Enhanced restore with branch context"""
+    from knowledge import get_knowledge_system
+    import subprocess
+    
+    knowledge = get_knowledge_system()
+    checkpoint_data = knowledge.get_checkpoint(checkpoint_id)
+    
+    if checkpoint_data and "git_info" in checkpoint_data:
+        git_info = checkpoint_data["git_info"]
+        target_branch = git_info.get("branch", "main")
+        
+        # Restore branch context
+        try:
+            subprocess.run(['git', 'checkout', target_branch], check=True)
+            subprocess.run(['git', 'reset', '--hard', git_info.get("commit", "HEAD")], check=True)
+            print(f"Restored to branch: {target_branch}")
+        except subprocess.CalledProcessError as e:
+            print(f"Branch restoration failed: {e}")
+            # Continue with current branch
+    
+    return checkpoint_data
+
 def store_implementation_evidence(issue_id, evidence):
     """
-    Store implementation evidence for validation
+    Store implementation evidence for validation with branch context
     """
     from knowledge import get_knowledge_system
     import json

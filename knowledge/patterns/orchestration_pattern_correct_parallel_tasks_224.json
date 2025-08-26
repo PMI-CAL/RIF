@@ -1,0 +1,38 @@
+{
+  "pattern_id": "correct_parallel_tasks_224",
+  "pattern_name": "Correct Parallel Task Launching",
+  "pattern_type": "correct",
+  "description": "Multiple Task invocations launched in a single Claude response for true parallel execution. Each Task handles one specific issue with specialized agent.",
+  "example_tasks": [
+    {
+      "description": "RIF-Implementer: User authentication system",
+      "prompt": "You are RIF-Implementer. Implement user authentication for issue #1. Follow all instructions in claude/agents/rif-implementer.md.",
+      "subagent_type": "general-purpose"
+    },
+    {
+      "description": "RIF-Implementer: Database connection pooling",
+      "prompt": "You are RIF-Implementer. Implement database connection pooling for issue #2. Follow all instructions in claude/agents/rif-implementer.md.",
+      "subagent_type": "general-purpose"
+    },
+    {
+      "description": "RIF-Validator: API validation framework",
+      "prompt": "You are RIF-Validator. Validate API framework for issue #3. Follow all instructions in claude/agents/rif-validator.md.",
+      "subagent_type": "general-purpose"
+    }
+  ],
+  "context": "Proper implementation of Claude Code's parallel execution model. Multiple Tasks launched in single response run concurrently.",
+  "effectiveness_rating": 0.95,
+  "usage_count": 1,
+  "success_rate": 1.0,
+  "lessons_learned": [
+    "One Task = One Issue = One Specialized Agent principle",
+    "Multiple Tasks in single response enables true parallel execution",
+    "Agent specialization improves task effectiveness",
+    "Proper agent instructions essential for success"
+  ],
+  "related_issues": [
+    224
+  ],
+  "created_at": "2025-08-25T03:10:31.747794",
+  "updated_at": "2025-08-25T03:10:31.747796"
+}

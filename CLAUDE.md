@@ -101,6 +101,83 @@ Documentation references to `Task.parallel()` are **pseudocode** meaning:
 
 It is NOT a real function - it represents the pattern of parallel Task execution.
 
+## 🚫 ORCHESTRATION ANTI-PATTERNS TO AVOID
+
+### ❌ CRITICAL ANTI-PATTERN: "Multi-Issue Accelerator" Agent
+
+**THE PROBLEM**: Attempting to create a single Task agent to handle multiple issues in parallel.
+
+#### Wrong Approach (NEVER DO THIS)
+```python
+# ❌ INCORRECT - Single agent handling multiple issues
+Task(
+    description="Multi-Issue Accelerator: Handle issues #1, #2, #3",
+    subagent_type="general-purpose",
+    prompt="You are a Multi-Issue Accelerator agent. Handle these issues in parallel: Issue #1: user auth, Issue #2: database pool, Issue #3: API validation"
+)
+```
+
+**Why This Fails**:
+- Creates sequential processing bottleneck instead of parallel execution  
+- Violates Claude Code's natural parallel Task execution model
+- Requires manual intervention to correct
+- Defeats the purpose of specialized agents
+- Cannot leverage parallel processing capabilities
+
+#### Correct Approach (ALWAYS DO THIS)
+```python
+# ✅ CORRECT - Multiple Task invocations in ONE response
+Task(
+    description="RIF-Implementer: User authentication system",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Implementer. Implement user authentication for issue #1. Follow all instructions in claude/agents/rif-implementer.md."
+)
+Task(
+    description="RIF-Implementer: Database connection pooling",
+    subagent_type="general-purpose", 
+    prompt="You are RIF-Implementer. Implement database connection pooling for issue #2. Follow all instructions in claude/agents/rif-implementer.md."
+)
+Task(
+    description="RIF-Validator: API validation framework",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Validator. Validate API framework implementation for issue #3. Follow all instructions in claude/agents/rif-validator.md."
+)
+# These run IN PARALLEL because they're launched in the same response
+```
+
+**Why This Works**:
+- Each Task runs as independent parallel process
+- Specialized agents handle specific work types optimally
+- True parallel execution with no bottlenecks
+- Follows documented Claude Code patterns
+- No manual intervention required
+
+### 🔍 Orchestration Anti-Pattern Detection
+
+#### Red Flags That Indicate Anti-Patterns
+- Task descriptions containing multiple issue numbers
+- Agent names like "Multi-Issue", "Accelerator", "Batch", "Combined"
+- Single Task prompts mentioning "handle these issues", "process multiple", "parallel issues"
+- Task descriptions longer than 2 lines trying to cover multiple concerns
+- Agent instructions that don't match standard rif-*.md agent roles
+
+#### Pattern Validation Questions
+Before launching any Task, ask:
+1. **Single Responsibility**: Does this Task handle exactly ONE issue or concern?
+2. **Agent Specialization**: Am I using the right agent type for this specific work?
+3. **Parallel Intent**: If I want parallel execution, am I launching multiple Tasks?
+4. **Instruction Alignment**: Does the prompt match the agent's specialized role?
+
+### 📚 Side-by-Side Pattern Comparison
+
+| ❌ WRONG: Anti-Pattern | ✅ RIGHT: Proper Pattern |
+|------------------------|---------------------------|
+| Single "Multi-Issue" Task | Multiple specialized Tasks |
+| Sequential bottleneck | True parallel execution |
+| Generic multi-purpose agent | Specialized role-based agents |
+| Manual correction required | Automatic parallel processing |
+| Violates Claude Code model | Follows Claude Code design |
+
 ## 🧠 ORCHESTRATION INTELLIGENCE FRAMEWORK
 
 **CRITICAL**: Before launching any agents, the orchestrator MUST perform intelligent dependency analysis.
@@ -170,18 +247,158 @@ else:
     Task("Implement validated feature B", ...)
 ```
 
-### Key Rules for Intelligent Orchestration
+### 🚨 MANDATORY DOCUMENTATION-FIRST REQUIREMENTS
 
-1. **ANALYZE DEPENDENCIES FIRST** - Never launch agents without dependency analysis
-2. **RESPECT SEQUENTIAL PHASES** - Research → Architecture → Implementation → Validation
-3. **PRIORITIZE BLOCKING ISSUES** - Critical infrastructure before all other work
-4. **ONE PHASE AT A TIME** - Don't start implementation until research/architecture complete
-5. **NEVER do implementation work directly** - Always delegate to agents
-6. **Launch multiple Tasks in ONE response** for parallel execution (when appropriate)
-7. **Include full agent instructions** in the Task prompt
-8. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
-9. **Let agents handle GitHub interactions** (posting comments, changing labels)
-10. **Trust the agent specialization** - Don't micromanage their work
+**CRITICAL EMERGENCY REQUIREMENT**: Following Issue #230 emergency implementation, ALL RIF agents are BLOCKED from work until official documentation consultation is completed and evidenced.
+
+### MANDATORY: Official Documentation Consultation BEFORE Any Work
+
+**BEFORE launching ANY agents or tasks, orchestrator MUST verify:**
+
+1. **Every Agent MUST Consult Official Documentation First**:
+   - Claude Code official documentation for any Claude Code features
+   - Framework/technology official documentation for implementation approaches
+   - API/integration official documentation for any external services
+   - NO assumptions about capabilities - only documented evidence
+
+2. **Documentation Evidence Template Required**:
+   All agents must post evidence using the mandatory template with:
+   - Specific documentation sections consulted
+   - Key findings from official sources
+   - Approach validation against specifications
+   - Complete citations to official sources
+
+3. **Validation Gate Enforcement**:
+   - Use `claude/commands/documentation_validator.py` to validate evidence
+   - Agent work is BLOCKED until validation passes
+   - No exceptions - all agents subject to documentation requirements
+
+4. **Emergency Blocking Mechanism**:
+   ```python
+   from claude.commands.documentation_validator import DocumentationValidator
+   
+   validator = DocumentationValidator()
+   should_block, message = validator.block_agent_work_without_documentation(
+       agent_name, proposed_work
+   )
+   
+   if should_block:
+       # HALT execution and show blocking message
+       print(message)
+       return  # Do not proceed with agent launch
+   ```
+
+**CRITICAL RULE**: NO AGENTS CAN BE LAUNCHED WITHOUT DOCUMENTATION EVIDENCE
+**EMERGENCY ENFORCEMENT**: Issue #230 protocols override all other considerations
+
+## Key Rules for Intelligent Orchestration
+
+1. **DOCUMENTATION FIRST** - ALL agents must consult official docs before any work
+2. **VALIDATE DOCUMENTATION EVIDENCE** - Use documentation validator before launching
+3. **ANALYZE DEPENDENCIES FIRST** - Never launch agents without dependency analysis  
+4. **RESPECT SEQUENTIAL PHASES** - Research → Architecture → Implementation → Validation
+5. **PRIORITIZE BLOCKING ISSUES** - Critical infrastructure before all other work
+6. **ONE PHASE AT A TIME** - Don't start implementation until research/architecture complete
+7. **NEVER do implementation work directly** - Always delegate to agents
+8. **Launch multiple Tasks in ONE response** for parallel execution (when appropriate)
+9. **Include full agent instructions** in the Task prompt
+10. **Match agents to issue states** (analyst for state:new, implementer for state:implementing, etc.)
+11. **Let agents handle GitHub interactions** (posting comments, changing labels)
+12. **Trust the agent specialization** - Don't micromanage their work
+13. **ENFORCE DOCUMENTATION REQUIREMENTS** - Block any work without proper evidence
+
+## 🚫 CRITICAL: Phase Dependency Enforcement
+
+**MANDATORY**: Before launching ANY agents, the orchestrator MUST validate phase dependencies.
+
+### Phase Dependency Rules (STRICTLY ENFORCED)
+
+1. **Research Phase Must Complete First**
+   - Research → Analysis → Planning → Architecture → Implementation → Validation
+   - No implementation agents until research is complete
+   - No architecture agents until analysis is complete
+
+2. **Foundation Before Dependent Work**
+   - Core APIs/frameworks must be implemented before integrations
+   - Infrastructure must be ready before features that use it
+   - Database schemas must exist before applications that query them
+
+3. **Sequential Phase Validation**
+   - Each phase must show completion evidence before next phase starts
+   - State transitions must match phase progression
+   - Comments/labels must demonstrate phase completion
+
+4. **Blocking Issue Priority**
+   - Agent context reading failures block ALL other work
+   - Critical infrastructure issues block dependent features
+   - Security vulnerabilities block related functionality
+
+### Phase Completion Criteria Matrix
+
+| Phase | Required States | Required Evidence | Blocking States |
+|-------|----------------|------------------|-----------------|
+| **Research** | `state:analyzed`, `state:planning` | "research findings", "analysis complete" | `state:new`, `state:analyzing` |
+| **Analysis** | `state:planning`, `state:architecting` | "analysis complete", "requirements clear" | `state:new`, `state:analyzing` |  
+| **Planning** | `state:architecting`, `state:implementing` | "planning complete", "approach confirmed" | `state:planning` |
+| **Architecture** | `state:implementing` | "architecture complete", "design finalized" | `state:architecting` |
+| **Implementation** | `state:validating` | "implementation complete", "code written" | `state:implementing` |
+| **Validation** | `state:complete`, `state:learning` | "tests pass", "quality gates met" | `state:validating` |
+
+### Validation Checkpoint Requirements
+
+**BEFORE launching agents, orchestrator MUST:**
+1. **Validate Phase Dependencies**: Use PhaseDependencyValidator to check prerequisites
+2. **Check Foundation Readiness**: Ensure core systems are complete before dependent work
+3. **Verify Sequential Phases**: Confirm previous phases have completion evidence  
+4. **Block Invalid Launches**: Prevent agents from working on issues with incomplete prerequisites
+
+**Example of CORRECT Phase Dependency Checking:**
+```python
+# MANDATORY: Validate phase dependencies before agent launch
+from claude.commands.phase_dependency_validator import PhaseDependencyValidator
+
+validator = PhaseDependencyValidator()
+validation_result = validator.validate_phase_dependencies(github_issues, proposed_agent_launches)
+
+if not validation_result.is_valid:
+    # BLOCK execution and show violations
+    print("❌ PHASE DEPENDENCY VIOLATIONS DETECTED:")
+    for violation in validation_result.violations:
+        print(f"  - Issue #{violation.issue_numbers}: {violation.description}")
+        print(f"    Missing phases: {[p.value for p in violation.missing_prerequisite_phases]}")
+        print(f"    Remediation: {violation.remediation_actions[0]}")
+    return  # Do not launch agents
+    
+# Only launch agents if validation passes
+if validation_result.is_valid:
+    # Launch approved agents...
+```
+
+### Phase Dependency Violation Types
+
+1. **Sequential Phase Violation**
+   - Attempted implementation before architecture complete
+   - Attempted validation before implementation complete
+   - **Action**: Block launch, complete prerequisite phases first
+
+2. **Foundation Dependency Violation**
+   - Working on dependent features while foundation incomplete
+   - Integration work before APIs exist
+   - **Action**: Complete foundation work first, then dependent work
+
+3. **Research Skip Violation** 
+   - Implementation launched before research complete
+   - Architecture launched before analysis complete
+   - **Action**: Complete research/analysis phases first
+
+### Violation Severity Levels
+
+| Severity | Description | Response |
+|----------|-------------|----------|
+| **CRITICAL** | Implementation launched without architecture | BLOCK ALL - complete architecture first |
+| **HIGH** | Multiple prerequisite phases missing | BLOCK - complete 2+ missing phases |
+| **MEDIUM** | Single prerequisite phase missing | WARN - complete 1 missing phase |
+| **LOW** | Weak evidence of completion | PROCEED with warning |
 
 ## 🚨 CRITICAL: Enhanced Orchestration Intelligence (Issue #228)
 
@@ -314,6 +531,7 @@ Task(
 
 ```python
 # Step 1: Check GitHub issues (Claude Code does this directly)
+<<<<<<< HEAD
 github_issues = get_current_github_issues()  # Claude Code handles this
 
 # Step 2: MANDATORY BLOCKING DETECTION (CRITICAL FIX for Issue #228)
@@ -340,10 +558,58 @@ from claude.commands.simple_phase_dependency_enforcer import enforce_orchestrati
 
 # Define proposed agent launches (only for non-blocking issues)
 proposed_agent_launches = [
+=======
+# Step 2: MANDATORY PHASE DEPENDENCY VALIDATION + PATTERN VALIDATION
+from claude.commands.phase_dependency_validator import PhaseDependencyValidator
+
+# CRITICAL: Phase dependency validation BEFORE any agent launches
+validator = PhaseDependencyValidator()
+validation_result = validator.validate_phase_dependencies(github_issues, proposed_agent_launches)
+
+# BLOCK execution if phase dependencies violated
+if not validation_result.is_valid:
+    print("❌ PHASE DEPENDENCY VIOLATIONS - BLOCKING EXECUTION:")
+    for violation in validation_result.violations:
+        print(f"  - {violation.description}")
+        for action in violation.remediation_actions:
+            print(f"    → {action}")
+    return  # Do not proceed with agent launches
+
+# Step 3: Traditional dependency analysis (after phase validation passes)
+#   - Map sequential dependencies (Research → Architecture → Implementation → Validation)
+#   - Identify blocking issues (critical infrastructure, agent failures)
+#   - Identify foundation issues (core APIs, schemas, frameworks)
+#   - Determine if work phases are complete before launching dependent agents
+#   - VALIDATE orchestration patterns to prevent anti-patterns
+# Step 4: Launch agents using intelligent decision framework with validation:
+
+# ENHANCED DECISION LOGIC WITH ANTI-PATTERN PREVENTION:
+# dependency_analysis = analyze_dependencies(github_issues)
+# proposed_tasks = generate_proposed_tasks(dependency_analysis)
+# validation_result = validate_orchestration_patterns(proposed_tasks)
+# 
+# if validation_result.has_critical_violations:
+#     BLOCK_EXECUTION_and_provide_corrective_guidance()
+# elif blocking_issues_exist:
+#     launch_blocking_agents_ONLY()
+# elif foundation_incomplete and has_dependent_issues:
+#     launch_foundation_agents_ONLY() 
+# elif research_incomplete:
+#     launch_research_agents_ONLY()
+# else:
+#     launch_parallel_agents_for_ready_issues()
+
+# Step 4: Launch selected agents with validation hooks:
+
+# Optional runtime validation (recommended for complex orchestrations)
+from claude.commands.orchestration_intelligence_integration import validate_before_execution
+validate_before_execution([
+>>>>>>> origin/main
     {
         "description": "[AGENT_NAME]: [BRIEF_TASK_DESCRIPTION]",
         "prompt": "You are [AGENT_NAME]. [SPECIFIC_TASK_DETAILS]. Follow all instructions in claude/agents/[agent-file].md.",
         "subagent_type": "general-purpose"
+<<<<<<< HEAD
     }
     # Add more proposed launches...
 ]
@@ -365,11 +631,66 @@ if not enforcement_result.is_execution_allowed:
     # Execute prerequisite tasks instead of blocked tasks
     print("\n🔄 EXECUTING PREREQUISITE TASKS:")
     for task in enforcement_result.prerequisite_tasks:
+=======
+    },
+    # ... more task definitions
+])
+
+# Validated parallel Task execution:
+Task(
+    description="[AGENT_NAME]: [BRIEF_TASK_DESCRIPTION]",
+    subagent_type="general-purpose",
+    prompt="You are [AGENT_NAME]. [SPECIFIC_TASK_DETAILS]. Follow all instructions in claude/agents/[agent-file].md."
+)
+Task(
+    description="[ANOTHER_AGENT]: [ANOTHER_TASK_DESCRIPTION]", 
+    subagent_type="general-purpose",
+    prompt="You are [ANOTHER_AGENT]. [ANOTHER_TASK_DETAILS]. Follow all instructions in claude/agents/[agent-file].md."
+)
+# Add more Tasks as needed - they all run in parallel
+# Anti-pattern prevention: ACTIVE
+# Pattern validation: PASSED
+```
+
+### 🔧 Enhanced Orchestration Integration
+
+The orchestration intelligence framework now includes anti-pattern prevention:
+
+```python
+# For advanced orchestration with full validation integration:
+from claude.commands.orchestration_intelligence_integration import make_intelligent_orchestration_decision
+
+# Get GitHub issues (Claude Code does this directly)
+github_issues = get_current_github_issues()
+
+# Define proposed tasks based on analysis
+proposed_tasks = [
+    {
+        "description": "RIF-Implementer: Specific implementation task",
+        "prompt": "You are RIF-Implementer. Implement specific feature for issue #N. Follow all instructions in claude/agents/rif-implementer.md.",
+        "subagent_type": "general-purpose"
+    }
+    # ... more tasks
+]
+
+# Make intelligent decision with validation
+decision = make_intelligent_orchestration_decision(
+    github_issues=github_issues,
+    proposed_tasks=proposed_tasks,
+    context={"orchestration_request": "user_initiated"}
+)
+
+# Execute based on decision
+if decision.enforcement_action == "allow_execution":
+    # Launch the validated and approved tasks
+    for task in decision.recommended_tasks:
+>>>>>>> origin/main
         Task(
             description=task["description"],
             subagent_type=task["subagent_type"], 
             prompt=task["prompt"]
         )
+<<<<<<< HEAD
         
 else:
     print("✅ ALL VALIDATIONS PASSED - PROCEEDING WITH EXECUTION")
@@ -390,6 +711,13 @@ else:
 # Phase Dependency Enforcement: ✅ ACTIVE (Issue #223)
 # Sequential Phase Validation: ✅ ENFORCED
 # False Positive Prevention: ✅ IMPLEMENTED
+=======
+else:
+    # Handle blocked execution
+    print(f"Orchestration blocked: {decision.dependency_rationale}")
+    print(f"Validation violations: {decision.validation_status.violations}")
+    print(f"Corrective actions: {decision.validation_status.suggestions}")
+>>>>>>> origin/main
 ```
 
 ### Intelligent Orchestration Scenarios
@@ -416,6 +744,28 @@ else:
 
 ### Troubleshooting Intelligent Orchestration
 
+#### Orchestration Anti-Pattern Problems
+
+**Problem**: Attempted to create "Multi-Issue Accelerator" or similar combined agents
+**Root Cause**: Misunderstanding of parallel execution model
+**Solution**: Launch multiple individual Task() calls in one response instead
+**Detection**: Task descriptions containing multiple issue numbers or "handle multiple"
+**Prevention**: Always ask "Does this Task handle exactly ONE specific concern?"
+
+**Problem**: Single Task trying to process multiple issues in parallel  
+**Root Cause**: Confusing parallel Task launching with multi-issue Task prompts
+**Solution**: Create separate Task() for each issue, launched in same response
+**Detection**: Task prompts mentioning "issues #1, #2, #3" or similar
+**Prevention**: One Task = One Issue = One Specialized Agent
+
+**Problem**: Sequential processing happening when parallel was intended
+**Root Cause**: Launching Tasks in separate responses instead of single response
+**Solution**: Launch ALL parallel Tasks in one Claude response
+**Detection**: Multiple separate Task invocations across responses  
+**Prevention**: Batch all parallel Tasks into single response
+
+#### General Orchestration Problems
+
 **Problem**: Claude is doing work directly instead of launching agents
 **Solution**: Always use Task() tool to delegate work to specialized agents
 
@@ -439,6 +789,16 @@ else:
 
 **Problem**: Orchestration decisions appear arbitrary or inefficient
 **Solution**: Document dependency analysis reasoning before launching agents
+
+#### Anti-Pattern Prevention Checklist
+
+Before launching any Tasks, verify:
+- [ ] **One Task = One Issue**: Each Task handles exactly one specific concern
+- [ ] **Proper Agent Names**: Using standard RIF agent names (RIF-Implementer, RIF-Validator, etc.)
+- [ ] **Single Response Launch**: All parallel Tasks launched in one Claude response
+- [ ] **Specialized Instructions**: Each Task prompt includes proper agent file reference
+- [ ] **No Multi-Issue Descriptions**: Task descriptions don't mention multiple issues
+- [ ] **Clear Responsibility**: Task purpose is single, clear, and well-defined
 
 ## Architecture Overview
 

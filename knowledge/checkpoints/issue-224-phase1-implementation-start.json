@@ -1,0 +1,27 @@
+{
+  "issue_id": 224,
+  "phase": "Phase 1: CLAUDE.md Anti-Pattern Documentation Enhancement",
+  "checkpoint_name": "issue-224-phase1-implementation-start",
+  "timestamp": "2025-08-25T02:58:00Z",
+  "agent": "RIF-Implementer",
+  "status": "starting",
+  "description": "Beginning Phase 1 implementation - enhancing CLAUDE.md with orchestration anti-patterns",
+  "objectives": [
+    "Add explicit Multi-Issue Accelerator anti-pattern section",
+    "Include side-by-side wrong vs right orchestration examples", 
+    "Strengthen parallel execution guidance",
+    "Add troubleshooting section for orchestration mistakes"
+  ],
+  "dependencies": [],
+  "next_checkpoint": "Enhanced-Documentation-Complete",
+  "rollback_point": "pre-implementation",
+  "context": {
+    "current_claude_md_section": "Orchestration Intelligence Framework (lines 104-264)",
+    "target_enhancements": [
+      "Multi-Issue Accelerator anti-pattern documentation",
+      "Enhanced troubleshooting section",
+      "Side-by-side pattern comparisons",
+      "Strengthened parallel execution examples"
+    ]
+  }
+}

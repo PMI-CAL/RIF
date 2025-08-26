@@ -1,0 +1,15 @@
+{
+  "lessons": [
+    {
+      "lesson_id": "issue_224_primary_lesson",
+      "title": "Avoid Multi-Issue Accelerator Anti-Pattern",
+      "category": "anti-pattern",
+      "confidence_level": 1.0,
+      "source_issues": [
+        224
+      ],
+      "created_at": "2025-08-25T03:10:31.748050"
+    }
+  ],
+  "last_updated": "2025-08-25T03:10:31.748149"
+}

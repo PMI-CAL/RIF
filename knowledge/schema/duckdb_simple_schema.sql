@@ -20,8 +20,8 @@ CREATE TABLE IF NOT EXISTS entities (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    -- Check constraints - Updated to support knowledge migration types
-    CHECK (type IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum', 'pattern', 'decision', 'learning', 'metric', 'issue_resolution', 'checkpoint', 'knowledge_item')),
+    -- Check constraints - Updated to support knowledge migration types and Claude documentation
+    CHECK (type IN ('function', 'class', 'module', 'variable', 'constant', 'interface', 'enum', 'pattern', 'decision', 'learning', 'metric', 'issue_resolution', 'checkpoint', 'knowledge_item', 'claude_capability', 'claude_limitation', 'claude_tool', 'implementation_pattern', 'anti_pattern', 'claude_documentation')),
     CHECK (line_start IS NULL OR line_start >= 1),
     CHECK (line_end IS NULL OR line_end >= line_start),
     CHECK (name != ''),
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS relationships (
     metadata JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     
-    -- Check constraints
-    CHECK (relationship_type IN ('imports', 'calls', 'extends', 'uses', 'implements', 'references', 'contains')),
+    -- Check constraints - Updated to support Claude documentation relationships
+    CHECK (relationship_type IN ('imports', 'calls', 'extends', 'uses', 'implements', 'references', 'contains', 'supports', 'alternative_to', 'conflicts_with', 'documents', 'explains', 'warns_against')),
     CHECK (confidence >= 0.0 AND confidence <= 1.0),
     CHECK (source_id != target_id) -- Prevent self-references
 );
