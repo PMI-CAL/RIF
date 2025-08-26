@@ -1,0 +1,56 @@
+{
+  "is_valid": false,
+  "violations": [
+    {
+      "violation_type": "sequential_phase_violation",
+      "issue_numbers": [
+        5
+      ],
+      "attempted_phase": "implementation",
+      "missing_prerequisite_phases": [
+        "planning",
+        "architecture",
+        "analysis"
+      ],
+      "severity": "critical",
+      "description": "Attempted implementation phase before completing prerequisite phases: ['planning', 'architecture', 'analysis']",
+      "remediation_actions": [
+        "Launch RIF-Analyst to complete requirements analysis",
+        "Launch RIF-Planner to create execution plan",
+        "Launch RIF-Architect to complete technical design",
+        "Wait for prerequisite phases to complete before launching implementation agents",
+        "Use sequential agent launching instead of parallel launching"
+      ]
+    },
+    {
+      "violation_type": "foundation_dependency_violation",
+      "issue_numbers": [
+        5
+      ],
+      "attempted_phase": "implementation",
+      "missing_prerequisite_phases": [
+        "implementation"
+      ],
+      "severity": "high",
+      "description": "Attempting implementation on dependent issues while foundation issues [4] are incomplete",
+      "remediation_actions": [
+        "Complete implementation of foundation issues: [4]",
+        "Wait for foundation APIs/frameworks to be ready",
+        "Launch foundation agents first, dependent agents second"
+      ]
+    }
+  ],
+  "warnings": [
+    "Issue #5: Jumping to implementation without architecture phase",
+    "Issue #5: Weak evidence of phase completion"
+  ],
+  "allowed_phases": [],
+  "blocked_phases": [
+    "planning",
+    "architecture",
+    "analysis"
+  ],
+  "confidence_score": 0.29999999999999993,
+  "validation_timestamp": "2025-08-25T08:23:48.580773",
+  "issue_reference": 223
+}

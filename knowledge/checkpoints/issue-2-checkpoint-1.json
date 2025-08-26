@@ -1,1 +1,0 @@
-{"timestamp": "2025-08-18T21:12:49Z", "checkpoint": "orchestration_docs_updated", "issue": "#2", "agent": "RIF-Implementer", "status": "major_update_complete", "changes": ["Enhanced orchestration documentation", "Added concrete examples", "Added troubleshooting guide", "Clarified Task.parallel() meaning"]}

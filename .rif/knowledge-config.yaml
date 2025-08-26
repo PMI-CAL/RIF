@@ -1,0 +1,98 @@
+# ==================================================
+# RIF Knowledge Preservation Configuration
+# ==================================================
+# This configuration defines which knowledge base files
+# should be preserved when deploying RIF as a project template
+
+preserve:
+  patterns:
+    # Project-specific patterns should be preserved
+    - "project-*.json"
+    - "custom-*.json"
+    - "user-*.json"
+    - "local-*.json"
+    
+  decisions:
+    # Project architectural decisions
+    - "project-*.json"
+    - "architecture-*.json"
+    - "design-*.json"
+    
+  learning:
+    # Project-specific learnings
+    - "project-*.json"
+    - "custom-*.json"
+    - "domain-*.json"
+    
+  metrics:
+    # Project performance baselines
+    - "project-*.json"
+    - "baseline-*.json"
+    - "performance-*.json"
+
+exclude:
+  # RIF framework development files
+  - "rif-*.json"
+  - "framework-*.json"
+  - "system-*.json"
+  
+  # Issue-specific temporary files
+  - "issue-*.json"
+  - "temp-*.json"
+  - "debug-*.json"
+  
+  # Audit and validation files
+  - "audit-*.json"
+  - "validation-*.json"
+  - "test-*.json"
+  
+  # Development and demo files
+  - "demo-*.json"
+  - "example-*.json"
+  - "dev-*.json"
+
+# Directories to completely exclude in deployment
+exclude_directories:
+  - "audits/"
+  - "checkpoints/" 
+  - "enforcement_logs/"
+  - "evidence_collection/"
+  - "false_positive_detection/"
+  - "validation/"
+  - "demo_*/"
+
+# Directories to preserve with selective filtering
+selective_directories:
+  patterns/:
+    preserve: ["project-*.json", "custom-*.json"]
+    exclude: ["rif-*.json", "framework-*.json"]
+  
+  decisions/:
+    preserve: ["project-*.json", "architecture-*.json"] 
+    exclude: ["rif-*.json", "system-*.json"]
+  
+  learning/:
+    preserve: ["project-*.json", "domain-*.json"]
+    exclude: ["rif-*.json", "issue-*.json"]
+  
+  metrics/:
+    preserve: ["project-*.json", "baseline-*.json"]
+    exclude: ["rif-*.json", "debug-*.json"]
+
+# File size limits for preserved knowledge
+size_limits:
+  max_file_size: 10485760  # 10MB maximum per knowledge file
+  max_total_size: 104857600  # 100MB maximum total preserved knowledge
+  
+# Compression settings for large knowledge files
+compression:
+  enabled: true
+  format: "gzip"
+  level: 6
+  
+# Backup settings for excluded knowledge
+backup:
+  enabled: true
+  location: ".rif/knowledge-backup/"
+  retention_days: 30
+  compress: true

@@ -2785,12 +2785,173 @@ class ParallelCoordinator:
         
         return notes
 
+class EnhancedBlockingDetectionEngine:
+    """
+    Enhanced Blocking Detection Engine for Issue #228 - Critical Orchestration Failure Resolution
+    
+    Detects explicit blocking declarations in issue body and comments:
+    - "THIS ISSUE BLOCKS ALL OTHERS"
+    - "BLOCKS ALL OTHER WORK"
+    - "STOP ALL WORK"
+    - "MUST COMPLETE BEFORE ALL"
+    
+    Prevents false positives by requiring exact blocking phrases, not just "critical" or "urgent".
+    """
+    
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        
+        # Exact phrases that indicate blocking priority (case-insensitive)
+        self.blocking_phrases = [
+            "this issue blocks all others",
+            "this issue blocks all other work", 
+            "blocks all other work",
+            "blocks all others",
+            "stop all work",
+            "must complete before all",
+            "must complete before all other work",
+            "must complete before all others"
+        ]
+        
+        # Words that alone do NOT constitute blocking (prevent false positives)
+        self.non_blocking_keywords = [
+            "critical", "urgent", "important", "priority", "blocking"
+        ]
+    
+    def detect_blocking_issues(self, issue_numbers: List[int]) -> Dict[str, Any]:
+        """
+        Detect which issues have explicit blocking declarations.
+        
+        Args:
+            issue_numbers: List of issue numbers to check
+            
+        Returns:
+            Dict with blocking analysis results
+        """
+        blocking_issues = []
+        blocking_details = {}
+        non_blocking_issues = []
+        
+        for issue_num in issue_numbers:
+            try:
+                blocking_result = self._analyze_issue_for_blocking(issue_num)
+                
+                if blocking_result['is_blocking']:
+                    blocking_issues.append(issue_num)
+                    blocking_details[str(issue_num)] = blocking_result['details']
+                    self.logger.warning(f"BLOCKING ISSUE DETECTED: #{issue_num}")
+                else:
+                    non_blocking_issues.append(issue_num)
+                    
+            except Exception as e:
+                self.logger.error(f"Error analyzing issue {issue_num} for blocking: {e}")
+                non_blocking_issues.append(issue_num)  # Assume non-blocking on error
+        
+        return {
+            'blocking_issues': blocking_issues,
+            'blocking_details': blocking_details,
+            'non_blocking_issues': non_blocking_issues,
+            'has_blocking_issues': len(blocking_issues) > 0,
+            'blocking_count': len(blocking_issues),
+            'analysis_timestamp': datetime.now().isoformat()
+        }
+    
+    def _analyze_issue_for_blocking(self, issue_number: int) -> Dict[str, Any]:
+        """
+        Analyze a single issue for blocking declarations.
+        
+        Args:
+            issue_number: GitHub issue number
+            
+        Returns:
+            Dict with blocking analysis for the issue
+        """
+        # Get issue data including comments
+        issue_data = self._get_issue_with_comments(issue_number)
+        if not issue_data:
+            return {'is_blocking': False, 'details': 'Could not fetch issue data'}
+        
+        blocking_sources = []
+        
+        # Check issue body for blocking phrases
+        body_text = (issue_data.get('body') or '').lower()
+        body_blocking_phrases = [phrase for phrase in self.blocking_phrases if phrase in body_text]
+        if body_blocking_phrases:
+            blocking_sources.append({
+                'source': 'issue_body',
+                'phrases': body_blocking_phrases,
+                'excerpt': self._extract_blocking_context(body_text, body_blocking_phrases[0])
+            })
+        
+        # Check comments for blocking phrases
+        comments = issue_data.get('comments', [])
+        for i, comment in enumerate(comments):
+            comment_body = (comment.get('body') or '').lower()
+            comment_blocking_phrases = [phrase for phrase in self.blocking_phrases if phrase in comment_body]
+            if comment_blocking_phrases:
+                blocking_sources.append({
+                    'source': f'comment_{i}',
+                    'author': comment.get('author', {}).get('login', 'unknown'),
+                    'phrases': comment_blocking_phrases,
+                    'excerpt': self._extract_blocking_context(comment_body, comment_blocking_phrases[0])
+                })
+        
+        is_blocking = len(blocking_sources) > 0
+        
+        return {
+            'is_blocking': is_blocking,
+            'details': {
+                'blocking_sources': blocking_sources,
+                'blocking_phrase_count': sum(len(source['phrases']) for source in blocking_sources),
+                'detected_phrases': list(set(phrase for source in blocking_sources for phrase in source['phrases']))
+            }
+        }
+    
+    def _get_issue_with_comments(self, issue_number: int) -> Optional[Dict[str, Any]]:
+        """Get issue data including comments from GitHub"""
+        try:
+            # Use gh CLI to get issue with comments
+            result = subprocess.run([
+                'gh', 'issue', 'view', str(issue_number), 
+                '--json', 'number,title,body,state,labels,comments'
+            ], capture_output=True, text=True, timeout=30)
+            
+            if result.returncode == 0:
+                return json.loads(result.stdout)
+            else:
+                self.logger.error(f"Failed to fetch issue {issue_number}: {result.stderr}")
+                return None
+                
+        except Exception as e:
+            self.logger.error(f"Error fetching issue {issue_number}: {e}")
+            return None
+    
+    def _extract_blocking_context(self, text: str, phrase: str, context_chars: int = 100) -> str:
+        """Extract context around blocking phrase for evidence"""
+        phrase_pos = text.find(phrase)
+        if phrase_pos == -1:
+            return phrase
+            
+        start = max(0, phrase_pos - context_chars // 2)
+        end = min(len(text), phrase_pos + len(phrase) + context_chars // 2)
+        
+        context = text[start:end].strip()
+        if start > 0:
+            context = "..." + context
+        if end < len(text):
+            context = context + "..."
+            
+        return context
+
 class EnhancedOrchestrationIntelligence:
     """
     Main integration facade for the Enhanced Orchestration Intelligence Layer.
     
     This class integrates all 6 core components into a cohesive system that supports 
     Claude Code as the orchestrator while providing sophisticated intelligence capabilities.
+    
+    ISSUE #228 INTEGRATION: Enhanced blocking detection prevents orchestration failures
+    by detecting explicit blocking declarations like "THIS ISSUE BLOCKS ALL OTHERS".
     """
     
     def __init__(self):
@@ -2805,6 +2966,9 @@ class EnhancedOrchestrationIntelligence:
         # Integration utilities
         self.context_analyzer = ContextAnalyzer()
         self.github_manager = GitHubStateManager()
+        
+        # ISSUE #228: Enhanced blocking detection engine
+        self.blocking_detection = EnhancedBlockingDetectionEngine()
         
         # CRITICAL INTEGRATION: Consensus orchestrator for issue #148
         try:
@@ -2864,6 +3028,7 @@ class EnhancedOrchestrationIntelligence:
     def generate_orchestration_plan(self, issue_numbers: List[int]) -> Dict[str, Any]:
         """
         Generate comprehensive orchestration plan for multiple issues.
+        ISSUE #228: Enhanced blocking detection integrated for pre-flight validation.
         
         Args:
             issue_numbers: List of GitHub issue numbers
@@ -2872,6 +3037,29 @@ class EnhancedOrchestrationIntelligence:
             Dict with orchestration plan and Task() launch codes
         """
         try:
+            # ISSUE #228: PRE-FLIGHT BLOCKING DETECTION (CRITICAL FIRST STEP)
+            self.logger.info(f"Performing pre-flight blocking detection for issues: {issue_numbers}")
+            blocking_analysis = self.blocking_detection.detect_blocking_issues(issue_numbers)
+            
+            # If blocking issues detected, HALT all other work
+            if blocking_analysis['has_blocking_issues']:
+                self.logger.critical(f"BLOCKING ISSUES DETECTED: {blocking_analysis['blocking_issues']}")
+                return {
+                    'orchestration_blocked': True,
+                    'blocking_analysis': blocking_analysis,
+                    'blocking_issues': blocking_analysis['blocking_issues'],
+                    'blocking_count': blocking_analysis['blocking_count'],
+                    'blocking_details': blocking_analysis['blocking_details'],
+                    'enforcement_action': 'HALT_ALL_ORCHESTRATION',
+                    'message': f"Orchestration BLOCKED - {blocking_analysis['blocking_count']} issues require completion first",
+                    'allowed_issues': blocking_analysis['blocking_issues'],  # Only blocking issues can proceed
+                    'blocked_issues': blocking_analysis['non_blocking_issues'],
+                    'task_launch_codes': self._generate_blocking_only_commands(blocking_analysis['blocking_issues']),
+                    'execution_ready': True,
+                    'parallel_execution': False,  # Blocking issues processed sequentially
+                    'blocking_detection_active': True
+                }
+            
             # CRITICAL INTEGRATION: Consensus evaluation for orchestration decisions
             consensus_decisions = []
             consensus_enabled_issues = []
@@ -2894,7 +3082,7 @@ class EnhancedOrchestrationIntelligence:
                     except Exception as e:
                         self.logger.warning(f"Could not evaluate consensus for issue #{issue_num}: {e}")
             
-            # Parallel coordination analysis
+            # Parallel coordination analysis (only if no blocking issues)
             coordination_result = self.parallel_coordinator.coordinate_parallel_orchestration(issue_numbers)
             
             # Generate Claude Code Task() commands (enhanced with consensus)
@@ -2921,7 +3109,11 @@ class EnhancedOrchestrationIntelligence:
                 'consensus_integration_active': self.consensus_enabled,
                 'intelligence_insights': intelligence_insights,
                 'execution_ready': len(task_commands) > 0,
-                'parallel_execution': len(coordination_result.get('parallel_tasks', [])) > 1
+                'parallel_execution': len(coordination_result.get('parallel_tasks', [])) > 1,
+                # ISSUE #228: Blocking detection status
+                'orchestration_blocked': False,
+                'blocking_analysis': blocking_analysis,
+                'blocking_detection_active': True
             }
             
         except Exception as e:
@@ -3120,6 +3312,68 @@ class EnhancedOrchestrationIntelligence:
             actions.extend(recommendations)
         
         return actions
+    
+    def _generate_blocking_only_commands(self, blocking_issues: List[int]) -> List[str]:
+        """
+        Generate Task() commands for blocking issues only.
+        ISSUE #228: When blocking issues detected, only work on those issues.
+        
+        Args:
+            blocking_issues: List of issue numbers with blocking declarations
+            
+        Returns:
+            List of Task() command strings for blocking issues
+        """
+        commands = []
+        
+        for issue_num in blocking_issues:
+            try:
+                # Get issue context for appropriate agent selection
+                issue_context = self.context_analyzer.analyze_issue(issue_num)
+                current_state = issue_context.current_state_label
+                
+                # Select appropriate agent based on current state
+                if current_state == 'state:new' or current_state is None:
+                    agent_type = "RIF-Analyst"
+                    task_description = f"Analyze BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
+                    prompt_instruction = f"You are RIF-Analyst. Perform critical analysis of BLOCKING issue #{issue_num}. This issue blocks all other work - complete analysis urgently. Follow all instructions in claude/agents/rif-analyst.md."
+                elif current_state == 'state:planning':
+                    agent_type = "RIF-Planner" 
+                    task_description = f"Plan BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
+                    prompt_instruction = f"You are RIF-Planner. Create urgent plan for BLOCKING issue #{issue_num}. This issue blocks all other work - prioritize completion. Follow all instructions in claude/agents/rif-planner.md."
+                elif current_state == 'state:implementing':
+                    agent_type = "RIF-Implementer"
+                    task_description = f"Implement BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)" 
+                    prompt_instruction = f"You are RIF-Implementer. Implement BLOCKING issue #{issue_num} immediately. This issue blocks all other work - complete implementation urgently. Follow all instructions in claude/agents/rif-implementer.md."
+                elif current_state == 'state:validating':
+                    agent_type = "RIF-Validator"
+                    task_description = f"Validate BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
+                    prompt_instruction = f"You are RIF-Validator. Validate BLOCKING issue #{issue_num} urgently. This issue blocks all other work - ensure quality and complete validation. Follow all instructions in claude/agents/rif-validator.md."
+                else:
+                    # Default to analyst for unknown states
+                    agent_type = "RIF-Analyst"
+                    task_description = f"Analyze BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)"
+                    prompt_instruction = f"You are RIF-Analyst. Analyze BLOCKING issue #{issue_num}. This issue blocks all other work - determine next steps urgently. Follow all instructions in claude/agents/rif-analyst.md."
+                
+                # Generate Task() command
+                command = f'''Task(
+    description="{task_description}",
+    subagent_type="general-purpose",
+    prompt="{prompt_instruction}"
+)'''
+                commands.append(command)
+                
+            except Exception as e:
+                self.logger.error(f"Error generating command for blocking issue {issue_num}: {e}")
+                # Fallback command
+                fallback_command = f'''Task(
+    description="Resolve BLOCKING issue #{issue_num} (THIS ISSUE BLOCKS ALL OTHERS)",
+    subagent_type="general-purpose", 
+    prompt="You are RIF-Analyst. Resolve BLOCKING issue #{issue_num}. This issue blocks all other work - complete urgently. Follow all instructions in claude/agents/rif-analyst.md."
+)'''
+                commands.append(fallback_command)
+        
+        return commands
     
     def _extract_consensus_context(self, issue_num: int, issue_analysis: Dict[str, Any]) -> Dict[str, Any]:
         """Extract context needed for consensus evaluation from issue analysis"""

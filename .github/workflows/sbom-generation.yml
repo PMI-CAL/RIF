@@ -1,0 +1,483 @@
+name: SBOM Generation
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ published, created ]
+  schedule:
+    # Generate SBOM weekly on Sundays
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      include_dev_dependencies:
+        description: 'Include development dependencies'
+        required: false
+        default: false
+        type: boolean
+      output_format:
+        description: 'SBOM output format'
+        required: false
+        default: 'spdx-json'
+        type: choice
+        options:
+          - spdx-json
+          - cyclonedx-json
+          - cyclonedx-xml
+          - syft-json
+
+env:
+  SBOM_OUTPUT_DIR: 'sbom-reports'
+  ARTIFACT_RETENTION_DAYS: 90
+
+jobs:
+  # Language Detection for SBOM
+  detect-dependencies:
+    name: Detect Dependencies
+    runs-on: ubuntu-latest
+    outputs:
+      has-python: ${{ steps.detect.outputs.has-python }}
+      has-node: ${{ steps.detect.outputs.has-node }}
+      has-docker: ${{ steps.detect.outputs.has-docker }}
+      has-go: ${{ steps.detect.outputs.has-go }}
+      has-java: ${{ steps.detect.outputs.has-java }}
+      has-rust: ${{ steps.detect.outputs.has-rust }}
+      project-name: ${{ steps.project.outputs.name }}
+      project-version: ${{ steps.project.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Detect project dependencies
+        id: detect
+        run: |
+          # Detect different dependency files
+          echo "has-python=$([ -f requirements.txt ] || [ -f pyproject.toml ] || [ -f setup.py ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has-node=$([ -f package.json ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has-docker=$([ -f Dockerfile ] || [ -f docker-compose.yml ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has-go=$([ -f go.mod ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has-java=$([ -f pom.xml ] || [ -f build.gradle ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+          echo "has-rust=$([ -f Cargo.toml ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
+      - name: Extract project information
+        id: project
+        run: |
+          # Try to get project name and version from various sources
+          PROJECT_NAME="${GITHUB_REPOSITORY##*/}"
+          PROJECT_VERSION="${GITHUB_REF_NAME#v}"
+          
+          # Try to get version from git tags
+          if [ "$PROJECT_VERSION" = "$GITHUB_REF_NAME" ]; then
+            PROJECT_VERSION=$(git describe --tags --exact-match 2>/dev/null || echo "dev-$(git rev-parse --short HEAD)")
+          fi
+          
+          echo "name=$PROJECT_NAME" >> $GITHUB_OUTPUT
+          echo "version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
+
+  # Generate SBOM using multiple tools
+  generate-sbom:
+    name: Generate SBOM
+    runs-on: ubuntu-latest
+    needs: detect-dependencies
+    if: needs.detect-dependencies.outputs.has-python == 'true' || needs.detect-dependencies.outputs.has-node == 'true' || needs.detect-dependencies.outputs.has-docker == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        tool: [syft, cyclonedx]
+        format: 
+          - ${{ github.event.inputs.output_format || 'spdx-json' }}
+    outputs:
+      sbom-generated: ${{ steps.generate.outputs.success }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        if: needs.detect-dependencies.outputs.has-python == 'true'
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Setup Node.js
+        if: needs.detect-dependencies.outputs.has-node == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          # Install Python dependencies if needed
+          if [ "${{ needs.detect-dependencies.outputs.has-python }}" = "true" ]; then
+            if [ -f requirements.txt ]; then
+              pip install -r requirements.txt
+            fi
+            if [ -f requirements-dev.txt ] && [ "${{ github.event.inputs.include_dev_dependencies }}" = "true" ]; then
+              pip install -r requirements-dev.txt
+            fi
+          fi
+          
+          # Install Node.js dependencies if needed
+          if [ "${{ needs.detect-dependencies.outputs.has-node }}" = "true" ]; then
+            if [ -f package-lock.json ]; then
+              npm ci
+            elif [ -f yarn.lock ]; then
+              yarn install --frozen-lockfile
+            else
+              npm install
+            fi
+          fi
+
+      - name: Create SBOM output directory
+        run: mkdir -p ${{ env.SBOM_OUTPUT_DIR }}
+
+      - name: Install SBOM generation tools
+        run: |
+          case "${{ matrix.tool }}" in
+            syft)
+              # Install Syft
+              curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+              ;;
+            cyclonedx)
+              # Install CycloneDX tools
+              pip install cyclonedx-bom cyclonedx-python-lib
+              if [ "${{ needs.detect-dependencies.outputs.has-node }}" = "true" ]; then
+                npm install -g @cyclonedx/cyclonedx-npm
+              fi
+              ;;
+          esac
+
+      - name: Generate SBOM with Syft
+        if: matrix.tool == 'syft'
+        id: syft
+        run: |
+          FORMAT="${{ matrix.format }}"
+          case "$FORMAT" in
+            spdx-json) SYFT_FORMAT="spdx-json" ;;
+            cyclonedx-json) SYFT_FORMAT="cyclonedx-json" ;;
+            cyclonedx-xml) SYFT_FORMAT="cyclonedx-xml" ;;
+            syft-json) SYFT_FORMAT="syft-json" ;;
+            *) SYFT_FORMAT="spdx-json" ;;
+          esac
+          
+          OUTPUT_FILE="${{ env.SBOM_OUTPUT_DIR }}/sbom-syft-${{ needs.detect-dependencies.outputs.project-name }}-${{ needs.detect-dependencies.outputs.project-version }}.${FORMAT}"
+          
+          syft . -o "${SYFT_FORMAT}=${OUTPUT_FILE}" \
+            --name "${{ needs.detect-dependencies.outputs.project-name }}" \
+            --version "${{ needs.detect-dependencies.outputs.project-version }}"
+          
+          echo "sbom-file=${OUTPUT_FILE}" >> $GITHUB_OUTPUT
+
+      - name: Generate SBOM with CycloneDX
+        if: matrix.tool == 'cyclonedx'
+        id: cyclonedx
+        run: |
+          FORMAT="${{ matrix.format }}"
+          OUTPUT_FILE="${{ env.SBOM_OUTPUT_DIR }}/sbom-cyclonedx-${{ needs.detect-dependencies.outputs.project-name }}-${{ needs.detect-dependencies.outputs.project-version }}.json"
+          
+          if [ "${{ needs.detect-dependencies.outputs.has-python }}" = "true" ]; then
+            # Generate Python SBOM
+            cyclonedx-py \
+              --output-format json \
+              --output-file "${OUTPUT_FILE}" \
+              --project-name "${{ needs.detect-dependencies.outputs.project-name }}" \
+              --project-version "${{ needs.detect-dependencies.outputs.project-version }}" \
+              .
+          elif [ "${{ needs.detect-dependencies.outputs.has-node }}" = "true" ]; then
+            # Generate Node.js SBOM
+            cyclonedx-npm \
+              --output-format json \
+              --output-file "${OUTPUT_FILE}" \
+              --package-name "${{ needs.detect-dependencies.outputs.project-name }}" \
+              --package-version "${{ needs.detect-dependencies.outputs.project-version }}" \
+              .
+          fi
+          
+          echo "sbom-file=${OUTPUT_FILE}" >> $GITHUB_OUTPUT
+
+      - name: Validate SBOM
+        id: validate
+        run: |
+          # Basic SBOM validation
+          SBOM_FILE=""
+          if [ "${{ matrix.tool }}" = "syft" ]; then
+            SBOM_FILE="${{ steps.syft.outputs.sbom-file }}"
+          elif [ "${{ matrix.tool }}" = "cyclonedx" ]; then
+            SBOM_FILE="${{ steps.cyclonedx.outputs.sbom-file }}"
+          fi
+          
+          if [ -f "$SBOM_FILE" ] && [ -s "$SBOM_FILE" ]; then
+            echo "✅ SBOM generated successfully: $SBOM_FILE"
+            echo "File size: $(stat -f%z "$SBOM_FILE" 2>/dev/null || stat -c%s "$SBOM_FILE") bytes"
+            
+            # Basic JSON validation
+            if command -v jq >/dev/null; then
+              if jq empty "$SBOM_FILE" 2>/dev/null; then
+                echo "✅ SBOM JSON is valid"
+              else
+                echo "❌ SBOM JSON is invalid"
+                exit 1
+              fi
+            fi
+            
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ SBOM generation failed"
+            echo "success=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
+      - name: Generate SBOM summary
+        id: summary
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          from datetime import datetime
+          
+          sbom_files = []
+          sbom_dir = "${{ env.SBOM_OUTPUT_DIR }}"
+          
+          for file in os.listdir(sbom_dir):
+            if file.endswith(('.json', '.xml')):
+              filepath = os.path.join(sbom_dir, file)
+              size = os.path.getsize(filepath)
+              sbom_files.append({
+                'file': file,
+                'size': size,
+                'tool': file.split('-')[1] if len(file.split('-')) > 1 else 'unknown'
+              })
+          
+          summary = {
+            'timestamp': datetime.now().isoformat(),
+            'project': "${{ needs.detect-dependencies.outputs.project-name }}",
+            'version': "${{ needs.detect-dependencies.outputs.project-version }}",
+            'commit': "${{ github.sha }}",
+            'ref': "${{ github.ref }}",
+            'sbom_files': sbom_files,
+            'total_files': len(sbom_files),
+            'languages': {
+              'python': "${{ needs.detect-dependencies.outputs.has-python }}" == "true",
+              'node': "${{ needs.detect-dependencies.outputs.has-node }}" == "true",
+              'docker': "${{ needs.detect-dependencies.outputs.has-docker }}" == "true",
+              'go': "${{ needs.detect-dependencies.outputs.has-go }}" == "true",
+              'java': "${{ needs.detect-dependencies.outputs.has-java }}" == "true",
+              'rust': "${{ needs.detect-dependencies.outputs.has-rust }}" == "true"
+            }
+          }
+          
+          with open(os.path.join(sbom_dir, 'sbom-summary.json'), 'w') as f:
+            json.dump(summary, f, indent=2)
+          
+          print(f"Generated SBOM summary with {len(sbom_files)} files")
+          EOF
+
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ matrix.tool }}-${{ matrix.format }}-${{ needs.detect-dependencies.outputs.project-version }}
+          path: ${{ env.SBOM_OUTPUT_DIR }}/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+
+  # Security analysis of SBOM
+  sbom-security-analysis:
+    name: SBOM Security Analysis
+    runs-on: ubuntu-latest
+    needs: [detect-dependencies, generate-sbom]
+    if: needs.generate-sbom.outputs.sbom-generated == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download SBOM artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sbom-*
+          path: downloaded-sboms/
+          merge-multiple: true
+
+      - name: Install security analysis tools
+        run: |
+          # Install Grype for vulnerability scanning
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          
+          # Install OSV Scanner
+          go install github.com/google/osv-scanner/cmd/osv-scanner@latest
+
+      - name: Analyze SBOM for vulnerabilities
+        run: |
+          mkdir -p security-analysis
+          
+          # Find SBOM files
+          find downloaded-sboms/ -name "*.json" -type f | while read sbom_file; do
+            echo "Analyzing SBOM: $sbom_file"
+            
+            # Run Grype analysis
+            BASENAME=$(basename "$sbom_file" .json)
+            grype "sbom:$sbom_file" -o json > "security-analysis/grype-${BASENAME}.json" || true
+            
+            # Run OSV Scanner if it's an SPDX SBOM
+            if grep -q "spdx" "$sbom_file" 2>/dev/null; then
+              osv-scanner --sbom="$sbom_file" --format=json --output="security-analysis/osv-${BASENAME}.json" || true
+            fi
+          done
+
+      - name: Generate security summary
+        run: |
+          python3 << 'EOF'
+          import json
+          import os
+          import glob
+          from collections import defaultdict
+          
+          vulnerability_summary = {
+            'total_vulnerabilities': 0,
+            'critical': 0,
+            'high': 0,
+            'medium': 0,
+            'low': 0,
+            'by_package': defaultdict(list),
+            'scan_results': []
+          }
+          
+          # Process Grype results
+          for grype_file in glob.glob('security-analysis/grype-*.json'):
+            try:
+              with open(grype_file, 'r') as f:
+                grype_data = json.load(f)
+              
+              if 'matches' in grype_data:
+                for match in grype_data['matches']:
+                  severity = match.get('vulnerability', {}).get('severity', 'unknown').lower()
+                  package = match.get('artifact', {}).get('name', 'unknown')
+                  vuln_id = match.get('vulnerability', {}).get('id', 'unknown')
+                  
+                  vulnerability_summary['total_vulnerabilities'] += 1
+                  vulnerability_summary[severity] = vulnerability_summary.get(severity, 0) + 1
+                  vulnerability_summary['by_package'][package].append(vuln_id)
+              
+              vulnerability_summary['scan_results'].append({
+                'tool': 'grype',
+                'file': grype_file,
+                'vulnerabilities': len(grype_data.get('matches', []))
+              })
+            except Exception as e:
+              print(f"Error processing {grype_file}: {e}")
+          
+          # Process OSV results
+          for osv_file in glob.glob('security-analysis/osv-*.json'):
+            try:
+              with open(osv_file, 'r') as f:
+                osv_data = json.load(f)
+              
+              osv_vulns = 0
+              if 'results' in osv_data:
+                for result in osv_data['results']:
+                  if 'packages' in result:
+                    for package in result['packages']:
+                      if 'vulnerabilities' in package:
+                        osv_vulns += len(package['vulnerabilities'])
+              
+              vulnerability_summary['scan_results'].append({
+                'tool': 'osv-scanner',
+                'file': osv_file,
+                'vulnerabilities': osv_vulns
+              })
+            except Exception as e:
+              print(f"Error processing {osv_file}: {e}")
+          
+          # Save summary
+          with open('security-analysis/vulnerability-summary.json', 'w') as f:
+            json.dump(vulnerability_summary, f, indent=2)
+          
+          print(f"Security analysis complete:")
+          print(f"Total vulnerabilities: {vulnerability_summary['total_vulnerabilities']}")
+          print(f"Critical: {vulnerability_summary.get('critical', 0)}")
+          print(f"High: {vulnerability_summary.get('high', 0)}")
+          print(f"Medium: {vulnerability_summary.get('medium', 0)}")
+          print(f"Low: {vulnerability_summary.get('low', 0)}")
+          EOF
+
+      - name: Upload security analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-security-analysis
+          path: security-analysis/
+          retention-days: ${{ env.ARTIFACT_RETENTION_DAYS }}
+
+  # Release SBOM (only on releases)
+  release-sbom:
+    name: Release SBOM
+    runs-on: ubuntu-latest
+    needs: [detect-dependencies, generate-sbom, sbom-security-analysis]
+    if: github.event_name == 'release' && needs.generate-sbom.outputs.sbom-generated == 'true'
+    steps:
+      - name: Download SBOM artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sbom-*
+          path: release-sboms/
+          merge-multiple: true
+
+      - name: Prepare release artifacts
+        run: |
+          cd release-sboms
+          
+          # Create a consolidated SBOM package
+          tar -czf "../sbom-${{ needs.detect-dependencies.outputs.project-name }}-${{ needs.detect-dependencies.outputs.project-version }}.tar.gz" *
+          
+          # Generate checksums
+          sha256sum "../sbom-${{ needs.detect-dependencies.outputs.project-name }}-${{ needs.detect-dependencies.outputs.project-version }}.tar.gz" > ../sbom-checksums.txt
+
+      - name: Upload SBOM to release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Upload SBOM package
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: ${{ github.event.release.id }},
+              name: 'sbom-${{ needs.detect-dependencies.outputs.project-name }}-${{ needs.detect-dependencies.outputs.project-version }}.tar.gz',
+              data: fs.readFileSync('sbom-${{ needs.detect-dependencies.outputs.project-name }}-${{ needs.detect-dependencies.outputs.project-version }}.tar.gz')
+            });
+            
+            // Upload checksums
+            await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: ${{ github.event.release.id }},
+              name: 'sbom-checksums.txt',
+              data: fs.readFileSync('sbom-checksums.txt')
+            });
+
+  # Notify on completion
+  notify-completion:
+    name: SBOM Generation Complete
+    runs-on: ubuntu-latest
+    needs: [detect-dependencies, generate-sbom, sbom-security-analysis]
+    if: always()
+    steps:
+      - name: Summary report
+        run: |
+          echo "## SBOM Generation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Project**: ${{ needs.detect-dependencies.outputs.project-name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Version**: ${{ needs.detect-dependencies.outputs.project-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **SBOM Generated**: ${{ needs.generate-sbom.outputs.sbom-generated || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.generate-sbom.outputs.sbom-generated }}" = "true" ]; then
+            echo "✅ SBOM generation completed successfully" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ SBOM generation failed or was skipped" >> $GITHUB_STEP_SUMMARY
+          fi

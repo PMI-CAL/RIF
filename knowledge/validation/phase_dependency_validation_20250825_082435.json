@@ -1,0 +1,12 @@
+{
+  "is_valid": true,
+  "violations": [],
+  "warnings": [],
+  "allowed_phases": [
+    "implementation"
+  ],
+  "blocked_phases": [],
+  "confidence_score": 1.0,
+  "validation_timestamp": "2025-08-25T08:24:35.273431",
+  "issue_reference": 223
+}

@@ -743,6 +743,80 @@ def store_evidence_by_claim_type(issue_id, claim_type, evidence):
     return evidence_record
 ```
 
+## 🚨 CRITICAL RULE: QUALITY GATE FAILURE = MERGE BLOCKING (Issue #268 Fix)
+
+### Absolute Blocking Logic (NO EXCEPTIONS)
+
+**MANDATORY RULE**: ANY quality gate failure = FAIL decision with merge blocking
+
+```python
+def validate_quality_gates(gate_results):
+    """
+    Binary decision function for quality gates
+    ANY failure = FAIL decision with merge blocking
+    NO agent discretion allowed
+    """
+    for gate_name, gate_result in gate_results.items():
+        if gate_result.status != "PASS":
+            return {
+                "decision": "FAIL", 
+                "merge_blocked": True,
+                "reason": f"Quality gate '{gate_name}' failed: {gate_result.status}"
+            }
+    
+    return {"decision": "PASS", "merge_blocked": False}
+```
+
+### Non-Negotiable Quality Gate Rules (Issue #268 Fix)
+1. **ANY failing quality gate = FAIL decision**
+2. **FAIL decision = NO merge recommendation**  
+3. **NO agent interpretation of gate failures**
+4. **NO "educational" exceptions for failures**
+5. **Gate execution ≠ Gate passing (critical distinction)**
+
+### Quality Gate Status Interpretation
+```yaml
+quality_gate_blocking:
+  PASS: "Gate executed successfully and met all criteria - ALLOWS MERGE"
+  FAIL: "Gate ran but didn't meet criteria - BLOCKS MERGE"
+  ERROR: "Gate encountered execution error - BLOCKS MERGE"
+  TIMEOUT: "Gate exceeded time limit - BLOCKS MERGE"  
+  PENDING: "Gate still running/queued - BLOCKS MERGE"
+  SKIPPED: "Required gate wasn't executed - BLOCKS MERGE"
+```
+
+**CRITICAL**: Only PASS status allows merge recommendation. ALL other statuses BLOCK merge.
+
+### Prohibited Reasoning Patterns (Issue #268 Prevention)
+❌ **NEVER SAY**: "Gate failures prove the system is working correctly"  
+❌ **NEVER SAY**: "Failures demonstrate proper enforcement"
+❌ **NEVER SAY**: "Quality gate execution validates the process"
+❌ **NEVER SAY**: "These failures are actually validation evidence"
+
+✅ **ALWAYS SAY**: "Quality gate failure blocks merge - fixes required"
+✅ **ALWAYS SAY**: "ALL gates must PASS before merge allowed"
+✅ **ALWAYS SAY**: "Gate failure = implementation issues need resolution"
+
+### Validation Decision Integration
+```python
+def make_validation_decision(issue_data):
+    """Make validation decision with mandatory quality gate check"""
+    # First check quality gates (absolute blocking)
+    gate_validation = validate_quality_gates(issue_data.quality_gates)
+    
+    if gate_validation["merge_blocked"]:
+        return {
+            "decision": "FAIL",
+            "merge_recommendation": "DO NOT MERGE",
+            "blocking_reason": gate_validation["reason"],
+            "required_action": "Fix quality gate failures before proceeding"
+        }
+    
+    # Only proceed with other validation if gates pass
+    # ... rest of validation logic
+    return {"decision": "PASS", "merge_recommendation": "APPROVED"}
+```
+
 ### Store Validation Patterns
 ```python
 # Use knowledge interface to store successful validation approaches

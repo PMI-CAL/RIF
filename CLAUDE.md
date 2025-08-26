@@ -400,10 +400,165 @@ if validation_result.is_valid:
 | **MEDIUM** | Single prerequisite phase missing | WARN - complete 1 missing phase |
 | **LOW** | Weak evidence of completion | PROCEED with warning |
 
-### Quick Reference: Intelligent Agent Launching Template
+## 🚨 CRITICAL: Enhanced Orchestration Intelligence (Issue #228)
+
+**ISSUE #228 INTEGRATION**: Following the critical orchestration failure where Issue #225 declared "THIS ISSUE BLOCKS ALL OTHERS" but was ignored, RIF now includes enhanced blocking detection that prevents such failures.
+
+### Enhanced Blocking Detection System
+
+The enhanced orchestration intelligence includes sophisticated blocking detection that:
+- **Scans issue bodies and comments** for explicit blocking declarations
+- **Halts all orchestration** when blocking issues are detected
+- **Prevents false positives** by requiring exact blocking phrases
+- **Provides detailed analysis** of why orchestration was blocked
+
+### Supported Blocking Declarations
+
+The system detects these exact phrases (case-insensitive):
+- "**THIS ISSUE BLOCKS ALL OTHERS**"
+- "**THIS ISSUE BLOCKS ALL OTHER WORK**"
+- "**BLOCKS ALL OTHER WORK**"
+- "**BLOCKS ALL OTHERS**"
+- "**STOP ALL WORK**"
+- "**MUST COMPLETE BEFORE ALL**"
+- "**MUST COMPLETE BEFORE ALL OTHER WORK**"
+- "**MUST COMPLETE BEFORE ALL OTHERS**"
+
+**Note**: Generic terms like "critical", "urgent", or "blocking" alone do NOT trigger blocking detection to prevent false positives.
+
+### Orchestration Intelligence Integration
+
+Enhanced orchestration includes three levels of intelligence:
+
+#### 1. Pre-Flight Blocking Detection
+```python
+from claude.commands.orchestration_intelligence_integration import validate_orchestration_request
+
+# MANDATORY: Check for blocking issues before any orchestration
+should_block, message = validate_orchestration_request([225, 226, 227])
+
+if should_block:
+    print(f"🚨 ORCHESTRATION BLOCKED: {message}")
+    return  # Do not proceed with orchestration
+```
+
+#### 2. Intelligent Orchestration Decision
+```python
+from claude.commands.orchestration_intelligence_integration import make_intelligent_orchestration_decision
+
+# Generate intelligent orchestration plan with blocking detection
+decision = make_intelligent_orchestration_decision([225, 226, 227])
+
+if decision.enforcement_action == "HALT_ALL_ORCHESTRATION":
+    print(f"🚨 BLOCKING ISSUES DETECTED: {decision.blocking_issues}")
+    print(f"🚫 BLOCKED ISSUES: {decision.blocked_issues}")
+    print(f"✅ ALLOWED WORK: Only {decision.allowed_issues}")
+    
+    # Launch only blocking issue tasks
+    for task_code in decision.task_launch_codes:
+        exec(task_code)  # Execute the Task() commands for blocking issues only
+    return
+
+# Normal orchestration for non-blocking scenarios
+for task_code in decision.task_launch_codes:
+    exec(task_code)
+```
+
+#### 3. Pre-Flight Validation Command
+```bash
+# Standalone validation tool for blocking detection
+python claude/commands/pre_flight_blocking_validator.py --issues 225,226,227
+
+# Output:
+# 🚨 RESULT: HALT ORCHESTRATION - 1 blocking issues detected
+# or
+# ✅ RESULT: ALLOW ORCHESTRATION - No blocking issues detected
+```
+
+### Orchestration Failure Prevention
+
+The enhanced system prevents these critical failures:
+1. **Ignoring explicit blocking declarations** (like Issue #225)
+2. **Proceeding with parallel work** when blocking issues exist
+3. **False positive blocking** from generic urgent language
+4. **Missed blocking declarations** in issue comments
+
+### Integration Architecture
+
+```
+GitHub Issues → Enhanced Blocking Detection → Orchestration Decision
+                        ↓
+                Pre-Flight Validation
+                        ↓  
+                Intelligent Analysis
+                        ↓
+                Task Launch Codes (blocking-aware)
+```
+
+### Enhanced Orchestration Example
+
+**Scenario**: Issues #225 (with "THIS ISSUE BLOCKS ALL OTHERS"), #226, and #227
+
+**Before Issue #228 Fix**:
+```python
+# ❌ WRONG: Would launch all tasks in parallel
+Task("Work on issue #225", ...)
+Task("Work on issue #226", ...)  # Should be blocked!
+Task("Work on issue #227", ...)  # Should be blocked!
+```
+
+**After Issue #228 Fix**:
+```python
+from claude.commands.orchestration_intelligence_integration import make_intelligent_orchestration_decision
+
+decision = make_intelligent_orchestration_decision([225, 226, 227])
+
+# System detects Issue #225 blocks others:
+# decision.enforcement_action == "HALT_ALL_ORCHESTRATION"
+# decision.blocking_issues == [225]
+# decision.blocked_issues == [226, 227]
+
+# Only launches task for blocking issue:
+Task(
+    description="Resolve BLOCKING issue #225 (THIS ISSUE BLOCKS ALL OTHERS)",
+    subagent_type="general-purpose",
+    prompt="You are RIF-Implementer. Resolve BLOCKING issue #225 immediately. This issue blocks all other work. Follow all instructions in claude/agents/rif-implementer.md."
+)
+# Issues #226 and #227 are automatically blocked until #225 completes
+```
+
+### Quick Reference: Intelligent Agent Launching Template (ENHANCED for Issue #223 & #228)
 
 ```python
 # Step 1: Check GitHub issues (Claude Code does this directly)
+<<<<<<< HEAD
+github_issues = get_current_github_issues()  # Claude Code handles this
+
+# Step 2: MANDATORY BLOCKING DETECTION (CRITICAL FIX for Issue #228)
+from claude.commands.orchestration_intelligence_integration import make_intelligent_orchestration_decision
+
+# CRITICAL: Enhanced blocking detection prevents orchestration failures
+orchestration_decision = make_intelligent_orchestration_decision(github_issues)
+
+# Handle blocking issues FIRST (Issue #228 fix)
+if orchestration_decision.enforcement_action == "HALT_ALL_ORCHESTRATION":
+    print("🚨 BLOCKING ISSUES DETECTED - HALTING ALL OTHER ORCHESTRATION")
+    print(f"   Blocking Issues: {orchestration_decision.blocking_issues}")
+    print(f"   Blocked Issues: {orchestration_decision.blocked_issues}")
+    print("   ACTION: Complete blocking issues before proceeding with others")
+    
+    # Execute ONLY blocking issue tasks
+    for task_code in orchestration_decision.task_launch_codes:
+        # Task codes are ready-to-execute strings
+        exec(task_code)
+    return  # Do not proceed with other issues
+
+# Step 3: PHASE DEPENDENCY ENFORCEMENT (Issue #223)
+from claude.commands.simple_phase_dependency_enforcer import enforce_orchestration_phase_dependencies
+
+# Define proposed agent launches (only for non-blocking issues)
+proposed_agent_launches = [
+=======
 # Step 2: MANDATORY PHASE DEPENDENCY VALIDATION + PATTERN VALIDATION
 from claude.commands.phase_dependency_validator import PhaseDependencyValidator
 
@@ -449,10 +604,34 @@ if not validation_result.is_valid:
 # Optional runtime validation (recommended for complex orchestrations)
 from claude.commands.orchestration_intelligence_integration import validate_before_execution
 validate_before_execution([
+>>>>>>> origin/main
     {
         "description": "[AGENT_NAME]: [BRIEF_TASK_DESCRIPTION]",
         "prompt": "You are [AGENT_NAME]. [SPECIFIC_TASK_DETAILS]. Follow all instructions in claude/agents/[agent-file].md.",
         "subagent_type": "general-purpose"
+<<<<<<< HEAD
+    }
+    # Add more proposed launches...
+]
+
+# ENFORCE PHASE DEPENDENCIES
+enforcement_result = enforce_orchestration_phase_dependencies(github_issues, proposed_agent_launches)
+
+# Step 4: Execute based on combined enforcement decision
+if not enforcement_result.is_execution_allowed:
+    print("❌ PHASE DEPENDENCY VIOLATIONS - EXECUTION BLOCKED")
+    print(f"Decision: {enforcement_result.decision_type.value}")
+    print("Violations:")
+    for violation in enforcement_result.violations:
+        print(f"  - {violation}")
+    print("Required Actions:")  
+    for action in enforcement_result.remediation_actions:
+        print(f"  → {action}")
+    
+    # Execute prerequisite tasks instead of blocked tasks
+    print("\n🔄 EXECUTING PREREQUISITE TASKS:")
+    for task in enforcement_result.prerequisite_tasks:
+=======
     },
     # ... more task definitions
 ])
@@ -505,16 +684,40 @@ decision = make_intelligent_orchestration_decision(
 if decision.enforcement_action == "allow_execution":
     # Launch the validated and approved tasks
     for task in decision.recommended_tasks:
+>>>>>>> origin/main
         Task(
             description=task["description"],
             subagent_type=task["subagent_type"], 
             prompt=task["prompt"]
         )
+<<<<<<< HEAD
+        
+else:
+    print("✅ ALL VALIDATIONS PASSED - PROCEEDING WITH EXECUTION")
+    print(f"Phase Decision: {enforcement_result.decision_type.value}")
+    print(f"Blocking Decision: {orchestration_decision.enforcement_action}")
+    print(f"Confidence: {enforcement_result.confidence_score:.2f}")
+    
+    # Execute validated tasks in parallel
+    for task in enforcement_result.allowed_tasks:
+        Task(
+            description=task["description"],
+            subagent_type=task["subagent_type"],
+            prompt=task["prompt"]
+        )
+
+# Enhanced Orchestration Status:
+# Blocking Detection: ✅ ACTIVE (Issue #228)
+# Phase Dependency Enforcement: ✅ ACTIVE (Issue #223)
+# Sequential Phase Validation: ✅ ENFORCED
+# False Positive Prevention: ✅ IMPLEMENTED
+=======
 else:
     # Handle blocked execution
     print(f"Orchestration blocked: {decision.dependency_rationale}")
     print(f"Validation violations: {decision.validation_status.violations}")
     print(f"Corrective actions: {decision.validation_status.suggestions}")
+>>>>>>> origin/main
 ```
 
 ### Intelligent Orchestration Scenarios

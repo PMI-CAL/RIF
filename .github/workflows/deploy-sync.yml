@@ -1,0 +1,526 @@
+name: Sync to Deploy Branch
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'tests/test_issue_*'
+      - 'knowledge/audits/**'
+      - 'knowledge/enforcement_logs/**'
+      - 'knowledge/evidence_collection/**'
+      - 'knowledge/false_positive_detection/**'
+      - 'validation/**'
+      - 'incidents/**'
+      - '*.test.*'
+      - '*issue_[0-9]*'
+      - 'audit_*.py'
+      - 'validate_*.py'
+      - '*.log'
+      - 'htmlcov/**'
+      - 'migration.log'
+  workflow_dispatch:
+    inputs:
+      force_sync:
+        description: 'Force complete rebuild of deploy branch'
+        required: false
+        default: false
+        type: boolean
+  schedule:
+    # Weekly sync on Sundays at 02:00 UTC
+    - cron: '0 2 * * 0'
+
+env:
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  sync-deploy:
+    name: Sync Main to Deploy Branch
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository with full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Configure Git
+        run: |
+          git config user.name "RIF Deploy Bot"
+          git config user.email "deploy-bot@rif-framework.dev"
+          git config push.default simple
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jq
+
+      - name: Pre-sync validation
+        id: validation
+        run: |
+          echo "=== Pre-sync Validation ==="
+          
+          # Check main branch tests status
+          echo "Checking main branch status..."
+          if git log -1 --pretty=format:'%s' | grep -E '(FAILED|ERROR|BROKEN)'; then
+            echo "::error::Main branch appears to have failing tests or errors"
+            exit 1
+          fi
+          
+          # Validate essential files exist
+          essential_files=(
+            "README.md"
+            "rif-init.sh" 
+            "setup.sh"
+            "claude/agents/rif-implementer.md"
+            "config/rif-workflow.yaml"
+            "CLAUDE.md"
+          )
+          
+          for file in "${essential_files[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "::error::Essential file missing: $file"
+              exit 1
+            fi
+            echo "✓ Essential file exists: $file"
+          done
+          
+          # Check for security vulnerabilities in scope
+          echo "Checking for obvious security issues..."
+          if grep -r "password.*=" --include="*.py" --include="*.js" --include="*.yml" .; then
+            echo "::warning::Potential hardcoded credentials found"
+          fi
+          
+          echo "✅ Pre-sync validation completed"
+
+      - name: Create or update deploy branch
+        id: deploy_branch
+        run: |
+          echo "=== Deploy Branch Management ==="
+          
+          # Check if deploy branch exists
+          if git ls-remote --exit-code origin deploy; then
+            echo "Deploy branch exists, checking out..."
+            git checkout deploy
+            git pull origin deploy
+            
+            # Check if force rebuild requested
+            if [[ "${{ github.event.inputs.force_sync }}" == "true" ]]; then
+              echo "Force rebuild requested, recreating branch..."
+              git checkout main
+              git branch -D deploy
+              git checkout -b deploy
+            else
+              echo "Incremental sync, merging from main..."
+              git merge main --no-edit
+            fi
+          else
+            echo "Deploy branch doesn't exist, creating from main..."
+            git checkout -b deploy
+          fi
+          
+          echo "✅ Deploy branch ready for cleaning"
+
+      - name: Remove development artifacts
+        run: |
+          echo "=== Cleaning Development Artifacts ==="
+          
+          # Remove development-specific files and directories
+          echo "Removing development files..."
+          
+          # Development artifacts
+          rm -rf knowledge/audits/
+          rm -rf knowledge/enforcement_logs/
+          rm -rf knowledge/evidence_collection/
+          rm -rf knowledge/false_positive_detection/
+          rm -rf validation/
+          rm -rf incidents/
+          rm -rf htmlcov/
+          rm -rf test_output/
+          
+          # Test files
+          find . -name "*test_issue_*" -type f -delete
+          find . -name "validate_issue_*.py" -type f -delete
+          find . -name "audit_*.py" -type f -delete
+          find . -name "*.test.*" -type f -delete
+          
+          # Development issue files
+          find . -name "*issue_[0-9]*" -type f -delete
+          
+          # Log files
+          find . -name "*.log" -type f -delete
+          find . -name "migration.log" -type f -delete
+          find . -name "shadow-mode.log" -type f -delete
+          
+          # Coverage files
+          rm -f .coverage
+          rm -f coverage.xml
+          
+          # Development summary files
+          rm -f CHAT_ERROR_CAPTURE_ANALYSIS_SUMMARY.md
+          rm -f DPIBS_RESEARCH_PHASE1_IMPLEMENTATION_COMPLETE.md
+          rm -f IMPLEMENTATION_COMPLETE_SUMMARY.md
+          rm -f INCREMENTAL_EXTRACTION_IMPLEMENTATION.md
+          rm -f MCP_KNOWLEDGE_SERVER_SUCCESS_REPORT.md
+          rm -f PATTERN_EXPORT_IMPORT_IMPLEMENTATION_SUMMARY.md
+          rm -f PATTERN_VISUALIZATION_IMPLEMENTATION.md
+          rm -f PATTERN_VISUALIZATION_IMPLEMENTATION_COMPLETE.md
+          rm -f QUALITY_SYSTEMS_VALIDATION_SUMMARY.md
+          rm -f RIF_LEARNING_REPORT_*.md
+          rm -f RIF_ORCHESTRATION_COMPLETE_REPORT.md
+          rm -f VALIDATION_REPORT_*.md
+          rm -f VALIDATION_SUMMARY_*.md
+          
+          # Issue-specific files
+          find . -name "ISSUE_*_IMPLEMENTATION_COMPLETE.md" -type f -delete
+          find . -name "ISSUE_*_VALIDATION_REPORT.md" -type f -delete
+          
+          # Environment files (will be replaced)
+          rm -f .env.*
+          
+          # Database files (keep schema, remove data)
+          find . -name "*.duckdb" -type f -delete
+          find . -name "*.duckdb.wal" -type f -delete
+          find . -name "*test*.db" -type f -delete
+          find . -name "demo*.duckdb" -type f -delete
+          
+          echo "✅ Development artifacts removed"
+
+      - name: Clean knowledge base for deployment
+        run: |
+          echo "=== Cleaning Knowledge Base ==="
+          
+          # Create clean knowledge base script
+          cat > scripts/clean_knowledge_for_deploy.py << 'EOF'
+          #!/usr/bin/env python3
+          """
+          Clean knowledge base for deployment - keep essential patterns and decisions,
+          remove development-specific data
+          """
+          import os
+          import json
+          import shutil
+          from pathlib import Path
+          
+          def clean_knowledge_base():
+              knowledge_dir = Path("knowledge")
+              if not knowledge_dir.exists():
+                  print("No knowledge directory found, skipping cleanup")
+                  return
+              
+              # Directories to completely remove
+              remove_dirs = [
+                  "audits",
+                  "enforcement_logs", 
+                  "evidence_collection",
+                  "false_positive_detection",
+                  "validation"
+              ]
+              
+              for dir_name in remove_dirs:
+                  dir_path = knowledge_dir / dir_name
+                  if dir_path.exists():
+                      shutil.rmtree(dir_path)
+                      print(f"✓ Removed {dir_name}/")
+              
+              # Files to remove
+              remove_files = [
+                  "issue_closure_prevention_log.json",
+                  "pending_user_validations.json",
+                  "user_validation_log.json",
+                  "events.jsonl",
+                  "shadow-mode.log",
+                  "migration_state.json",
+                  "migration_final_report.json",
+                  "cutover_config.json"
+              ]
+              
+              for file_name in remove_files:
+                  file_path = knowledge_dir / file_name
+                  if file_path.exists():
+                      file_path.unlink()
+                      print(f"✓ Removed {file_name}")
+              
+              # Clean learning directory - keep general patterns, remove issue-specific
+              learning_dir = knowledge_dir / "learning"
+              if learning_dir.exists():
+                  for file_path in learning_dir.glob("issue-*"):
+                      file_path.unlink()
+                      print(f"✓ Removed learning/{file_path.name}")
+                  
+                  for file_path in learning_dir.glob("*issue*"):
+                      file_path.unlink()
+                      print(f"✓ Removed learning/{file_path.name}")
+              
+              # Clean checkpoints - keep only general patterns
+              checkpoints_dir = knowledge_dir / "checkpoints"
+              if checkpoints_dir.exists():
+                  for file_path in checkpoints_dir.glob("issue-*"):
+                      file_path.unlink()
+                      print(f"✓ Removed checkpoint/{file_path.name}")
+              
+              # Clean patterns directory - keep generic patterns, remove issue-specific
+              patterns_dir = knowledge_dir / "patterns"
+              if patterns_dir.exists():
+                  for file_path in patterns_dir.glob("*issue*"):
+                      file_path.unlink()
+                      print(f"✓ Removed pattern/{file_path.name}")
+              
+              print("✅ Knowledge base cleaned for deployment")
+          
+          if __name__ == "__main__":
+              clean_knowledge_base()
+          EOF
+          
+          # Make executable and run
+          chmod +x scripts/clean_knowledge_for_deploy.py
+          python3 scripts/clean_knowledge_for_deploy.py
+          
+          # Remove the cleaning script itself (deployment doesn't need it)
+          rm scripts/clean_knowledge_for_deploy.py
+          
+          echo "✅ Knowledge base cleaning completed"
+
+      - name: Update configuration for deployment
+        run: |
+          echo "=== Updating Deployment Configuration ==="
+          
+          # Create deployment-specific configuration
+          cat > deploy.config.json << 'EOF'
+          {
+            "version": "1.0.0",
+            "deployment_mode": "template",
+            "paths": {
+              "rif_home": "${PROJECT_ROOT}/.rif",
+              "knowledge_base": "${PROJECT_ROOT}/.rif/knowledge",
+              "agents": "${PROJECT_ROOT}/.rif/agents",
+              "commands": "${PROJECT_ROOT}/.rif/commands",
+              "docs": "${PROJECT_ROOT}/docs",
+              "config": "${PROJECT_ROOT}/config",
+              "scripts": "${PROJECT_ROOT}/scripts",
+              "templates": "${PROJECT_ROOT}/templates",
+              "systems": "${PROJECT_ROOT}/systems"
+            },
+            "features": {
+              "self_development_checks": false,
+              "audit_logging": false,
+              "development_telemetry": false,
+              "shadow_mode": false,
+              "quality_gates": true,
+              "pattern_learning": true
+            },
+            "knowledge": {
+              "preserve_patterns": true,
+              "preserve_decisions": false,
+              "clean_on_init": true,
+              "backup_existing": false
+            },
+            "environment": {
+              "github_integration": true,
+              "claude_code_hooks": true,
+              "mcp_servers": false,
+              "lightrag_backend": true
+            },
+            "security": {
+              "sanitize_paths": true,
+              "validate_templates": true,
+              "restrict_file_access": true
+            }
+          }
+          EOF
+          
+          # Update README with deployment-specific instructions
+          if [[ -f README.md ]]; then
+            # Add deployment banner
+            sed -i '1i# RIF - Reactive Intelligence Framework (Production Template)\n' README.md
+            sed -i '2i> 🚀 **This is the production-ready template branch.** For development, see the [main branch](../../tree/main).\n' README.md
+            
+            # Update installation instructions
+            sed -i 's/git clone.*/git clone -b deploy https:\/\/github.com\/\[username\]\/rif.git my-project/' README.md
+            sed -i 's/\.\/rif-init\.sh/cd my-project \&\& .\/rif-init.sh --mode production/' README.md
+          fi
+          
+          echo "✅ Configuration updated for deployment"
+
+      - name: Post-sync validation
+        run: |
+          echo "=== Post-sync Validation ==="
+          
+          # Validate essential files still exist
+          essential_files=(
+            "README.md"
+            "rif-init.sh"
+            "setup.sh"
+            "claude/agents/rif-implementer.md"
+            "config/rif-workflow.yaml"
+            "CLAUDE.md"
+            "deploy.config.json"
+          )
+          
+          for file in "${essential_files[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "::error::Essential file missing after sync: $file"
+              exit 1
+            fi
+            echo "✓ Essential file preserved: $file"
+          done
+          
+          # Validate configuration syntax
+          echo "Validating configuration files..."
+          python3 -c "import json; json.load(open('deploy.config.json'))" || {
+            echo "::error::Invalid JSON in deploy.config.json"
+            exit 1
+          }
+          
+          if [[ -f config/rif-workflow.yaml ]]; then
+            python3 -c "import yaml; yaml.safe_load(open('config/rif-workflow.yaml'))" || {
+              echo "::error::Invalid YAML in config/rif-workflow.yaml"
+              exit 1
+            }
+          fi
+          
+          # Check that development artifacts are gone
+          if [[ -d knowledge/audits ]]; then
+            echo "::error::Development artifacts not properly removed"
+            exit 1
+          fi
+          
+          # Test script executability
+          if [[ ! -x rif-init.sh ]]; then
+            echo "::error::rif-init.sh not executable"
+            exit 1
+          fi
+          
+          if [[ ! -x setup.sh ]]; then
+            echo "::error::setup.sh not executable"  
+            exit 1
+          fi
+          
+          echo "✅ Post-sync validation completed"
+
+      - name: Commit and push deploy branch
+        run: |
+          echo "=== Committing Deploy Branch ==="
+          
+          # Get the main branch commit for reference
+          main_commit=$(git rev-parse main)
+          main_commit_short=$(git rev-parse --short main)
+          
+          # Stage all changes
+          git add -A
+          
+          # Check if there are changes to commit
+          if git diff --cached --quiet; then
+            echo "No changes to deploy branch, skipping commit"
+            exit 0
+          fi
+          
+          # Create commit message
+          commit_message="Deploy sync from main: $main_commit_short
+          
+          Automated synchronization from main branch.
+          - Cleaned development artifacts
+          - Updated deployment configuration  
+          - Preserved essential framework components
+          
+          Source commit: $main_commit
+          Sync timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          🤖 Generated by RIF Deploy Bot"
+          
+          # Commit changes
+          git commit -m "$commit_message"
+          
+          # Push with lease protection
+          git push --force-with-lease origin deploy
+          
+          echo "✅ Deploy branch updated and pushed"
+
+      - name: Create deployment summary
+        if: always()
+        run: |
+          echo "=== Deployment Summary ==="
+          
+          # Create summary for job output
+          echo "## 🚀 Deploy Branch Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "**Source Branch**: main" >> $GITHUB_STEP_SUMMARY
+          echo "**Target Branch**: deploy" >> $GITHUB_STEP_SUMMARY
+          echo "**Trigger**: ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ job.status }}" == "success" ]]; then
+            echo "**Status**: ✅ Success" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Changes Applied" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Development artifacts removed" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Knowledge base cleaned for production" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Configuration updated for deployment" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ Essential files preserved" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Usage" >> $GITHUB_STEP_SUMMARY
+            echo "Users can now clone the production-ready template:" >> $GITHUB_STEP_SUMMARY
+            echo '```bash' >> $GITHUB_STEP_SUMMARY
+            echo 'git clone -b deploy https://github.com/${{ github.repository }}.git my-project' >> $GITHUB_STEP_SUMMARY
+            echo 'cd my-project' >> $GITHUB_STEP_SUMMARY
+            echo './rif-init.sh --mode production' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status**: ❌ Failed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Deploy branch sync failed. Check job logs for details." >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "✅ Summary generated"
+
+  # Optional: Notify on failure
+  notify-failure:
+    name: Notify on Deploy Sync Failure
+    runs-on: ubuntu-latest
+    needs: sync-deploy
+    if: failure()
+    
+    steps:
+      - name: Create issue on sync failure
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Deploy Branch Sync Failure',
+              body: `## Deploy Sync Failed
+              
+              The automated synchronization from main to deploy branch has failed.
+              
+              **Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+              **Trigger**: ${{ github.event_name }}
+              **Timestamp**: ${new Date().toISOString()}
+              **Main Branch Commit**: ${{ github.sha }}
+              
+              ### Immediate Actions Needed
+              1. Review the failed workflow logs
+              2. Check for merge conflicts or validation errors
+              3. Manually resolve issues and re-trigger sync
+              4. Verify deploy branch integrity
+              
+              ### Recovery Commands
+              \`\`\`bash
+              # Manual sync recovery
+              git checkout main
+              git pull origin main
+              gh workflow run deploy-sync.yml
+              \`\`\`
+              
+              This issue was automatically created by the deploy-sync workflow.
+              `,
+              labels: ['deploy-sync', 'infrastructure', 'urgent']
+            });
+            
+            console.log(`Created issue #${issue.data.number} for deploy sync failure`);

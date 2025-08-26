@@ -1,0 +1,253 @@
+# RIF Deploy Branch Configuration
+# Configuration for automated deployment branch synchronization
+
+deploy_config:
+  version: "1.0.0"
+  branch_name: "deploy"
+  source_branch: "main"
+  
+  # Sync settings
+  sync:
+    enabled: true
+    auto_sync_on_push: true
+    scheduled_sync: true
+    schedule_cron: "0 2 * * 0"  # Weekly on Sunday at 2 AM UTC
+    force_sync_threshold_days: 7  # Force full rebuild after 7 days
+    
+  # Validation settings
+  validation:
+    pre_sync:
+      enabled: true
+      check_tests: true
+      check_build: false  # Tests cover this
+      check_security: true
+      check_essential_files: true
+    
+    post_sync:
+      enabled: true
+      check_configuration: true
+      check_executables: true
+      check_cleanup: true
+      check_initialization: false  # Too heavy for CI
+  
+  # File exclusion patterns
+  exclusions:
+    # Development directories
+    directories:
+      - "knowledge/audits"
+      - "knowledge/enforcement_logs"
+      - "knowledge/evidence_collection"
+      - "knowledge/false_positive_detection"
+      - "validation"
+      - "incidents"
+      - "htmlcov"
+      - "test_output"
+      - ".coverage*"
+      - "__pycache__"
+      - "*.pyc"
+    
+    # File patterns
+    file_patterns:
+      - "*test_issue_*"
+      - "validate_issue_*.py"
+      - "audit_*.py"
+      - "*.test.*"
+      - "*issue_[0-9]*"
+      - "*.log"
+      - "*.tmp"
+      - "*.duckdb"
+      - "*.duckdb.wal"
+      - "*test*.db"
+      - "demo*.duckdb"
+      - ".env.*"
+      - "migration.log"
+      - "shadow-mode.log"
+    
+    # Development summary files
+    development_summaries:
+      - "CHAT_ERROR_CAPTURE_ANALYSIS_SUMMARY.md"
+      - "DPIBS_RESEARCH_PHASE1_IMPLEMENTATION_COMPLETE.md"
+      - "IMPLEMENTATION_COMPLETE_SUMMARY.md"
+      - "INCREMENTAL_EXTRACTION_IMPLEMENTATION.md"
+      - "MCP_KNOWLEDGE_SERVER_SUCCESS_REPORT.md"
+      - "PATTERN_EXPORT_IMPORT_IMPLEMENTATION_SUMMARY.md"
+      - "PATTERN_VISUALIZATION_IMPLEMENTATION.md"
+      - "PATTERN_VISUALIZATION_IMPLEMENTATION_COMPLETE.md"
+      - "QUALITY_SYSTEMS_VALIDATION_SUMMARY.md"
+      - "RIF_LEARNING_REPORT_*.md"
+      - "RIF_ORCHESTRATION_COMPLETE_REPORT.md"
+      - "VALIDATION_REPORT_*.md"
+      - "VALIDATION_SUMMARY_*.md"
+      - "ISSUE_*_IMPLEMENTATION_COMPLETE.md"
+      - "ISSUE_*_VALIDATION_REPORT.md"
+  
+  # File preservation (must exist in deploy branch)
+  essential_files:
+    - "README.md"
+    - "rif-init.sh"
+    - "setup.sh"
+    - "CLAUDE.md"
+    - "LICENSE"
+    - "SECURITY.md"
+    - "claude/agents/rif-implementer.md"
+    - "claude/agents/rif-analyst.md"
+    - "claude/agents/rif-validator.md"
+    - "claude/agents/rif-planner.md"
+    - "claude/agents/rif-architect.md"
+    - "config/rif-workflow.yaml"
+    - "config/multi-agent.yaml"
+    - "config/framework-variables.yaml"
+  
+  # Knowledge base cleaning
+  knowledge_cleaning:
+    enabled: true
+    preserve_patterns: true
+    preserve_core_decisions: true
+    remove_issue_specific: true
+    remove_audit_logs: true
+    remove_development_metrics: true
+    
+    # Files to always remove from knowledge
+    remove_files:
+      - "issue_closure_prevention_log.json"
+      - "pending_user_validations.json"
+      - "user_validation_log.json"
+      - "events.jsonl"
+      - "shadow-mode.log"
+      - "migration_state.json"
+      - "migration_final_report.json"
+      - "cutover_config.json"
+    
+    # Patterns to remove from subdirectories
+    remove_patterns:
+      learning:
+        - "issue-*"
+        - "*issue*"
+      checkpoints:
+        - "issue-*"
+        - "*validation*"
+      patterns:
+        - "*issue*"
+        - "*development*"
+  
+  # Configuration overrides for deploy branch
+  config_overrides:
+    deploy_config:
+      deployment_mode: "template"
+      features:
+        self_development_checks: false
+        audit_logging: false
+        development_telemetry: false
+        shadow_mode: false
+        quality_gates: true
+        pattern_learning: true
+      knowledge:
+        preserve_patterns: true
+        preserve_decisions: false
+        clean_on_init: true
+        backup_existing: false
+      environment:
+        github_integration: true
+        claude_code_hooks: true
+        mcp_servers: false
+        lightrag_backend: true
+      security:
+        sanitize_paths: true
+        validate_templates: true
+        restrict_file_access: true
+    
+    # Update README for deployment
+    readme_updates:
+      add_banner: true
+      banner_text: |
+        # RIF - Reactive Intelligence Framework (Production Template)
+        
+        > 🚀 **This is the production-ready template branch.** For development, see the [main branch](../../tree/main).
+      
+      update_clone_command: true
+      clone_command: "git clone -b deploy https://github.com/[username]/rif.git my-project"
+      
+      update_init_command: true
+      init_command: "cd my-project && ./rif-init.sh --mode production"
+  
+  # Notification settings
+  notifications:
+    on_success:
+      enabled: false  # Can be enabled for important deployments
+      channels: []
+    
+    on_failure:
+      enabled: true
+      create_issue: true
+      issue_labels: ["deploy-sync", "infrastructure", "urgent"]
+      notify_maintainers: true
+  
+  # Recovery settings
+  recovery:
+    backup_before_sync: true
+    backup_retention_days: 30
+    rollback_enabled: true
+    emergency_contacts: []
+  
+  # Monitoring
+  monitoring:
+    track_sync_duration: true
+    track_size_changes: true
+    track_file_changes: true
+    alert_on_large_changes: true
+    large_change_threshold_mb: 50
+    alert_on_long_sync: true
+    long_sync_threshold_minutes: 10
+
+# Branch protection settings (applied via GitHub API)
+branch_protection:
+  deploy_branch:
+    required_status_checks:
+      strict: false
+      contexts: []
+    
+    enforce_admins: false
+    required_pull_request_reviews:
+      required_approving_review_count: 0
+      dismiss_stale_reviews: false
+      require_code_owner_reviews: false
+    
+    restrictions:
+      users: []
+      teams: []
+      apps: ["github-actions"]  # Only GitHub Actions can push
+    
+    allow_force_pushes: false
+    allow_deletions: false
+    
+  main_branch:
+    required_status_checks:
+      strict: true
+      contexts: ["RIF PR Quality Gates"]
+    
+    enforce_admins: false
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: true
+    
+    restrictions: null  # No restrictions for main
+    allow_force_pushes: false
+    allow_deletions: false
+
+# User experience settings
+user_experience:
+  deployment_docs:
+    create_deployment_guide: true
+    include_troubleshooting: true
+    include_examples: true
+    
+  onboarding:
+    test_initialization: true
+    validate_user_flow: true
+    provide_quick_start: true
+    
+  support:
+    create_templates: true
+    provide_examples: true
+    document_common_patterns: true

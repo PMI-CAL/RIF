@@ -1,15 +1,14 @@
 #!/bin/bash
 
-# RIF - Reactive Intelligence Framework
-# Initialization and Setup Script
+# RIF - Reactive Intelligence Framework Initialization Script
+# Main entry point for initializing RIF in a project
 
 set -e
 
-echo "=========================================="
-echo "   RIF - Reactive Intelligence Framework"
-echo "   Automatic Intelligent Development System"
-echo "=========================================="
-echo ""
+# Configuration
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+RIF_VERSION="1.0.0"
+DEFAULT_MODE="development"
 
 # Colors for output
 RED='\033[0;31m'
@@ -18,292 +17,345 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Check prerequisites
-echo -e "${BLUE}Checking prerequisites...${NC}"
+print_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
 
-# Check for git
-if ! command -v git &> /dev/null; then
-    echo -e "${RED}✗ Git is not installed${NC}"
-    exit 1
-else
-    echo -e "${GREEN}✓ Git found${NC}"
-fi
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
 
-# Check for GitHub CLI
-if ! command -v gh &> /dev/null; then
-    echo -e "${YELLOW}⚠ GitHub CLI not found - installing...${NC}"
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install gh
-    else
-        echo "Please install GitHub CLI: https://cli.github.com/"
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+print_header() {
+    echo ""
+    echo -e "${BLUE}========================================${NC}"
+    echo -e "${BLUE} $1 ${NC}"
+    echo -e "${BLUE}========================================${NC}"
+}
+
+# Show usage information
+show_usage() {
+    echo "RIF - Reactive Intelligence Framework Initialization"
+    echo ""
+    echo "Usage: $0 [OPTIONS]"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help                Show this help message"
+    echo "  -m, --mode MODE           Set initialization mode: development|production"
+    echo "                           Default: $DEFAULT_MODE"
+    echo "  -v, --version             Show RIF version"
+    echo "  --interactive             Enable interactive configuration (default)"
+    echo "  --non-interactive         Disable interactive prompts"
+    echo "  --force                   Force initialization even if already configured"
+    echo ""
+    echo "Modes:"
+    echo "  development              Full RIF development environment"
+    echo "  production               Clean production template for projects"
+    echo ""
+    echo "Examples:"
+    echo "  $0                       Initialize with development mode"
+    echo "  $0 --mode production     Initialize for production use"
+    echo "  $0 --non-interactive     Initialize without prompts"
+}
+
+# Parse command line arguments
+parse_arguments() {
+    MODE="$DEFAULT_MODE"
+    INTERACTIVE=true
+    FORCE=false
+    
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_usage
+                exit 0
+                ;;
+            -m|--mode)
+                MODE="$2"
+                shift 2
+                ;;
+            -v|--version)
+                echo "RIF version $RIF_VERSION"
+                exit 0
+                ;;
+            --interactive)
+                INTERACTIVE=true
+                shift
+                ;;
+            --non-interactive)
+                INTERACTIVE=false
+                shift
+                ;;
+            --force)
+                FORCE=true
+                shift
+                ;;
+            *)
+                print_error "Unknown option: $1"
+                show_usage
+                exit 1
+                ;;
+        esac
+    done
+    
+    # Validate mode
+    if [[ "$MODE" != "development" ]] && [[ "$MODE" != "production" ]]; then
+        print_error "Invalid mode: $MODE"
+        print_info "Valid modes: development, production"
         exit 1
     fi
-else
-    echo -e "${GREEN}✓ GitHub CLI found${NC}"
-fi
-
-# Check for jq
-if ! command -v jq &> /dev/null; then
-    echo -e "${YELLOW}⚠ jq not found - installing...${NC}"
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install jq
-    else
-        sudo apt-get install -y jq || echo "Please install jq manually"
-    fi
-else
-    echo -e "${GREEN}✓ jq found${NC}"
-fi
-
-# Check for Claude Code
-if [ -d "$HOME/.claude" ] || command -v claude &> /dev/null; then
-    echo -e "${GREEN}✓ Claude Code detected${NC}"
-else
-    echo -e "${YELLOW}⚠ Claude Code not detected - RIF works best with Claude Code${NC}"
-fi
-
-echo ""
-echo -e "${BLUE}Setting up RIF in current directory...${NC}"
-
-# Create directory structure
-echo "Creating RIF directories..."
-mkdir -p knowledge/{patterns,decisions,issues,metrics,learning,checkpoints}
-mkdir -p .claude
-mkdir -p .github/ISSUE_TEMPLATE
-
-# Initialize knowledge base
-echo "Initializing knowledge base..."
-cat > knowledge/patterns/recent.json << 'EOF'
-{
-  "patterns": [],
-  "version": "1.0.0",
-  "updated": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 }
-EOF
 
-cat > knowledge/issues/resolved.json << 'EOF'
-{
-  "issues": [],
-  "version": "1.0.0",
-  "updated": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-}
-EOF
-
-cat > knowledge/metrics/quality.json << 'EOF'
-{
-  "gates": {
-    "coverage": {"threshold": 80, "current": 0},
-    "security": {"threshold": "no_critical", "current": "unknown"},
-    "performance": {"threshold": "baseline", "current": "unknown"}
-  },
-  "version": "1.0.0",
-  "updated": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-}
-EOF
-
-# Create GitHub issue templates
-echo "Creating GitHub issue templates..."
-cat > .github/ISSUE_TEMPLATE/rif-task.md << 'EOF'
----
-name: RIF Task
-about: Create a task for RIF to automatically handle
-title: ''
-labels: 'state:new'
-assignees: ''
----
-
-## Description
-[Describe what needs to be done]
-
-## Context
-[Any relevant context or background]
-
-## Acceptance Criteria
-- [ ] Criterion 1
-- [ ] Criterion 2
-- [ ] Criterion 3
-
-## Notes
-[Any additional notes or constraints]
-EOF
-
-cat > .github/ISSUE_TEMPLATE/rif-bug.md << 'EOF'
----
-name: RIF Bug Fix
-about: Report a bug for RIF to automatically fix
-title: '[BUG] '
-labels: 'state:new, type:bug'
-assignees: ''
----
-
-## Bug Description
-[Clear description of the bug]
-
-## Steps to Reproduce
-1. Step 1
-2. Step 2
-3. Step 3
-
-## Expected Behavior
-[What should happen]
-
-## Actual Behavior
-[What actually happens]
-
-## Environment
-- OS: [e.g., macOS, Linux]
-- Version: [e.g., 1.0.0]
-- Dependencies: [relevant versions]
-EOF
-
-# Check if hooks are already configured
-if [ -f ".claude/settings.json" ]; then
-    echo -e "${YELLOW}⚠ .claude/settings.json already exists - backing up...${NC}"
-    cp .claude/settings.json .claude/settings.json.backup.$(date +%s)
-fi
-
-# Copy Claude settings if not exists
-if [ ! -f ".claude/settings.json" ]; then
-    echo "Configuring Claude Code hooks..."
-    cp "${BASH_SOURCE%/*}/.claude/settings.json" .claude/settings.json
-    echo -e "${GREEN}✓ Claude Code hooks configured${NC}"
-else
-    echo -e "${YELLOW}⚠ Claude settings exist - please merge manually${NC}"
-fi
-
-# Setup git hooks (optional)
-echo ""
-read -p "Do you want to set up git hooks for automatic RIF triggers? (y/n) " -n 1 -r
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    cat > .git/hooks/post-commit << 'EOF'
-#!/bin/bash
-# RIF post-commit hook
-echo '{
-  "event": "commit",
-  "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
-  "hash": "'$(git rev-parse HEAD)'",
-  "message": "'$(git log -1 --pretty=%B | head -1)'"
-}' >> knowledge/events.jsonl
-EOF
-    chmod +x .git/hooks/post-commit
-    echo -e "${GREEN}✓ Git hooks configured${NC}"
-fi
-
-# Check GitHub authentication
-echo ""
-echo -e "${BLUE}Checking GitHub authentication...${NC}"
-if gh auth status &> /dev/null; then
-    echo -e "${GREEN}✓ GitHub authenticated${NC}"
-    REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || echo "")
-    if [ -n "$REPO" ]; then
-        echo -e "${GREEN}✓ Repository detected: $REPO${NC}"
-    else
-        echo -e "${YELLOW}⚠ Not in a GitHub repository${NC}"
-        read -p "Create a GitHub repository? (y/n) " -n 1 -r
-        echo ""
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            read -p "Repository name: " REPO_NAME
-            gh repo create "$REPO_NAME" --private --clone=false
-            git remote add origin "https://github.com/$(gh api user -q .login)/$REPO_NAME.git"
-            echo -e "${GREEN}✓ Repository created${NC}"
+# Detect if we're in development or deploy branch
+detect_branch_mode() {
+    local deploy_config="$SCRIPT_DIR/deploy.config.json"
+    
+    if [[ -f "$deploy_config" ]]; then
+        local deploy_mode=$(python3 -c "import json; print(json.load(open('$deploy_config')).get('deployment_mode', 'unknown'))" 2>/dev/null || echo "unknown")
+        if [[ "$deploy_mode" == "template" ]]; then
+            print_info "Detected: Production template branch"
+            return 0  # Production template
         fi
     fi
-else
-    echo -e "${YELLOW}⚠ GitHub not authenticated${NC}"
-    echo "Run: gh auth login"
-fi
+    
+    # Check if we have development artifacts
+    if [[ -d "$SCRIPT_DIR/knowledge/audits" ]] || [[ -d "$SCRIPT_DIR/validation" ]]; then
+        print_info "Detected: Development branch"
+        return 1  # Development branch
+    fi
+    
+    print_info "Detected: Unknown branch type"
+    return 2  # Unknown
+}
 
-# Create initial RIF documentation
-echo ""
-echo "Creating RIF documentation..."
-cat > RIF-README.md << 'EOF'
-# RIF-Enabled Project
+# Initialize RIF based on mode
+initialize_rif() {
+    print_header "RIF Initialization"
+    
+    print_info "Mode: $MODE"
+    print_info "Interactive: $INTERACTIVE"
+    print_info "RIF Directory: $SCRIPT_DIR"
+    
+    # Check if already initialized
+    if [[ -f "$SCRIPT_DIR/.rif-initialized" ]] && [[ "$FORCE" != "true" ]]; then
+        print_warning "RIF already initialized in this directory"
+        print_info "Use --force to re-initialize"
+        
+        if [[ "$INTERACTIVE" == "true" ]]; then
+            read -p "Re-initialize anyway? (y/N): " -r
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                print_info "Initialization aborted"
+                exit 0
+            fi
+        else
+            exit 0
+        fi
+    fi
+    
+    # Detect branch type and warn about mismatches
+    detect_branch_mode
+    local branch_type=$?
+    
+    if [[ $branch_type -eq 0 ]] && [[ "$MODE" == "development" ]]; then
+        print_warning "You're on a production template branch but requesting development mode"
+        print_info "Consider using: git clone -b main <repo> for development"
+    elif [[ $branch_type -eq 1 ]] && [[ "$MODE" == "production" ]]; then
+        print_warning "You're on a development branch but requesting production mode"
+        print_info "Consider using: git clone -b deploy <repo> for production"
+    fi
+    
+    # Run appropriate setup script
+    if [[ -f "$SCRIPT_DIR/setup.sh" ]]; then
+        print_info "Running framework setup..."
+        if [[ "$INTERACTIVE" == "true" ]]; then
+            "$SCRIPT_DIR/setup.sh" "$SCRIPT_DIR" 
+        else
+            "$SCRIPT_DIR/setup.sh" --non-interactive "$SCRIPT_DIR"
+        fi
+    else
+        print_warning "Setup script not found, continuing with basic initialization"
+    fi
+    
+    # Create mode-specific configuration
+    create_mode_configuration
+    
+    # Set up development environment if needed
+    if [[ "$MODE" == "development" ]]; then
+        setup_development_environment
+    else
+        setup_production_environment
+    fi
+    
+    # Mark as initialized
+    echo "{\"mode\": \"$MODE\", \"initialized\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\", \"version\": \"$RIF_VERSION\"}" > "$SCRIPT_DIR/.rif-initialized"
+    
+    print_success "RIF initialization completed!"
+    show_next_steps
+}
 
-This project uses RIF (Reactive Intelligence Framework) for automatic intelligent development.
-
-## How It Works
-
-1. **Create an Issue**: Describe what you need in a GitHub issue
-2. **RIF Activates**: Agents automatically analyze and implement
-3. **Review Results**: Check issue comments for progress and results
-
-## Quick Start
-
-### Create Your First RIF Task
-
-```bash
-gh issue create --title "Your task description" --body "Details about what you need"
-```
-
-RIF will automatically:
-- Analyze the requirements
-- Plan the implementation
-- Write the code
-- Test the solution
-- Update documentation
-- Learn from the experience
-
-## RIF Agents
-
-- **RIF-Analyst**: Analyzes requirements and patterns
-- **RIF-Planner**: Creates execution plans
-- **RIF-Architect**: Designs solutions
-- **RIF-Implementer**: Writes code
-- **RIF-Validator**: Tests and validates
-- **RIF-Learner**: Updates knowledge base
-
-## Knowledge Base
-
-RIF learns from every task:
-- `knowledge/patterns/` - Successful patterns
-- `knowledge/issues/` - Resolved issues
-- `knowledge/decisions/` - Design decisions
-- `knowledge/metrics/` - Performance data
-
-## Monitoring
-
-Check RIF status:
-```bash
-gh issue list --label "state:*"
-```
-
-View recent events:
-```bash
-tail -f knowledge/events.jsonl | jq .
-```
-
-## Troubleshooting
-
-If RIF isn't responding:
-1. Check issue has `state:new` label
-2. Verify Claude Code hooks are configured
-3. Ensure GitHub CLI is authenticated
-4. Check knowledge directory exists
-
-## Learn More
-
-See the main [CLAUDE.md](CLAUDE.md) file for complete documentation.
+# Create mode-specific configuration
+create_mode_configuration() {
+    print_info "Configuring for $MODE mode..."
+    
+    local config_dir="$SCRIPT_DIR/.rif"
+    mkdir -p "$config_dir"
+    
+    # Create mode configuration file
+    cat > "$config_dir/mode.json" << EOF
+{
+  "mode": "$MODE",
+  "configured": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+  "features": {
+    "self_development": $(if [[ "$MODE" == "development" ]]; then echo "true"; else echo "false"; fi),
+    "audit_logging": $(if [[ "$MODE" == "development" ]]; then echo "true"; else echo "false"; fi),
+    "quality_gates": true,
+    "pattern_learning": true
+  },
+  "paths": {
+    "knowledge": "$config_dir/knowledge",
+    "agents": "$SCRIPT_DIR/claude/agents",
+    "commands": "$SCRIPT_DIR/claude/commands"
+  }
+}
 EOF
+    
+    print_success "Mode configuration created"
+}
 
-echo -e "${GREEN}✓ Documentation created${NC}"
+# Setup development environment
+setup_development_environment() {
+    print_info "Setting up development environment..."
+    
+    local config_dir="$SCRIPT_DIR/.rif"
+    
+    # Initialize knowledge base for development
+    if [[ -d "$SCRIPT_DIR/knowledge" ]]; then
+        ln -sf "$SCRIPT_DIR/knowledge" "$config_dir/knowledge"
+        print_info "✓ Linked to full knowledge base"
+    else
+        mkdir -p "$config_dir/knowledge"
+        print_info "✓ Created development knowledge base"
+    fi
+    
+    # Enable Claude Code hooks for development
+    if [[ ! -d "$SCRIPT_DIR/.claude" ]]; then
+        mkdir -p "$SCRIPT_DIR/.claude"
+        cat > "$SCRIPT_DIR/.claude/settings.json" << 'EOF'
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "echo 'RIF Development Mode Active'",
+        "output": "context"
+      }
+    ]
+  }
+}
+EOF
+        print_info "✓ Created Claude Code development hooks"
+    fi
+    
+    print_success "Development environment configured"
+}
 
-# Final setup summary
-echo ""
-echo "=========================================="
-echo -e "${GREEN}RIF Setup Complete!${NC}"
-echo "=========================================="
-echo ""
-echo "Next steps:"
-echo "1. Review and commit RIF files:"
-echo "   git add ."
-echo "   git commit -m 'Add RIF - Reactive Intelligence Framework'"
-echo ""
-echo "2. Create your first RIF issue:"
-echo "   gh issue create --title 'Test RIF' --body 'Test that RIF is working'"
-echo ""
-echo "3. Watch RIF work automatically:"
-echo "   gh issue view <number> --comments"
-echo ""
-echo "RIF is now ready to intelligently handle your development tasks!"
-echo ""
-echo "Remember: RIF works AUTOMATICALLY - just create issues and review results!"
+# Setup production environment  
+setup_production_environment() {
+    print_info "Setting up production environment..."
+    
+    local config_dir="$SCRIPT_DIR/.rif"
+    
+    # Initialize clean knowledge base for production
+    mkdir -p "$config_dir/knowledge"
+    
+    # Copy essential patterns only
+    if [[ -d "$SCRIPT_DIR/knowledge/patterns" ]]; then
+        mkdir -p "$config_dir/knowledge/patterns"
+        # Copy only generic patterns, skip issue-specific ones
+        find "$SCRIPT_DIR/knowledge/patterns" -name "*.json" -not -name "*issue*" -exec cp {} "$config_dir/knowledge/patterns/" \; 2>/dev/null || true
+        print_info "✓ Copied essential patterns"
+    fi
+    
+    # Basic Claude Code hooks for production
+    if [[ ! -d "$SCRIPT_DIR/.claude" ]]; then
+        mkdir -p "$SCRIPT_DIR/.claude"
+        cat > "$SCRIPT_DIR/.claude/settings.json" << 'EOF'
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command", 
+        "command": "echo 'RIF Production Mode - Ready for Development'",
+        "output": "context"
+      }
+    ]
+  }
+}
+EOF
+        print_info "✓ Created Claude Code production hooks"
+    fi
+    
+    print_success "Production environment configured"
+}
+
+# Show next steps based on mode
+show_next_steps() {
+    print_header "Next Steps"
+    
+    if [[ "$MODE" == "development" ]]; then
+        echo "🔧 Development Mode - RIF Framework Development"
+        echo ""
+        echo "You can now:"
+        echo "1. Create GitHub issues to trigger RIF agents"
+        echo "2. Use Claude Code with full RIF development features"
+        echo "3. Develop and test RIF framework enhancements"
+        echo "4. Access full knowledge base and audit logs"
+        echo ""
+        echo "Quick start:"
+        echo "  gh issue create --title 'Test RIF Development' --body 'Testing RIF in development mode'"
+        
+    else
+        echo "🚀 Production Mode - Project Development with RIF"
+        echo ""
+        echo "You can now:"
+        echo "1. Create GitHub issues for your project features"
+        echo "2. Use RIF agents for development tasks"
+        echo "3. Leverage patterns and templates"
+        echo "4. Build your project with RIF assistance"
+        echo ""
+        echo "Quick start:"
+        echo "  gh issue create --title 'Initialize Project Architecture' --body 'Set up initial project structure'"
+    fi
+    
+    echo ""
+    echo "📚 Documentation:"
+    echo "  - Framework Guide: docs/"
+    echo "  - Agent Documentation: claude/agents/"
+    echo "  - Configuration: config/"
+    echo ""
+    echo "🎯 Need Help?"
+    echo "  - Check CLAUDE.md for full RIF capabilities"
+    echo "  - Review agent templates in claude/agents/"
+    echo "  - Use GitHub issues for RIF assistance"
+}
+
+# Main execution
+main() {
+    print_header "RIF Framework Initialization"
+    
+    parse_arguments "$@"
+    initialize_rif
+}
+
+# Trap to handle script interruption
+trap 'print_error "Initialization interrupted"; exit 1' INT TERM
+
+# Execute main function
+main "$@"

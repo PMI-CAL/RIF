@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "deployment_mode": "project",
+  "paths": {
+    "rif_home": "${PROJECT_ROOT}/.rif",
+    "knowledge_base": "${PROJECT_ROOT}/.rif/knowledge",
+    "agents": "${PROJECT_ROOT}/.rif/agents",
+    "commands": "${PROJECT_ROOT}/.rif/commands",
+    "docs": "${PROJECT_ROOT}/docs",
+    "config": "${PROJECT_ROOT}/config",
+    "scripts": "${PROJECT_ROOT}/scripts",
+    "templates": "${PROJECT_ROOT}/templates",
+    "systems": "${PROJECT_ROOT}/systems"
+  },
+  "features": {
+    "self_development_checks": false,
+    "audit_logging": false,
+    "development_telemetry": false,
+    "shadow_mode": false,
+    "quality_gates": true,
+    "pattern_learning": true
+  },
+  "knowledge": {
+    "preserve_patterns": true,
+    "preserve_decisions": false,
+    "clean_on_init": true,
+    "backup_existing": true
+  },
+  "environment": {
+    "github_integration": true,
+    "claude_code_hooks": true,
+    "mcp_servers": false,
+    "lightrag_backend": true
+  },
+  "security": {
+    "sanitize_paths": true,
+    "validate_templates": true,
+    "restrict_file_access": true
+  }
+}

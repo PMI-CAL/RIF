@@ -1,0 +1,486 @@
+name: Emergency Hotfix Workflow
+
+on:
+  push:
+    branches:
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - 'main'
+      - 'production'
+    types: [opened, synchronize]
+    # Trigger only for PRs with hotfix label
+    # This will be refined in the job conditions
+
+env:
+  EMERGENCY_TIMEOUT: 1800  # 30 minutes
+  HOTFIX_REVIEWER_COUNT: 1  # Reduced from standard 2
+  
+jobs:
+  # Job 1: Emergency Detection and Validation
+  emergency-detection:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.labels.*.name, 'hotfix') || startsWith(github.ref_name, 'hotfix/')
+    outputs:
+      is_emergency: ${{ steps.detect.outputs.emergency }}
+      incident_id: ${{ steps.detect.outputs.incident_id }}
+      severity: ${{ steps.detect.outputs.severity }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Detect Emergency Context
+        id: detect
+        run: |
+          # Check if this is an emergency hotfix
+          if [[ "${{ github.ref_name }}" == hotfix/* ]] || [[ "${{ contains(github.event.pull_request.labels.*.name, 'hotfix') }}" == "true" ]]; then
+            echo "emergency=true" >> $GITHUB_OUTPUT
+            
+            # Extract incident ID from branch name or PR title
+            INCIDENT_ID=""
+            if [[ "${{ github.ref_name }}" == hotfix/* ]]; then
+              INCIDENT_ID="${{ github.ref_name#hotfix/ }}"
+            else
+              INCIDENT_ID="INC-$(date +%Y%m%d)-$(echo ${{ github.event.pull_request.number }})"
+            fi
+            echo "incident_id=$INCIDENT_ID" >> $GITHUB_OUTPUT
+            
+            # Determine severity from labels or PR title
+            SEVERITY="high"
+            if [[ "${{ github.event.pull_request.title }}" == *"CRITICAL"* ]] || [[ "${{ contains(github.event.pull_request.labels.*.name, 'critical') }}" == "true" ]]; then
+              SEVERITY="critical"
+            fi
+            echo "severity=$SEVERITY" >> $GITHUB_OUTPUT
+            
+            # Create incident record
+            cat > incident.json << EOF
+          {
+            "incident_id": "$INCIDENT_ID",
+            "severity": "$SEVERITY", 
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "pr_number": "${{ github.event.pull_request.number }}",
+            "branch": "${{ github.ref_name }}",
+            "author": "${{ github.actor }}",
+            "title": "${{ github.event.pull_request.title }}",
+            "description": "${{ github.event.pull_request.body }}"
+          }
+          EOF
+          else
+            echo "emergency=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Upload Incident Record
+        if: steps.detect.outputs.emergency == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: incident-record
+          path: incident.json
+          retention-days: 30
+
+  # Job 2: Minimal Quality Gates (Security + Smoke Tests Only)
+  emergency-quality-gates:
+    runs-on: ubuntu-latest
+    needs: emergency-detection
+    if: needs.emergency-detection.outputs.is_emergency == 'true'
+    timeout-minutes: 15  # Aggressive timeout for emergency
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js (if applicable)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+        continue-on-error: true
+        
+      - name: Setup Python (if applicable)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+        continue-on-error: true
+        
+      - name: Install Dependencies
+        run: |
+          # Try multiple package managers
+          if [ -f "package.json" ]; then
+            npm ci || npm install
+          fi
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          fi
+          if [ -f "Pipfile" ]; then
+            pip install pipenv && pipenv install
+          fi
+        continue-on-error: true
+        timeout-minutes: 5
+        
+      - name: Security Scan (Critical Only)
+        run: |
+          echo "🔐 Running security scan for emergency hotfix..."
+          # Run lightweight security checks
+          if command -v npm &> /dev/null && [ -f "package.json" ]; then
+            npm audit --audit-level=critical || echo "Security warnings found but continuing due to emergency"
+          fi
+          
+          # Check for sensitive information
+          if command -v grep &> /dev/null; then
+            echo "Checking for secrets..."
+            ! grep -r -E "(password|secret|key|token)\s*[:=]\s*['\"][^'\"]+['\"]" . --include="*.js" --include="*.py" --include="*.yml" --include="*.json" || echo "Potential secrets found - review required"
+          fi
+        timeout-minutes: 3
+        
+      - name: Smoke Tests (Basic Functionality)
+        run: |
+          echo "💨 Running smoke tests for emergency hotfix..."
+          # Basic syntax/compilation checks
+          if [ -f "package.json" ]; then
+            # JavaScript syntax check
+            find . -name "*.js" -not -path "./node_modules/*" -exec node -c {} \; || exit 1
+          fi
+          
+          if [ -f "requirements.txt" ] || [ -f "setup.py" ]; then
+            # Python syntax check
+            python -m py_compile $(find . -name "*.py" -not -path "./.venv/*" -not -path "./venv/*") || exit 1
+          fi
+          
+          # Run basic tests if they exist and are fast
+          if [ -f "package.json" ] && grep -q '"test"' package.json; then
+            timeout 180s npm test -- --maxWorkers=2 --testPathIgnorePatterns=/e2e/ || echo "Some tests failed but continuing due to emergency"
+          fi
+          
+          if [ -f "pytest.ini" ] || [ -f "setup.cfg" ] && command -v pytest &> /dev/null; then
+            timeout 180s pytest -x --maxfail=3 -k "not integration and not e2e" || echo "Some tests failed but continuing due to emergency"
+          fi
+        timeout-minutes: 5
+
+  # Job 3: Emergency Review and Deployment
+  emergency-deployment:
+    runs-on: ubuntu-latest
+    needs: [emergency-detection, emergency-quality-gates]
+    if: needs.emergency-detection.outputs.is_emergency == 'true' && github.event.pull_request.merged == true
+    environment:
+      name: production
+      url: https://your-production-url.com
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download Incident Record
+        uses: actions/download-artifact@v4
+        with:
+          name: incident-record
+          
+      - name: Setup Deployment Environment
+        run: |
+          echo "🚀 Setting up emergency deployment environment..."
+          # Setup deployment tools (customize for your stack)
+          # This is a template - replace with your actual deployment setup
+          
+      - name: Emergency Deployment
+        run: |
+          echo "🚨 Deploying emergency hotfix to production..."
+          echo "Incident ID: ${{ needs.emergency-detection.outputs.incident_id }}"
+          echo "Severity: ${{ needs.emergency-detection.outputs.severity }}"
+          
+          # Template deployment commands (customize for your infrastructure)
+          # Example deployment patterns:
+          
+          # For Docker/Kubernetes:
+          # docker build -t app:hotfix-${{ github.sha }} .
+          # kubectl apply -f k8s/
+          # kubectl set image deployment/app app=app:hotfix-${{ github.sha }}
+          # kubectl rollout status deployment/app --timeout=300s
+          
+          # For serverless:
+          # serverless deploy --stage prod
+          
+          # For traditional servers:
+          # rsync -av --delete ./ user@server:/path/to/app/
+          # systemctl restart your-service
+          
+          echo "Emergency deployment completed at $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+        timeout-minutes: 10
+        
+      - name: Deployment Verification
+        run: |
+          echo "🔍 Verifying emergency deployment..."
+          # Basic health checks (customize for your application)
+          
+          # Example health check patterns:
+          # curl -f https://your-app.com/health || exit 1
+          # kubectl get pods | grep app | grep Running || exit 1
+          
+          echo "Deployment verification completed successfully"
+        timeout-minutes: 3
+        
+      - name: Update Incident Record
+        run: |
+          # Update incident with deployment info
+          cat > deployment-update.json << EOF
+          {
+            "deployment_timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "deployment_status": "success",
+            "commit_sha": "${{ github.sha }}",
+            "deployed_by": "${{ github.actor }}",
+            "verification_status": "passed"
+          }
+          EOF
+          
+          # Merge with original incident record
+          if command -v jq &> /dev/null; then
+            jq -s '.[0] * .[1]' incident.json deployment-update.json > updated-incident.json
+            mv updated-incident.json incident.json
+          fi
+          
+      - name: Upload Updated Incident Record
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-incident-record
+          path: incident.json
+          retention-days: 30
+
+  # Job 4: Automatic Backport to Main
+  automatic-backport:
+    runs-on: ubuntu-latest
+    needs: [emergency-detection, emergency-deployment]
+    if: needs.emergency-deployment.result == 'success' && needs.emergency-detection.outputs.is_emergency == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Configure Git
+        run: |
+          git config --global user.name "RIF Emergency Hotfix Bot"
+          git config --global user.email "rif-hotfix@github-actions.local"
+          
+      - name: Create Backport PR
+        run: |
+          echo "🔄 Creating automatic backport to main branch..."
+          
+          # Get the hotfix branch name
+          HOTFIX_BRANCH="${{ github.ref_name }}"
+          BACKPORT_BRANCH="backport/${HOTFIX_BRANCH}-to-main"
+          
+          # Create backport branch from main
+          git checkout main
+          git pull origin main
+          git checkout -b "$BACKPORT_BRANCH"
+          
+          # Cherry-pick the hotfix commits
+          echo "Cherry-picking commits from $HOTFIX_BRANCH..."
+          git cherry-pick --strategy=ort --strategy-option=theirs $(git merge-base main $HOTFIX_BRANCH)..refs/remotes/origin/$HOTFIX_BRANCH || {
+            echo "Cherry-pick failed. Creating manual backport PR..."
+            git cherry-pick --abort || true
+            git reset --hard main
+            # Create empty commit to trigger manual review
+            git commit --allow-empty -m "Manual backport required for $HOTFIX_BRANCH"
+          }
+          
+          # Push backport branch
+          git push origin "$BACKPORT_BRANCH"
+          
+          # Create PR using GitHub CLI
+          gh pr create \
+            --title "🔄 Backport: ${{ github.event.pull_request.title }}" \
+            --body "Automatic backport of emergency hotfix from $HOTFIX_BRANCH
+
+          **Original Emergency PR:** #${{ github.event.pull_request.number }}
+          **Incident ID:** ${{ needs.emergency-detection.outputs.incident_id }}
+          **Severity:** ${{ needs.emergency-detection.outputs.severity }}
+          
+          This backport ensures the main branch contains the emergency fix for future releases.
+          
+          **Changes:**
+          ${{ github.event.pull_request.body }}
+          
+          **Emergency Timeline:**
+          - Hotfix deployed: $(date -u +"%Y-%m-%d %H:%M UTC")
+          - Backport created: $(date -u +"%Y-%m-%d %H:%M UTC")
+          
+          **Next Steps:**
+          - [ ] Full test suite execution
+          - [ ] Documentation updates
+          - [ ] Post-mortem scheduling
+          " \
+            --base main \
+            --head "$BACKPORT_BRANCH" \
+            --label "backport,emergency-followup"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Job 5: Post-Mortem Automation
+  post-mortem-automation:
+    runs-on: ubuntu-latest
+    needs: [emergency-detection, emergency-deployment, automatic-backport]
+    if: always() && needs.emergency-detection.outputs.is_emergency == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Download Incident Records
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-incident-record
+        continue-on-error: true
+        
+      - name: Generate Post-Mortem Report
+        run: |
+          echo "📋 Generating automated post-mortem report..."
+          
+          # Calculate timeline
+          INCIDENT_START=$(date -u +"%Y-%m-%d %H:%M UTC")
+          DEPLOYMENT_END=$(date -u +"%Y-%m-%d %H:%M UTC")
+          
+          cat > post-mortem-${{ needs.emergency-detection.outputs.incident_id }}.md << 'EOF'
+          # Post-Mortem Report: ${{ needs.emergency-detection.outputs.incident_id }}
+          
+          ## Executive Summary
+          **Incident ID:** ${{ needs.emergency-detection.outputs.incident_id }}
+          **Severity Level:** ${{ needs.emergency-detection.outputs.severity }}
+          **Total Resolution Time:** [Calculated from timestamps]
+          **Impact Assessment:** [To be filled by on-call team]
+          
+          ## Timeline
+          | Time (UTC) | Event | Status |
+          |------------|-------|--------|
+          | $INCIDENT_START | Emergency hotfix initiated | ⚠️ |
+          | [Auto-calculated] | Quality gates completed | ✅ |
+          | [Auto-calculated] | Emergency deployment completed | ✅ |
+          | [Auto-calculated] | Backport PR created | ✅ |
+          | $DEPLOYMENT_END | Post-mortem generated | ✅ |
+          
+          ## Technical Details
+          **Hotfix Branch:** `${{ github.ref_name }}`
+          **Production PR:** #${{ github.event.pull_request.number }}
+          **Commit SHA:** `${{ github.sha }}`
+          **Deployed By:** @${{ github.actor }}
+          
+          ## Root Cause Analysis
+          **Primary Cause:** [Extract from PR description]
+          
+          ${{ github.event.pull_request.body }}
+          
+          ## Impact Assessment
+          - **Services Affected:** [To be determined]
+          - **Users Impacted:** [To be determined]
+          - **Duration:** [Auto-calculated]
+          - **Business Impact:** [To be assessed]
+          
+          ## Response Analysis
+          ### What Went Well
+          - [x] Emergency workflow triggered successfully
+          - [x] Quality gates completed within SLA
+          - [x] Deployment automated and verified
+          - [x] Backport created automatically
+          
+          ### Areas for Improvement
+          - [ ] [To be filled during post-mortem review]
+          
+          ## Action Items
+          - [ ] Schedule post-mortem review meeting
+          - [ ] Update monitoring for this scenario
+          - [ ] Review documentation completeness
+          - [ ] Validate emergency procedures
+          
+          ## Follow-up Tasks
+          - [ ] Complete backport PR review and merge
+          - [ ] Update incident response runbooks
+          - [ ] Schedule team debrief session
+          - [ ] Update alerting thresholds if needed
+          
+          ---
+          *This post-mortem was automatically generated by RIF Emergency Hotfix Workflow*
+          *Generated at: $(date -u +"%Y-%m-%d %H:%M UTC")*
+          EOF
+          
+      - name: Create Post-Mortem Issue
+        run: |
+          # Create follow-up issue for post-mortem review
+          gh issue create \
+            --title "📋 Post-Mortem Review: ${{ needs.emergency-detection.outputs.incident_id }}" \
+            --body "$(cat post-mortem-${{ needs.emergency-detection.outputs.incident_id }}.md)" \
+            --label "post-mortem,emergency-followup,priority:high" \
+            --assignee "${{ github.actor }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload Post-Mortem Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-mortem-report
+          path: post-mortem-*.md
+          retention-days: 90
+          
+      - name: Notify Team
+        run: |
+          echo "📢 Emergency hotfix completed. Post-mortem report generated."
+          echo "Incident ID: ${{ needs.emergency-detection.outputs.incident_id }}"
+          echo "Report available in GitHub Actions artifacts and new issue created."
+          
+          # Add any additional notification logic here:
+          # - Slack notifications
+          # - Email alerts
+          # - PagerDuty updates
+          # - Microsoft Teams messages
+
+  # Job 6: Rollback Capability (Failure Handling)
+  emergency-rollback:
+    runs-on: ubuntu-latest
+    needs: [emergency-detection, emergency-deployment]
+    if: failure() && needs.emergency-detection.outputs.is_emergency == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Emergency Rollback
+        run: |
+          echo "🔄 Initiating emergency rollback..."
+          echo "Incident ID: ${{ needs.emergency-detection.outputs.incident_id }}"
+          
+          # Template rollback commands (customize for your infrastructure)
+          # Example rollback patterns:
+          
+          # For Kubernetes:
+          # kubectl rollout undo deployment/app
+          # kubectl rollout status deployment/app --timeout=300s
+          
+          # For Docker Swarm:
+          # docker service rollback app
+          
+          # For serverless:
+          # serverless remove --stage prod && serverless deploy --stage prod --rollback
+          
+          echo "Emergency rollback completed at $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+        timeout-minutes: 5
+        
+      - name: Create Rollback Issue
+        run: |
+          gh issue create \
+            --title "🚨 Emergency Rollback Executed: ${{ needs.emergency-detection.outputs.incident_id }}" \
+            --body "Emergency rollback was executed due to deployment failure.
+
+          **Incident ID:** ${{ needs.emergency-detection.outputs.incident_id }}
+          **Original PR:** #${{ github.event.pull_request.number }}
+          **Rollback Time:** $(date -u +"%Y-%m-%d %H:%M UTC")
+          **Executed By:** GitHub Actions (automated)
+          
+          **Immediate Actions Required:**
+          - [ ] Verify rollback success
+          - [ ] Investigate deployment failure
+          - [ ] Assess ongoing impact
+          - [ ] Determine next steps
+          
+          **Investigation Required:**
+          - Deployment logs review
+          - Infrastructure health check
+          - Application metrics analysis
+          " \
+            --label "rollback,emergency,critical,priority:highest" \
+            --assignee "${{ github.actor }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

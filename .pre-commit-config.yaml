@@ -1,0 +1,293 @@
+# Pre-commit hooks for RIF security and quality
+repos:
+  # Security: Secret detection
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        name: Detect secrets
+        description: Detect secrets in staged files
+        args: ['--baseline', '.secrets.baseline']
+        exclude: |
+          (?x)^(
+              .*\.md$|
+              .*\.rst$|
+              .*\.txt$|
+              .*\.log$|
+              test/.*|
+              tests/.*|
+              .*/test_.*\.py$|
+              .*_test\.py$|
+              .*/fixtures/.*|
+              .*/mocks/.*|
+              node_modules/.*|
+              __pycache__/.*|
+              \.git/.*|
+              \.secrets\.baseline$
+          )$
+
+  # Security: TruffleHog for additional secret detection
+  - repo: https://github.com/trufflesecurity/trufflehog
+    rev: v3.63.2
+    hooks:
+      - id: trufflehog
+        name: TruffleHog secret detection
+        description: Scan for secrets using TruffleHog
+        entry: trufflehog filesystem --no-update
+        language: golang
+        pass_filenames: false
+        args: ['--json', '.']
+
+  # Security: Semgrep static analysis
+  - repo: https://github.com/returntocorp/semgrep
+    rev: v1.45.0
+    hooks:
+      - id: semgrep
+        name: Semgrep security scan
+        description: Static analysis for security issues
+        args: ['--config=auto', '--error']
+        exclude: |
+          (?x)^(
+              test/.*|
+              tests/.*|
+              .*/test_.*\.py$|
+              .*_test\.py$
+          )$
+
+  # Code quality: Python
+  - repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+      - id: black
+        name: Black code formatter
+        description: Format Python code with Black
+        language_version: python3
+        
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+      - id: flake8
+        name: Flake8 linter
+        description: Python linting with Flake8
+        additional_dependencies:
+          - flake8-docstrings
+          - flake8-security
+          - flake8-bandit
+        args: ['--max-line-length=88', '--extend-ignore=E203,W503']
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        name: Import sorting
+        description: Sort Python imports
+        args: ["--profile", "black"]
+
+  # Security: Bandit for Python security issues
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.5
+    hooks:
+      - id: bandit
+        name: Bandit security linter
+        description: Security linter for Python
+        args: ['-r', '.', '-f', 'json', '-o', 'bandit-report.json']
+        pass_filenames: false
+        exclude: |
+          (?x)^(
+              test/.*|
+              tests/.*|
+              .*/test_.*\.py$|
+              .*_test\.py$
+          )$
+
+  # General: File checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+        description: Remove trailing whitespace
+        
+      - id: end-of-file-fixer
+        name: Fix end of files
+        description: Ensure files end with newline
+        
+      - id: check-yaml
+        name: Check YAML syntax
+        description: Validate YAML files
+        
+      - id: check-json
+        name: Check JSON syntax
+        description: Validate JSON files
+        
+      - id: check-toml
+        name: Check TOML syntax
+        description: Validate TOML files
+        
+      - id: check-merge-conflict
+        name: Check merge conflicts
+        description: Check for merge conflict markers
+        
+      - id: check-added-large-files
+        name: Check large files
+        description: Prevent large files from being committed
+        args: ['--maxkb=1000']
+        
+      - id: check-case-conflict
+        name: Check case conflicts
+        description: Check for case conflicts in file names
+        
+      - id: check-executables-have-shebangs
+        name: Check executable shebangs
+        description: Ensure executable files have shebangs
+        
+      - id: check-shebang-scripts-are-executable
+        name: Check script permissions
+        description: Ensure shebang scripts are executable
+
+  # Security: YAML security checks
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+        name: YAML linting
+        description: Lint YAML files for style and security
+        args: ['-d', '{extends: default, rules: {line-length: {max: 120}}}']
+
+  # Shell script security
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.6
+    hooks:
+      - id: shellcheck
+        name: ShellCheck
+        description: Static analysis for shell scripts
+        args: ['-e', 'SC1091']  # Ignore sourcing issues in some contexts
+
+  # Docker security (if Docker files exist)
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+        name: Hadolint Docker linter
+        description: Dockerfile linting for security
+        files: ^.*Dockerfile.*$
+
+  # Dependency vulnerability scanning
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+    rev: v1.3.2
+    hooks:
+      - id: python-safety-dependencies-check
+        name: Safety vulnerability check
+        description: Check Python dependencies for vulnerabilities
+        files: requirements.*\.txt$
+
+  # Custom security hooks
+  - repo: local
+    hooks:
+      - id: check-rif-secrets
+        name: RIF-specific secret check
+        description: Check for RIF-specific secrets and tokens
+        entry: python3
+        language: system
+        args:
+          - -c
+          - |
+            import re
+            import sys
+            import glob
+            
+            # RIF-specific secret patterns
+            patterns = [
+                (r'rif_agent_[a-zA-Z0-9]{32}', 'RIF Agent Token'),
+                (r'rif_kb_[a-fA-F0-9]{40}', 'RIF Knowledge Base Key'),
+                (r'rif_orch_[a-zA-Z0-9_-]{24,64}', 'RIF Orchestration Secret'),
+            ]
+            
+            violations = []
+            for file_path in sys.argv[1:]:
+                try:
+                    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
+                        for pattern, name in patterns:
+                            matches = re.findall(pattern, content, re.IGNORECASE)
+                            if matches:
+                                violations.append(f"{file_path}: Found {name}")
+                except:
+                    continue
+            
+            if violations:
+                print("RIF Security Violations:")
+                for violation in violations:
+                    print(f"  ❌ {violation}")
+                sys.exit(1)
+            else:
+                print("✅ No RIF-specific secrets detected")
+        files: '.*\.(py|js|ts|yml|yaml|json|sh|env)$'
+        pass_filenames: true
+
+      - id: check-github-workflows
+        name: GitHub workflow security check
+        description: Check GitHub Actions workflows for security issues
+        entry: python3
+        language: system
+        args:
+          - -c
+          - |
+            import re
+            import sys
+            import yaml
+            
+            security_issues = []
+            
+            for workflow_file in sys.argv[1:]:
+                if not workflow_file.endswith(('.yml', '.yaml')):
+                    continue
+                    
+                try:
+                    with open(workflow_file, 'r') as f:
+                        workflow = yaml.safe_load(f)
+                    
+                    # Check for security issues in workflows
+                    if isinstance(workflow, dict):
+                        # Check for pull_request_target with code checkout
+                        if 'on' in workflow:
+                            events = workflow['on']
+                            if isinstance(events, dict) and 'pull_request_target' in events:
+                                security_issues.append(f"{workflow_file}: Uses pull_request_target - review for security")
+                        
+                        # Check for secrets in workflow
+                        workflow_str = str(workflow)
+                        if re.search(r'\$\{\{\s*secrets\.[A-Z_]+\s*\}\}', workflow_str):
+                            # This is normal, but check for hardcoded secrets
+                            if re.search(r'["\']sk-[a-zA-Z0-9]{32,}["\']', workflow_str):
+                                security_issues.append(f"{workflow_file}: Possible hardcoded API key")
+                
+                except Exception as e:
+                    security_issues.append(f"{workflow_file}: Error parsing workflow: {e}")
+            
+            if security_issues:
+                print("GitHub Workflow Security Issues:")
+                for issue in security_issues:
+                    print(f"  ⚠️  {issue}")
+                # Don't fail for warnings, just alert
+            else:
+                print("✅ No GitHub workflow security issues detected")
+        files: '^\.github/workflows/.*\.(yml|yaml)$'
+        pass_filenames: true
+
+# Configuration
+default_stages: [commit, push]
+fail_fast: false
+
+# CI configuration
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit hooks
+    
+    For more information, see https://pre-commit.ci
+  autofix_prs: true
+  autoupdate_branch: ''
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [trufflehog, semgrep]  # Skip heavy tools in CI
+  submodules: false

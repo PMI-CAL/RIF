@@ -1,0 +1,56 @@
+{
+  "structure_check": {
+    "passed": false,
+    "details": [
+      "\u2705 patterns/ exists",
+      "\u2705 decisions/ exists",
+      "\u2705 conversations/ exists",
+      "\u2705 context/ exists",
+      "\u2705 embeddings/ exists",
+      "\u2705 parsing/ exists",
+      "\u2705 integration/ exists",
+      "\u2705 Development artifacts properly removed",
+      "\u274c Missing essential file: project_metadata.json",
+      "\u2705 MIGRATION_GUIDE.md exists"
+    ]
+  },
+  "content_check": {
+    "passed": false,
+    "details": [
+      "\u2705 Patterns directory has 95 patterns",
+      "\u2705 No issue-specific patterns found",
+      "\u2705 Good selection of reusable patterns: 95",
+      "\u2705 Good framework decisions preserved: 28",
+      "\u274c Development files still present: 5"
+    ]
+  },
+  "database_check": {
+    "passed": true,
+    "details": [
+      "\u2705 ChromaDB directory properly reset",
+      "\u2139\ufe0f Conversations database will be created on first use",
+      "\u2139\ufe0f Orchestration database will be created on first use"
+    ]
+  },
+  "cleanup_check": {
+    "passed": false,
+    "details": [
+      "\u2705 RIF-specific artifacts properly removed",
+      "\u274c Issue-specific files remaining: 9"
+    ]
+  },
+  "size_check": {
+    "passed": true,
+    "details": [
+      "\u2705 Good size for deployment: 6.27MB",
+      "\u2139\ufe0f Total files: 444",
+      "\u2705 No unusually large files found"
+    ]
+  },
+  "overall": {
+    "passed": false,
+    "score": 40.0,
+    "passed_checks": 2,
+    "total_checks": 5
+  }
+}
