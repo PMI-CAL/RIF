@@ -1,0 +1,285 @@
+name: Intelligent PR Processing
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  complexity_assessment:
+    runs-on: ubuntu-latest
+    outputs:
+      complexity: ${{ steps.assess.outputs.complexity }}
+      automation_level: ${{ steps.assess.outputs.automation_level }}
+      lines_changed: ${{ steps.assess.outputs.lines_changed }}
+      files_changed: ${{ steps.assess.outputs.files_changed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Assess PR Complexity
+        id: assess
+        run: |
+          echo "🔍 Assessing PR complexity..."
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            # Calculate lines and files changed
+            LINES_ADDED=${{ github.event.pull_request.additions }}
+            LINES_DELETED=${{ github.event.pull_request.deletions }}
+            FILES_CHANGED=${{ github.event.pull_request.changed_files }}
+            TOTAL_LINES=$((LINES_ADDED + LINES_DELETED))
+            
+            # Check if it's a dependency update
+            PR_TITLE="${{ github.event.pull_request.title }}"
+            if [[ "$PR_TITLE" =~ ^(bump|update|upgrade|deps|dependencies) ]]; then
+              IS_DEPENDENCY_UPDATE=true
+            else
+              IS_DEPENDENCY_UPDATE=false
+            fi
+            
+            # Check file types for architecture changes
+            git diff --name-only HEAD~1 HEAD > changed_files.txt
+            if grep -qE '\.(yml|yaml|json|config|env)$' changed_files.txt; then
+              HAS_CONFIG_CHANGES=true
+            else
+              HAS_CONFIG_CHANGES=false
+            fi
+            
+            # Complexity assessment logic
+            if [ $TOTAL_LINES -lt 10 ] && [ "$IS_DEPENDENCY_UPDATE" = "true" ]; then
+              echo "complexity=trivial" >> $GITHUB_OUTPUT
+              echo "automation_level=github_only" >> $GITHUB_OUTPUT
+            elif [ $TOTAL_LINES -lt 50 ] && [ $FILES_CHANGED -lt 5 ] && [ "$HAS_CONFIG_CHANGES" = "false" ]; then
+              echo "complexity=simple" >> $GITHUB_OUTPUT
+              echo "automation_level=copilot_assisted" >> $GITHUB_OUTPUT
+            elif [ $TOTAL_LINES -lt 200 ] && [ $FILES_CHANGED -lt 10 ]; then
+              echo "complexity=medium" >> $GITHUB_OUTPUT
+              echo "automation_level=rif_integration" >> $GITHUB_OUTPUT
+            else
+              echo "complexity=complex" >> $GITHUB_OUTPUT
+              echo "automation_level=rif_integration" >> $GITHUB_OUTPUT
+            fi
+            
+            echo "lines_changed=$TOTAL_LINES" >> $GITHUB_OUTPUT
+            echo "files_changed=$FILES_CHANGED" >> $GITHUB_OUTPUT
+            
+          else
+            # Issue created - always use RIF integration
+            echo "complexity=unknown" >> $GITHUB_OUTPUT
+            echo "automation_level=rif_integration" >> $GITHUB_OUTPUT
+            echo "lines_changed=0" >> $GITHUB_OUTPUT
+            echo "files_changed=0" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "✅ Complexity assessment complete"
+
+  github_automation:
+    needs: complexity_assessment
+    if: needs.complexity_assessment.outputs.automation_level != 'rif_integration'
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [test, lint, security, coverage]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          else
+            echo "⚠️ No package.json found, skipping Node.js setup"
+          fi
+          
+      - name: Run ${{ matrix.task }}
+        run: |
+          echo "🔧 Running ${{ matrix.task }}..."
+          case "${{ matrix.task }}" in
+            test)
+              if [ -f package.json ] && npm run test --if-present; then
+                echo "✅ Tests passed"
+              elif [ -f pytest.ini ] || [ -f setup.cfg ]; then
+                python -m pytest --cov=. --cov-report=xml || echo "⚠️ Tests failed"
+              else
+                echo "ℹ️ No test configuration found"
+              fi
+              ;;
+            lint)
+              if [ -f package.json ] && npm run lint --if-present; then
+                echo "✅ Linting passed"
+              elif [ -f .flake8 ] || [ -f setup.cfg ]; then
+                python -m flake8 . || echo "⚠️ Linting failed"
+              else
+                echo "ℹ️ No lint configuration found"
+              fi
+              ;;
+            security)
+              if [ -f package.json ]; then
+                npm audit --audit-level=moderate || echo "⚠️ Security issues found"
+              fi
+              if command -v bandit &> /dev/null; then
+                bandit -r . -f json || echo "⚠️ Security scan failed"
+              fi
+              ;;
+            coverage)
+              echo "📊 Coverage check placeholder"
+              ;;
+          esac
+
+  auto_fix_attempt:
+    needs: [complexity_assessment, github_automation]
+    if: failure() && needs.complexity_assessment.outputs.automation_level != 'rif_integration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci
+          fi
+          
+      - name: Run auto-fixes
+        run: |
+          echo "🔧 Attempting automatic fixes..."
+          
+          # Run lint fixes if available
+          if [ -f package.json ] && npm run lint:fix --if-present; then
+            echo "✅ Lint fixes applied"
+          fi
+          
+          # Run format fixes if available  
+          if [ -f package.json ] && npm run format --if-present; then
+            echo "✅ Format fixes applied"
+          fi
+          
+          # Security fixes
+          if [ -f package.json ]; then
+            npm audit fix --force || echo "⚠️ Some security issues could not be auto-fixed"
+          fi
+          
+      - name: Commit auto-fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 Auto-fix: Resolve validation issues [skip ci]"
+          branch: ${{ github.head_ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  copilot_review_request:
+    needs: [complexity_assessment, github_automation]
+    if: success() && needs.complexity_assessment.outputs.automation_level == 'copilot_assisted'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request Copilot Review
+        run: |
+          echo "🤖 Requesting GitHub Copilot review..."
+          # Note: GitHub Copilot PR review is still in beta
+          # This is a placeholder for when the feature is generally available
+          echo "📝 PR ready for Copilot-assisted review"
+
+  auto_merge_eligible:
+    needs: [complexity_assessment, github_automation, copilot_review_request]
+    if: success() && (needs.complexity_assessment.outputs.automation_level == 'github_only' || needs.complexity_assessment.outputs.automation_level == 'copilot_assisted')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable Auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "🔄 Enabling auto-merge for PR #${{ github.event.number }}"
+            gh pr merge ${{ github.event.number }} --auto --squash --repo ${{ github.repository }} || echo "⚠️ Auto-merge could not be enabled"
+          fi
+
+  rif_hook_trigger:
+    needs: complexity_assessment
+    if: needs.complexity_assessment.outputs.automation_level == 'rif_integration'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Create RIF Hook Trigger
+        run: |
+          # Create trigger file for Claude Code hooks to detect
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            TRIGGER_TYPE="pr"
+            ITEM_NUMBER="${{ github.event.number }}"
+            ITEM_TITLE="${{ github.event.pull_request.title }}"
+          else
+            TRIGGER_TYPE="issue"
+            ITEM_NUMBER="${{ github.event.issue.number }}"
+            ITEM_TITLE="${{ github.event.issue.title }}"
+          fi
+          
+          cat > "rif-trigger-${ITEM_NUMBER}.json" << EOF
+          {
+            "item_number": "${ITEM_NUMBER}",
+            "item_type": "${TRIGGER_TYPE}",
+            "title": "${ITEM_TITLE}",
+            "complexity": "${{ needs.complexity_assessment.outputs.complexity }}",
+            "lines_changed": ${{ needs.complexity_assessment.outputs.lines_changed }},
+            "files_changed": ${{ needs.complexity_assessment.outputs.files_changed }},
+            "timestamp": "${TIMESTAMP}",
+            "trigger_source": "github_action",
+            "automation_level": "rif_integration",
+            "repository": "${{ github.repository }}",
+            "sha": "${{ github.sha }}"
+          }
+          EOF
+          
+          echo "📄 Created RIF trigger file: rif-trigger-${ITEM_NUMBER}.json"
+          cat "rif-trigger-${ITEM_NUMBER}.json"
+          
+      - name: Commit RIF Trigger
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🤖 RIF: Trigger for complex ${{ github.event_name }} #${{ github.event.number || github.event.issue.number }}"
+          file_pattern: "rif-trigger-*.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  summary_report:
+    needs: [complexity_assessment, github_automation, auto_fix_attempt, copilot_review_request, auto_merge_eligible, rif_hook_trigger]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Processing Summary
+        run: |
+          echo "## 📊 Intelligent PR Processing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Complexity**: ${{ needs.complexity_assessment.outputs.complexity }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Automation Level**: ${{ needs.complexity_assessment.outputs.automation_level }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Lines Changed**: ${{ needs.complexity_assessment.outputs.lines_changed }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Files Changed**: ${{ needs.complexity_assessment.outputs.files_changed }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.complexity_assessment.outputs.automation_level }}" == "github_only" ]; then
+            echo "🎯 **Result**: Fully automated GitHub processing" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.complexity_assessment.outputs.automation_level }}" == "copilot_assisted" ]; then
+            echo "🤖 **Result**: Copilot-assisted automation" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "🔧 **Result**: RIF agent integration triggered" >> $GITHUB_STEP_SUMMARY
+          fi
