@@ -34,7 +34,7 @@ from claude.commands.dynamic_dependency_detector import (
     validate_phase_dependencies_dynamic
 )
 
-from claude.commands.content_analysis_engine import IssueState, ComplexityLevel
+from claude.commands.content_analysis_engine import WorkflowState, ComplexityLevel
 
 
 class TestDynamicDependencyDetector(unittest.TestCase):
@@ -179,31 +179,31 @@ class TestDynamicDependencyDetector(unittest.TestCase):
             {
                 "title": "New Feature Request",
                 "body": "Need to implement user authentication. Requirements are unclear and need more research.",
-                "expected_phase": IssueState.ANALYZING,
+                "expected_phase": WorkflowState.ANALYZING,
                 "expected_progression": PhaseProgressionType.RESEARCH_FIRST
             },
             {
                 "title": "Architecture Planning",
                 "body": "Need to design the microservices architecture. Requirements analysis is complete.",
-                "expected_phase": IssueState.PLANNING,
+                "expected_phase": WorkflowState.PLANNING,
                 "expected_progression": PhaseProgressionType.ARCHITECTURE_NEEDED
             },
             {
                 "title": "Ready for Implementation", 
                 "body": "Design is complete and architecture is finalized. Ready for coding.",
-                "expected_phase": IssueState.IMPLEMENTING,
+                "expected_phase": WorkflowState.IMPLEMENTING,
                 "expected_progression": PhaseProgressionType.IMPLEMENTATION_READY
             },
             {
                 "title": "Code Complete",
                 "body": "Implementation is finished. Code is ready for testing and validation.",
-                "expected_phase": IssueState.VALIDATING,
+                "expected_phase": WorkflowState.VALIDATING,
                 "expected_progression": PhaseProgressionType.VALIDATION_PENDING
             },
             {
                 "title": "Post-Implementation Review",
                 "body": "Task completed successfully. Need to document lessons learned and update knowledge base.",
-                "expected_phase": IssueState.LEARNING,
+                "expected_phase": WorkflowState.LEARNING,
                 "expected_progression": PhaseProgressionType.LEARNING_PHASE
             }
         ]

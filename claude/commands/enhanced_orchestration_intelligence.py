@@ -668,12 +668,27 @@ class DynamicStateAnalyzer:
     
     def _determine_optimal_state(self, context_model: ContextModel) -> Tuple[str, float]:
         """Determine optimal next state with confidence scoring"""
+<<<<<<< HEAD
         # ISSUE #273 CRITICAL FIX: Replace label dependency with content analysis
         current_state = context_model.issue_context.current_state_from_content
         if not current_state:
             return 'analyzing', ConfidenceLevel.HIGH.value
         
         current_state = current_state.replace('state:', '')
+=======
+        # ISSUE #273: Replace label dependency with content analysis
+        if context_model.content_analysis_result:
+            # Use content-derived state instead of labels
+            current_state = context_model.content_analysis_result.state.value
+            confidence_adjustment = context_model.content_analysis_result.confidence_score
+        else:
+            # Fallback to label-based approach for backward compatibility
+            current_state = context_model.issue_context.current_state_label
+            if not current_state:
+                return 'analyzing', ConfidenceLevel.HIGH.value
+            current_state = current_state.replace('state:', '')
+            confidence_adjustment = 1.0
+>>>>>>> origin/main
         
         # Validation-based intelligent decisions
         if context_model.validation_results:
@@ -723,8 +738,13 @@ class DynamicStateAnalyzer:
     def _analyze_validation_based_transition(self, context_model: ContextModel) -> Tuple[str, float]:
         """Analyze transition based on validation results"""
         validation = context_model.validation_results
+<<<<<<< HEAD
         # ISSUE #273 FIX: Replace label dependency with content analysis
         current_state = context_model.issue_context.current_state_from_content.replace('state:', '') if context_model.issue_context.current_state_from_content else 'new'
+=======
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
+>>>>>>> origin/main
         
         if not validation:
             return current_state, ConfidenceLevel.LOW.value
@@ -758,8 +778,7 @@ class DynamicStateAnalyzer:
         next_state, confidence = self._determine_optimal_state(context_model)
         
         return {
-            # ISSUE #273 FIX: Replace label dependency with content analysis
-            'current_state': issue_context.current_state_from_content,
+            'current_state': issue_context.current_state_label,
             'recommended_next_state': next_state,
             'confidence': confidence,
             'complexity_analysis': {
@@ -785,8 +804,7 @@ class DynamicStateAnalyzer:
         decision_log = {
             'timestamp': datetime.now().isoformat(),
             'issue_number': issue_context.number,
-            # ISSUE #273 FIX: Replace label dependency with content analysis
-            'current_state': issue_context.current_state_from_content,
+            'current_state': issue_context.current_state_label,
             'recommended_state': next_state,
             'confidence': confidence,
             'complexity_score': context_model.overall_complexity_score,
@@ -1294,9 +1312,7 @@ class TeamOptimizationEngine:
         used_agents = set()
         
         for context_model in group:
-            # ISSUE #273 FIX: Replace label dependency with content analysis
-
-            current_state = context_model.issue_context.current_state_from_content
+            current_state = context_model.issue_context.current_state_label
             if current_state:
                 state_name = current_state.replace('state:', '')
                 candidate_agents = self._get_candidate_agents(state_name, context_model)
@@ -1409,9 +1425,14 @@ class LearningAgentSelector:
     
     def get_agent_recommendations(self, context_model: ContextModel) -> List[Dict[str, Any]]:
         """Get ranked agent recommendations with reasoning"""
+<<<<<<< HEAD
         # ISSUE #273 FIX: Replace label dependency with content analysis
 
         current_state = context_model.issue_context.current_state_from_content
+=======
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
+>>>>>>> origin/main
         if not current_state:
             return []
         
@@ -2056,9 +2077,14 @@ class LoopBackDecisionEngine:
             Dict with readiness assessment
         """
         # Check basic state transition validity
+<<<<<<< HEAD
         # ISSUE #273 FIX: Replace label dependency with content analysis
 
         current_state = context_model.issue_context.current_state_from_content
+=======
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
+>>>>>>> origin/main
         if current_state:
             current_state = current_state.replace('state:', '')
             is_valid, reason = self.state_validator.validate_state_transition(current_state, target_state)
@@ -2395,12 +2421,18 @@ class TransitionEngine:
         Returns:
             Dict with transition results and recommendations
         """
+<<<<<<< HEAD
         # ISSUE #273 FIX: Replace label dependency with content analysis
 
         current_state = context_model.issue_context.current_state_from_content
         if current_state:
             current_state = current_state.replace('state:', '')
         else:
+=======
+        # ISSUE #273: Use content analysis for state extraction
+        current_state = self._get_current_state_from_context(context_model)
+        if not current_state:
+>>>>>>> origin/main
             current_state = 'new'
         
         if validation_result and not validation_result.passed:
@@ -2655,10 +2687,16 @@ class ParallelCoordinator:
             if cm.security_context.get('requires_security_review', False):
                 constraints['security_sensitive'].append(issue_num)
             
+<<<<<<< HEAD
             # Resource intensive (implementation or architecture work)
             # ISSUE #273 FIX: Replace label dependency with content analysis
 
             current_state = cm.issue_context.current_state_from_content
+=======
+            # Resource intensive (implementation or architecture work) 
+            # ISSUE #273: Use content analysis for state extraction
+            current_state = self._get_current_state_from_context(cm)
+>>>>>>> origin/main
             if current_state and any(state in current_state for state in ['implementing', 'architecting']):
                 constraints['resource_intensive'].append(issue_num)
             
@@ -2702,6 +2740,7 @@ class ParallelCoordinator:
                     high_complexity_in_batch += 1
                 
                 # Check for resource conflicts
+<<<<<<< HEAD
                 # ISSUE #273 FIX: Replace label dependency with content analysis
 
                 current_state = cm.issue_context.current_state_from_content
@@ -2711,6 +2750,15 @@ class ParallelCoordinator:
                     impl_count = sum(1 for bcm in batch 
                                    if bcm.issue_context.current_state_from_content and 
                                       'implementing' in (bcm.issue_context.current_state_from_content or ''))
+=======
+                # ISSUE #273: Use content analysis for state extraction  
+                current_state = self._get_current_state_from_context(cm)
+                if current_state and 'implementing' in current_state:
+                    # Limit concurrent implementations
+                    impl_count = sum(1 for bcm in batch 
+                                   if self._get_current_state_from_context(bcm) and 
+                                      'implementing' in self._get_current_state_from_context(bcm))
+>>>>>>> origin/main
                     if impl_count >= 1:  # Max 1 implementation per batch
                         continue
                 
@@ -2737,10 +2785,15 @@ class ParallelCoordinator:
                 # Estimate time based on complexity and state
                 base_time = cm.overall_complexity_score * 4.0  # 0-4 hours based on complexity
                 
+<<<<<<< HEAD
                 # ISSUE #273 FIX: Replace label dependency with content analysis
 
                 
                 current_state = cm.issue_context.current_state_from_content
+=======
+                # ISSUE #273: Use content analysis for state extraction
+                current_state = self._get_current_state_from_context(cm)
+>>>>>>> origin/main
                 if current_state:
                     if 'architecting' in current_state:
                         base_time += 2.0
@@ -2783,7 +2836,11 @@ class ParallelCoordinator:
                         'batch_index': batch_idx,
                         'complexity_score': cm.overall_complexity_score,
                         'estimated_time': assignment.get('estimated_time', 3.0),
+<<<<<<< HEAD
                         'prompt': f"Process GitHub issue #{cm.issue_context.number} titled '{cm.issue_context.title}'. Current state: {cm.issue_context.current_state_from_content or 'unknown'}. Context tags: {', '.join(cm.semantic_tags)}.",
+=======
+                        'prompt': f"Process GitHub issue #{cm.issue_context.number} titled '{cm.issue_context.title}'. Current state: {cm.issue_context.current_state_label}. Context tags: {', '.join(cm.semantic_tags)}.",
+>>>>>>> origin/main
                         'parallel_safe': batch_idx == 0 or len(coordination_plan['batches'][batch_idx]) > 1
                     })
         
@@ -3356,10 +3413,16 @@ class EnhancedOrchestrationIntelligence:
             try:
                 # Get issue context for appropriate agent selection
                 issue_context = self.context_analyzer.analyze_issue(issue_num)
+<<<<<<< HEAD
 
                 # ISSUE #273 FIX: Replace label dependency with content analysis
 
                 current_state = issue_context.current_state_from_content
+=======
+                # ISSUE #273: Use content analysis for state extraction
+                context_model = self.context_engine.enrich_context(issue_context) 
+                current_state = self._get_current_state_from_context(context_model)
+>>>>>>> origin/main
                 
                 # Select appropriate agent based on current state
                 if current_state == 'state:new' or current_state is None:

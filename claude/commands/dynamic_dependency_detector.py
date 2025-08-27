@@ -35,9 +35,8 @@ from enum import Enum
 from .content_analysis_engine import (
     ContentAnalysisEngine, 
     ContentAnalysisResult, 
-    IssueState, 
-    ComplexityLevel,
-    ConfidenceLevel
+    WorkflowState, 
+    ComplexityLevel
 )
 
 # Set up logging
@@ -98,8 +97,8 @@ class BlockingDeclaration:
 class PhaseProgression:
     """Represents phase progression requirements"""
     issue_number: int
-    current_phase: IssueState
-    required_next_phase: IssueState
+    current_phase: WorkflowState
+    required_next_phase: WorkflowState
     progression_type: PhaseProgressionType
     confidence: float
     content_evidence: List[str]
@@ -133,7 +132,7 @@ class DynamicDependencyDetector:
     def __init__(self, knowledge_base_path: Optional[Path] = None):
         """Initialize the dynamic dependency detector"""
         self.knowledge_base_path = knowledge_base_path or Path("knowledge")
-        self.content_engine = ContentAnalysisEngine(knowledge_base_path)
+        self.content_engine = ContentAnalysisEngine()
         
         # Initialize advanced dependency patterns
         self._initialize_dependency_patterns()
@@ -328,7 +327,7 @@ class DynamicDependencyDetector:
         
         # Step 1: Perform content analysis
         content_analysis = self.content_engine.analyze_issue_content(
-            issue_title, issue_body, issue_number, comments
+            issue_title, issue_body
         )
         
         # Step 2: Extract cross-issue dependencies
@@ -535,7 +534,7 @@ class DynamicDependencyDetector:
         text_lower = full_text.lower()
         
         # Start with content analysis state
-        current_phase = content_analysis.derived_state
+        current_phase = content_analysis.state
         
         # Detect progression requirements
         progression_scores = {}
@@ -693,19 +692,19 @@ class DynamicDependencyDetector:
             return "general"
             
     def _determine_required_next_phase(
-        self, current_phase: IssueState, progression_scores: Dict
-    ) -> IssueState:
+        self, current_phase: WorkflowState, progression_scores: Dict
+    ) -> WorkflowState:
         """Determine the required next phase based on progression analysis"""
         
         # Default phase progression sequence
         phase_sequence = [
-            IssueState.NEW,
-            IssueState.ANALYZING, 
-            IssueState.PLANNING,
-            IssueState.IMPLEMENTING,
-            IssueState.VALIDATING,
-            IssueState.LEARNING,
-            IssueState.COMPLETE
+            WorkflowState.NEW,
+            WorkflowState.ANALYZING, 
+            WorkflowState.PLANNING,
+            WorkflowState.IMPLEMENTING,
+            WorkflowState.VALIDATING,
+            WorkflowState.LEARNING,
+            WorkflowState.COMPLETE
         ]
         
         try:
@@ -715,24 +714,24 @@ class DynamicDependencyDetector:
             
         # Check progression requirements
         if PhaseProgressionType.RESEARCH_FIRST in progression_scores:
-            return IssueState.ANALYZING
+            return WorkflowState.ANALYZING
         elif PhaseProgressionType.ANALYSIS_REQUIRED in progression_scores:
-            return IssueState.ANALYZING  
+            return WorkflowState.ANALYZING  
         elif PhaseProgressionType.ARCHITECTURE_NEEDED in progression_scores:
-            return IssueState.PLANNING
+            return WorkflowState.PLANNING
         elif PhaseProgressionType.IMPLEMENTATION_READY in progression_scores:
-            return IssueState.IMPLEMENTING
+            return WorkflowState.IMPLEMENTING
         elif PhaseProgressionType.VALIDATION_PENDING in progression_scores:
-            return IssueState.VALIDATING
+            return WorkflowState.VALIDATING
         elif PhaseProgressionType.LEARNING_PHASE in progression_scores:
-            return IssueState.LEARNING
+            return WorkflowState.LEARNING
         else:
             # Default to next in sequence
             next_index = min(current_index + 1, len(phase_sequence) - 1)
             return phase_sequence[next_index]
             
     def _identify_progression_blocking_factors(
-        self, text: str, current_phase: IssueState, required_phase: IssueState
+        self, text: str, current_phase: WorkflowState, required_phase: WorkflowState
     ) -> List[str]:
         """Identify factors blocking phase progression"""
         
