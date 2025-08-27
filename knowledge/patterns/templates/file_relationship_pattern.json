@@ -1,0 +1,22 @@
+{
+  "pattern_name": "Template: File Relationship Pattern",
+  "pattern_type": "file_relationship",
+  "description": "Template for files that are commonly edited together",
+  "files": [
+    "file1.py",
+    "file2.py",
+    "file3.py"
+  ],
+  "relationship": "These files form a logical unit",
+  "occurrence_count": 0,
+  "common_operations": [
+    "Refactoring",
+    "Bug fixing",
+    "Feature addition"
+  ],
+  "recommendation": "Consider these files as related when making changes",
+  "tags": ["architecture", "dependencies", "structure"],
+  "confidence": 0.0,
+  "auto_learned": false,
+  "template": true
+}

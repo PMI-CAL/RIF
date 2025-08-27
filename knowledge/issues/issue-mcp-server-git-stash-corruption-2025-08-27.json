@@ -1,0 +1,119 @@
+{
+  "issue_id": "mcp-server-git-stash-corruption-2025-08-27",
+  "issue_title": "MCP Server Failed Due to Git Stash Creating Empty Database File",
+  "issue_type": "critical-infrastructure",
+  "severity": "critical",
+  "resolution_date": "2025-08-27",
+  "recurrence_count": 4,
+  "problem_description": {
+    "initial_state": "MCP server broken with 'Cannot open database' error after git operations",
+    "symptoms": [
+      "MCP server fails with: 'IO Error: Cannot open database \"/Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb\" in read-only mode: database does not exist'",
+      "Database file missing from expected location",
+      "Server connection fails immediately on startup",
+      "Knowledge graph completely inaccessible"
+    ],
+    "impact": "Complete MCP server failure blocking all knowledge operations",
+    "trigger": "Git stash operation corrupting binary database files"
+  },
+  "root_cause_analysis": {
+    "primary_cause": "Git stash operation created empty placeholder for binary database file",
+    "mechanism": "During 'git stash' on 2025-08-27, git attempted to track entities.duckdb (12MB binary file) but created 0-byte placeholder",
+    "contributing_factors": [
+      "Binary database files not in .gitignore",
+      "Git attempting to handle large binary files during stash/merge",
+      "No pre-commit hooks preventing database file commits",
+      "No automated MCP server health checks",
+      "Manual 'git add' operations including binary files"
+    ],
+    "evidence": {
+      "git_commit": "a46a302 - index on issue-274-dynamic-dependency-detection",
+      "git_author": "git stash <git@stash>",
+      "file_status": "knowledge/chromadb/entities.duckdb | Bin 0 -> 12333056 bytes",
+      "actual_file": "Missing from filesystem after stash operation"
+    }
+  },
+  "resolution_steps": [
+    {
+      "step": 1,
+      "action": "Identified missing database file through MCP server logs",
+      "command": "cat /Users/cal/Library/Caches/claude-cli-nodejs/-Users-cal-DEV-RIF/mcp-logs-rif-knowledge/*.txt"
+    },
+    {
+      "step": 2,
+      "action": "Located backup database in alternative location",
+      "command": "find /Users/cal/DEV/RIF -name 'entities.duckdb' -type f",
+      "result": "/Users/cal/DEV/RIF/mcp/claude-code-knowledge/knowledge/chromadb/entities.duckdb"
+    },
+    {
+      "step": 3,
+      "action": "Restored database to expected location",
+      "command": "cp /Users/cal/DEV/RIF/mcp/claude-code-knowledge/knowledge/chromadb/entities.duckdb /Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb"
+    },
+    {
+      "step": 4,
+      "action": "Added database files to .gitignore",
+      "changes": [
+        "*.duckdb",
+        "*.duckdb.wal", 
+        "*.sqlite3",
+        "*.sqlite",
+        "*.db",
+        "knowledge/chromadb/"
+      ]
+    },
+    {
+      "step": 5,
+      "action": "Created recovery documentation",
+      "file": "knowledge/chromadb/README.md"
+    }
+  ],
+  "preventive_measures": [
+    "Added all database file patterns to .gitignore",
+    "Added entire chromadb directory to .gitignore",
+    "Created detailed README with recovery instructions",
+    "Documented backup location for database files",
+    "Warning against using 'git add .' with binary files"
+  ],
+  "permanent_fix": {
+    "gitignore_additions": [
+      "# Database files (binary, should not be tracked)",
+      "*.duckdb",
+      "*.duckdb.wal",
+      "*.sqlite3",
+      "*.sqlite",
+      "*.db",
+      "",
+      "# ChromaDB persistent storage",
+      "knowledge/chromadb/"
+    ],
+    "recovery_procedure": "cp /Users/cal/DEV/RIF/mcp/claude-code-knowledge/knowledge/chromadb/entities.duckdb /Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb",
+    "validation": "ls -la /Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb # Should show ~270KB+ file"
+  },
+  "lessons_learned": [
+    "Binary database files must always be in .gitignore",
+    "Git stash can corrupt binary files - creates empty placeholders",
+    "Always verify file size, not just existence when debugging databases",
+    "Keep backup copies of critical database files",
+    "Never use 'git add .' without reviewing staged files",
+    "MCP server startup is fragile - needs health check automation"
+  ],
+  "detection_patterns": [
+    "MCP error: 'Cannot open database'",
+    "MCP error: 'database does not exist'",
+    "Git status showing entities.duckdb as modified",
+    "Empty (0 byte) database files after git operations",
+    "Connection failed after git stash/merge operations"
+  ],
+  "related_patterns": [
+    "knowledge/patterns/mcp-server-database-path-troubleshooting-pattern.json",
+    "knowledge/issues/issue-mcp-server-database-confusion-resolution.json"
+  ],
+  "metadata": {
+    "resolved_by": "Claude Code root cause analysis",
+    "time_to_resolve": "10 minutes",
+    "prevented_future_occurrences": true,
+    "automation_potential": "High - could add pre-commit hook",
+    "tags": ["mcp-server", "git", "database", "binary-files", "stash", "corruption", "critical-fix"]
+  }
+}

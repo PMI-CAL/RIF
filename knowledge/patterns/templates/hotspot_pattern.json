@@ -1,0 +1,22 @@
+{
+  "pattern_name": "Template: Hotspot Pattern",
+  "pattern_type": "hotspot",
+  "description": "Template for frequently modified files",
+  "file": "path/to/hotspot/file.py",
+  "edit_count": 0,
+  "edit_frequency": "high",
+  "reasons": [
+    "Complex logic",
+    "Frequent bugs",
+    "Changing requirements",
+    "Poor initial design"
+  ],
+  "related_files": [
+    "Files often edited alongside this one"
+  ],
+  "recommendation": "Consider refactoring or adding comprehensive tests",
+  "tags": ["maintenance", "complexity", "refactoring"],
+  "confidence": 0.0,
+  "auto_learned": false,
+  "template": true
+}

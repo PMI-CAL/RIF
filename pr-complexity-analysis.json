@@ -1,0 +1,18 @@
+{
+  "complexity": "simple",
+  "automationLevel": "copilot_assisted",
+  "analysis": {
+    "linesChanged": 29,
+    "filesChanged": 2,
+    "fileTypes": {},
+    "criticalPathsAffected": [],
+    "isDependencyUpdate": false,
+    "hasArchitectureChanges": false,
+    "hasSecurityImpact": false,
+    "hasPerformanceImpact": false,
+    "weightedComplexityScore": 11,
+    "riskFactors": []
+  },
+  "recommendations": [],
+  "timestamp": "2025-08-27T07:28:20.773Z"
+}

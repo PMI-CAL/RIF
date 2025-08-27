@@ -1,0 +1,76 @@
+{
+  "issue_id": "mcp-server-database-confusion-2025-08-27",
+  "issue_title": "MCP Server Failed Due to Database Path Confusion",
+  "issue_type": "critical-infrastructure",
+  "resolution_date": "2025-08-27",
+  "problem_description": {
+    "initial_state": "MCP server broken with 'Table entities does not exist' error",
+    "symptoms": [
+      "MCP server initialization failed",
+      "CatalogException when querying entities table",
+      "Knowledge graph appeared empty despite previous working state"
+    ],
+    "impact": "Complete MCP server failure blocking all knowledge access"
+  },
+  "root_cause_analysis": {
+    "primary_cause": "Database path mismatch - server pointed to empty hybrid_knowledge.duckdb instead of populated chromadb/entities.duckdb",
+    "contributing_factors": [
+      "Multiple database files with similar names causing confusion",
+      "Uncommitted local change reverting database path",
+      "Configuration files referencing wrong database",
+      "Empty and corrupt database files left in knowledge directory"
+    ],
+    "evidence": {
+      "working_database": "knowledge/chromadb/entities.duckdb with 528 entities",
+      "empty_database": "knowledge/hybrid_knowledge.duckdb with 0 tables",
+      "corrupt_files": ["conversations.duckdb (0 bytes)", "orchestration.duckdb (0 bytes)"],
+      "git_history": "Commit 169fa72 changed path correctly, but was locally reverted"
+    }
+  },
+  "resolution_steps": [
+    {
+      "step": 1,
+      "action": "Identified correct database through comprehensive analysis",
+      "command": "python3 -c \"import duckdb; conn = duckdb.connect('knowledge/chromadb/entities.duckdb'); print(conn.execute('SELECT COUNT(*) FROM entities').fetchone())\""
+    },
+    {
+      "step": 2,
+      "action": "Reverted uncommitted changes to MCP server file",
+      "command": "git checkout -- mcp/rif-knowledge-server/rif_knowledge_server.py"
+    },
+    {
+      "step": 3,
+      "action": "Cleaned up confusing database files",
+      "command": "mv knowledge/*.duckdb knowledge/deprecated_databases/"
+    },
+    {
+      "step": 4,
+      "action": "Restarted MCP server",
+      "result": "Server operational with full knowledge access"
+    }
+  ],
+  "preventive_measures": [
+    "Removed empty/corrupt database files to prevent future confusion",
+    "Created deprecated_databases directory for old files",
+    "Documented correct database path in knowledge base",
+    "Added troubleshooting pattern for future occurrences"
+  ],
+  "lessons_learned": [
+    "Always verify database content, not just file existence",
+    "Check for uncommitted changes when debugging configuration issues",
+    "Clean up deprecated files to prevent confusion",
+    "Document critical infrastructure paths clearly"
+  ],
+  "related_artifacts": [
+    "knowledge/patterns/mcp-server-database-path-troubleshooting-pattern.json",
+    "knowledge/chromadb/entities.duckdb (correct database)",
+    "knowledge/deprecated_databases/ (removed confusing files)"
+  ],
+  "metadata": {
+    "resolved_by": "Claude Code deep root cause analysis",
+    "time_to_resolve": "45 minutes investigation + 2 minutes fix",
+    "severity": "critical",
+    "recurrence_count": 3,
+    "tags": ["mcp-server", "database", "configuration", "troubleshooting"]
+  }
+}
