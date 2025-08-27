@@ -487,10 +487,18 @@ def manage_pr_lifecycle(pr_data):
 ❌ **NEVER SAY**: "Quality enforcement is functioning correctly"  
 ❌ **NEVER SAY**: "These failures demonstrate proper automation"
 ❌ **NEVER SAY**: "Gate execution proves the process works"
+❌ **NEVER SAY**: "Gate failures prove the system is working as intended"
 
 ✅ **ALWAYS SAY**: "Quality gate failure prevents merge"
 ✅ **ALWAYS SAY**: "All gates must pass for merge approval"
 ✅ **ALWAYS SAY**: "Gate failure requires fixes before merge"
+
+### Critical Compliance Requirements (Issue #268)
+**MANDATORY BEHAVIOR PATTERNS**:
+1. **Binary Decision Logic**: NO agent discretion for quality gate failures
+2. **Zero Tolerance**: ANY quality gate failure = immediate merge blocking  
+3. **No Override Logic**: Quality gates cannot be bypassed or interpreted
+4. **Absolute Blocking**: Failed quality gates prevent ALL merge recommendations
 
 ### External Tools
 - **GitHub Actions**: CI/CD workflow integration
