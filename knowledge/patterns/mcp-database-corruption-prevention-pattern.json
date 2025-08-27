@@ -1,0 +1,124 @@
+{
+  "pattern_id": "mcp-database-corruption-prevention",
+  "pattern_name": "MCP Database Corruption Prevention Pattern",
+  "category": "infrastructure-protection",
+  "severity": "critical",
+  "created_date": "2025-08-27",
+  "problem_space": {
+    "description": "Binary database files getting corrupted or deleted by git operations",
+    "frequency": "Recurring (4+ times)",
+    "impact": "Complete MCP server failure and knowledge graph inaccessibility",
+    "affected_components": [
+      "MCP RIF Knowledge Server",
+      "DuckDB databases",
+      "ChromaDB storage",
+      "Knowledge graph"
+    ]
+  },
+  "root_causes": [
+    {
+      "cause": "Git tracking binary files",
+      "description": "Binary database files not in .gitignore get tracked and corrupted",
+      "prevention": "Add all database patterns to .gitignore immediately"
+    },
+    {
+      "cause": "Git stash corruption",
+      "description": "Git stash creates empty placeholders for large binary files",
+      "prevention": "Never stash with untracked binary files present"
+    },
+    {
+      "cause": "No validation",
+      "description": "No pre-commit hooks or health checks catching issues",
+      "prevention": "Implement automated validation before commits"
+    }
+  ],
+  "prevention_strategy": {
+    "immediate_actions": [
+      "Add *.duckdb, *.sqlite3, *.db to .gitignore",
+      "Add knowledge/chromadb/ directory to .gitignore",
+      "Remove any tracked database files with 'git rm --cached'",
+      "Create backup copies of all database files"
+    ],
+    "gitignore_template": [
+      "# Database files (binary, should not be tracked)",
+      "*.duckdb",
+      "*.duckdb.wal",
+      "*.sqlite3",
+      "*.sqlite",
+      "*.db",
+      "*.mdb",
+      "*.accdb",
+      "",
+      "# Database directories",
+      "knowledge/chromadb/",
+      "knowledge/deprecated_databases/"
+    ],
+    "validation_checks": [
+      "ls -la knowledge/chromadb/entities.duckdb # Should be 270KB+",
+      "git status --ignored | grep -i duckdb # Should show as ignored",
+      "python3 -c \"import duckdb; conn = duckdb.connect('knowledge/chromadb/entities.duckdb', read_only=True); print(f'Entities: {conn.execute(\\\"SELECT COUNT(*) FROM entities\\\").fetchone()[0]}')\""
+    ]
+  },
+  "recovery_procedure": {
+    "detection": [
+      "MCP server fails with 'Cannot open database' error",
+      "Check logs: /Users/cal/Library/Caches/claude-cli-nodejs/-Users-cal-DEV-RIF/mcp-logs-rif-knowledge/",
+      "Verify file exists and size: ls -la knowledge/chromadb/entities.duckdb"
+    ],
+    "restoration": {
+      "primary_backup": "/Users/cal/DEV/RIF/mcp/claude-code-knowledge/knowledge/chromadb/entities.duckdb",
+      "restore_command": "cp /Users/cal/DEV/RIF/mcp/claude-code-knowledge/knowledge/chromadb/entities.duckdb /Users/cal/DEV/RIF/knowledge/chromadb/entities.duckdb",
+      "alternative_sources": [
+        "knowledge/deprecated_databases/",
+        "Git history (if accidentally committed)",
+        "System backups"
+      ]
+    },
+    "validation": [
+      "File size check: Should be ~270KB minimum",
+      "Content check: python3 -c \"import duckdb; duckdb.connect('knowledge/chromadb/entities.duckdb', read_only=True)\"",
+      "MCP test: Restart MCP server and verify connection"
+    ]
+  },
+  "automation_opportunities": {
+    "pre_commit_hook": {
+      "description": "Prevent committing database files",
+      "script": "#!/bin/bash\nif git diff --cached --name-only | grep -E '\\.(duckdb|sqlite3|sqlite|db)$'; then\n  echo 'Error: Attempting to commit database files'\n  exit 1\nfi"
+    },
+    "health_check": {
+      "description": "Verify MCP server can start",
+      "command": "python3 -c \"import sys; sys.path.append('/Users/cal/DEV/RIF'); from mcp.rif_knowledge_server import RIFKnowledgeServer; server = RIFKnowledgeServer()\""
+    },
+    "backup_script": {
+      "description": "Regular backup of critical databases",
+      "command": "cp knowledge/chromadb/entities.duckdb knowledge/chromadb/entities.duckdb.backup.$(date +%Y%m%d)"
+    }
+  },
+  "warning_signs": [
+    "Git status shows database files as modified",
+    "Database files appear with 0 bytes size",
+    "Git stash operations with database files present",
+    "MCP server connection failures after git operations",
+    "Missing entities.duckdb after checkout/merge"
+  ],
+  "best_practices": [
+    "Always use 'git status' before 'git add'",
+    "Never use 'git add .' with database files present",
+    "Keep database files in .gitignore from project start",
+    "Maintain backup copies of critical databases",
+    "Use git LFS for large files that must be tracked",
+    "Run MCP health check after git operations"
+  ],
+  "related_knowledge": [
+    "knowledge/issues/issue-mcp-server-database-confusion-resolution.json",
+    "knowledge/issues/issue-mcp-server-git-stash-corruption-2025-08-27.json",
+    "knowledge/patterns/mcp-server-database-path-troubleshooting-pattern.json"
+  ],
+  "metadata": {
+    "author": "Claude Code",
+    "confidence": "high",
+    "tested": true,
+    "prevents_issue": "mcp-server-database-corruption",
+    "tags": ["mcp", "database", "git", "corruption", "prevention", "critical"]
+  }
+}

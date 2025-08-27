@@ -1,0 +1,14 @@
+{
+  "pattern_name": "hotspot-interface.py-20250827",
+  "pattern_type": "hotspot",
+  "description": "File /Users/cal/DEV/RIF/knowledge/interface.py is frequently modified (5 times)",
+  "file": "/Users/cal/DEV/RIF/knowledge/interface.py",
+  "edit_count": 5,
+  "related_files": [],
+  "recommendation": "Consider refactoring or adding tests for stability",
+  "auto_learned": true,
+  "confidence": 1.0,
+  "created_at": "2025-08-27T03:51:19.791612",
+  "created_by": "universal_learner",
+  "source": "automatic_learning"
+}

@@ -47,6 +47,13 @@ except ImportError:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# ISSUE #273: Import ContentAnalysisEngine for label-free orchestration
+try:
+    from content_analysis_engine import ContentAnalysisEngine
+    CONTENT_ANALYSIS_AVAILABLE = True
+except ImportError:
+    CONTENT_ANALYSIS_AVAILABLE = False
+
 @dataclass
 class IssueContext:
     """Rich context representation for GitHub issues"""
@@ -61,6 +68,8 @@ class IssueContext:
     created_at: str
     updated_at: str
     comments_count: int
+    # ISSUE #273: Add content analysis result for label-free orchestration
+    content_analysis_result: Optional[Any] = None  # Will be ContentAnalysisResult if available
     
     @property
     def current_state_label(self) -> Optional[str]:
@@ -136,6 +145,12 @@ class ContextAnalyzer:
         self.patterns_path = self.knowledge_base_path / "patterns"
         self.decisions_path = self.knowledge_base_path / "decisions"
         
+        # ISSUE #273: Initialize ContentAnalysisEngine for label-free orchestration
+        if CONTENT_ANALYSIS_AVAILABLE:
+            self.content_analysis_engine = ContentAnalysisEngine()
+        else:
+            self.content_analysis_engine = None
+        
     def analyze_issue(self, issue_number: int) -> IssueContext:
         """
         Analyze a GitHub issue and return rich context for orchestration decisions.
@@ -178,6 +193,18 @@ class ContextAnalyzer:
             # Extract agent history from comments
             agent_history = self._extract_agent_history(issue_number)
             
+            # ISSUE #273: Perform content analysis for label-free orchestration
+            content_analysis_result = None
+            if self.content_analysis_engine:
+                try:
+                    content_analysis_result = self.content_analysis_engine.analyze_issue_content(
+                        issue_data['title'], 
+                        issue_data['body'] or ''
+                    )
+                    logger.info(f"Content analysis completed for issue #{issue_number} in {content_analysis_result.analysis_time_ms:.1f}ms")
+                except Exception as e:
+                    logger.warning(f"Content analysis failed for issue #{issue_number}: {e}")
+            
             return IssueContext(
                 number=issue_number,
                 title=issue_data['title'],
@@ -189,7 +216,8 @@ class ContextAnalyzer:
                 agent_history=agent_history,
                 created_at=issue_data['createdAt'],
                 updated_at=issue_data['updatedAt'],
-                comments_count=len(issue_data.get('comments', []))
+                comments_count=len(issue_data.get('comments', [])),
+                content_analysis_result=content_analysis_result
             )
             
         except Exception as e:

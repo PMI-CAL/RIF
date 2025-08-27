@@ -1,0 +1,229 @@
+{
+  "description": "GitHub Automation Integration Hooks for RIF Weighted Priority System",
+  "version": "1.0.0",
+  "hooks": {
+    "SessionStart": [
+      {
+        "name": "weighted_priority_analysis", 
+        "type": "command",
+        "command": "python /Users/cal/DEV/RIF/claude/commands/weighted_priority_orchestrator.py --analyze-only > /tmp/rif-priority-context.json",
+        "output": "context",
+        "description": "Analyze current weighted priorities for GitHub automation integration"
+      },
+      {
+        "name": "github_automation_status",
+        "type": "command", 
+        "command": "gh pr list --state open --json number,title,autoMergeRequest | jq '{automation_enabled: map(select(.autoMergeRequest != null)) | length, total_prs: length}' > /tmp/rif-automation-status.json",
+        "output": "context",
+        "description": "Check GitHub automation status for open PRs"
+      }
+    ],
+    
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*orchestrate.*|.*rif.*orchestr.*",
+        "hooks": [
+          {
+            "name": "trigger_weighted_orchestration",
+            "type": "command",
+            "command": "echo '{\"orchestration_mode\": \"weighted_priority\", \"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\"}' > /tmp/rif-orchestration-trigger.json",
+            "output": "context"
+          },
+          {
+            "name": "load_automation_config",
+            "type": "command",
+            "command": "if [ -f ./config/github-automation.yaml ]; then cat ./config/github-automation.yaml | yq -o json; else echo '{\"automation_level\": \"rif_managed\"}'; fi > /tmp/rif-automation-config.json",
+            "output": "context"
+          }
+        ]
+      }
+    ],
+
+    "PostToolUse": [
+      {
+        "matcher": "WeightedPriorityOrchestrator",
+        "hooks": [
+          {
+            "name": "log_automation_decision",
+            "type": "command", 
+            "command": "echo '{\"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\", \"action\": \"weighted_orchestration_executed\"}' >> ./knowledge/events.jsonl"
+          }
+        ]
+      },
+      {
+        "matcher": "trigger_github_automation",
+        "hooks": [
+          {
+            "name": "track_automation_trigger",
+            "type": "command",
+            "command": "echo '{\"timestamp\": \"'$(date -u +\"%Y-%m-%dT%H:%M:%SZ\")'\", \"action\": \"github_automation_triggered\", \"pr\": \"$PR_NUMBER\"}' >> ./knowledge/automation-log.jsonl"
+          }
+        ]
+      }
+    ],
+
+    "PREvent": [
+      {
+        "name": "pr_complexity_analysis",
+        "trigger": "opened|synchronize",
+        "type": "command",
+        "command": "python /Users/cal/DEV/RIF/claude/commands/weighted_priority_orchestrator.py --analyze-pr $PR_NUMBER > /tmp/rif-pr-analysis-$PR_NUMBER.json",
+        "output": "context",
+        "description": "Analyze PR complexity for automation routing"
+      },
+      {
+        "name": "auto_merge_eligibility",
+        "trigger": "opened",
+        "type": "command",
+        "command": "gh pr view $PR_NUMBER --json files,additions,deletions,labels | jq '{eligible_for_auto_merge: (.additions + .deletions < 50 and (.files | length) < 5)}' > /tmp/rif-auto-merge-$PR_NUMBER.json",
+        "output": "context"
+      }
+    ],
+
+    "IssueEvent": [
+      {
+        "name": "blocking_issue_detection",
+        "trigger": "opened|edited",
+        "type": "command", 
+        "command": "gh issue view $ISSUE_NUMBER --json title,body,comments | jq '{is_blocking: ((.title + \" \" + .body + \" \" + (.comments | map(.body) | join(\" \"))) | ascii_upcase | test(\"THIS ISSUE BLOCKS ALL OTHERS|BLOCKS ALL OTHER WORK|STOP ALL WORK\"))}' > /tmp/rif-blocking-$ISSUE_NUMBER.json",
+        "output": "context",
+        "description": "Detect if issue contains blocking declarations"
+      }
+    ]
+  },
+
+  "automation_levels": {
+    "github_native": {
+      "description": "Full GitHub automation without RIF involvement",
+      "criteria": [
+        "dependency_updates",
+        "documentation_only",
+        "test_only_changes", 
+        "formatting_fixes"
+      ],
+      "actions": [
+        "auto_merge_on_success",
+        "skip_rif_orchestration"
+      ]
+    },
+
+    "copilot_assisted": {
+      "description": "GitHub Copilot review with auto-merge",
+      "criteria": [
+        "small_changes_under_50_lines",
+        "no_security_impact",
+        "good_test_coverage"
+      ],
+      "actions": [
+        "request_copilot_review",
+        "auto_merge_after_review",
+        "parallel_rif_work_allowed"
+      ]
+    },
+
+    "rif_managed": {
+      "description": "Traditional RIF agent validation",
+      "criteria": [
+        "large_refactors",
+        "new_features", 
+        "architecture_changes",
+        "security_critical"
+      ],
+      "actions": [
+        "rif_validator_review",
+        "manual_merge_approval",
+        "high_priority_weight_2x"
+      ]
+    }
+  },
+
+  "github_workflows": {
+    "pr_automation": {
+      "file": ".github/workflows/pr-automation.yml",
+      "description": "Main PR automation workflow",
+      "triggers": ["pull_request"],
+      "jobs": [
+        "complexity_analysis",
+        "automation_routing", 
+        "quality_gates",
+        "auto_merge"
+      ]
+    },
+
+    "rif_orchestration_trigger": {
+      "file": ".github/workflows/rif-orchestration-trigger.yml", 
+      "description": "Trigger RIF orchestration from GitHub events",
+      "triggers": ["issues", "pull_request", "workflow_dispatch"],
+      "jobs": [
+        "trigger_rif_analysis",
+        "create_trigger_file"
+      ]
+    }
+  },
+
+  "branch_protection": {
+    "main": {
+      "required_status_checks": {
+        "strict": true,
+        "checks": [
+          "pr-automation / complexity_analysis",
+          "pr-automation / quality_gates"
+        ]
+      },
+      "enforce_admins": false,
+      "required_pull_request_reviews": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews": true
+      },
+      "allow_auto_merge": true,
+      "require_merge_queue": true,
+      "merge_queue": {
+        "merge_method": "squash",
+        "max_entries_to_build": 5,
+        "min_entries_to_merge": 1,
+        "wait_timer": 0
+      }
+    }
+  },
+
+  "integration_examples": {
+    "claude_code_orchestration": {
+      "description": "How Claude Code integrates with GitHub automation",
+      "process": [
+        "1. SessionStart hook loads current automation status",
+        "2. User requests orchestration",
+        "3. WeightedPriorityOrchestrator analyzes all work", 
+        "4. Simple PRs delegated to GitHub automation",
+        "5. Complex PRs get RIF agents with 2x weight",
+        "6. Issues processed in parallel based on weighted priorities",
+        "7. PostToolUse hooks log all automation decisions"
+      ]
+    },
+
+    "github_actions_integration": {
+      "description": "GitHub Actions workflow integration points",
+      "workflow_file": ".github/workflows/rif-integration.yml",
+      "steps": [
+        "Detect PR/issue changes",
+        "Run complexity analysis",
+        "Route to appropriate automation level",
+        "Create RIF trigger files for complex cases",
+        "Enable auto-merge for eligible PRs"
+      ]
+    }
+  },
+
+  "configuration": {
+    "max_parallel_capacity": 4,
+    "automation_thresholds": {
+      "simple_pr_max_lines": 50,
+      "simple_pr_max_files": 5,
+      "auto_merge_timeout_minutes": 30
+    },
+    "rif_integration": {
+      "trigger_file_location": "/tmp/rif-orchestration-trigger.json",
+      "automation_log_location": "./knowledge/automation-log.jsonl",
+      "priority_cache_location": "/tmp/rif-priority-context.json"
+    }
+  }
+}

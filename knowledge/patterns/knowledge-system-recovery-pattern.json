@@ -1,0 +1,99 @@
+{
+  "pattern_id": "knowledge-system-recovery-2025-08-27",
+  "pattern_name": "Knowledge System Recovery and Validation Pattern",
+  "description": "Complete pattern for recovering and validating the RIF Knowledge System after database corruption or MCP server failures",
+  "problem_description": "The MCP Knowledge Server repeatedly breaks due to database path mismatches, git corruption of binary files, and database locking conflicts. System needs deep understanding and permanent fixes, not quick hacks.",
+  "solution_overview": "Consolidated database architecture with separate read/write access patterns, proper git configuration, and comprehensive validation tooling",
+  "implementation_steps": [
+    {
+      "step": 1,
+      "action": "Consolidate database to single knowledge.duckdb file",
+      "command": "python3 knowledge/setup_knowledge_database.py",
+      "rationale": "Single source of truth prevents path confusion"
+    },
+    {
+      "step": 2, 
+      "action": "Update MCP server to use correct database path",
+      "file": "mcp/rif-knowledge-server/rif_knowledge_server.py",
+      "change": "self.duckdb_path = self.knowledge_path / 'knowledge.duckdb'",
+      "rationale": "Ensures MCP server finds database correctly"
+    },
+    {
+      "step": 3,
+      "action": "Add binary files to .gitignore",
+      "command": "echo '*.duckdb' >> .gitignore",
+      "rationale": "Prevents git corruption of binary database files"
+    },
+    {
+      "step": 4,
+      "action": "Run knowledge ingestion",
+      "command": "python3 knowledge/ingest_knowledge.py",
+      "rationale": "Populates database with patterns, issues, decisions"
+    },
+    {
+      "step": 5,
+      "action": "Extract code entities",
+      "command": "python3 -c 'from knowledge.extraction.entity_extractor import EntityExtractor; ...'",
+      "rationale": "Adds code structure to knowledge graph"
+    },
+    {
+      "step": 6,
+      "action": "Setup auto ingestion service",
+      "command": "python3 knowledge/auto_ingestion_service.py --watch",
+      "rationale": "Maintains knowledge updates automatically"
+    },
+    {
+      "step": 7,
+      "action": "Validate system health",
+      "command": "python3 knowledge/test_knowledge_system.py",
+      "rationale": "Ensures all requirements are met"
+    }
+  ],
+  "validation_criteria": {
+    "entities": "Must have 500+ entities (current: 12,933)",
+    "claude_docs": "All 16 Claude Code tools must be documented",
+    "relationships": "Must have relationships between entities (current: 54)",
+    "mcp_connection": "MCP server must connect and query successfully",
+    "database_integrity": "No orphaned relationships allowed"
+  },
+  "error_patterns": [
+    {
+      "error": "Cannot open database entities.duckdb",
+      "cause": "Wrong database path in MCP server",
+      "fix": "Update path to knowledge/knowledge.duckdb"
+    },
+    {
+      "error": "Database corrupted after git stash",
+      "cause": "Binary files tracked by git",
+      "fix": "Add *.duckdb to .gitignore"
+    },
+    {
+      "error": "Conflicting lock on database",
+      "cause": "MCP server prevents writes",
+      "fix": "Use auto_ingestion_service for writes"
+    }
+  ],
+  "architecture_notes": {
+    "database": "DuckDB embedded database at knowledge/knowledge.duckdb",
+    "mcp_access": "Read-only to prevent locking",
+    "ingestion_access": "Read-write through separate service",
+    "schema": "entities and relationships tables with UUID keys"
+  },
+  "lessons_learned": [
+    "Deep research reveals architectural issues, not just symptoms",
+    "Binary database files must never be in git",
+    "Separate read/write access prevents locking conflicts",
+    "Consolidation to single database prevents path confusion",
+    "Validation tooling is essential for system health"
+  ],
+  "related_issues": [
+    "issue-mcp-server-database-confusion-resolution",
+    "issue-mcp-server-git-stash-corruption-2025-08-27",
+    "issue-mcp-knowledge-system-complete-fix-2025-08-27"
+  ],
+  "complexity": "high",
+  "tags": ["knowledge-system", "mcp-server", "database", "recovery", "validation"],
+  "created_by": "Claude Code",
+  "created_at": "2025-08-27T03:15:00Z",
+  "user_requirements": "User demanded deep understanding and research, not quick hacks. System must have 500+ entities with relationships and 100% Claude documentation."
+}

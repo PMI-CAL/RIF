@@ -1,0 +1,86 @@
+{
+  "pattern_id": "mcp-server-database-path-troubleshooting",
+  "pattern_name": "MCP Server Database Path Mismatch Resolution",
+  "category": "troubleshooting",
+  "technology": "mcp-server",
+  "problem_context": {
+    "symptoms": [
+      "MCP server fails to start",
+      "Database connection errors",
+      "Table 'entities' does not exist error",
+      "Empty knowledge graph despite previous working state",
+      "CatalogException: Table with name entities does not exist"
+    ],
+    "root_causes": [
+      "Database path mismatch between configuration and actual data location",
+      "Uncommitted changes reverting database path",
+      "Multiple database files causing confusion (hybrid_knowledge.duckdb vs entities.duckdb)",
+      "Git stash operations creating empty database file placeholders",
+      "Binary database files not in .gitignore getting corrupted by git"
+    ],
+    "common_triggers": [
+      "Git merge conflicts",
+      "Manual edits to server configuration",
+      "Incomplete migration between database systems",
+      "Git stash operations with untracked database files",
+      "Git add . including binary database files"
+    ]
+  },
+  "solution_approach": {
+    "diagnostic_steps": [
+      "Check current database path in mcp/rif-knowledge-server/rif_knowledge_server.py",
+      "Verify which database files exist and their sizes",
+      "Query each database to check table existence and row counts",
+      "Review git history for database path changes",
+      "Check for uncommitted changes with git status"
+    ],
+    "resolution_steps": [
+      "Identify the database with actual data (typically knowledge/chromadb/entities.duckdb)",
+      "Verify the populated database contains entities table with 500+ rows",
+      "Revert uncommitted changes: git checkout -- mcp/rif-knowledge-server/rif_knowledge_server.py",
+      "Ensure database path points to chromadb/entities.duckdb not hybrid_knowledge.duckdb",
+      "Restart MCP server after fix"
+    ],
+    "verification_commands": [
+      "python3 -c \"import duckdb; conn = duckdb.connect('knowledge/chromadb/entities.duckdb', read_only=True); print(conn.execute('SELECT COUNT(*) FROM entities').fetchone())\"",
+      "grep 'duckdb_path =' mcp/rif-knowledge-server/rif_knowledge_server.py",
+      "git diff mcp/rif-knowledge-server/rif_knowledge_server.py"
+    ]
+  },
+  "evidence_collection": {
+    "database_analysis": {
+      "entities.duckdb": "Contains 528 entities with Claude knowledge, patterns, code entities",
+      "hybrid_knowledge.duckdb": "Empty database with 0 tables",
+      "correct_path": "knowledge/chromadb/entities.duckdb"
+    },
+    "git_history": {
+      "issue_259_fix": "Confirmed chromadb/entities.duckdb as correct path",
+      "issue_97_implementation": "Original MCP server setup used hybrid_knowledge.duckdb",
+      "issue_248_change": "Emergency branch protection accidentally changed path"
+    }
+  },
+  "prevention_measures": [
+    "Add database path validation on server startup",
+    "Create git pre-commit hook to prevent database path changes",
+    "Document correct database path in README",
+    "Add automated test to verify MCP server connectivity",
+    "Add *.duckdb and *.sqlite3 to .gitignore immediately",
+    "Never use git add . without checking for binary files",
+    "Keep backup copies of critical database files",
+    "Use git stash --include-untracked carefully with database files"
+  ],
+  "related_issues": [
+    "Issue #225: Fix MCP Server Integration for RIF Knowledge Base",
+    "Issue #259: CRITICAL: MCP SERVER IS BROKEN AGAIN",
+    "Issue #97: Fix MCP Knowledge Server - Achieve 90% usefulness"
+  ],
+  "metadata": {
+    "confidence": 1.0,
+    "frequency": "recurring",
+    "severity": "critical",
+    "time_to_resolve": "5-10 minutes",
+    "last_occurrence": "2025-08-27",
+    "created_by": "Claude Code root cause analysis",
+    "tags": ["mcp", "database", "troubleshooting", "critical-infrastructure"]
+  }
+}

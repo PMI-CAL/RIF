@@ -1,0 +1,113 @@
+{
+  "pattern_id": "git-stash-binary-file-corruption",
+  "pattern_name": "Git Stash Binary File Corruption Prevention",
+  "category": "git-operations",
+  "severity": "high",
+  "created_date": "2025-08-27",
+  "problem_description": {
+    "issue": "Git stash operations can corrupt binary files by creating empty placeholders",
+    "mechanism": "When git stash encounters large binary files, it may create 0-byte placeholders instead of properly preserving the file contents",
+    "affected_files": [
+      "*.duckdb - DuckDB database files",
+      "*.sqlite3 - SQLite database files",
+      "*.db - Generic database files",
+      "Large binary files not in .gitignore"
+    ],
+    "symptoms": [
+      "Binary files become 0 bytes after git stash",
+      "Database connection errors after git operations",
+      "Git shows binary files as modified with wrong sizes",
+      "Stash commits show 'Bin 0 -> [large size] bytes'"
+    ]
+  },
+  "root_cause": {
+    "primary": "Git attempting to track binary files during stash operation",
+    "contributing_factors": [
+      "Binary files not in .gitignore",
+      "Using git add . with binary files present",
+      "Stashing with --include-untracked on directories with databases",
+      "Git's inability to properly handle large binary files in stash"
+    ]
+  },
+  "prevention": {
+    "immediate_actions": [
+      "Add all binary file patterns to .gitignore",
+      "Check git status before any stash operation",
+      "Never stash with untracked binary files present",
+      "Use git stash --keep-index to avoid staging issues"
+    ],
+    "safe_stash_workflow": [
+      "git status # Check for untracked binary files",
+      "git add .gitignore # If you just added binary patterns",
+      "git stash push -m 'description' -- specific/files/only",
+      "# Or if safe: git stash --keep-index"
+    ],
+    "gitignore_essentials": [
+      "*.duckdb",
+      "*.duckdb.wal",
+      "*.sqlite3",
+      "*.sqlite",
+      "*.db",
+      "*.mdb",
+      "*.accdb"
+    ]
+  },
+  "detection": {
+    "warning_signs": [
+      "Git status shows binary files as new or modified",
+      "Large files appearing in git diff",
+      "Stash list shows commits by 'git stash <git@stash>'",
+      "Binary files in working directory not in .gitignore"
+    ],
+    "validation_commands": [
+      "find . -name '*.duckdb' -o -name '*.sqlite3' | xargs ls -la",
+      "git check-ignore *.duckdb # Should return the files if properly ignored",
+      "git ls-files --others --ignored --exclude-standard | grep -E '\\.(duckdb|sqlite3|db)$'"
+    ]
+  },
+  "recovery": {
+    "if_corruption_occurs": [
+      "DO NOT commit the corrupted files",
+      "Check for backup copies in other directories",
+      "Look for the original file in git history if previously committed",
+      "Restore from system backups if available",
+      "Recreate database from scratch if no backup exists"
+    ],
+    "cleanup_commands": [
+      "git rm --cached corrupted_file.duckdb # Remove from git tracking",
+      "git checkout HEAD -- corrupted_file.duckdb # Try restore from HEAD",
+      "git stash drop # If stash contains corruption",
+      "find . -name '*.duckdb' -size 0 -delete # Remove empty database files"
+    ]
+  },
+  "best_practices": [
+    "Always add binary files to .gitignore BEFORE creating them",
+    "Use git stash push with specific file paths, not entire directory",
+    "Keep binary files in dedicated directories that are gitignored",
+    "Use git LFS for binary files that must be version controlled",
+    "Regular backups of critical binary files outside git",
+    "Never use git add . without reviewing staged files first"
+  ],
+  "real_world_example": {
+    "date": "2025-08-27",
+    "incident": "MCP server failure due to git stash corruption",
+    "details": "Git stash created empty entities.duckdb placeholder during stash operation",
+    "git_evidence": "commit a46a302: 'knowledge/chromadb/entities.duckdb | Bin 0 -> 12333056 bytes'",
+    "impact": "Complete MCP server failure, knowledge graph inaccessible",
+    "resolution": "Restored from backup copy in mcp/claude-code-knowledge/"
+  },
+  "automation": {
+    "pre_stash_check": "#!/bin/bash\nif find . -name '*.duckdb' -o -name '*.sqlite3' | grep -q .; then\n  echo 'Warning: Binary database files detected'\n  echo 'Add to .gitignore before stashing'\n  exit 1\nfi",
+    "safe_stash_function": "function safe-stash() {\n  git ls-files --others --ignored --exclude-standard | grep -E '\\.(duckdb|sqlite3|db)$' && echo 'Error: Binary files present' && return 1\n  git stash \"$@\"\n}"
+  },
+  "related_patterns": [
+    "mcp-database-corruption-prevention-pattern",
+    "mcp-server-database-path-troubleshooting-pattern"
+  ],
+  "metadata": {
+    "author": "Claude Code",
+    "validation": "Tested and confirmed",
+    "frequency": "Common issue when binary files not gitignored",
+    "tags": ["git", "stash", "binary", "corruption", "database", "prevention"]
+  }
+}

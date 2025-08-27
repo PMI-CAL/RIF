@@ -1,0 +1,473 @@
+{
+  "issue_number": 269,
+  "timestamp": "2025-08-25T20:00:00.990599",
+  "auto_fix_enabled": true,
+  "original_validation": {
+    "issue_number": 269,
+    "timestamp": "2025-08-25T20:00:00.990625",
+    "can_close": false,
+    "blocking_reasons": [
+      "functional_testing_results"
+    ],
+    "warnings": [],
+    "quality_gates": {
+      "all_gates_pass": true,
+      "passed_gates": [
+        "adaptive_coverage",
+        "code_coverage",
+        "security_scan",
+        "linting",
+        "documentation",
+        "evidence_requirements",
+        "quality_score",
+        "conflict_resolution",
+        "arbitration_confidence",
+        "escalation_justification",
+        "dependency_satisfaction",
+        "consensus_decision",
+        "consensus_confidence",
+        "consensus_audit_trail",
+        "consensus_participation"
+      ],
+      "failed_gates": [],
+      "gate_results": {
+        "adaptive_coverage": {
+          "passed": true,
+          "value": null,
+          "threshold": null,
+          "reason": "Unknown gate type: adaptive_coverage",
+          "evidence": []
+        },
+        "code_coverage": {
+          "passed": true,
+          "value": 85,
+          "threshold": 80,
+          "reason": "Coverage: 85% (threshold: 80%)",
+          "evidence": [
+            "Coverage report generated",
+            "All critical paths covered"
+          ]
+        },
+        "security_scan": {
+          "passed": true,
+          "value": 0,
+          "threshold": "no_critical",
+          "reason": "Critical vulnerabilities: 0",
+          "evidence": [
+            "Security scan completed",
+            "No critical vulnerabilities found"
+          ]
+        },
+        "linting": {
+          "passed": true,
+          "value": 0,
+          "threshold": "no_errors",
+          "reason": "Linting errors: 0",
+          "evidence": [
+            "Linting passed",
+            "No errors detected"
+          ]
+        },
+        "documentation": {
+          "passed": true,
+          "value": "complete",
+          "threshold": "complete",
+          "reason": "Documentation: complete",
+          "evidence": [
+            "Issue contains documentation references"
+          ]
+        },
+        "evidence_requirements": {
+          "passed": true,
+          "value": 100,
+          "threshold": "100%",
+          "reason": "Evidence completeness: 100%",
+          "evidence": [
+            "Found 20 evidence indicators in comments"
+          ]
+        },
+        "quality_score": {
+          "passed": true,
+          "value": null,
+          "threshold": 80,
+          "reason": "Quality score calculated separately",
+          "evidence": []
+        },
+        "conflict_resolution": {
+          "passed": true,
+          "value": null,
+          "threshold": "resolved",
+          "reason": "Unknown gate type: conflict_resolution",
+          "evidence": []
+        },
+        "arbitration_confidence": {
+          "passed": true,
+          "value": null,
+          "threshold": 0.7,
+          "reason": "Unknown gate type: arbitration_confidence",
+          "evidence": []
+        },
+        "escalation_justification": {
+          "passed": true,
+          "value": null,
+          "threshold": "documented",
+          "reason": "Unknown gate type: escalation_justification",
+          "evidence": []
+        },
+        "dependency_satisfaction": {
+          "passed": true,
+          "value": null,
+          "threshold": "all_satisfied",
+          "reason": "Unknown gate type: dependency_satisfaction",
+          "evidence": []
+        },
+        "consensus_decision": {
+          "passed": true,
+          "value": null,
+          "threshold": "resolved",
+          "reason": "Unknown gate type: consensus_decision",
+          "evidence": []
+        },
+        "consensus_confidence": {
+          "passed": true,
+          "value": null,
+          "threshold": 0.75,
+          "reason": "Unknown gate type: consensus_confidence",
+          "evidence": []
+        },
+        "consensus_audit_trail": {
+          "passed": true,
+          "value": null,
+          "threshold": "complete",
+          "reason": "Unknown gate type: consensus_audit_trail",
+          "evidence": []
+        },
+        "consensus_participation": {
+          "passed": true,
+          "value": null,
+          "threshold": "minimum_agents_met",
+          "reason": "Unknown gate type: consensus_participation",
+          "evidence": []
+        }
+      }
+    },
+    "evidence_validation": {
+      "all_evidence_provided": false,
+      "missing_evidence": [
+        "functional_testing_results"
+      ],
+      "provided_evidence": [
+        "unit_tests_passing",
+        "integration_tests_passing",
+        "coverage_report"
+      ],
+      "evidence_by_type": {
+        "unit_tests_passing": {
+          "found": true,
+          "source": "issue_comments",
+          "keywords_matched": [
+            "unit test"
+          ]
+        },
+        "integration_tests_passing": {
+          "found": true,
+          "source": "issue_comments",
+          "keywords_matched": [
+            "integration test"
+          ]
+        },
+        "coverage_report": {
+          "found": true,
+          "source": "issue_comments",
+          "keywords_matched": [
+            "coverage",
+            "test coverage"
+          ]
+        },
+        "functional_testing_results": {
+          "found": false,
+          "source": "issue_comments",
+          "keywords_searched": [
+            "functional testing results"
+          ]
+        }
+      }
+    },
+    "quality_score": {
+      "score": 80,
+      "formula": "100 - (20 \u00d7 FAILs) - (10 \u00d7 CONCERNS)",
+      "fails": 1,
+      "concerns": 0,
+      "threshold": 80,
+      "passes_threshold": true
+    },
+    "risk_assessment": {
+      "risk_level": "medium",
+      "risk_factors": [
+        "security"
+      ],
+      "mitigation_required": false
+    },
+    "recommendations": [
+      "\u274c Issue cannot be closed - blocking reasons must be addressed",
+      "   \u2022 functional_testing_results",
+      "\ud83d\udcca Quality score is 80 - consider improving before closure",
+      "\ud83d\udccb Missing evidence requirements:",
+      "   \u2022 functional_testing_results"
+    ],
+    "workflow_state_valid": true,
+    "current_state": "complete",
+    "expected_final_states": [
+      "complete",
+      "failed",
+      "blocked"
+    ]
+  },
+  "auto_fix_attempts": [],
+  "final_validation": {
+    "issue_number": 269,
+    "timestamp": "2025-08-25T20:00:05.764210",
+    "can_close": false,
+    "blocking_reasons": [
+      "functional_testing_results"
+    ],
+    "warnings": [],
+    "quality_gates": {
+      "all_gates_pass": true,
+      "passed_gates": [
+        "adaptive_coverage",
+        "code_coverage",
+        "security_scan",
+        "linting",
+        "documentation",
+        "evidence_requirements",
+        "quality_score",
+        "conflict_resolution",
+        "arbitration_confidence",
+        "escalation_justification",
+        "dependency_satisfaction",
+        "consensus_decision",
+        "consensus_confidence",
+        "consensus_audit_trail",
+        "consensus_participation"
+      ],
+      "failed_gates": [],
+      "gate_results": {
+        "adaptive_coverage": {
+          "passed": true,
+          "value": null,
+          "threshold": null,
+          "reason": "Unknown gate type: adaptive_coverage",
+          "evidence": []
+        },
+        "code_coverage": {
+          "passed": true,
+          "value": 85,
+          "threshold": 80,
+          "reason": "Coverage: 85% (threshold: 80%)",
+          "evidence": [
+            "Coverage report generated",
+            "All critical paths covered"
+          ]
+        },
+        "security_scan": {
+          "passed": true,
+          "value": 0,
+          "threshold": "no_critical",
+          "reason": "Critical vulnerabilities: 0",
+          "evidence": [
+            "Security scan completed",
+            "No critical vulnerabilities found"
+          ]
+        },
+        "linting": {
+          "passed": true,
+          "value": 0,
+          "threshold": "no_errors",
+          "reason": "Linting errors: 0",
+          "evidence": [
+            "Linting passed",
+            "No errors detected"
+          ]
+        },
+        "documentation": {
+          "passed": true,
+          "value": "complete",
+          "threshold": "complete",
+          "reason": "Documentation: complete",
+          "evidence": [
+            "Issue contains documentation references"
+          ]
+        },
+        "evidence_requirements": {
+          "passed": true,
+          "value": 100,
+          "threshold": "100%",
+          "reason": "Evidence completeness: 100%",
+          "evidence": [
+            "Found 20 evidence indicators in comments"
+          ]
+        },
+        "quality_score": {
+          "passed": true,
+          "value": null,
+          "threshold": 80,
+          "reason": "Quality score calculated separately",
+          "evidence": []
+        },
+        "conflict_resolution": {
+          "passed": true,
+          "value": null,
+          "threshold": "resolved",
+          "reason": "Unknown gate type: conflict_resolution",
+          "evidence": []
+        },
+        "arbitration_confidence": {
+          "passed": true,
+          "value": null,
+          "threshold": 0.7,
+          "reason": "Unknown gate type: arbitration_confidence",
+          "evidence": []
+        },
+        "escalation_justification": {
+          "passed": true,
+          "value": null,
+          "threshold": "documented",
+          "reason": "Unknown gate type: escalation_justification",
+          "evidence": []
+        },
+        "dependency_satisfaction": {
+          "passed": true,
+          "value": null,
+          "threshold": "all_satisfied",
+          "reason": "Unknown gate type: dependency_satisfaction",
+          "evidence": []
+        },
+        "consensus_decision": {
+          "passed": true,
+          "value": null,
+          "threshold": "resolved",
+          "reason": "Unknown gate type: consensus_decision",
+          "evidence": []
+        },
+        "consensus_confidence": {
+          "passed": true,
+          "value": null,
+          "threshold": 0.75,
+          "reason": "Unknown gate type: consensus_confidence",
+          "evidence": []
+        },
+        "consensus_audit_trail": {
+          "passed": true,
+          "value": null,
+          "threshold": "complete",
+          "reason": "Unknown gate type: consensus_audit_trail",
+          "evidence": []
+        },
+        "consensus_participation": {
+          "passed": true,
+          "value": null,
+          "threshold": "minimum_agents_met",
+          "reason": "Unknown gate type: consensus_participation",
+          "evidence": []
+        }
+      }
+    },
+    "evidence_validation": {
+      "all_evidence_provided": false,
+      "missing_evidence": [
+        "functional_testing_results"
+      ],
+      "provided_evidence": [
+        "unit_tests_passing",
+        "integration_tests_passing",
+        "coverage_report"
+      ],
+      "evidence_by_type": {
+        "unit_tests_passing": {
+          "found": true,
+          "source": "issue_comments",
+          "keywords_matched": [
+            "unit test"
+          ]
+        },
+        "integration_tests_passing": {
+          "found": true,
+          "source": "issue_comments",
+          "keywords_matched": [
+            "integration test"
+          ]
+        },
+        "coverage_report": {
+          "found": true,
+          "source": "issue_comments",
+          "keywords_matched": [
+            "coverage",
+            "test coverage"
+          ]
+        },
+        "functional_testing_results": {
+          "found": false,
+          "source": "issue_comments",
+          "keywords_searched": [
+            "functional testing results"
+          ]
+        }
+      }
+    },
+    "quality_score": {
+      "score": 80,
+      "formula": "100 - (20 \u00d7 FAILs) - (10 \u00d7 CONCERNS)",
+      "fails": 1,
+      "concerns": 0,
+      "threshold": 80,
+      "passes_threshold": true
+    },
+    "risk_assessment": {
+      "risk_level": "medium",
+      "risk_factors": [
+        "security"
+      ],
+      "mitigation_required": false
+    },
+    "recommendations": [
+      "\u274c Issue cannot be closed - blocking reasons must be addressed",
+      "   \u2022 functional_testing_results",
+      "\ud83d\udcca Quality score is 80 - consider improving before closure",
+      "\ud83d\udccb Missing evidence requirements:",
+      "   \u2022 functional_testing_results"
+    ],
+    "workflow_state_valid": true,
+    "current_state": "complete",
+    "expected_final_states": [
+      "complete",
+      "failed",
+      "blocked"
+    ]
+  },
+  "overall_result": {
+    "can_close": false,
+    "decision": "FAIL",
+    "auto_fix_attempted": true,
+    "auto_fix_successful": false,
+    "fixes_applied": 0,
+    "reason": "Auto-fix attempted (0 fixes applied) but 1 issues remain",
+    "merge_blocked": true,
+    "ready_for_merge": false,
+    "remaining_issues": [
+      "functional_testing_results"
+    ]
+  },
+  "fix_summary": {
+    "total_rounds": 0,
+    "total_failures_identified": 0,
+    "total_fix_attempts": 0,
+    "successful_fixes": 0,
+    "partial_fixes": 0,
+    "failed_fixes": 0,
+    "fix_types_applied": [],
+    "files_modified": [],
+    "files_modified_count": 0,
+    "overall_success": false
+  }
+}

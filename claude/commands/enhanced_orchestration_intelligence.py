@@ -33,6 +33,9 @@ from orchestration_utilities import (
     IssueContext, ContextAnalyzer, StateValidator, 
     OrchestrationHelper, GitHubStateManager
 )
+from content_analysis_engine import (
+    ContentAnalysisEngine, ContentAnalysisResult, IssueState, ComplexityLevel
+)
 
 # Set up logging
 logger = logging.getLogger(__name__)

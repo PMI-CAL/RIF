@@ -1,0 +1,23 @@
+{
+  "pattern_name": "Template: Error Fix Pattern",
+  "pattern_type": "error_fix",
+  "description": "Template for capturing command errors and their fixes",
+  "problem": {
+    "command": "The command that failed",
+    "error": "The error message or key part of it",
+    "exit_code": "Non-zero exit code",
+    "context": "What was being attempted"
+  },
+  "solution": {
+    "command": "The command that worked",
+    "change": "What was changed to fix it",
+    "explanation": "Why this fix works"
+  },
+  "context_files": [
+    "Files that were being worked on when error occurred"
+  ],
+  "tags": ["error", "fix", "debug"],
+  "confidence": 0.0,
+  "auto_learned": false,
+  "template": true
+}

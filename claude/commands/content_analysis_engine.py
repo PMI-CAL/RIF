@@ -33,7 +33,7 @@ class ConfidenceLevel(Enum):
 class IssueState(Enum):
     """Content-derived issue states"""
     NEW = "new"
-    ANALYZING = "analyzing"  
+    ANALYZING = "analyzing"
     PLANNING = "planning"
     ARCHITECTING = "architecting"
     IMPLEMENTING = "implementing"
